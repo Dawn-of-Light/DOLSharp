@@ -23,9 +23,7 @@
     </UpgradeBackupLocation>
     <SignAssembly>False</SignAssembly>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <SourceAnalysisOverrideSettingsFile>D:\DOL\Svn DoL\DOLBase\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
@@ -73,60 +71,30 @@
     <PackageReference Include="log4net" Version="2.0.4" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Config\BaseServerConfiguration.cs" />
-    <Compile Include="Config\ConfigElement.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Config\XMLConfigFile.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Config\ConfigElement.cs" />
+    <Compile Include="Config\XMLConfigFile.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="FTP\FTPAsynchronousConnection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FTP\FTPConnection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FTP\FTPFile.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FTP\FTPFileTransferType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FTP\FTPMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Marshal.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MPK\MPK.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MPK\MPKFile.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MPK\MPKFileHeader.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="FTP\FTPAsynchronousConnection.cs" />
+    <Compile Include="FTP\FTPConnection.cs" />
+    <Compile Include="FTP\FTPFile.cs" />
+    <Compile Include="FTP\FTPFileTransferType.cs" />
+    <Compile Include="FTP\FTPMode.cs" />
+    <Compile Include="Marshal.cs" />
+    <Compile Include="MPK\MPK.cs" />
+    <Compile Include="MPK\MPKFile.cs" />
+    <Compile Include="MPK\MPKFileHeader.cs" />
     <Compile Include="Network\BaseClient.cs" />
     <Compile Include="Network\BaseServer.cs" />
     <Compile Include="Network\IPacket.cs" />
     <Compile Include="Network\PacketIn.cs" />
     <Compile Include="Network\PacketOut.cs" />
     <Compile Include="Network\UPnPNat.cs" />
-    <Compile Include="Statistics.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Statistics.cs" />
     <Compile Include="Threading\SpinWaitLock.cs" />
-    <Compile Include="WeakMulticastDelegate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WeakRef.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="WeakMulticastDelegate.cs" />
+    <Compile Include="WeakRef.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- Graveen: the following is replacing the rev number in the AssemblyInfo.cs file by the SVN rev number of the current project. -->

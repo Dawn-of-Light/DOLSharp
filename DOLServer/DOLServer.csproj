@@ -8,8 +8,6 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
     <AssemblyName>DOLServer</AssemblyName>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
@@ -18,20 +16,13 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>DOLServer</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\RedFish\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <SignAssembly>False</SignAssembly>
-    <TargetFrameworkProfile />
     <NoWin32Manifest>False</NoWin32Manifest>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <OutputPath>..\$(Configuration)\</OutputPath>
@@ -71,77 +62,27 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <PackageReference Include="log4net" Version="2.0.4" ExcludeAssets="Runtime" />
-    <ProjectReference Include="..\DOLBase\DOLBase.csproj">
-      <Name>DOLBase</Name>
-      <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-      <ExcludeAssets>All</ExcludeAssets>
-    </ProjectReference>
-    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
-      <Name>DOLDatabase</Name>
-      <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-      <ExcludeAssets>All</ExcludeAssets>
-    </ProjectReference>
-    <ProjectReference Include="..\GameServer\GameServer.csproj">
-      <Name>GameServer</Name>
-      <Project>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-      <ExcludeAssets>All</ExcludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="False" ExcludeAssets="All" />
+    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="False" ExcludeAssets="All" />
+    <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" Private="False" ExcludeAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="actions\ConsoleStart.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceInstall.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceRun.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceStart.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceStop.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceUninstall.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ConsolePacketLib.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GameServerService.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="GameServerServiceInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="IAction.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainClass.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="GameServerService.resx">
-      <DependentUpon>GameServerService.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GameServerServiceInstaller.resx">
-      <DependentUpon>GameServerServiceInstaller.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <Compile Include="actions\ConsoleStart.cs" />
+    <Compile Include="actions\ServiceInstall.cs" />
+    <Compile Include="actions\ServiceRun.cs" />
+    <Compile Include="actions\ServiceStart.cs" />
+    <Compile Include="actions\ServiceStop.cs" />
+    <Compile Include="actions\ServiceUninstall.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="ConsolePacketLib.cs" />
+    <Compile Include="GameServerService.cs" SubType="Component" />
+    <Compile Include="GameServerServiceInstaller.cs" SubType="Component" />
+    <Compile Include="IAction.cs" />
+    <Compile Include="MainClass.cs" />
+    <EmbeddedResource Include="GameServerService.resx" SubType="Designer" DependentUpon="GameServerService.cs" />
+    <EmbeddedResource Include="GameServerServiceInstaller.resx" SubType="Designer" DependentUpon="GameServerServiceInstaller.cs" />
     <None Include="app.config" />
-    <None Include="DOLServer.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="DOLServer.exe.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />

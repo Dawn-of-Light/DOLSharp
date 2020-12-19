@@ -67,29 +67,12 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <PackageReference Include="log4net" Version="2.0.4" PrivateAssets="All" />
-    <ProjectReference Include="..\DOLBase\DOLBase.csproj">
-      <Name>DOLBase</Name>
-      <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
-      <Name>DOLDatabase</Name>
-      <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\GameServer\GameServer.csproj">
-      <Name>GameServer</Name>
-      <Project>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="False" />
+    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="False" />
+    <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" Private="False" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="behaviour\examples\TestBehaviour.cs" />
     <Compile Include="commands\player\anonymous.cs" />
     <Compile Include="commands\serverinfo.cs" />
@@ -102,9 +85,7 @@
     <Compile Include="customnpc\PortalCeremonyBaseNPC.cs" />
     <Compile Include="customnpc\PortalCeremonyExampleNPC.cs" />
     <Compile Include="customnpc\RegionTestNpc.cs" />
-    <Compile Include="customnpc\TownCrier.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="customnpc\TownCrier.cs" />
     <Compile Include="dbupdater\AutoXMLDatabaseUpdate.cs" />
     <Compile Include="dbupdater\AutoXMLUpdateTable.cs" />
     <Compile Include="dbupdater\GuildAndAllianceUpdate.cs" />
@@ -116,35 +97,17 @@
     <Compile Include="examples\CustomInventoryLoggingExample.cs" />
     <Compile Include="gameevents\DOLTestServer.cs" />
     <Compile Include="gameevents\StartupGuilds.cs" />
-    <Compile Include="gameevents\FightingNPC.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\FollowingNPC.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\HorseRace.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\PlayerEnterExit.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\StartupLocations.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameevents\TalkingNPC.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="gameevents\FightingNPC.cs" />
+    <Compile Include="gameevents\FollowingNPC.cs" />
+    <Compile Include="gameevents\HorseRace.cs" />
+    <Compile Include="gameevents\PlayerEnterExit.cs" />
+    <Compile Include="gameevents\StartupLocations.cs" />
+    <Compile Include="gameevents\TalkingNPC.cs" />
     <Compile Include="gameevents\TutorialJumpPointHandler.cs" />
-    <Compile Include="globals.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="globals.cs" />
     <Compile Include="web\OnlineStatusUpdate.cs" />
-    <Compile Include="web\WebUIGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="web\XMLWebUIGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="web\WebUIGenerator.cs" />
+    <Compile Include="web\XMLWebUIGenerator.cs" />
     <Compile Include="quests\Albion\AFewRepairs.cs" />
     <Compile Include="quests\Albion\AfterTheAccident.cs" />
     <Compile Include="quests\Albion\AgainstTheGrain.cs" />

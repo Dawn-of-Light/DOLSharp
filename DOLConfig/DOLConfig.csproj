@@ -13,17 +13,12 @@
     <FileAlignment>4096</FileAlignment>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <SourceAnalysisOverrideSettingsFile>C:\Users\RedFish\AppData\Roaming\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
     <RunCodeAnalysis>False</RunCodeAnalysis>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -83,48 +78,20 @@
     <PackageReference Include="MySql.Data" Version="6.9.8" ExcludeAssets="Runtime" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DOLConfig.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DOLConfig.Designer.cs">
-      <DependentUpon>DOLConfig.cs</DependentUpon>
-    </Compile>
+    <Compile Include="DOLConfig.cs" SubType="Form" />
+    <Compile Include="DOLConfig.Designer.cs" DependentUpon="DOLConfig.cs" />
     <Compile Include="DOLConfigParser.cs" />
-    <Compile Include="Resources1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="ServerProperties.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ExtraPropertiesEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ExtraPropertiesEditor.Designer.cs">
-      <DependentUpon>ExtraPropertiesEditor.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Resources1.Designer.cs" AutoGen="True" DesignTime="True" DependentUpon="Resources.resx" />
+    <Compile Include="ServerProperties.cs" SubType="Form" />
+    <Compile Include="ExtraPropertiesEditor.cs" SubType="Form" />
+    <Compile Include="ExtraPropertiesEditor.Designer.cs" DependentUpon="ExtraPropertiesEditor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <EmbeddedResource Include="DOLConfig.resx">
-      <DependentUpon>DOLConfig.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ExtraPropertiesEditor.resx">
-      <DependentUpon>ExtraPropertiesEditor.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <Compile Include="RegExTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="RegExTextBox.designer.cs">
-      <DependentUpon>RegExTextBox.cs</DependentUpon>
-    </Compile>
+    <Compile Include="RegExTextBox.cs" SubType="Component" />
+    <Compile Include="RegExTextBox.designer.cs" DependentUpon="RegExTextBox.cs" />
+    <EmbeddedResource Include="DOLConfig.resx" SubType="Designer" DependentUpon="DOLConfig.cs" />
+    <EmbeddedResource Include="ExtraPropertiesEditor.resx" SubType="Designer" DependentUpon="ExtraPropertiesEditor.cs" />
+    <EmbeddedResource Include="Resources.resx" SubType="Designer" Generator="ResXFileCodeGenerator" LastGenOutput="Resources1.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

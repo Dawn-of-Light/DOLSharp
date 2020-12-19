@@ -19,13 +19,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>DOL</RootNamespace>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <SourceAnalysisOverrideSettingsFile>C:\Users\RedFish\AppData\Roaming\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
@@ -73,26 +67,12 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <PackageReference Include="log4net" Version="2.0.4" PrivateAssets="All" />
-    <ProjectReference Include="..\DOLBase\DOLBase.csproj">
-      <Name>DOLBase</Name>
-      <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
-      <Name>DOLDatabase</Name>
-      <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="False" />
+    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="False" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ai\ABrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ai\APlayerVicinityBrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ai\ABrain.cs" />
+    <Compile Include="ai\APlayerVicinityBrain.cs" />
     <Compile Include="ai\brain\Animist\BomberBrain.cs" />
     <Compile Include="ai\brain\Animist\TurretFNFBrain.cs" />
     <Compile Include="ai\brain\Animist\TurretMainPetCasterBrain.cs" />
@@ -111,19 +91,13 @@
     <Compile Include="ai\brain\NoveltyPetBrain.cs" />
     <Compile Include="ai\brain\DragonBrain.cs" />
     <Compile Include="ai\brain\Npcs\AggressiveBrain.cs" />
-    <Compile Include="ai\brain\GuardBrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ai\brain\GuardBrain.cs" />
     <Compile Include="ai\brain\Guards\Caster.cs" />
     <Compile Include="ai\brain\Guards\KeepGuardBrain.cs" />
     <Compile Include="ai\brain\Guards\Healer.cs" />
     <Compile Include="ai\brain\Guards\Lord.cs" />
-    <Compile Include="ai\brain\IOldAggressiveBrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ai\brain\IControlledBrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ai\brain\IOldAggressiveBrain.cs" />
+    <Compile Include="ai\brain\IControlledBrain.cs" />
     <Compile Include="ai\brain\Npcs\CastingBehaviour.cs" />
     <Compile Include="ai\brain\Npcs\IAttackBehaviour.cs" />
     <Compile Include="ai\brain\Npcs\MeleeBehaviour.cs" />
@@ -131,19 +105,13 @@
     <Compile Include="ai\brain\Npcs\PassiveBehaviour.cs" />
     <Compile Include="ai\brain\ProcPetBrain.cs" />
     <Compile Include="ai\brain\RetrieverMobBrain.cs" />
-    <Compile Include="ai\brain\RoundsBrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ai\brain\RoundsBrain.cs" />
     <Compile Include="ai\brain\ScoutMobBrain.cs" />
-    <Compile Include="ai\brain\StandardMobBrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ai\brain\StandardMobBrain.cs" />
     <Compile Include="ai\brain\Theurgist\TheurgistPetBrain.cs" />
     <Compile Include="ai\brain\Animist\TurretBrain.cs" />
     <Compile Include="ai\brain\Necromancer\NecromancerPetBrain.cs" />
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="behaviour\AbstractTrigger.cs" />
     <Compile Include="behaviour\AbstractRequirement.cs" />
     <Compile Include="behaviour\Actions\AnimationAction.cs" />
@@ -318,19 +286,11 @@
     <Compile Include="commands\playercommands\who.cs" />
     <Compile Include="commands\playercommands\xp.cs" />
     <Compile Include="commands\playercommands\yell.cs" />
-    <Compile Include="craft\AbstractCraftingSkill.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="craft\AbstractCraftingSkill.cs" />
     <Compile Include="craft\AbstractProfession.cs" />
-    <Compile Include="craft\AdvancedCraftingSkill.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\Alchemy.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\ArmorCrafting.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="craft\AdvancedCraftingSkill.cs" />
+    <Compile Include="craft\Alchemy.cs" />
+    <Compile Include="craft\ArmorCrafting.cs" />
     <Compile Include="database\converters\DatabaseConverterAttribute.cs" />
     <Compile Include="database\converters\IDatabaseConverter.cs" />
     <Compile Include="database\converters\Version002.cs" />
@@ -351,9 +311,7 @@
     <Compile Include="gameobjects\Atlantis\Teleporter\SpawnDjinnStone.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\SummonDjinnStone.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\SummonedDjinn.cs" />
-    <Compile Include="gameobjects\CharacterClasses\Albion\CharacterClassNecromancer.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="gameobjects\CharacterClasses\Albion\CharacterClassNecromancer.cs" />
     <Compile Include="gameobjects\CharacterClasses\CharacterClassAttribute.cs" />
     <Compile Include="gameobjects\CharacterClasses\Hibernia\CharacterClassAnimist.cs" />
     <Compile Include="gameobjects\CharacterClasses\ICharacterClass.cs" />
@@ -411,320 +369,128 @@
     <Compile Include="gameobjects\CustomNPC\Teleporters\SimpleTeleporter.cs" />
     <Compile Include="gameobjects\GameTrainingDummy.cs" />
     <Compile Include="gameobjects\craft master\BasicCraftingMaster.cs" />
-    <Compile Include="craft\ClothWorking.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="craft\ClothWorking.cs" />
     <Compile Include="craft\BasicCrafting.cs" />
-    <Compile Include="craft\CraftingMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\Fletching.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\GemCutting.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\HerbalCrafting.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\LeatherCrafting.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\MetalWorking.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\Repair.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\Salvage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\SiegeCrafting.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\SpellCrafting.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\Tailoring.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\WeaponCrafting.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="craft\WoodWorking.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\BerserkEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="craft\CraftingMgr.cs" />
+    <Compile Include="craft\Fletching.cs" />
+    <Compile Include="craft\GemCutting.cs" />
+    <Compile Include="craft\HerbalCrafting.cs" />
+    <Compile Include="craft\LeatherCrafting.cs" />
+    <Compile Include="craft\MetalWorking.cs" />
+    <Compile Include="craft\Repair.cs" />
+    <Compile Include="craft\Salvage.cs" />
+    <Compile Include="craft\SiegeCrafting.cs" />
+    <Compile Include="craft\SpellCrafting.cs" />
+    <Compile Include="craft\Tailoring.cs" />
+    <Compile Include="craft\WeaponCrafting.cs" />
+    <Compile Include="craft\WoodWorking.cs" />
+    <Compile Include="effects\BerserkEffect.cs" />
     <Compile Include="effects\BodyguardEffect.cs" />
     <Compile Include="effects\CamouflageEffect.cs" />
-    <Compile Include="effects\EngageEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="effects\EngageEffect.cs" />
     <Compile Include="effects\Necromancer\FacilitatePainworkingEffect.cs" />
-    <Compile Include="effects\GameEffectList.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\GameEffectPlayerList.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\GameSpellAndImmunityEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\GameSpellEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\GuardEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="effects\GameEffectList.cs" />
+    <Compile Include="effects\GameEffectPlayerList.cs" />
+    <Compile Include="effects\GameSpellAndImmunityEffect.cs" />
+    <Compile Include="effects\GameSpellEffect.cs" />
+    <Compile Include="effects\GuardEffect.cs" />
     <Compile Include="effects\GuildBannerEffect.cs" />
-    <Compile Include="effects\IConcentrationEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\IGameEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\InterceptEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="effects\IConcentrationEffect.cs" />
+    <Compile Include="effects\IGameEffect.cs" />
+    <Compile Include="effects\InterceptEffect.cs" />
     <Compile Include="effects\Necromancer\MezzRootImmunityEffect.cs" />
     <Compile Include="effects\Necromancer\NecromancerShadeEffect.cs" />
     <Compile Include="effects\Necromancer\TauntEffect.cs" />
-    <Compile Include="effects\ProtectEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\PulsingSpellEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\QuickCastEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\RapidFireEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\ShadeEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="effects\ProtectEffect.cs" />
+    <Compile Include="effects\PulsingSpellEffect.cs" />
+    <Compile Include="effects\QuickCastEffect.cs" />
+    <Compile Include="effects\RapidFireEffect.cs" />
+    <Compile Include="effects\ShadeEffect.cs" />
     <Compile Include="effects\Spells\FocusShellEffect.cs" />
-    <Compile Include="effects\SprintEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\StagEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="effects\SprintEffect.cs" />
+    <Compile Include="effects\StagEffect.cs" />
     <Compile Include="effects\StaticEffect.cs" />
-    <Compile Include="effects\StealthEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="effects\SureShotEffect.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="effects\StealthEffect.cs" />
+    <Compile Include="effects\SureShotEffect.cs" />
     <Compile Include="effects\TimedEffect.cs" />
     <Compile Include="effects\TripleWieldEffect.cs" />
     <Compile Include="effects\UniPortalEffect.cs" />
-    <Compile Include="events\database\AccountEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\database\CharacterEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="events\database\AccountEventArgs.cs" />
+    <Compile Include="events\database\CharacterEventArgs.cs" />
     <Compile Include="events\database\NewsEventArgs.cs" />
-    <Compile Include="events\database\DatabaseEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\DOLEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\DOLEventHandlerCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\GameEventMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\AttackedByEnemyEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\AttackFinishedEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="events\database\DatabaseEvent.cs" />
+    <Compile Include="events\DOLEvent.cs" />
+    <Compile Include="events\DOLEventHandlerCollection.cs" />
+    <Compile Include="events\GameEventMgr.cs" />
+    <Compile Include="events\gameobjects\AttackedByEnemyEventArgs.cs" />
+    <Compile Include="events\gameobjects\AttackFinishedEventArgs.cs" />
     <Compile Include="events\gameobjects\CastFailedEventArgs.cs" />
     <Compile Include="events\gameobjects\CastingEventArgs.cs" />
-    <Compile Include="events\gameobjects\DyingEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\EnemyHealedEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\EnemyKilledEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\FollowLostTargetEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\GainedExperienceEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\GainedRealmPointsEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\GameLivingEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\GameNPCEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\GameObjectEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\GamePlayerEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\GameTrainerEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\GiveItemEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\GiveMoneyEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="events\gameobjects\DyingEventArgs.cs" />
+    <Compile Include="events\gameobjects\EnemyHealedEventArgs.cs" />
+    <Compile Include="events\gameobjects\EnemyKilledEventArgs.cs" />
+    <Compile Include="events\gameobjects\FollowLostTargetEventArgs.cs" />
+    <Compile Include="events\gameobjects\GainedExperienceEventArgs.cs" />
+    <Compile Include="events\gameobjects\GainedRealmPointsEventArgs.cs" />
+    <Compile Include="events\gameobjects\GameLivingEvent.cs" />
+    <Compile Include="events\gameobjects\GameNPCEvent.cs" />
+    <Compile Include="events\gameobjects\GameObjectEvent.cs" />
+    <Compile Include="events\gameobjects\GamePlayerEvent.cs" />
+    <Compile Include="events\gameobjects\GameTrainerEvent.cs" />
+    <Compile Include="events\gameobjects\GiveItemEventArgs.cs" />
+    <Compile Include="events\gameobjects\GiveMoneyEventArgs.cs" />
     <Compile Include="events\gameobjects\HealthChangedEventArgs.cs" />
-    <Compile Include="events\gameobjects\InteractEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\InteractWithEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="events\gameobjects\InteractEventArgs.cs" />
+    <Compile Include="events\gameobjects\InteractWithEventArgs.cs" />
     <Compile Include="events\gameobjects\ItemBonusChangedEventArgs.cs" />
     <Compile Include="events\gameobjects\ItemDroppedEventArgs.cs" />
-    <Compile Include="events\gameobjects\ItemEquippedArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\ItemUnequippedArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\MoveToEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="events\gameobjects\ItemEquippedArgs.cs" />
+    <Compile Include="events\gameobjects\ItemUnequippedArgs.cs" />
+    <Compile Include="events\gameobjects\MoveToEventArgs.cs" />
     <Compile Include="events\gameobjects\PetSpellEventArgs.cs" />
-    <Compile Include="events\gameobjects\PlayerDisbandedEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\PlayerGroupEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\PlayerInventoryEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\PlayerJoinedEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\PlayerPromotedEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="events\gameobjects\PlayerDisbandedEventArgs.cs" />
+    <Compile Include="events\gameobjects\PlayerGroupEvent.cs" />
+    <Compile Include="events\gameobjects\PlayerInventoryEvent.cs" />
+    <Compile Include="events\gameobjects\PlayerJoinedEventArgs.cs" />
+    <Compile Include="events\gameobjects\PlayerPromotedEventArgs.cs" />
     <Compile Include="events\gameobjects\QuestRewardChosenEventArgs.cs" />
     <Compile Include="events\gameobjects\RevivedEventArgs.cs" />
-    <Compile Include="events\gameobjects\QuestEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\ReceiveMoneyEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\ReceiveItemEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\RiderDismountEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\RiderMountEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\SayEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\SayReceiveEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\SourceEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\TakeDamageEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="events\gameobjects\QuestEventArgs.cs" />
+    <Compile Include="events\gameobjects\ReceiveMoneyEventArgs.cs" />
+    <Compile Include="events\gameobjects\ReceiveItemEventArgs.cs" />
+    <Compile Include="events\gameobjects\RiderDismountEventArgs.cs" />
+    <Compile Include="events\gameobjects\RiderMountEventArgs.cs" />
+    <Compile Include="events\gameobjects\SayEventArgs.cs" />
+    <Compile Include="events\gameobjects\SayReceiveEventArgs.cs" />
+    <Compile Include="events\gameobjects\SourceEventArgs.cs" />
+    <Compile Include="events\gameobjects\TakeDamageEventArgs.cs" />
     <Compile Include="events\gameobjects\TetherEventArgs.cs" />
     <Compile Include="events\gameobjects\TimerEventArgs.cs" />
-    <Compile Include="events\gameobjects\TurnToEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\TurnToHeadingEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\UseSlotEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\WalkEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\WalkToEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\WhisperEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\WhisperReceiveEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\YellEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\gameobjects\YellReceiveEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\keep\KeepEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\keep\KeepEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="events\gameobjects\TurnToEventArgs.cs" />
+    <Compile Include="events\gameobjects\TurnToHeadingEventArgs.cs" />
+    <Compile Include="events\gameobjects\UseSlotEventArgs.cs" />
+    <Compile Include="events\gameobjects\WalkEventArgs.cs" />
+    <Compile Include="events\gameobjects\WalkToEventArgs.cs" />
+    <Compile Include="events\gameobjects\WhisperEventArgs.cs" />
+    <Compile Include="events\gameobjects\WhisperReceiveEventArgs.cs" />
+    <Compile Include="events\gameobjects\YellEventArgs.cs" />
+    <Compile Include="events\gameobjects\YellReceiveEventArgs.cs" />
+    <Compile Include="events\keep\KeepEvent.cs" />
+    <Compile Include="events\keep\KeepEventArgs.cs" />
     <Compile Include="events\keep\RelicPadEvent.cs" />
     <Compile Include="events\keep\RelicPadEventArgs.cs" />
-    <Compile Include="events\scripts\ScriptEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\scripts\ScriptLoadedEventAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\scripts\ScriptUnloadedEventAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\server\GameClientEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\server\GameServerEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\server\GameServerStartedEventAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\server\GameServerStoppedEventAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\World\AreaEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\World\AreaEventArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\World\RegionEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="events\World\RegionPlayerArgs.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GameClient.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="events\scripts\ScriptEvent.cs" />
+    <Compile Include="events\scripts\ScriptLoadedEventAttribute.cs" />
+    <Compile Include="events\scripts\ScriptUnloadedEventAttribute.cs" />
+    <Compile Include="events\server\GameClientEvent.cs" />
+    <Compile Include="events\server\GameServerEvent.cs" />
+    <Compile Include="events\server\GameServerStartedEventAttribute.cs" />
+    <Compile Include="events\server\GameServerStoppedEventAttribute.cs" />
+    <Compile Include="events\World\AreaEvent.cs" />
+    <Compile Include="events\World\AreaEventArgs.cs" />
+    <Compile Include="events\World\RegionEvent.cs" />
+    <Compile Include="events\World\RegionPlayerArgs.cs" />
+    <Compile Include="GameClient.cs" />
     <Compile Include="gameobjects\Animist\TurretPet.cs" />
     <Compile Include="gameobjects\Atlantis\Teleporter\AncientBoundDjinn.cs" />
     <Compile Include="gameobjects\Atlantis\Arbiter.cs" />
@@ -779,101 +545,43 @@
     <Compile Include="gameobjects\Dragons\Golestandt.cs" />
     <Compile Include="gameobjects\GameBoat.cs" />
     <Compile Include="gameobjects\GameTaxiBoat.cs" />
-    <Compile Include="gameobjects\CustomNPC\CraftNPC.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\CustomNPC\GameStableMaster.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\CustomNPC\GameTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameDoor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameGravestone.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameGuard.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameTaxi.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="gameobjects\CustomNPC\CraftNPC.cs" />
+    <Compile Include="gameobjects\CustomNPC\GameStableMaster.cs" />
+    <Compile Include="gameobjects\CustomNPC\GameTrainer.cs" />
+    <Compile Include="gameobjects\GameDoor.cs" />
+    <Compile Include="gameobjects\GameGravestone.cs" />
+    <Compile Include="gameobjects\GameGuard.cs" />
+    <Compile Include="gameobjects\GameTaxi.cs" />
     <Compile Include="gameobjects\GameHouseVault.cs" />
-    <Compile Include="gameobjects\GameLiving.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameMerchant.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameMoney.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameMovingObject.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameNPC.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameObject.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GamePlayer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameSiegeWeapon.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameStaticItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\GameStaticItemTimed.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="gameobjects\GameLiving.cs" />
+    <Compile Include="gameobjects\GameMerchant.cs" />
+    <Compile Include="gameobjects\GameMoney.cs" />
+    <Compile Include="gameobjects\GameMovingObject.cs" />
+    <Compile Include="gameobjects\GameNPC.cs" />
+    <Compile Include="gameobjects\GameObject.cs" />
+    <Compile Include="gameobjects\GamePlayer.cs" />
+    <Compile Include="gameobjects\GameSiegeWeapon.cs" />
+    <Compile Include="gameobjects\GameStaticItem.cs" />
+    <Compile Include="gameobjects\GameStaticItemTimed.cs" />
     <Compile Include="gameobjects\Necromancer\NecromancerPet.cs" />
-    <Compile Include="gameobjects\SiegeWeapon\gamesiegeballista.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\SiegeWeapon\gamesiegecatapult.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\SiegeWeapon\gamesiegecauldron.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\SiegeWeapon\GameSiegeRam.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameobjects\SiegeWeapon\gamesiegetrebuchet.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GameServer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GameServerConfiguration.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Ability.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="commands\AbstractCommandHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Alliance.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="gameobjects\SiegeWeapon\gamesiegeballista.cs" />
+    <Compile Include="gameobjects\SiegeWeapon\gamesiegecatapult.cs" />
+    <Compile Include="gameobjects\SiegeWeapon\gamesiegecauldron.cs" />
+    <Compile Include="gameobjects\SiegeWeapon\GameSiegeRam.cs" />
+    <Compile Include="gameobjects\SiegeWeapon\gamesiegetrebuchet.cs" />
+    <Compile Include="GameServer.cs" />
+    <Compile Include="GameServerConfiguration.cs" />
+    <Compile Include="gameutils\Ability.cs" />
+    <Compile Include="commands\AbstractCommandHandler.cs" />
+    <Compile Include="gameutils\Alliance.cs" />
     <Compile Include="gameutils\Atlantis\ArtifactMgr.cs" />
     <Compile Include="gameutils\AttackData.cs" />
     <Compile Include="gameutils\AuditMgr.cs" />
     <Compile Include="gameutils\BattleGroup.cs" />
     <Compile Include="gameutils\BoatMgr.cs" />
     <Compile Include="gameutils\CardMgr.cs" />
-    <Compile Include="gameutils\ChatGroup.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="commands\CmdAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="gameutils\ChatGroup.cs" />
+    <Compile Include="commands\CmdAttribute.cs" />
     <Compile Include="gameutils\ChatUtil.cs" />
     <Compile Include="gameobjects\IGameInventoryItem.cs" />
     <Compile Include="gameobjects\GameInventoryItem.cs" />
@@ -1240,15 +948,11 @@
     <Compile Include="quests\Catacombs\Obelisks\InconnuCrypt.cs" />
     <Compile Include="quests\Catacombs\Obelisks\KoboldUndercity.cs" />
     <Compile Include="quests\Catacombs\Obelisks\SharLabyrinth.cs" />
-    <Compile Include="quests\Missions\AbstractMission.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="quests\Missions\AbstractMission.cs" />
     <Compile Include="quests\Missions\CaptureMission.cs" />
     <Compile Include="quests\Missions\ScoutMission.cs" />
     <Compile Include="quests\Missions\KillMission.cs" />
-    <Compile Include="quests\Missions\RaizeMission.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="quests\Missions\RaizeMission.cs" />
     <Compile Include="quests\Missions\TaskDungeonMission.cs" />
     <Compile Include="behaviour\Actions\AttackAction.cs" />
     <Compile Include="behaviour\Actions\MonsterSpawnAction.cs" />
@@ -1489,512 +1193,180 @@
     <Compile Include="realmabilities\Statics\ThornweedFieldBase.cs" />
     <Compile Include="realmabilities\Statics\WallOfFlameBase.cs" />
     <Compile Include="serverproperty\ServerProperties.cs" />
-    <Compile Include="gameutils\DoorMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Faction.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\FactionMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\FastMath.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\GameLivingInventory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\GameNpcInventoryTemplate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\GamePlayerInventory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\GameTimer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Group.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\GroupMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\GSPacketIn.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Guild.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\GuildMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Hashtable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="commands\ICommandHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\IDoor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\IGameInventory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\ILootGenerator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\INpcTemplate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\ITradeWindow.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\LootGeneratorBase.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\LootGeneratorMoney.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\LootGeneratorOneTimeDrop.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\LootGeneratorRandom.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\LootGeneratorTemplate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\LootList.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\LootMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\MerchantTradeItems.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Message.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Money.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\MovementMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\NPCGuildScriptAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\NpcTemplate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\NpcTemplateMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\PathPoint.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\PlayerTradeWindow.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\PropertyCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\RegionAction.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\RegionTimer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\ScriptMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\SelfCraftWindow.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="gameutils\DoorMgr.cs" />
+    <Compile Include="gameutils\Faction.cs" />
+    <Compile Include="gameutils\FactionMgr.cs" />
+    <Compile Include="gameutils\FastMath.cs" />
+    <Compile Include="gameutils\GameLivingInventory.cs" />
+    <Compile Include="gameutils\GameNpcInventoryTemplate.cs" />
+    <Compile Include="gameutils\GamePlayerInventory.cs" />
+    <Compile Include="gameutils\GameTimer.cs" />
+    <Compile Include="gameutils\Group.cs" />
+    <Compile Include="gameutils\GroupMgr.cs" />
+    <Compile Include="gameutils\GSPacketIn.cs" />
+    <Compile Include="gameutils\Guild.cs" />
+    <Compile Include="gameutils\GuildMgr.cs" />
+    <Compile Include="gameutils\Hashtable.cs" />
+    <Compile Include="commands\ICommandHandler.cs" />
+    <Compile Include="gameutils\IDoor.cs" />
+    <Compile Include="gameutils\IGameInventory.cs" />
+    <Compile Include="gameutils\ILootGenerator.cs" />
+    <Compile Include="gameutils\INpcTemplate.cs" />
+    <Compile Include="gameutils\ITradeWindow.cs" />
+    <Compile Include="gameutils\LootGeneratorBase.cs" />
+    <Compile Include="gameutils\LootGeneratorMoney.cs" />
+    <Compile Include="gameutils\LootGeneratorOneTimeDrop.cs" />
+    <Compile Include="gameutils\LootGeneratorRandom.cs" />
+    <Compile Include="gameutils\LootGeneratorTemplate.cs" />
+    <Compile Include="gameutils\LootList.cs" />
+    <Compile Include="gameutils\LootMgr.cs" />
+    <Compile Include="gameutils\MerchantTradeItems.cs" />
+    <Compile Include="gameutils\Message.cs" />
+    <Compile Include="gameutils\Money.cs" />
+    <Compile Include="gameutils\MovementMgr.cs" />
+    <Compile Include="gameutils\NPCGuildScriptAttribute.cs" />
+    <Compile Include="gameutils\NpcTemplate.cs" />
+    <Compile Include="gameutils\NpcTemplateMgr.cs" />
+    <Compile Include="gameutils\PathPoint.cs" />
+    <Compile Include="gameutils\PlayerTradeWindow.cs" />
+    <Compile Include="gameutils\PropertyCollection.cs" />
+    <Compile Include="gameutils\RegionAction.cs" />
+    <Compile Include="gameutils\RegionTimer.cs" />
+    <Compile Include="gameutils\ScriptMgr.cs" />
+    <Compile Include="gameutils\SelfCraftWindow.cs" />
     <Compile Include="serverproperty\ServerPropertyAttribute.cs" />
-    <Compile Include="gameutils\SinglePermission.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\SkillBase.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\SkillConstants.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Specialization.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="gameutils\Util.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GlobalConstants.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="housing\House.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="housing\HouseMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="housing\HouseTemplateMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="housing\IndoorItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="housing\LotMarker.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="housing\OutdoorItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\AbstractGameKeep.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\GameKeep.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\GameKeepComponent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\Gameobjects\GameKeepBanner.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\Gameobjects\GameKeepDoor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\Gameobjects\Guards\GameKeepGuard.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\GameTower.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\HookPointInventory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\KeepHookPoint.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="keeps\KeepManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassArmsman.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassCabalist.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassCleric.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassFriar.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassHeretic.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassInfiltrator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassMercenary.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassMinstrel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassNecromancer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassPaladin.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassReaver.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassScout.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassSorcerer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassTheurgist.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\albion\ClassWizard.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassAcolyte.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassAlbionRogue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassDisciple.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassElementalist.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassFighter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassForester.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassGuardian.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassMage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassMagician.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassMidgardRogue.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassMystic.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassNaturalist.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassSeer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassStalker.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\base\ClassViking.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassAnimist.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassBainshee.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassBard.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassBlademaster.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassChampion.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassDruid.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassEldritch.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassEnchanter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassHero.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassMentalist.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassNightshade.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassRanger.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassValewalker.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassVampiir.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\hibernia\ClassWarden.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassBerserker.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassBonedancer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassHealer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassHunter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassRunemaster.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassSavage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassShadowblade.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassShaman.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassSkald.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassSpiritmaster.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassThane.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassValkyrie.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassWarlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playerclasses\midgard\ClassWarrior.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\ClearTitle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\EventPlayerTitle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\IPlayerTitle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\PlayerTitleMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="playertitles\SimplePlayerTitle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\ArcheryRangePercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\ArcherySpeedPercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\ArmorAbsorbtionCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\ArmorFactorCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\BlockChanceCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="gameutils\SinglePermission.cs" />
+    <Compile Include="gameutils\SkillBase.cs" />
+    <Compile Include="gameutils\SkillConstants.cs" />
+    <Compile Include="gameutils\Specialization.cs" />
+    <Compile Include="gameutils\Util.cs" />
+    <Compile Include="GlobalConstants.cs" />
+    <Compile Include="housing\House.cs" />
+    <Compile Include="housing\HouseMgr.cs" />
+    <Compile Include="housing\HouseTemplateMgr.cs" />
+    <Compile Include="housing\IndoorItem.cs" />
+    <Compile Include="housing\LotMarker.cs" />
+    <Compile Include="housing\OutdoorItem.cs" />
+    <Compile Include="keeps\AbstractGameKeep.cs" />
+    <Compile Include="keeps\GameKeep.cs" />
+    <Compile Include="keeps\GameKeepComponent.cs" />
+    <Compile Include="keeps\Gameobjects\GameKeepBanner.cs" />
+    <Compile Include="keeps\Gameobjects\GameKeepDoor.cs" />
+    <Compile Include="keeps\Gameobjects\Guards\GameKeepGuard.cs" />
+    <Compile Include="keeps\GameTower.cs" />
+    <Compile Include="keeps\HookPointInventory.cs" />
+    <Compile Include="keeps\KeepHookPoint.cs" />
+    <Compile Include="keeps\KeepManager.cs" />
+    <Compile Include="playerclasses\albion\ClassArmsman.cs" />
+    <Compile Include="playerclasses\albion\ClassCabalist.cs" />
+    <Compile Include="playerclasses\albion\ClassCleric.cs" />
+    <Compile Include="playerclasses\albion\ClassFriar.cs" />
+    <Compile Include="playerclasses\albion\ClassHeretic.cs" />
+    <Compile Include="playerclasses\albion\ClassInfiltrator.cs" />
+    <Compile Include="playerclasses\albion\ClassMercenary.cs" />
+    <Compile Include="playerclasses\albion\ClassMinstrel.cs" />
+    <Compile Include="playerclasses\albion\ClassNecromancer.cs" />
+    <Compile Include="playerclasses\albion\ClassPaladin.cs" />
+    <Compile Include="playerclasses\albion\ClassReaver.cs" />
+    <Compile Include="playerclasses\albion\ClassScout.cs" />
+    <Compile Include="playerclasses\albion\ClassSorcerer.cs" />
+    <Compile Include="playerclasses\albion\ClassTheurgist.cs" />
+    <Compile Include="playerclasses\albion\ClassWizard.cs" />
+    <Compile Include="playerclasses\base\ClassAcolyte.cs" />
+    <Compile Include="playerclasses\base\ClassAlbionRogue.cs" />
+    <Compile Include="playerclasses\base\ClassDisciple.cs" />
+    <Compile Include="playerclasses\base\ClassElementalist.cs" />
+    <Compile Include="playerclasses\base\ClassFighter.cs" />
+    <Compile Include="playerclasses\base\ClassForester.cs" />
+    <Compile Include="playerclasses\base\ClassGuardian.cs" />
+    <Compile Include="playerclasses\base\ClassMage.cs" />
+    <Compile Include="playerclasses\base\ClassMagician.cs" />
+    <Compile Include="playerclasses\base\ClassMidgardRogue.cs" />
+    <Compile Include="playerclasses\base\ClassMystic.cs" />
+    <Compile Include="playerclasses\base\ClassNaturalist.cs" />
+    <Compile Include="playerclasses\base\ClassSeer.cs" />
+    <Compile Include="playerclasses\base\ClassStalker.cs" />
+    <Compile Include="playerclasses\base\ClassViking.cs" />
+    <Compile Include="playerclasses\hibernia\ClassAnimist.cs" />
+    <Compile Include="playerclasses\hibernia\ClassBainshee.cs" />
+    <Compile Include="playerclasses\hibernia\ClassBard.cs" />
+    <Compile Include="playerclasses\hibernia\ClassBlademaster.cs" />
+    <Compile Include="playerclasses\hibernia\ClassChampion.cs" />
+    <Compile Include="playerclasses\hibernia\ClassDruid.cs" />
+    <Compile Include="playerclasses\hibernia\ClassEldritch.cs" />
+    <Compile Include="playerclasses\hibernia\ClassEnchanter.cs" />
+    <Compile Include="playerclasses\hibernia\ClassHero.cs" />
+    <Compile Include="playerclasses\hibernia\ClassMentalist.cs" />
+    <Compile Include="playerclasses\hibernia\ClassNightshade.cs" />
+    <Compile Include="playerclasses\hibernia\ClassRanger.cs" />
+    <Compile Include="playerclasses\hibernia\ClassValewalker.cs" />
+    <Compile Include="playerclasses\hibernia\ClassVampiir.cs" />
+    <Compile Include="playerclasses\hibernia\ClassWarden.cs" />
+    <Compile Include="playerclasses\midgard\ClassBerserker.cs" />
+    <Compile Include="playerclasses\midgard\ClassBonedancer.cs" />
+    <Compile Include="playerclasses\midgard\ClassHealer.cs" />
+    <Compile Include="playerclasses\midgard\ClassHunter.cs" />
+    <Compile Include="playerclasses\midgard\ClassRunemaster.cs" />
+    <Compile Include="playerclasses\midgard\ClassSavage.cs" />
+    <Compile Include="playerclasses\midgard\ClassShadowblade.cs" />
+    <Compile Include="playerclasses\midgard\ClassShaman.cs" />
+    <Compile Include="playerclasses\midgard\ClassSkald.cs" />
+    <Compile Include="playerclasses\midgard\ClassSpiritmaster.cs" />
+    <Compile Include="playerclasses\midgard\ClassThane.cs" />
+    <Compile Include="playerclasses\midgard\ClassValkyrie.cs" />
+    <Compile Include="playerclasses\midgard\ClassWarlock.cs" />
+    <Compile Include="playerclasses\midgard\ClassWarrior.cs" />
+    <Compile Include="playertitles\ClearTitle.cs" />
+    <Compile Include="playertitles\EventPlayerTitle.cs" />
+    <Compile Include="playertitles\IPlayerTitle.cs" />
+    <Compile Include="playertitles\PlayerTitleMgr.cs" />
+    <Compile Include="playertitles\SimplePlayerTitle.cs" />
+    <Compile Include="propertycalc\ArcheryRangePercentCalculator.cs" />
+    <Compile Include="propertycalc\ArcherySpeedPercentCalculator.cs" />
+    <Compile Include="propertycalc\ArmorAbsorbtionCalculator.cs" />
+    <Compile Include="propertycalc\ArmorFactorCalculator.cs" />
+    <Compile Include="propertycalc\BlockChanceCalculator.cs" />
     <Compile Include="propertycalc\DPSCalculator.cs" />
-    <Compile Include="propertycalc\EnduranceRegenerationRateCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\EvadeChanceCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\FatigueConsumptionPercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\FocusLevelCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\FumbleChanceCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\HealthRegenerationRateCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\IMultiplicativeProperties.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\IPropertyCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\IPropertyIndexer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\LivingEffectiveLevelCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\MaxConcentrationCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\MaxHealthCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\MaxManaCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\MaxSpeedCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\MeleeDamagePercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\MeleeSpeedPercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\MesmerizeDurationPercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\MultiplicativePropertiesHybrid.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\ParryChanceCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\PowerRegenerationRateCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\PropertyCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\PropertyCalculatorAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\PropertyIndexer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\RangedDamagePercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\ResistCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\SkillLevelCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\SpeedDecreaseDurationPercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\SpellRangePercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\StatCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="propertycalc\StunDurationPercentCalculator.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="propertycalc\EnduranceRegenerationRateCalculator.cs" />
+    <Compile Include="propertycalc\EvadeChanceCalculator.cs" />
+    <Compile Include="propertycalc\FatigueConsumptionPercentCalculator.cs" />
+    <Compile Include="propertycalc\FocusLevelCalculator.cs" />
+    <Compile Include="propertycalc\FumbleChanceCalculator.cs" />
+    <Compile Include="propertycalc\HealthRegenerationRateCalculator.cs" />
+    <Compile Include="propertycalc\IMultiplicativeProperties.cs" />
+    <Compile Include="propertycalc\IPropertyCalculator.cs" />
+    <Compile Include="propertycalc\IPropertyIndexer.cs" />
+    <Compile Include="propertycalc\LivingEffectiveLevelCalculator.cs" />
+    <Compile Include="propertycalc\MaxConcentrationCalculator.cs" />
+    <Compile Include="propertycalc\MaxHealthCalculator.cs" />
+    <Compile Include="propertycalc\MaxManaCalculator.cs" />
+    <Compile Include="propertycalc\MaxSpeedCalculator.cs" />
+    <Compile Include="propertycalc\MeleeDamagePercentCalculator.cs" />
+    <Compile Include="propertycalc\MeleeSpeedPercentCalculator.cs" />
+    <Compile Include="propertycalc\MesmerizeDurationPercentCalculator.cs" />
+    <Compile Include="propertycalc\MultiplicativePropertiesHybrid.cs" />
+    <Compile Include="propertycalc\ParryChanceCalculator.cs" />
+    <Compile Include="propertycalc\PowerRegenerationRateCalculator.cs" />
+    <Compile Include="propertycalc\PropertyCalculator.cs" />
+    <Compile Include="propertycalc\PropertyCalculatorAttribute.cs" />
+    <Compile Include="propertycalc\PropertyIndexer.cs" />
+    <Compile Include="propertycalc\RangedDamagePercentCalculator.cs" />
+    <Compile Include="propertycalc\ResistCalculator.cs" />
+    <Compile Include="propertycalc\SkillLevelCalculator.cs" />
+    <Compile Include="propertycalc\SpeedDecreaseDurationPercentCalculator.cs" />
+    <Compile Include="propertycalc\SpellRangePercentCalculator.cs" />
+    <Compile Include="propertycalc\StatCalculator.cs" />
+    <Compile Include="propertycalc\StunDurationPercentCalculator.cs" />
     <Compile Include="propertycalc\StyleDamagePercentCalculator.cs" />
     <Compile Include="propertycalc\TOABonusCalculator.cs" />
     <Compile Include="propertycalc\ToHitCalculator.cs" />
-    <Compile Include="quests\Tasks\AbstractTask.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\Tasks\CraftTask.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="quests\Tasks\AbstractTask.cs" />
+    <Compile Include="quests\Tasks\CraftTask.cs" />
     <Compile Include="behaviour\IBehaviourAction.cs" />
     <Compile Include="behaviour\IBehaviourRequirement.cs" />
     <Compile Include="behaviour\IBehaviourTrigger.cs" />
-    <Compile Include="quests\Tasks\KillTask.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="quests\Tasks\MoneyTask.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="quests\Tasks\KillTask.cs" />
+    <Compile Include="quests\Tasks\MoneyTask.cs" />
     <Compile Include="realmabilities\handlers\AvoidanceOfMagicAbility.cs" />
     <Compile Include="realmabilities\effects\TrueshotEffect.cs" />
     <Compile Include="realmabilities\effects\VanishEffect.cs" />
@@ -2008,36 +1380,16 @@
     <Compile Include="realmabilities\handlers\SerenityAbility.cs" />
     <Compile Include="realmabilities\handlers\TrueshotAbility.cs" />
     <Compile Include="realmabilities\handlers\WildPowerAbility.cs" />
-    <Compile Include="ResourceUtil.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="serverrules\AbstractServerRules.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="serverrules\DFEnterJumpPoint.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="serverrules\IJumpPointHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="serverrules\IServerRules.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="serverrules\NormalServerRules.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="serverrules\PvEServerRules.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="serverrules\PvPServerRules.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="serverrules\ServerRulesAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="skillhandler\BerserkAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ResourceUtil.cs" />
+    <Compile Include="serverrules\AbstractServerRules.cs" />
+    <Compile Include="serverrules\DFEnterJumpPoint.cs" />
+    <Compile Include="serverrules\IJumpPointHandler.cs" />
+    <Compile Include="serverrules\IServerRules.cs" />
+    <Compile Include="serverrules\NormalServerRules.cs" />
+    <Compile Include="serverrules\PvEServerRules.cs" />
+    <Compile Include="serverrules\PvPServerRules.cs" />
+    <Compile Include="serverrules\ServerRulesAttribute.cs" />
+    <Compile Include="skillhandler\BerserkAbilityHandler.cs" />
     <Compile Include="skillhandler\Climbing.cs" />
     <Compile Include="skillhandler\LevelBasedStatChangingAbility.cs" />
     <Compile Include="skillhandler\StatChangingAbility.cs" />
@@ -2049,57 +1401,29 @@
     <Compile Include="skillhandler\StealthersAbilitiesHandler.cs" />
     <Compile Include="skillhandler\TauntingShoutAbilityHandler.cs" />
     <Compile Include="skillhandler\VampiirBoltAbilityHandler.cs" />
-    <Compile Include="skillhandler\CriticalShotAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="skillhandler\DirtyTricksAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="skillhandler\EngageAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="skillhandler\CriticalShotAbilityHandler.cs" />
+    <Compile Include="skillhandler\DirtyTricksAbilityHandler.cs" />
+    <Compile Include="skillhandler\EngageAbilityHandler.cs" />
     <Compile Include="skillhandler\FlurryAbilityHandler.cs" />
-    <Compile Include="skillhandler\GuardAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="skillhandler\InterceptAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="skillhandler\GuardAbilityHandler.cs" />
+    <Compile Include="skillhandler\InterceptAbilityHandler.cs" />
     <Compile Include="realmabilities\handlers\MasteryOfStealthAbility.cs" />
     <Compile Include="skillhandler\PropertyChangingAbility.cs" />
-    <Compile Include="skillhandler\ProtectAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="skillhandler\QuickCastAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="skillhandler\RapidFireAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="skillhandler\ProtectAbilityHandler.cs" />
+    <Compile Include="skillhandler\QuickCastAbilityHandler.cs" />
+    <Compile Include="skillhandler\RapidFireAbilityHandler.cs" />
     <Compile Include="skillhandler\SpellCastingAbilityHandler.cs" />
-    <Compile Include="skillhandler\SprintAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="skillhandler\StagAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="skillhandler\StealthSpecHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="skillhandler\SureShotAbilityHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="skillhandler\SprintAbilityHandler.cs" />
+    <Compile Include="skillhandler\StagAbilityHandler.cs" />
+    <Compile Include="skillhandler\StealthSpecHandler.cs" />
+    <Compile Include="skillhandler\SureShotAbilityHandler.cs" />
     <Compile Include="realmabilities\handlers\VanishAbility.cs" />
     <Compile Include="skillhandler\TripleWieldAbilityHandler.cs" />
     <Compile Include="skillhandler\VampiirAbilities.cs" />
-    <Compile Include="spells\AblativeArmorSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\AblativeArmorSpellHandler.cs" />
     <Compile Include="spells\AfHitsBuff.cs" />
     <Compile Include="spells\AllStatsBuff.cs" />
-    <Compile Include="spells\AmnesiaSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\AmnesiaSpellHandler.cs" />
     <Compile Include="spells\Animist\PetPBAoE.cs" />
     <Compile Include="spells\Animist\SummonAnimistFnF.cs" />
     <Compile Include="spells\Animist\SummonAnimistMainPet.cs" />
@@ -2119,8 +1443,7 @@
     <Compile Include="spells\Artifacts\Belt of Sun.cs" />
     <Compile Include="spells\Artifacts\bracerofzo.cs" />
     <Compile Include="spells\Artifacts\CeremonialBracer.cs" />
-    <Compile Include="spells\Artifacts\Cloudsong.cs">
-    </Compile>
+    <Compile Include="spells\Artifacts\Cloudsong.cs" />
     <Compile Include="spells\Artifacts\CombineScrolls.cs" />
     <Compile Include="spells\Artifacts\CommonArtifactSpells.cs" />
     <Compile Include="spells\Artifacts\DreamSphere.cs" />
@@ -2135,8 +1458,7 @@
     <Compile Include="spells\Artifacts\BandofStars.cs" />
     <Compile Include="spells\Artifacts\ShadesOfMist.cs" />
     <Compile Include="spells\Artifacts\SnakeCharmersWeapon.cs" />
-    <Compile Include="spells\Artifacts\StyleDmgAbs.cs">
-    </Compile>
+    <Compile Include="spells\Artifacts\StyleDmgAbs.cs" />
     <Compile Include="spells\Artifacts\TartarosGift.cs" />
     <Compile Include="spells\Artifacts\TraitorsDagger.cs" />
     <Compile Include="spells\Artifacts\Traldor.cs" />
@@ -2147,34 +1469,20 @@
     <Compile Include="spells\negative\FearSpellHandler.cs" />
     <Compile Include="spells\negative\FriendBrain.cs" />
     <Compile Include="spells\Bainshee\RangeShield.cs" />
-    <Compile Include="spells\BladeturnSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\BladeturnSpellHandler.cs" />
     <Compile Include="spells\BolsteringRoarSpellHandler.cs" />
-    <Compile Include="spells\BoltSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\BoltSpellHandler.cs" />
     <Compile Include="spells\Animist\BomberSpellHandler.cs" />
     <Compile Include="spells\Bonedancer\SummonCommanderPet.cs" />
-    <Compile Include="spells\BuffShear.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\BuffShear.cs" />
     <Compile Include="spells\buff\SingleStatAbilityBuffHandler.cs" />
     <Compile Include="spells\Cabalist\SummonSimulacrum.cs" />
-    <Compile Include="spells\CCSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\CharmSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\CCSpellHandler.cs" />
+    <Compile Include="spells\CharmSpellHandler.cs" />
     <Compile Include="spells\CommonAstralSpells.cs" />
     <Compile Include="spells\Fury.cs" />
-    <Compile Include="spells\CombatHealSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ConcentrationList.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\CombatHealSpellHandler.cs" />
+    <Compile Include="spells\ConcentrationList.cs" />
     <Compile Include="spells\ConfusionSpellHandler.cs" />
     <Compile Include="spells\Conversion.cs" />
     <Compile Include="spells\ConvertPet.cs" />
@@ -2244,9 +1552,7 @@
     <Compile Include="spells\Teleport\UniPortal.cs" />
     <Compile Include="spells\Valkyrie\FrontalAOEConeHandler.cs" />
     <Compile Include="spells\Valkyrie\ValkyrieProc.cs" />
-    <Compile Include="spells\Vampiir\VampArmorDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\Vampiir\VampArmorDebuff.cs" />
     <Compile Include="spells\Vampiir\VampiirEffectivenessDeBuff.cs" />
     <Compile Include="spells\EnduranceDrainSpellHandler.cs" />
     <Compile Include="spells\Vampiir\VampiirPowerBolt.cs" />
@@ -2262,364 +1568,132 @@
     <Compile Include="spells\Warlock\UninterruptableSpellHandler.cs" />
     <Compile Include="spells\Warlock\WarlockSpeedDecreaseSpellHandler.cs" />
     <Compile Include="spells\WaterBreathingSpellHandler.cs" />
-    <Compile Include="spells\CureDiseaseSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\Curemezz.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\CureDiseaseSpellHandler.cs" />
+    <Compile Include="spells\Curemezz.cs" />
     <Compile Include="spells\CureNearsight.cs" />
-    <Compile Include="spells\CurePoisonSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DamageAddAndShield.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DamageSpeedDecrease.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DirectDamageDebuffSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DirectDamageSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DiseaseSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DoTSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DualStatBuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DualStatDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\HealSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\HoTSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\IllnessSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ImmunityEffectSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ISpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\LifedrainSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\LifeTransferSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\NearsightSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ProcSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\PropertyChangingSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\RegenBuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\RemoveSpellEffectHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ResistBuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ResistDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ResurrectSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SingleStatBuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SingleStatDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SpeedDecreaseSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SpeedEnhancementSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\Spell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SpellHandlerAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SpreadhealSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\StyleBleeding.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\StyleCombatSpeedDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\StyleSpeedDecrease.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\StyleStun.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SummonSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\TauntSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\UnbreakableSpeedDecreaseSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="styles\Style.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="styles\StyleProcessor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\AcolyteTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="spells\CurePoisonSpellHandler.cs" />
+    <Compile Include="spells\DamageAddAndShield.cs" />
+    <Compile Include="spells\DamageSpeedDecrease.cs" />
+    <Compile Include="spells\DirectDamageDebuffSpellHandler.cs" />
+    <Compile Include="spells\DirectDamageSpellHandler.cs" />
+    <Compile Include="spells\DiseaseSpellHandler.cs" />
+    <Compile Include="spells\DoTSpellHandler.cs" />
+    <Compile Include="spells\DualStatBuff.cs" />
+    <Compile Include="spells\DualStatDebuff.cs" />
+    <Compile Include="spells\HealSpellHandler.cs" />
+    <Compile Include="spells\HoTSpellHandler.cs" />
+    <Compile Include="spells\IllnessSpellHandler.cs" />
+    <Compile Include="spells\ImmunityEffectSpellHandler.cs" />
+    <Compile Include="spells\ISpellHandler.cs" />
+    <Compile Include="spells\LifedrainSpellHandler.cs" />
+    <Compile Include="spells\LifeTransferSpellHandler.cs" />
+    <Compile Include="spells\NearsightSpellHandler.cs" />
+    <Compile Include="spells\ProcSpellHandler.cs" />
+    <Compile Include="spells\PropertyChangingSpell.cs" />
+    <Compile Include="spells\RegenBuff.cs" />
+    <Compile Include="spells\RemoveSpellEffectHandler.cs" />
+    <Compile Include="spells\ResistBuff.cs" />
+    <Compile Include="spells\ResistDebuff.cs" />
+    <Compile Include="spells\ResurrectSpellHandler.cs" />
+    <Compile Include="spells\SingleStatBuff.cs" />
+    <Compile Include="spells\SingleStatDebuff.cs" />
+    <Compile Include="spells\SpeedDecreaseSpellHandler.cs" />
+    <Compile Include="spells\SpeedEnhancementSpellHandler.cs" />
+    <Compile Include="spells\Spell.cs" />
+    <Compile Include="spells\SpellHandler.cs" />
+    <Compile Include="spells\SpellHandlerAttribute.cs" />
+    <Compile Include="spells\SpreadhealSpellHandler.cs" />
+    <Compile Include="spells\StyleBleeding.cs" />
+    <Compile Include="spells\StyleCombatSpeedDebuff.cs" />
+    <Compile Include="spells\StyleSpeedDecrease.cs" />
+    <Compile Include="spells\StyleStun.cs" />
+    <Compile Include="spells\SummonSpellHandler.cs" />
+    <Compile Include="spells\TauntSpellHandler.cs" />
+    <Compile Include="spells\UnbreakableSpeedDecreaseSpellHandler.cs" />
+    <Compile Include="styles\Style.cs" />
+    <Compile Include="styles\StyleProcessor.cs" />
+    <Compile Include="trainer\albion\AcolyteTrainer.cs" />
     <Compile Include="trainer\albion\AlbionMaulerTrainer.cs" />
-    <Compile Include="trainer\albion\AlbionRogueTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\ArmsmanTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\CabalistTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\ClericTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\DiscipleTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\ElementalistTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\FighterTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\FriarTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\HereticTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\InfiltratorTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\MageTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\MercenaryTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\MinstrelTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\NecromancerTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\PaladinTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\ReaverTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\ScoutTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\SorcererTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\TheurgistTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\albion\WizardTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\AnimistTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\BainsheeTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\BardTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\BlademasterTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\ChampionTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\DruidTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\EldritchTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\EnchanterTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\ForesterTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\GuardianTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\HeroTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="trainer\albion\AlbionRogueTrainer.cs" />
+    <Compile Include="trainer\albion\ArmsmanTrainer.cs" />
+    <Compile Include="trainer\albion\CabalistTrainer.cs" />
+    <Compile Include="trainer\albion\ClericTrainer.cs" />
+    <Compile Include="trainer\albion\DiscipleTrainer.cs" />
+    <Compile Include="trainer\albion\ElementalistTrainer.cs" />
+    <Compile Include="trainer\albion\FighterTrainer.cs" />
+    <Compile Include="trainer\albion\FriarTrainer.cs" />
+    <Compile Include="trainer\albion\HereticTrainer.cs" />
+    <Compile Include="trainer\albion\InfiltratorTrainer.cs" />
+    <Compile Include="trainer\albion\MageTrainer.cs" />
+    <Compile Include="trainer\albion\MercenaryTrainer.cs" />
+    <Compile Include="trainer\albion\MinstrelTrainer.cs" />
+    <Compile Include="trainer\albion\NecromancerTrainer.cs" />
+    <Compile Include="trainer\albion\PaladinTrainer.cs" />
+    <Compile Include="trainer\albion\ReaverTrainer.cs" />
+    <Compile Include="trainer\albion\ScoutTrainer.cs" />
+    <Compile Include="trainer\albion\SorcererTrainer.cs" />
+    <Compile Include="trainer\albion\TheurgistTrainer.cs" />
+    <Compile Include="trainer\albion\WizardTrainer.cs" />
+    <Compile Include="trainer\hibernia\AnimistTrainer.cs" />
+    <Compile Include="trainer\hibernia\BainsheeTrainer.cs" />
+    <Compile Include="trainer\hibernia\BardTrainer.cs" />
+    <Compile Include="trainer\hibernia\BlademasterTrainer.cs" />
+    <Compile Include="trainer\hibernia\ChampionTrainer.cs" />
+    <Compile Include="trainer\hibernia\DruidTrainer.cs" />
+    <Compile Include="trainer\hibernia\EldritchTrainer.cs" />
+    <Compile Include="trainer\hibernia\EnchanterTrainer.cs" />
+    <Compile Include="trainer\hibernia\ForesterTrainer.cs" />
+    <Compile Include="trainer\hibernia\GuardianTrainer.cs" />
+    <Compile Include="trainer\hibernia\HeroTrainer.cs" />
     <Compile Include="trainer\hibernia\HiberniaMaulerTrainer.cs" />
-    <Compile Include="trainer\hibernia\MagicianTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\MentalistTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\NaturalistTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\NightshadeTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\RangerTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\StalkerTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\ValewalkerTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\VampiirrTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\hibernia\WardenTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\BerserkerTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\BonedancerTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\HealerTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\HunterTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="trainer\hibernia\MagicianTrainer.cs" />
+    <Compile Include="trainer\hibernia\MentalistTrainer.cs" />
+    <Compile Include="trainer\hibernia\NaturalistTrainer.cs" />
+    <Compile Include="trainer\hibernia\NightshadeTrainer.cs" />
+    <Compile Include="trainer\hibernia\RangerTrainer.cs" />
+    <Compile Include="trainer\hibernia\StalkerTrainer.cs" />
+    <Compile Include="trainer\hibernia\ValewalkerTrainer.cs" />
+    <Compile Include="trainer\hibernia\VampiirrTrainer.cs" />
+    <Compile Include="trainer\hibernia\WardenTrainer.cs" />
+    <Compile Include="trainer\midgard\BerserkerTrainer.cs" />
+    <Compile Include="trainer\midgard\BonedancerTrainer.cs" />
+    <Compile Include="trainer\midgard\HealerTrainer.cs" />
+    <Compile Include="trainer\midgard\HunterTrainer.cs" />
     <Compile Include="trainer\midgard\MidgardMaulerTrainer.cs" />
-    <Compile Include="trainer\midgard\MidgardRogueTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\MysticTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\RunemasterTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\SavageTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\SeerTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\ShadowbladeTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\ShamanTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\SkaldTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\SpiritmasterTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\ThaneTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\ValkyrieTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\VikingTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\WarlockTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="trainer\midgard\WarriorTrainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\AbstractArea.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\Area.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\AreaMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\GameLocation.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\IArea.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\IGameLocation.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="trainer\midgard\MidgardRogueTrainer.cs" />
+    <Compile Include="trainer\midgard\MysticTrainer.cs" />
+    <Compile Include="trainer\midgard\RunemasterTrainer.cs" />
+    <Compile Include="trainer\midgard\SavageTrainer.cs" />
+    <Compile Include="trainer\midgard\SeerTrainer.cs" />
+    <Compile Include="trainer\midgard\ShadowbladeTrainer.cs" />
+    <Compile Include="trainer\midgard\ShamanTrainer.cs" />
+    <Compile Include="trainer\midgard\SkaldTrainer.cs" />
+    <Compile Include="trainer\midgard\SpiritmasterTrainer.cs" />
+    <Compile Include="trainer\midgard\ThaneTrainer.cs" />
+    <Compile Include="trainer\midgard\ValkyrieTrainer.cs" />
+    <Compile Include="trainer\midgard\VikingTrainer.cs" />
+    <Compile Include="trainer\midgard\WarlockTrainer.cs" />
+    <Compile Include="trainer\midgard\WarriorTrainer.cs" />
+    <Compile Include="world\AbstractArea.cs" />
+    <Compile Include="world\Area.cs" />
+    <Compile Include="world\AreaMgr.cs" />
+    <Compile Include="world\GameLocation.cs" />
+    <Compile Include="world\IArea.cs" />
+    <Compile Include="world\IGameLocation.cs" />
     <Compile Include="world\Instance\AdventureWingInstance.cs" />
     <Compile Include="world\Instance\BaseInstance.cs" />
     <Compile Include="world\Instance\Instance.cs" />
     <Compile Include="world\Instance\RegionInstance.cs" />
-    <Compile Include="world\IPoint2D.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\IPoint3D.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\Point2D.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\Point3D.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\Region.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="world\RegionData.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="world\IPoint2D.cs" />
+    <Compile Include="world\IPoint3D.cs" />
+    <Compile Include="world\Point2D.cs" />
+    <Compile Include="world\Point3D.cs" />
+    <Compile Include="world\Region.cs" />
+    <Compile Include="world\RegionData.cs" />
     <Compile Include="world\TeleportArea.cs" />
-    <Compile Include="world\WorldMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="world\WorldMgr.cs" />
     <Compile Include="world\WorldUpdateThread.cs" />
-    <Compile Include="world\Zone.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="world\Zone.cs" />
     <Compile Include="world\ZoneBonus.cs" />
     <Compile Include="world\ZoneData.cs" />
     <Compile Include="world\ZonePointEffects.cs" />
