@@ -60,9 +60,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.101.0" PrivateAssets="All" />
-    <PackageReference Include="log4net" Version="2.0.4" PrivateAssets="All" />
-    <PackageReference Include="MySql.Data" Version="6.9.8" PrivateAssets="All" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.6" PrivateAssets="all" />
+    <PackageReference Include="log4net" Version="2.0.12" PrivateAssets="all" />
+    <PackageReference Include="MySql.Data" Version="8.0.22" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />

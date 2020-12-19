@@ -74,8 +74,8 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.101.0" ExcludeAssets="All" />
-    <PackageReference Include="MySql.Data" Version="6.9.8" ExcludeAssets="Runtime" />
+    <PackageReference Include="MySql.Data" Version="8.0.22" ExcludeAssets="Runtime" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.6" ExcludeAssets="All" Condition=" '$(OS)' != 'Unix' " />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DOLConfig.cs" SubType="Form" />

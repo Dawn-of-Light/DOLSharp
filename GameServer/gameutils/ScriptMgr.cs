@@ -540,6 +540,7 @@ namespace DOL.GS
 				param.WarningLevel = 2;
 				param.CompilerOptions = string.Format("/optimize /lib:.{0}lib", Path.DirectorySeparatorChar);
 				param.ReferencedAssemblies.Add("System.Core.dll");
+				param.ReferencedAssemblies.Add("netstandard.dll");
 
 				string[] filepaths = new string[files.Count];
 				for (int i = 0; i < files.Count; i++)
