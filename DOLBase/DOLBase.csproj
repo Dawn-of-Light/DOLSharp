@@ -7,8 +7,6 @@
     <ProjectGuid>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
     <AssemblyName>DOLBase</AssemblyName>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
@@ -17,10 +15,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>DOL</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
     <SignAssembly>False</SignAssembly>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -29,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
     <RunCodeAnalysis>False</RunCodeAnalysis>
-    <TargetFrameworkProfile />
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <IntermediateOutputPath>..\build\DOLBase\$(Configuration)\obj\</IntermediateOutputPath>
     <NoWin32Manifest>False</NoWin32Manifest>

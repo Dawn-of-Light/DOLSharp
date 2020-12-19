@@ -4,13 +4,13 @@ sudo: false # Use container-based infrastructure
 
 env:
   matrix:
-   - XBUILD_TARGET=Debug
-   - XBUILD_TARGET=Release
+   - BUILD_TARGET=Debug
+   - BUILD_TARGET=Release
 
 install:
- - travis_retry nuget restore
+ - travis_retry Configuration=$BUILD_TARGET nuget restore
  - travis_retry nuget install NUnit.Console -Version 3.11.1 -OutputDirectory test -ExcludeVersion
 script:
- - MONO_IOMAP=case xbuild /p:Configuration=$XBUILD_TARGET "Dawn of Light.sln"
- - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/Tests/$XBUILD_TARGET/lib/Tests.dll --where "namespace =~ 'DOL.UnitTests' and category!='Explicit'"
- - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/Tests/$XBUILD_TARGET/lib/Tests.dll --where "namespace =~ 'DOL.Integration' and category!='Explicit'"
+ - MONO_IOMAP=case msbuild /p:Configuration=$BUILD_TARGET "Dawn of Light.sln"
+ - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/Tests/$BUILD_TARGET/lib/Tests.dll --where "namespace =~ 'DOL.UnitTests' and category!='Explicit'"
+ - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/Tests/$BUILD_TARGET/lib/Tests.dll --where "namespace =~ 'DOL.Integration' and category!='Explicit'"

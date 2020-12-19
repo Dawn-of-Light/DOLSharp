@@ -76,6 +76,9 @@
     <Reference Include="System.Xml.Linq" />
     <PackageReference Include="MySql.Data" Version="8.0.22" ExcludeAssets="Runtime" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.6" ExcludeAssets="All" Condition=" '$(OS)' != 'Unix' " />
+    <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
+      <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DOLConfig.cs" SubType="Form" />
