@@ -123,6 +123,7 @@
     <Reference Include="System.Xml.Linq" />
     <PackageReference Include="log4net" Version="2.0.4" />
     <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.101.0" />
     <Compile Include="IntegrationTests\GameServer\gameutils\InventoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
