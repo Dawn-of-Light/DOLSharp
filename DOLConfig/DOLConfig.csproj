@@ -1,6 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project>
   <PropertyGroup>
+    <BaseIntermediateOutputPath>..\build\DOLConfig\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
@@ -9,7 +13,6 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>DOLConfig</RootNamespace>
     <AssemblyName>DOLConfig</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>4096</FileAlignment>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -35,26 +38,25 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
-    <TargetFrameworkProfile />
     <NoWin32Manifest>False</NoWin32Manifest>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <OutputPath>..\$(Configuration)\</OutputPath>
-    <BaseIntermediateOutputPath>..\build\DOLConfig\$(Configuration)\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>..\build\DOLConfig\$(Configuration)\obj</IntermediateOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>False</Optimize>
     <DebugType>Full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <ErrorReport>prompt</ErrorReport>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>None</DebugType>
-    <ErrorReport>prompt</ErrorReport>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
@@ -64,39 +66,21 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
     <PackageReference Include="MySql.Data" Version="8.0.22" ExcludeAssets="Runtime" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.6" ExcludeAssets="All" Condition=" '$(OS)' != 'Unix' " />
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
       <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="False" ExcludeAssets="All" />
+    <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" Private="False" ExcludeAssets="All" />
+    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="False" ExcludeAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DOLConfig.cs" SubType="Form" />
-    <Compile Include="DOLConfig.Designer.cs" DependentUpon="DOLConfig.cs" />
-    <Compile Include="DOLConfigParser.cs" />
-    <Compile Include="Resources1.Designer.cs" AutoGen="True" DesignTime="True" DependentUpon="Resources.resx" />
-    <Compile Include="ServerProperties.cs" SubType="Form" />
-    <Compile Include="ExtraPropertiesEditor.cs" SubType="Form" />
-    <Compile Include="ExtraPropertiesEditor.Designer.cs" DependentUpon="ExtraPropertiesEditor.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="RegExTextBox.cs" SubType="Component" />
-    <Compile Include="RegExTextBox.designer.cs" DependentUpon="RegExTextBox.cs" />
-    <EmbeddedResource Include="DOLConfig.resx" SubType="Designer" DependentUpon="DOLConfig.cs" />
-    <EmbeddedResource Include="ExtraPropertiesEditor.resx" SubType="Designer" DependentUpon="ExtraPropertiesEditor.cs" />
-    <EmbeddedResource Include="Resources.resx" SubType="Designer" Generator="ResXFileCodeGenerator" LastGenOutput="Resources1.Designer.cs" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Update="DOLConfig.cs" />
+    <Compile Update="ExtraPropertiesEditor.cs" />
+    <Compile Update="RegExTextBox.cs" />
+    <Compile Update="ServerProperties.cs" />
     <None Include="app.config" />
     <None Include="serverconfig_extraproperties.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -104,67 +88,21 @@
     <Content Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <ProjectReference Include="..\DOLBase\DOLBase.csproj">
-      <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
-      <Name>DOLBase</Name>
-      <Private>False</Private>
-      <ExcludeAssets>All</ExcludeAssets>
-    </ProjectReference>
-    <ProjectReference Include="..\GameServer\GameServer.csproj">
-      <Project>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</Project>
-      <Name>GameServer</Name>
-      <Private>False</Private>
-      <ExcludeAssets>All</ExcludeAssets>
-    </ProjectReference>
-    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
-      <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
-      <Name>DOLDatabase</Name>
-      <Private>False</Private>
-      <ExcludeAssets>All</ExcludeAssets>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5" Visible="False" ProductName=".NET Framework 3.5 SP1 Client Profile" Install="false" />
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0" Visible="False" ProductName=".NET Framework 2.0 %28x86%29" Install="false" />
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0" Visible="False" ProductName=".NET Framework 3.0 %28x86%29" Install="false" />
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5" Visible="False" ProductName=".NET Framework 3.5" Install="true" />
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1" Visible="False" ProductName=".NET Framework 3.5 SP1" Install="false" />
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1" Visible="False" ProductName="Windows Installer 3.1" Install="true" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DOLConfig.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Graveen: the following is replacing the rev number in the asembly.info file by the SVN rev number of the current project. -->
   <!-- You must work on project under SVN version control, have msbuild community tasks assemblies installed and subversion client -->
   <!-- The path of the tools should either be corrected below, or matched. In case you lack one of theses prereqs, rev number 'll not be changed. -->
-  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\')" />
   <Target Name="BeforeBuild">
     <SvnVersion LocalPath="." Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')">
       <Output TaskParameter="Revision" PropertyName="Revision" />
@@ -172,9 +110,10 @@
     <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)*.xml" "$(ProjectDir)..\$(ConfigurationName)\lib\config" /y /s /q /i
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(MSBuildProjectDirectory)\*.xml" "$(MSBuildProjectDirectory)\..\$(Configuration)\lib\config" /y /s /q /i
 </PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cd "$(ProjectDir)"; mkdir -p "$(ProjectDir)../$(ConfigurationName)/lib/config"; find ./ -name "*.xml" | xargs -i -t cp --parents -f {} "$(ProjectDir)../$(ConfigurationName)/lib/config/"
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cd "$(MSBuildProjectDirectory)/"; mkdir -p "$(MSBuildProjectDirectory)/../$(Configuration)/lib/config"; find ./ -name "*.xml" | xargs -i -t cp --parents -f {} "$(MSBuildProjectDirectory)/../$(Configuration)/lib/config/"
 </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

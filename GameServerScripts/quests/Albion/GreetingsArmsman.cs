@@ -20,7 +20,6 @@ using System;
 using DOL.Database;
 using DOL.Events;
 using DOL.Language;
-using System;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
