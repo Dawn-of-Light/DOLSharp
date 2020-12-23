@@ -213,7 +213,7 @@ namespace DOL.MPK
 					file.Header.Offset = offset;
 					files[index] = file;
 
-					using (var wrtr = new BinaryWriter(dirmem, Encoding.UTF8))
+					using (var wrtr = new BinaryWriter(dirmem, Encoding.UTF8, true))
 					{
 						file.Header.Write(wrtr);
 					}

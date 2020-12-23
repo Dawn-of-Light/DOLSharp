@@ -126,7 +126,7 @@ namespace DOL.MPK
 			def.Finish();
 
 			// create temporary buffer
-			var tempbuffer = new byte[_buf.Length + _buf.Length / 5];
+			var tempbuffer = new byte[_buf.Length + _buf.Length / 5 + 3];
 			_hdr.CompressedSize = (uint)def.Deflate(tempbuffer, 0, tempbuffer.Length);
 
 			_compBuf = new byte[_hdr.CompressedSize];
