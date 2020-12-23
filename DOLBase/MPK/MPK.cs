@@ -118,9 +118,9 @@ namespace DOL.MPK
 		{
 			get
 			{
-				if (_files.ContainsKey(fname.ToLower()))
+				if (_files.ContainsKey(fname))
 				{
-					return _files[fname.ToLower()];
+					return _files[fname];
 				}
 
 				return null;
@@ -251,7 +251,7 @@ namespace DOL.MPK
 			{
 				using (var wrtr = new BinaryWriter(filemem, Encoding.UTF8))
 				{
-					wrtr.Write((int) CRCValue);
+					wrtr.Write((uint) CRCValue);
 					wrtr.Write(_sizeDir);
 					wrtr.Write(_sizeName);
 					wrtr.Write(_numFiles);
@@ -356,10 +356,10 @@ namespace DOL.MPK
 				buf[i] ^= i;
 			}
 
-			CRCValue = ((buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3]);
-			_sizeDir = ((buf[4] << 24) | (buf[5] << 16) | (buf[6] << 8) | buf[7]);
-			_sizeName = ((buf[8] << 24) | (buf[9] << 16) | (buf[10] << 8) | buf[11]);
-			_numFiles = ((buf[12] << 24) | (buf[13] << 16) | (buf[14] << 8) | buf[15]);
+			CRCValue = ((uint)buf[3] << 24) + (buf[2] << 16) + (buf[1] << 8) + buf[0];
+			_sizeDir = (buf[7] << 24) + (buf[6] << 16) + (buf[5] << 8) + buf[4];
+			_sizeName = (buf[11] << 24) + (buf[10] << 16) + (buf[9] << 8) + buf[8];
+			_numFiles = (buf[15] << 24) + (buf[14] << 16) + (buf[13] << 8) + buf[12];
 
 			buf = new byte[_sizeName];
 			rdr.Read(buf, 0, _sizeName);
