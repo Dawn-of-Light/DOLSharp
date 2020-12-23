@@ -1845,6 +1845,30 @@ namespace DOL.GS.ServerProperties
 
 		#region PVE / TOA
 		/// <summary>
+		/// Allow currency exchange?
+		/// </summary>
+		[ServerProperty("pve", "currency_exchange_allow", "Allow players to exchange aurulite/blood seals/glass/scales by giving them to a merchant who takes the desired currency, i.e. you can give glass to dragon merchants to get scales?", true)]
+		public static bool CURRENCY_EXCHANGE_ALLOW;
+
+		/// <summary>
+		/// Currency exchange values, i.e. you need 10 aurulite to get 1 dragon scale.
+		/// </summary>
+		[ServerProperty("pve", "currency_exchange_values", "Value of special currencies for currency conversion.", "atlanteanglass|1;aurulite|4;dragonscales|40;BloodSeal|1000")]
+		public static string CURRENCY_EXCHANGE_VALUES;
+
+		/// <summary>
+		/// Allow currencies to be exchanged for BPs?
+		/// </summary>
+		[ServerProperty("pve", "bp_exchange_allow", "Allow players to exchange special currencies for BPs by giving them to BP merchants?", true)]
+		public static bool BP_EXCHANGE_ALLOW;
+
+		/// <summary>
+		/// BP exchange values.  Each item grants x BPs.
+		/// </summary>
+		[ServerProperty("pve", "bp_exchange_values", "Value of special currencies in BPs.", "atlanteanglass|1;aurulite|4;dragonscales|40;BloodSeal|1000")]
+		public static string BP_EXCHANGE_VALUES;
+
+		/// <summary>
 		/// Initial percent chance of a mob BAFing for a single attacker
 		/// </summary>
 		[ServerProperty("pve", "baf_initial_chance", "Percent chance for a mob to bring a friend when attacked by a single attacker.  Each multiples of 100 guarantee an add, so a cumulative chance of 250% guarantees two adds with a 50% chance of a third.", 0)]
