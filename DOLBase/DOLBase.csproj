@@ -1,60 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project>
   <PropertyGroup>
+    <BaseIntermediateOutputPath>..\build\DOLBase\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
-    <AssemblyName>DOLBase</AssemblyName>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
     <DelaySign>False</DelaySign>
     <OutputType>Library</OutputType>
-    <RootNamespace>DOL</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
     <SignAssembly>False</SignAssembly>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion Condition=" '$(OS)' != 'Unix' ">v4.5.1</TargetFrameworkVersion>
-    <TargetFrameworkVersion Condition=" '$(OS)' == 'Unix' ">v4.5</TargetFrameworkVersion>
-    <SourceAnalysisOverrideSettingsFile>D:\DOL\Svn DoL\DOLBase\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
-    <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
     <RunCodeAnalysis>False</RunCodeAnalysis>
-    <TargetFrameworkProfile />
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <IntermediateOutputPath>..\build\DOLBase\$(Configuration)\obj\</IntermediateOutputPath>
     <NoWin32Manifest>False</NoWin32Manifest>
     <OutputPath>..\$(Configuration)\lib\</OutputPath>
-    <BaseIntermediateOutputPath>..\build\DOLBase\$(Configuration)\</BaseIntermediateOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <StartAction>Project</StartAction>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>False</Optimize>
     <DebugType>Full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
@@ -64,96 +52,17 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <PackageReference Include="SharpZipLib" Version="1.3.1" PrivateAssets="all" />
+    <PackageReference Include="log4net" Version="2.0.12" PrivateAssets="all" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Config\BaseServerConfiguration.cs" />
-    <Compile Include="Config\ConfigElement.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Config\XMLConfigFile.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Constants.cs" />
-    <Compile Include="FTP\FTPAsynchronousConnection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FTP\FTPConnection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FTP\FTPFile.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FTP\FTPFileTransferType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FTP\FTPMode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Marshal.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MPK\MPK.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MPK\MPKFile.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MPK\MPKFileHeader.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Network\BaseClient.cs" />
-    <Compile Include="Network\BaseServer.cs" />
-    <Compile Include="Network\IPacket.cs" />
-    <Compile Include="Network\PacketIn.cs" />
-    <Compile Include="Network\PacketOut.cs" />
-    <Compile Include="Network\UPnPNat.cs" />
-    <Compile Include="Statistics.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Threading\SpinWaitLock.cs" />
-    <Compile Include="WeakMulticastDelegate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="WeakRef.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- Graveen: the following is replacing the rev number in the AssemblyInfo.cs file by the SVN rev number of the current project. -->
   <!-- You must work on project under SVN version control, have msbuild community tasks assemblies installed and subversion client -->
   <!-- The path of the tools should either be corrected below, or matched. In case you lack one of theses prereqs, rev number 'll not be changed. -->
-  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\')" />
   <Target Name="BeforeBuild">
     <SvnVersion LocalPath="." Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')">
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnVersion>
     <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
   </Target>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

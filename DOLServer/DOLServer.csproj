@@ -1,6 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project>
   <PropertyGroup>
+    <BaseIntermediateOutputPath>..\build\DOLServer\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -8,8 +12,6 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
     <AssemblyName>DOLServer</AssemblyName>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
@@ -18,26 +20,19 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>DOLServer</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion Condition=" '$(OS)' != 'Unix' ">v4.5.1</TargetFrameworkVersion>
-    <TargetFrameworkVersion Condition=" '$(OS)' == 'Unix' ">v4.5</TargetFrameworkVersion>
-    <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\RedFish\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <SignAssembly>False</SignAssembly>
-    <TargetFrameworkProfile />
     <NoWin32Manifest>False</NoWin32Manifest>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <OutputPath>..\$(Configuration)\</OutputPath>
-    <BaseIntermediateOutputPath>..\build\DOLServer\$(Configuration)\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>..\build\DOLServer\$(Configuration)\obj\</IntermediateOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -63,115 +58,28 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.Configuration.Install">
-      <Name>System.Configuration.Install</Name>
-    </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.ServiceProcess">
-      <Name>System.ServiceProcess</Name>
-    </Reference>
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
-    <ProjectReference Include="..\DOLBase\DOLBase.csproj">
-      <Name>DOLBase</Name>
-      <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
-      <Name>DOLDatabase</Name>
-      <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\GameServer\GameServer.csproj">
-      <Name>GameServer</Name>
-      <Project>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.ServiceProcess" />
+    <PackageReference Include="log4net" Version="2.0.12" ExcludeAssets="Runtime" />
+    <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="False" ExcludeAssets="All" />
+    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="False" ExcludeAssets="All" />
+    <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" Private="False" ExcludeAssets="All" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="actions\ConsoleStart.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceInstall.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceRun.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceStart.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceStop.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="actions\ServiceUninstall.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ConsolePacketLib.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GameServerService.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="GameServerServiceInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="IAction.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainClass.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="GameServerService.resx">
-      <DependentUpon>GameServerService.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GameServerServiceInstaller.resx">
-      <DependentUpon>GameServerServiceInstaller.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="DOLServer.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="DOLServer.exe.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- Graveen: the following is replacing the rev number in the asembly.info file by the SVN rev number of the current project. -->
   <!-- You must work on project under SVN version control, have msbuild community tasks assemblies installed and subversion client -->
   <!-- The path of the tools should either be corrected below, or matched. In case you lack one of theses prereqs, rev number 'll not be changed. -->
-  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\')" />
   <Target Name="BeforeBuild">
     <SvnVersion LocalPath="." Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')">
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnVersion>
     <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
   </Target>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

@@ -19,7 +19,7 @@
 using System;
 using System.IO;
 using System.Text;
-using ICSharpCode.SharpZipLib.Checksums;
+using ICSharpCode.SharpZipLib.Checksum;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 
 namespace DOL.MPK
@@ -134,9 +134,9 @@ namespace DOL.MPK
 
 
 			var crc = new Crc32();
-			crc.Update(_compBuf, 0, (int)_hdr.CompressedSize);
+			crc.Update(new ArraySegment<byte>(_compBuf, 0, (int)_hdr.CompressedSize));
 
-			_hdr.CRC = crc;
+			_hdr.CRCValue = crc.Value;
 		}
 
 		/// <summary>
