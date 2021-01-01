@@ -23,9 +23,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-
-using System.Reflection;
-using log4net;
+using DOL.GS.ServerProperties;
 
 
 namespace DOL.GS.Keeps
@@ -110,7 +108,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if(IsPortalKeepGuard)
+				if (IsPortalKeepGuard)
 					return 255;
 
 				return base.Level;
@@ -230,7 +228,7 @@ namespace DOL.GS.Keeps
 					{
 						foreach (GameLiving living in guard.Attackers)
 						{
-                            if ( guard.IsWithinRadius( living, guard.AttackRange ) )
+							if (guard.IsWithinRadius(living, guard.AttackRange))
 							{
 								guard.StartAttack(living);
 								return;
@@ -238,7 +236,7 @@ namespace DOL.GS.Keeps
 						}
 					}
 
-                    if ( guard.IsWithinRadius( guard.TargetObject, guard.AttackRangeDistance ) )
+					if (guard.IsWithinRadius(guard.TargetObject, guard.AttackRangeDistance))
 					{
 						if (guard.MaxSpeedBase == 0 || (guard is GuardArcher && !guard.BeenAttackedRecently))
 							guard.SwitchToRanged(guard.TargetObject);
@@ -254,7 +252,7 @@ namespace DOL.GS.Keeps
 					guard.StopAttack();
 					return;
 				}
-                if ( !guard.IsWithinRadius( guard.TargetObject, guard.AttackRange ) )
+				if (!guard.IsWithinRadius(guard.TargetObject, guard.AttackRange))
 				{
 					guard.StopAttack();
 					return;
@@ -489,12 +487,12 @@ namespace DOL.GS.Keeps
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Standard || ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
 				{
 					//if we are targeting something, and the distance to the target object is greater than the attack range
-                    if( TargetObject != null && !this.IsWithinRadius( TargetObject, AttackRange ) )
+					if (TargetObject != null && !this.IsWithinRadius(TargetObject, AttackRange))
 					{
 						//stop the attack
 						StopAttack();
 						//if the distance to the attacker is less than the attack range
-						if ( this.IsWithinRadius( ad.Attacker, AttackRange ) )
+						if (this.IsWithinRadius(ad.Attacker, AttackRange))
 						{
 							//attack it
 							StartAttack(ad.Attacker);
@@ -530,8 +528,8 @@ namespace DOL.GS.Keeps
 			if (guard.Component.AbstractKeep.Guild == null) return;
 
 			int inArea = guard.GetEnemyCountInArea();
-            string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GuardSpam.Killed", guard.Name, guard.Component.AbstractKeep.Name, inArea);
-            KeepGuildMgr.SendMessageToGuild(message, guard.Component.AbstractKeep.Guild);
+			string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GuardSpam.Killed", guard.Name, guard.Component.AbstractKeep.Name, inArea);
+			KeepGuildMgr.SendMessageToGuild(message, guard.Component.AbstractKeep.Guild);
 		}
 
 		/// <summary>
@@ -581,16 +579,16 @@ namespace DOL.GS.Keeps
 		{
 			base.RoamingRange = 0;
 			base.TetherRange = 10000;
-			
+
 			if (!base.AddToWorld())
 				return false;
-			
-			if(IsPortalKeepGuard&&(Brain as KeepGuardBrain!=null))
+
+			if (IsPortalKeepGuard && (Brain as KeepGuardBrain != null))
 			{
-				(this.Brain as KeepGuardBrain).AggroRange=2000;
-				(this.Brain as KeepGuardBrain).AggroLevel=99;
+				(this.Brain as KeepGuardBrain).AggroRange = 2000;
+				(this.Brain as KeepGuardBrain).AggroLevel = 99;
 			}
-			
+
 			GameEventMgr.AddHandler(this, GameNPCEvent.AttackFinished, new DOLEventHandler(AttackFinished));
 
 			if (PatrolGroup != null && !m_changingPositions)
@@ -673,18 +671,18 @@ namespace DOL.GS.Keeps
 			//You examine the Armswoman. She is friendly and is a realm guard.
 			//She has upgraded equipment (5).
 			IList list = new ArrayList(4);
-            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.YouTarget", GetName(0, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.YouTarget", GetName(0, false)));
 
 			if (Realm != eRealm.None)
 			{
-                list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+				list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
 				if (this.Component != null)
 				{
 					string text = "";
 					if (this.Component.AbstractKeep.Level > 1 && this.Component.AbstractKeep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
-                        text = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.AbstractKeep.Level);
+						text = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.AbstractKeep.Level);
 					if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.AbstractKeep.Region == 163 && !(this.Component.AbstractKeep is GameKeepTower))
-                        text += LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.AbstractKeep.BaseLevel - 50).ToString());
+						text += LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.AbstractKeep.BaseLevel - 50).ToString());
 					if (text != "")
 						list.Add(text);
 				}
@@ -707,8 +705,8 @@ namespace DOL.GS.Keeps
 					{
 						// Subjective
 						if (Gender == GS.eGender.Male)
-                            s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.He");
-                        else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.She");
+							s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.He");
+						else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.She");
 						if (!firstLetterUppercase)
 							s = s.ToLower();
 						break;
@@ -716,9 +714,9 @@ namespace DOL.GS.Keeps
 				case 1:
 					{
 						// Possessive
-                        if (Gender == eGender.Male)
-                            s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.His");
-                        else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Hers");
+						if (Gender == eGender.Male)
+							s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.His");
+						else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Hers");
 						if (!firstLetterUppercase)
 							s = s.ToLower();
 						break;
@@ -726,9 +724,9 @@ namespace DOL.GS.Keeps
 				case 2:
 					{
 						// Objective
-                        if (Gender == eGender.Male)
-                            s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Him");
-                        else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Her");
+						if (Gender == eGender.Male)
+							s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Him");
+						else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Her");
 						if (!firstLetterUppercase)
 							s = s.ToLower();
 						break;
@@ -827,7 +825,7 @@ namespace DOL.GS.Keeps
 				if (area is KeepArea && Component != null)
 				{
 					Component.AbstractKeep.Guards.Remove(m_dataObjectID); //Remove(this.InternalID); LoadFromDatabase() adds using m_dataObjectID
-					// break; This is a bad idea.  If there are multiple KeepAreas, we could end up with instantiated keep items that are no longer in the DB
+																		  // break; This is a bad idea.  If there are multiple KeepAreas, we could end up with instantiated keep items that are no longer in the DB
 				}
 			}
 			base.DeleteFromDatabase();
@@ -939,6 +937,972 @@ namespace DOL.GS.Keeps
 			{
 				WalkToSpawn(MaxSpeed);
 			}
+		}
+
+		public void RefreshTemplate()
+		{
+			SetRealm();
+			SetGuild();
+			SetRespawnTime();
+			SetGender();
+			SetModel();
+			SetName();
+			SetBlockEvadeParryChance();
+            SetBrain();
+			SetSpeed();
+			SetLevel();
+			SetResists();
+			SetStats();
+			SetAggression();
+			ClothingMgr.EquipGuard(this);
+			ClothingMgr.SetEmblem(this);
+		}
+
+
+		/// <summary>
+		/// Gets short name of keeps
+		/// </summary>
+		/// <param name="KeepName">Complete name of the Keep</param>
+		private string GetKeepShortName(string KeepName)
+		{
+			string ShortName;
+			if (KeepName.StartsWith("Caer"))//Albion
+			{
+				ShortName = KeepName.Substring(5);
+			}
+			else if (KeepName.StartsWith("Fort"))
+			{
+				ShortName = KeepName.Substring(5);
+			}
+			else if (KeepName.StartsWith("Dun"))//Hibernia
+			{
+				if (KeepName == "Dun nGed")
+				{
+					ShortName = "Ged";
+				}
+				else if (KeepName == "Dun da Behn")
+				{
+					ShortName = "Behn";
+				}
+				else
+				{
+					ShortName = KeepName.Substring(4);
+				}
+			}
+			else if (KeepName.StartsWith("Castle"))// Albion Relic
+			{
+				ShortName = KeepName.Substring(7);
+			}
+			else//Midgard
+			{
+				if (KeepName.Contains(" "))
+					ShortName = KeepName.Substring(0, KeepName.IndexOf(" ", 0));
+				else
+					ShortName = KeepName;
+			}
+			return ShortName;
+		}
+
+		private void SetName()
+		{
+			if (this is FrontierHastener)
+			{
+				Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Hastener");
+				return;
+			}
+			if (this is GuardLord)
+			{
+				if (Component == null)
+				{
+					Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Commander", CurrentZone.Description);
+					return;
+				}
+				else if (IsTowerGuard)
+				{
+					Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.TowerCaptain");
+					return;
+				}
+			}
+			switch (ModelRealm)
+			{
+				#region Albion / None
+				case eRealm.None:
+				case eRealm.Albion:
+					{
+						if (this is GuardArcher)
+						{
+							if (IsPortalKeepGuard)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.BowmanCommander");
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Scout");
+						}
+						else if (this is GuardCaster)
+						{
+							if (IsPortalKeepGuard)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterWizard");
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Wizard");
+						}
+						else if (this is GuardFighter)
+						{
+							if (IsPortalKeepGuard)
+							{
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.KnightCommander");
+							}
+							else
+							{
+								if (Gender == eGender.Male)
+									Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Armsman");
+								else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Armswoman");
+							}
+						}
+						else if (this is GuardHealer)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Cleric");
+						}
+						else if (this is GuardLord)
+						{
+							if (Gender == eGender.Male)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lord", GetKeepShortName(Component.AbstractKeep.Name));
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lady", GetKeepShortName(Component.AbstractKeep.Name));
+						}
+						else if (this is GuardStealther)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Infiltrator");
+						}
+						else if (this is MissionMaster)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.CaptainCommander");
+						}
+						break;
+					}
+				#endregion
+				#region Midgard
+				case eRealm.Midgard:
+					{
+						if (this is GuardArcher)
+						{
+							if (IsPortalKeepGuard)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.NordicHunter");
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Hunter");
+						}
+						else if (this is GuardCaster)
+						{
+							if (IsPortalKeepGuard)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterRunes");
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Runemaster");
+						}
+						else if (this is GuardFighter)
+						{
+							if (IsPortalKeepGuard)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.NordicJarl");
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Huscarl");
+						}
+						else if (this is GuardHealer)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Healer");
+						}
+						else if (this is GuardLord)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Jarl", GetKeepShortName(Component.AbstractKeep.Name));
+						}
+						else if (this is GuardStealther)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Shadowblade");
+						}
+						else if (this is MissionMaster)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.HersirCommander");
+						}
+						break;
+					}
+				#endregion
+				#region Hibernia
+				case eRealm.Hibernia:
+					{
+						if (this is GuardArcher)
+						{
+							if (IsPortalKeepGuard)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterRanger");
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Ranger");
+						}
+						else if (this is GuardCaster)
+						{
+							if (IsPortalKeepGuard)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterEldritch");
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Eldritch");
+						}
+						else if (this is GuardFighter)
+						{
+							if (IsPortalKeepGuard)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Champion");
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Guardian");
+						}
+						else if (this is GuardHealer)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Druid");
+						}
+						else if (this is GuardLord)
+						{
+							if (Gender == eGender.Male)
+								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", GetKeepShortName(Component.AbstractKeep.Name));
+							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftess", GetKeepShortName(Component.AbstractKeep.Name));
+						}
+						else if (this is GuardStealther)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Nightshade");
+						}
+						else if (this is MissionMaster)
+						{
+							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.ChampionCommander");
+						}
+						break;
+					}
+					#endregion
+			}
+
+			if (Realm == eRealm.None)
+			{
+				Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Renegade", Name);
+			}
+		}
+
+		private void SetBlockEvadeParryChance()
+		{
+			BlockChance = 0;
+			EvadeChance = 0;
+			ParryChance = 0;
+
+			if (this is GuardLord || this is MissionMaster)
+			{
+				BlockChance = 15;
+				ParryChance = 15;
+
+				if (ModelRealm != eRealm.Albion)
+				{
+					EvadeChance = 10;
+					ParryChance = 5;
+				}
+			}
+			else if (this is GuardStealther)
+			{
+				EvadeChance = 30;
+			}
+			else if (this is GuardFighter)
+			{
+				BlockChance = 10;
+				ParryChance = 10;
+
+				if (ModelRealm != eRealm.Albion)
+				{
+					EvadeChance = 5;
+					ParryChance = 5;
+				}
+			}
+			else if (this is GuardHealer)
+			{
+				BlockChance = 5;
+			}
+			else if (this is GuardArcher)
+			{
+				if (ModelRealm == eRealm.Albion)
+				{
+					BlockChance = 10;
+					EvadeChance = 5;
+				}
+				else
+				{
+					EvadeChance = 15;
+				}
+			}
+		}
+
+		public void SetBrain()
+		{
+			if (Brain is KeepGuardBrain == false)
+			{
+				KeepGuardBrain brain = new KeepGuardBrain();
+				if (this is GuardCaster)
+					brain = new CasterBrain();
+				else if (this is GuardHealer)
+					brain = new HealerBrain();
+				else if (this is GuardLord)
+					brain = new LordBrain();
+
+				AddBrain(brain);
+				brain.guard = this;
+			}
+
+			if (this is MissionMaster)
+			{
+				(Brain as KeepGuardBrain).SetAggression(90, 400);
+			}
+		}
+
+		public void SetSpeed()
+		{
+			if (IsPortalKeepGuard)
+			{
+				MaxSpeedBase = 575;
+			}
+			if ((this is GuardLord && Component != null) || this is GuardStaticArcher || this is GuardStaticCaster)
+			{
+				MaxSpeedBase = 0;
+			}
+			else if (Level < 250)
+			{
+				if (Realm == eRealm.None)
+				{
+					MaxSpeedBase = 200;
+				}
+				else if (Level < 50)
+				{
+					MaxSpeedBase = 210;
+				}
+				else
+				{
+					MaxSpeedBase = 250;
+				}
+			}
+			else
+			{
+				MaxSpeedBase = 575;
+			}
+		}
+
+		private void SetResists()
+		{
+			for (int i = (int)eProperty.Resist_First; i <= (int)eProperty.Resist_Last; i++)
+			{
+				if (this is GuardLord)
+				{
+					BaseBuffBonusCategory[i] = 40;
+				}
+				else if (Level < 50)
+				{
+					BaseBuffBonusCategory[i] = Level / 2 + 1;
+				}
+				else
+				{
+					BaseBuffBonusCategory[i] = 26;
+				}
+			}
+		}
+
+		private void SetStats()
+		{
+			if (this is GuardLord)
+			{
+				Strength = (short)(Properties.LORD_AUTOSET_STR_BASE + (10 * Level * Properties.LORD_AUTOSET_STR_MULTIPLIER));
+				Dexterity = (short)(Properties.LORD_AUTOSET_DEX_BASE + (Level * Properties.LORD_AUTOSET_DEX_MULTIPLIER));
+				Constitution = (short)(Properties.LORD_AUTOSET_CON_BASE + (Level * Properties.LORD_AUTOSET_CON_MULTIPLIER));
+				Quickness = (short)(Properties.LORD_AUTOSET_QUI_BASE + (Level * Properties.LORD_AUTOSET_QUI_MULTIPLIER));
+				Intelligence = (short)(Properties.LORD_AUTOSET_INT_BASE + (Level * Properties.LORD_AUTOSET_INT_MULTIPLIER));
+			}
+			else
+			{
+				Strength = (short)(Properties.GUARD_AUTOSET_STR_BASE + (10 * Level * Properties.GUARD_AUTOSET_STR_MULTIPLIER));
+				Dexterity = (short)(Properties.GUARD_AUTOSET_DEX_BASE + (Level * Properties.GUARD_AUTOSET_DEX_MULTIPLIER));
+				Constitution = (short)(Properties.GUARD_AUTOSET_CON_BASE + (Level * Properties.GUARD_AUTOSET_CON_MULTIPLIER));
+				Quickness = (short)(Properties.GUARD_AUTOSET_QUI_BASE + (Level * Properties.GUARD_AUTOSET_QUI_MULTIPLIER));
+				Intelligence = (short)(Properties.GUARD_AUTOSET_INT_BASE + (Level * Properties.GUARD_AUTOSET_INT_MULTIPLIER));
+			}
+		}
+
+		private void SetRealm()
+		{
+			if (Component != null)
+			{
+				Realm = Component.AbstractKeep.Realm;
+
+				if (Realm != eRealm.None)
+				{
+					ModelRealm = Realm;
+				}
+				else
+				{
+					ModelRealm = (eRealm)Util.Random(1, 3);
+				}
+			}
+			else
+			{
+				Realm = CurrentZone.Realm;
+				ModelRealm = Realm;
+			}
+		}
+
+		private void SetGuild()
+		{
+			if (Component == null)
+			{
+				GuildName = "";
+			}
+			else if (Component.AbstractKeep.Guild == null)
+			{
+				GuildName = "";
+			}
+			else
+			{
+				GuildName = Component.AbstractKeep.Guild.Name;
+			}
+		}
+
+		private void SetRespawnTime()
+		{
+			if (this is FrontierHastener)
+			{
+				RespawnInterval = 5000; // 5 seconds
+			}
+			else if (this is GuardLord)
+			{
+				if (Component != null)
+				{
+					RespawnInterval = Component.AbstractKeep.LordRespawnTime;
+				}
+				else
+				{
+					if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE
+						|| GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+					{
+						// In PvE & PvP servers, lords are really just mobs farmed for seals.
+						int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
+						int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
+							(Util.Random(-iVariance, iVariance)));
+
+						RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
+					}
+					else
+						RespawnInterval = 10000; // 10 seconds
+				}
+			}
+			else if (this is MissionMaster)
+			{
+				if (Realm == eRealm.None && (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE ||
+				GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP))
+				{
+					// In PvE & PvP servers, lords are really just mobs farmed for seals.
+					int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
+					int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
+						(Util.Random(-iVariance, iVariance)));
+
+					RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
+				}
+				else
+					RespawnInterval = 10000; // 10 seconds
+			}
+			else
+			{
+				int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
+				int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
+					(Util.Random(-iVariance, iVariance)));
+
+				RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
+			}
+		}
+
+		private void SetAggression()
+		{
+			if (this is GuardStaticCaster)
+			{
+				(Brain as KeepGuardBrain).SetAggression(99, 1850);
+			}
+			else if (this is GuardStaticArcher)
+			{
+				(Brain as KeepGuardBrain).SetAggression(99, 2100);
+			}
+		}
+
+		public void SetLevel()
+		{
+			if (Component != null)
+			{
+				Component.AbstractKeep.SetGuardLevel(this);
+			}
+		}
+
+		private void SetGender()
+		{
+			//portal keep guards are always male
+			if (IsPortalKeepGuard)
+			{
+				Gender = eGender.Male;
+			}
+			else
+			{
+				if (Util.Chance(50))
+				{
+					Gender = eGender.Male;
+				}
+				else
+				{
+					Gender = eGender.Female;
+				}
+			}
+		}
+
+		private void SetModel()
+		{
+			if (!ServerProperties.Properties.AUTOMODEL_GUARDS_LOADED_FROM_DB && !LoadedFromScript)
+			{
+				return;
+			}
+			if (this is FrontierHastener)
+			{
+				switch (Realm)
+				{
+					case eRealm.None:
+					case eRealm.Albion:
+						{
+							Model = TemplateMgr.AlbionHastener;
+							Size = 45;
+							break;
+						}
+					case eRealm.Midgard:
+						{
+							Model = TemplateMgr.MidgardHastener;
+							Size = 50;
+							Flags ^= GameNPC.eFlags.GHOST;
+							break;
+						}
+					case eRealm.Hibernia:
+						{
+							Model = TemplateMgr.HiberniaHastener;
+							Size = 45;
+							break;
+						}
+				}
+				return;
+			}
+
+			switch (ModelRealm)
+			{
+				#region None
+				case eRealm.None:
+				#endregion
+				#region Albion
+				case eRealm.Albion:
+					{
+						if (this is GuardArcher)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.SaracenMale; break;//Saracen Male
+									case 1: Model = TemplateMgr.HighlanderMale; break;//Highlander Male
+									case 2: Model = TemplateMgr.BritonMale; break;//Briton Male
+									case 3: Model = TemplateMgr.IcconuMale; break;//Icconu Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.SaracenFemale; break;//Saracen Female
+									case 1: Model = TemplateMgr.HighlanderFemale; break;//Highlander Female
+									case 2: Model = TemplateMgr.BritonFemale; break;//Briton Female
+									case 3: Model = TemplateMgr.IcconuFemale; break;//Icconu Female
+								}
+							}
+						}
+						else if (this is GuardCaster)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.AvalonianMale; break;//Avalonian Male
+									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
+									case 2: Model = TemplateMgr.HalfOgreMale; break;//Half Ogre Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.AvalonianFemale; break;//Avalonian Female
+									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
+									case 2: Model = TemplateMgr.HalfOgreFemale; break;//Half Ogre Female
+								}
+							}
+						}
+						else if (this is GuardFighter)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 6))
+								{
+									case 0: Model = TemplateMgr.HighlanderMale; break;//Highlander Male
+									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
+									case 2: Model = TemplateMgr.SaracenMale; break;//Saracen Male
+									case 3: Model = TemplateMgr.AvalonianMale; break;//Avalonian Male
+									case 4: Model = TemplateMgr.HalfOgreMale; break;//Half Ogre Male
+									case 5: Model = TemplateMgr.IcconuMale; break;//Icconu Male
+									case 6: Model = TemplateMgr.MinotaurMaleAlb; break;//Minotuar
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 5))
+								{
+									case 0: Model = TemplateMgr.HighlanderFemale; break;//Highlander Female
+									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
+									case 2: Model = TemplateMgr.SaracenFemale; break;//Saracen Female
+									case 3: Model = TemplateMgr.AvalonianFemale; break;//Avalonian Female
+									case 4: Model = TemplateMgr.HalfOgreFemale; break;//Half Ogre Female
+									case 5: Model = TemplateMgr.IcconuFemale; break;//Icconu Female
+								}
+							}
+						}
+						else if (this is GuardHealer)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.HighlanderMale; break;//Highlander Male
+									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
+									case 2: Model = TemplateMgr.AvalonianMale; break;//Avalonian Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.HighlanderFemale; break;//Highlander Female
+									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
+									case 2: Model = TemplateMgr.AvalonianFemale; break;//Avalonian Female
+								}
+							}
+						}
+						else if (this is GuardLord || this is MissionMaster)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.HighlanderMale; break;//Highlander Male
+									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
+									case 2: Model = TemplateMgr.AvalonianMale; break;//Avalonian Male
+									case 3: Model = TemplateMgr.MinotaurMaleAlb; break;//Minotaur
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.HighlanderFemale; break;//Highlander Female
+									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
+									case 2: Model = TemplateMgr.AvalonianFemale; break;//Avalonian Female
+								}
+							}
+						}
+						else if (this is GuardStealther)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.SaracenMale; break;//Saracen Male
+									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
+									case 2: Model = TemplateMgr.IcconuMale; break;//Icconu Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.SaracenFemale; break;//Saracen Female
+									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
+									case 2: Model = TemplateMgr.IcconuFemale; break;//Icconu Female
+								}
+							}
+						}
+						break;
+					}
+				#endregion
+				#region Midgard
+				case eRealm.Midgard:
+					{
+						if (this is GuardArcher)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 4))
+								{
+									case 0: Model = TemplateMgr.NorseMale; break;//Norse Male
+									case 1: Model = TemplateMgr.KoboldMale; break;//Kobold Male
+									case 2: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
+									case 3: Model = TemplateMgr.ValkynMale; break;//Valkyn Male
+									case 4: Model = TemplateMgr.FrostalfMale; break;//Frostalf Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 4))
+								{
+									case 0: Model = TemplateMgr.NorseFemale; break;//Norse Female
+									case 1: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
+									case 2: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
+									case 3: Model = TemplateMgr.ValkynFemale; break;//Valkyn Female
+									case 4: Model = TemplateMgr.FrostalfFemale; break;//Frostalf Female
+								}
+							}
+						}
+						else if (this is GuardCaster)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.KoboldMale; break;//Kobold Male
+									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
+									case 2: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
+									case 3: Model = TemplateMgr.FrostalfMale; break;//Frostalf Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
+									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
+									case 2: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
+									case 3: Model = TemplateMgr.FrostalfFemale; break;//Frostalf Female
+								}
+							}
+						}
+						else if (this is GuardFighter)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 5))
+								{
+									case 0: Model = TemplateMgr.TrollMale; break;//Troll Male
+									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
+									case 2: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
+									case 3: Model = TemplateMgr.KoboldMale; break;//Kobold Male
+									case 4: Model = TemplateMgr.ValkynMale; break;//Valkyn Male
+									case 5: Model = TemplateMgr.MinotaurMaleMid; break;//Minotaur
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 4))
+								{
+									case 0: Model = TemplateMgr.TrollFemale; break;//Troll Female
+									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
+									case 2: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
+									case 3: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
+									case 4: Model = TemplateMgr.ValkynFemale; break;//Valkyn Female
+								}
+							}
+						}
+						else if (this is GuardHealer)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
+									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
+									case 2: Model = TemplateMgr.FrostalfMale; break;//Frostalf Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
+									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
+									case 2: Model = TemplateMgr.FrostalfFemale; break;//Frostalf Female
+								}
+							}
+						}
+						else if (this is GuardLord || this is MissionMaster)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 4))
+								{
+									case 0: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
+									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
+									case 2: Model = TemplateMgr.TrollMale; break;//Troll Male
+									case 3: Model = TemplateMgr.KoboldMale; break;//Kobold Male
+									case 4: Model = TemplateMgr.MinotaurMaleMid; break;//Minotaur
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
+									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
+									case 2: Model = TemplateMgr.TrollFemale; break;//Troll Female
+									case 3: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
+								}
+							}
+						}
+						else if (this is GuardStealther)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.KoboldMale; break;//Kobold Male
+									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
+									case 2: Model = TemplateMgr.ValkynMale; break;//Valkyn Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
+									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
+									case 2: Model = TemplateMgr.ValkynFemale; break;//Valkyn Female
+								}
+							}
+						}
+						break;
+					}
+				#endregion
+				#region Hibernia
+				case eRealm.Hibernia:
+					{
+						if (this is GuardArcher)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
+									case 1: Model = TemplateMgr.ElfMale; break;//Elf Male
+									case 2: Model = TemplateMgr.CeltMale; break;//Celt Male
+									case 3: Model = TemplateMgr.SharMale; break;//Shar Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
+									case 1: Model = TemplateMgr.ElfFemale; break;//Elf Female
+									case 2: Model = TemplateMgr.CeltFemale; break;//Celt Female
+									case 3: Model = TemplateMgr.SharFemale; break;//Shar Female
+								}
+							}
+						}
+						else if (this is GuardCaster)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 1))
+								{
+									case 0: Model = TemplateMgr.ElfMale; break;//Elf Male
+									case 1: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 1))
+								{
+									case 0: Model = TemplateMgr.ElfFemale; break;//Elf Female
+									case 1: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
+								}
+							}
+						}
+						else if (this is GuardFighter)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 4))
+								{
+									case 0: Model = TemplateMgr.FirbolgMale; break;//Firbolg Male
+									case 1: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
+									case 2: Model = TemplateMgr.CeltMale; break;//Celt Male
+									case 3: Model = TemplateMgr.SharMale; break;//Shar Male
+									case 4: Model = TemplateMgr.MinotaurMaleHib; break;//Minotaur
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.FirbolgFemale; break;//Firbolg Female
+									case 1: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
+									case 2: Model = TemplateMgr.CeltFemale; break;//Celt Female
+									case 3: Model = TemplateMgr.SharFemale; break;//Shar Female
+								}
+							}
+						}
+						else if (this is GuardHealer)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.CeltMale; break;//Celt Male
+									case 1: Model = TemplateMgr.FirbolgMale; break;//Firbolg Male
+									case 2: Model = TemplateMgr.SylvianMale; break;//Sylvian Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 2))
+								{
+									case 0: Model = TemplateMgr.CeltFemale; break;//Celt Female
+									case 1: Model = TemplateMgr.FirbolgFemale; break;//Firbolg Female
+									case 2: Model = TemplateMgr.SylvianFemale; break;//Sylvian Female
+								}
+							}
+						}
+						else if (this is GuardLord || this is MissionMaster)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 4))
+								{
+									case 0: Model = TemplateMgr.CeltMale; break;//Celt Male
+									case 1: Model = TemplateMgr.FirbolgMale; break;//Firbolg Male
+									case 2: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
+									case 3: Model = TemplateMgr.ElfMale; break;//Elf Male
+									case 4: Model = TemplateMgr.MinotaurMaleHib; break;//Minotaur
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 3))
+								{
+									case 0: Model = TemplateMgr.CeltFemale; break;//Celt Female
+									case 1: Model = TemplateMgr.FirbolgFemale; break;//Firbolg Female
+									case 2: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
+									case 3: Model = TemplateMgr.ElfFemale; break;//Elf Female
+								}
+							}
+						}
+						else if (this is GuardStealther)
+						{
+							if (Gender == eGender.Male)
+							{
+								switch (Util.Random(0, 1))
+								{
+									case 0: Model = TemplateMgr.ElfMale; break;//Elf Male
+									case 1: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
+								}
+							}
+							else
+							{
+								switch (Util.Random(0, 1))
+								{
+									case 0: Model = TemplateMgr.ElfFemale; break;//Elf Female
+									case 1: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
+								}
+							}
+						}
+						break;
+					}
+					#endregion
+			}
+
 		}
 
 	}
