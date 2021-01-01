@@ -19,7 +19,6 @@
 using System;
 using System.IO;
 using System.Text;
-using ICSharpCode.SharpZipLib.Checksum;
 
 namespace DOL.MPK
 {
