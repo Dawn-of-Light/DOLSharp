@@ -24,7 +24,9 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.ServerProperties;
-
+using System.Collections.Generic;
+using DOL.GS.Realm;
+using DOL.GS.PlayerClass;
 
 namespace DOL.GS.Keeps
 {
@@ -948,7 +950,7 @@ namespace DOL.GS.Keeps
 			SetModel();
 			SetName();
 			SetBlockEvadeParryChance();
-            SetBrain();
+			SetBrain();
 			SetSpeed();
 			SetLevel();
 			SetResists();
@@ -1215,7 +1217,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public void SetBrain()
+		protected virtual void SetBrain()
 		{
 			if (Brain is KeepGuardBrain == false)
 			{
@@ -1237,7 +1239,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public void SetSpeed()
+		protected virtual void SetSpeed()
 		{
 			if (IsPortalKeepGuard)
 			{
@@ -1325,7 +1327,14 @@ namespace DOL.GS.Keeps
 			else
 			{
 				Realm = CurrentZone.Realm;
-				ModelRealm = Realm;
+				if (Realm != eRealm.None)
+				{
+					ModelRealm = Realm;
+				}
+				else
+				{
+					ModelRealm = (eRealm)Util.Random(1, 3);
+				}
 			}
 		}
 
@@ -1410,7 +1419,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public void SetLevel()
+		private void SetLevel()
 		{
 			if (Component != null)
 			{
@@ -1438,9 +1447,41 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private void SetModel()
+		protected virtual ICharacterClass GetClass()
+        {
+			if (ModelRealm == eRealm.Albion)
+			{
+				if (this is GuardArcher) return new ClassScout();
+				else if (this is GuardCaster) return new ClassWizard();
+				else if (this is GuardFighter) return new ClassArmsman();
+				else if (this is GuardHealer) return new ClassCleric();
+				else if (this is GuardLord || this is MissionMaster) return new ClassArmsman();
+				else if (this is GuardStealther) return new ClassInfiltrator();
+			}
+			else if (ModelRealm == eRealm.Midgard)
+			{
+				if (this is GuardArcher) return new ClassHunter();
+				else if (this is GuardCaster) return new ClassRunemaster();
+				else if (this is GuardFighter) return new ClassWarrior();
+				else if (this is GuardHealer) return new ClassHealer();
+				else if (this is GuardLord || this is MissionMaster) return new ClassWarrior();
+				else if (this is GuardStealther) return new ClassShadowblade();
+			}
+			else if(ModelRealm == eRealm.Hibernia)
+            {
+				if (this is GuardArcher) return new ClassRanger();
+				else if (this is GuardCaster) return new ClassEldritch();
+				else if (this is GuardFighter) return new ClassHero();
+				else if (this is GuardHealer) return new ClassDruid();
+				else if (this is GuardLord || this is MissionMaster) return new ClassHero();
+				else if (this is GuardStealther) return new ClassNightshade();
+			}
+			return new DefaultCharacterClass();
+		}
+
+		protected virtual void SetModel()
 		{
-			if (!ServerProperties.Properties.AUTOMODEL_GUARDS_LOADED_FROM_DB && !LoadedFromScript)
+			if (!Properties.AUTOMODEL_GUARDS_LOADED_FROM_DB && !LoadedFromScript)
 			{
 				return;
 			}
@@ -1472,437 +1513,12 @@ namespace DOL.GS.Keeps
 				return;
 			}
 
-			switch (ModelRealm)
+			var possibleRaces = GetClass().EligibleRaces.FindAll(s => s.GetModel(Gender) != eLivingModel.None);
+			if (possibleRaces.Count > 0)
 			{
-				#region None
-				case eRealm.None:
-				#endregion
-				#region Albion
-				case eRealm.Albion:
-					{
-						if (this is GuardArcher)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.SaracenMale; break;//Saracen Male
-									case 1: Model = TemplateMgr.HighlanderMale; break;//Highlander Male
-									case 2: Model = TemplateMgr.BritonMale; break;//Briton Male
-									case 3: Model = TemplateMgr.IcconuMale; break;//Icconu Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.SaracenFemale; break;//Saracen Female
-									case 1: Model = TemplateMgr.HighlanderFemale; break;//Highlander Female
-									case 2: Model = TemplateMgr.BritonFemale; break;//Briton Female
-									case 3: Model = TemplateMgr.IcconuFemale; break;//Icconu Female
-								}
-							}
-						}
-						else if (this is GuardCaster)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.AvalonianMale; break;//Avalonian Male
-									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
-									case 2: Model = TemplateMgr.HalfOgreMale; break;//Half Ogre Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.AvalonianFemale; break;//Avalonian Female
-									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
-									case 2: Model = TemplateMgr.HalfOgreFemale; break;//Half Ogre Female
-								}
-							}
-						}
-						else if (this is GuardFighter)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 6))
-								{
-									case 0: Model = TemplateMgr.HighlanderMale; break;//Highlander Male
-									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
-									case 2: Model = TemplateMgr.SaracenMale; break;//Saracen Male
-									case 3: Model = TemplateMgr.AvalonianMale; break;//Avalonian Male
-									case 4: Model = TemplateMgr.HalfOgreMale; break;//Half Ogre Male
-									case 5: Model = TemplateMgr.IcconuMale; break;//Icconu Male
-									case 6: Model = TemplateMgr.MinotaurMaleAlb; break;//Minotuar
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 5))
-								{
-									case 0: Model = TemplateMgr.HighlanderFemale; break;//Highlander Female
-									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
-									case 2: Model = TemplateMgr.SaracenFemale; break;//Saracen Female
-									case 3: Model = TemplateMgr.AvalonianFemale; break;//Avalonian Female
-									case 4: Model = TemplateMgr.HalfOgreFemale; break;//Half Ogre Female
-									case 5: Model = TemplateMgr.IcconuFemale; break;//Icconu Female
-								}
-							}
-						}
-						else if (this is GuardHealer)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.HighlanderMale; break;//Highlander Male
-									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
-									case 2: Model = TemplateMgr.AvalonianMale; break;//Avalonian Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.HighlanderFemale; break;//Highlander Female
-									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
-									case 2: Model = TemplateMgr.AvalonianFemale; break;//Avalonian Female
-								}
-							}
-						}
-						else if (this is GuardLord || this is MissionMaster)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.HighlanderMale; break;//Highlander Male
-									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
-									case 2: Model = TemplateMgr.AvalonianMale; break;//Avalonian Male
-									case 3: Model = TemplateMgr.MinotaurMaleAlb; break;//Minotaur
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.HighlanderFemale; break;//Highlander Female
-									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
-									case 2: Model = TemplateMgr.AvalonianFemale; break;//Avalonian Female
-								}
-							}
-						}
-						else if (this is GuardStealther)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.SaracenMale; break;//Saracen Male
-									case 1: Model = TemplateMgr.BritonMale; break;//Briton Male
-									case 2: Model = TemplateMgr.IcconuMale; break;//Icconu Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.SaracenFemale; break;//Saracen Female
-									case 1: Model = TemplateMgr.BritonFemale; break;//Briton Female
-									case 2: Model = TemplateMgr.IcconuFemale; break;//Icconu Female
-								}
-							}
-						}
-						break;
-					}
-				#endregion
-				#region Midgard
-				case eRealm.Midgard:
-					{
-						if (this is GuardArcher)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 4))
-								{
-									case 0: Model = TemplateMgr.NorseMale; break;//Norse Male
-									case 1: Model = TemplateMgr.KoboldMale; break;//Kobold Male
-									case 2: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
-									case 3: Model = TemplateMgr.ValkynMale; break;//Valkyn Male
-									case 4: Model = TemplateMgr.FrostalfMale; break;//Frostalf Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 4))
-								{
-									case 0: Model = TemplateMgr.NorseFemale; break;//Norse Female
-									case 1: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
-									case 2: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
-									case 3: Model = TemplateMgr.ValkynFemale; break;//Valkyn Female
-									case 4: Model = TemplateMgr.FrostalfFemale; break;//Frostalf Female
-								}
-							}
-						}
-						else if (this is GuardCaster)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.KoboldMale; break;//Kobold Male
-									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
-									case 2: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
-									case 3: Model = TemplateMgr.FrostalfMale; break;//Frostalf Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
-									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
-									case 2: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
-									case 3: Model = TemplateMgr.FrostalfFemale; break;//Frostalf Female
-								}
-							}
-						}
-						else if (this is GuardFighter)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 5))
-								{
-									case 0: Model = TemplateMgr.TrollMale; break;//Troll Male
-									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
-									case 2: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
-									case 3: Model = TemplateMgr.KoboldMale; break;//Kobold Male
-									case 4: Model = TemplateMgr.ValkynMale; break;//Valkyn Male
-									case 5: Model = TemplateMgr.MinotaurMaleMid; break;//Minotaur
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 4))
-								{
-									case 0: Model = TemplateMgr.TrollFemale; break;//Troll Female
-									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
-									case 2: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
-									case 3: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
-									case 4: Model = TemplateMgr.ValkynFemale; break;//Valkyn Female
-								}
-							}
-						}
-						else if (this is GuardHealer)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
-									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
-									case 2: Model = TemplateMgr.FrostalfMale; break;//Frostalf Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
-									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
-									case 2: Model = TemplateMgr.FrostalfFemale; break;//Frostalf Female
-								}
-							}
-						}
-						else if (this is GuardLord || this is MissionMaster)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 4))
-								{
-									case 0: Model = TemplateMgr.DwarfMale; break;//Dwarf Male
-									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
-									case 2: Model = TemplateMgr.TrollMale; break;//Troll Male
-									case 3: Model = TemplateMgr.KoboldMale; break;//Kobold Male
-									case 4: Model = TemplateMgr.MinotaurMaleMid; break;//Minotaur
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.DwarfFemale; break;//Dwarf Female
-									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
-									case 2: Model = TemplateMgr.TrollFemale; break;//Troll Female
-									case 3: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
-								}
-							}
-						}
-						else if (this is GuardStealther)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.KoboldMale; break;//Kobold Male
-									case 1: Model = TemplateMgr.NorseMale; break;//Norse Male
-									case 2: Model = TemplateMgr.ValkynMale; break;//Valkyn Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.KoboldFemale; break;//Kobold Female
-									case 1: Model = TemplateMgr.NorseFemale; break;//Norse Female
-									case 2: Model = TemplateMgr.ValkynFemale; break;//Valkyn Female
-								}
-							}
-						}
-						break;
-					}
-				#endregion
-				#region Hibernia
-				case eRealm.Hibernia:
-					{
-						if (this is GuardArcher)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
-									case 1: Model = TemplateMgr.ElfMale; break;//Elf Male
-									case 2: Model = TemplateMgr.CeltMale; break;//Celt Male
-									case 3: Model = TemplateMgr.SharMale; break;//Shar Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
-									case 1: Model = TemplateMgr.ElfFemale; break;//Elf Female
-									case 2: Model = TemplateMgr.CeltFemale; break;//Celt Female
-									case 3: Model = TemplateMgr.SharFemale; break;//Shar Female
-								}
-							}
-						}
-						else if (this is GuardCaster)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 1))
-								{
-									case 0: Model = TemplateMgr.ElfMale; break;//Elf Male
-									case 1: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 1))
-								{
-									case 0: Model = TemplateMgr.ElfFemale; break;//Elf Female
-									case 1: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
-								}
-							}
-						}
-						else if (this is GuardFighter)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 4))
-								{
-									case 0: Model = TemplateMgr.FirbolgMale; break;//Firbolg Male
-									case 1: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
-									case 2: Model = TemplateMgr.CeltMale; break;//Celt Male
-									case 3: Model = TemplateMgr.SharMale; break;//Shar Male
-									case 4: Model = TemplateMgr.MinotaurMaleHib; break;//Minotaur
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.FirbolgFemale; break;//Firbolg Female
-									case 1: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
-									case 2: Model = TemplateMgr.CeltFemale; break;//Celt Female
-									case 3: Model = TemplateMgr.SharFemale; break;//Shar Female
-								}
-							}
-						}
-						else if (this is GuardHealer)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.CeltMale; break;//Celt Male
-									case 1: Model = TemplateMgr.FirbolgMale; break;//Firbolg Male
-									case 2: Model = TemplateMgr.SylvianMale; break;//Sylvian Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 2))
-								{
-									case 0: Model = TemplateMgr.CeltFemale; break;//Celt Female
-									case 1: Model = TemplateMgr.FirbolgFemale; break;//Firbolg Female
-									case 2: Model = TemplateMgr.SylvianFemale; break;//Sylvian Female
-								}
-							}
-						}
-						else if (this is GuardLord || this is MissionMaster)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 4))
-								{
-									case 0: Model = TemplateMgr.CeltMale; break;//Celt Male
-									case 1: Model = TemplateMgr.FirbolgMale; break;//Firbolg Male
-									case 2: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
-									case 3: Model = TemplateMgr.ElfMale; break;//Elf Male
-									case 4: Model = TemplateMgr.MinotaurMaleHib; break;//Minotaur
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 3))
-								{
-									case 0: Model = TemplateMgr.CeltFemale; break;//Celt Female
-									case 1: Model = TemplateMgr.FirbolgFemale; break;//Firbolg Female
-									case 2: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
-									case 3: Model = TemplateMgr.ElfFemale; break;//Elf Female
-								}
-							}
-						}
-						else if (this is GuardStealther)
-						{
-							if (Gender == eGender.Male)
-							{
-								switch (Util.Random(0, 1))
-								{
-									case 0: Model = TemplateMgr.ElfMale; break;//Elf Male
-									case 1: Model = TemplateMgr.LurikeenMale; break;//Lurikeen Male
-								}
-							}
-							else
-							{
-								switch (Util.Random(0, 1))
-								{
-									case 0: Model = TemplateMgr.ElfFemale; break;//Elf Female
-									case 1: Model = TemplateMgr.LurikeenFemale; break;//Lurikeen Female
-								}
-							}
-						}
-						break;
-					}
-					#endregion
+				var indexPick = Util.Random(0, possibleRaces.Count - 1);
+				Model = (ushort)possibleRaces[indexPick].GetModel(Gender);
 			}
-
 		}
 
 	}

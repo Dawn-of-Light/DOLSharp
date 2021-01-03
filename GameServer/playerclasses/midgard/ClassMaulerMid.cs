@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Mauler Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.MaulerMid, "Mauler", "Viking")]
+	[CharacterClass((int)eCharacterClass.MaulerMid, "Mauler", "Viking")]
 	public class ClassMaulerMid : ClassViking
 	{
 		public ClassMaulerMid()
@@ -58,5 +56,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Kobold, PlayerRace.Deifrang, PlayerRace.Norseman,
+		};
 	}
 }

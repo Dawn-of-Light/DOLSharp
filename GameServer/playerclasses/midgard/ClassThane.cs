@@ -16,17 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Thane Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Thane, "Thane", "Viking")]
+	[CharacterClass((int)eCharacterClass.Thane, "Thane", "Viking")]
 	public class ClassThane : ClassViking
 	{
-
 		public ClassThane()
 			: base()
 		{
@@ -49,5 +46,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Deifrang, PlayerRace.Norseman, PlayerRace.Troll,
+		};
 	}
 }

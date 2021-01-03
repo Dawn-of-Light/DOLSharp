@@ -321,7 +321,8 @@ namespace DOL.GS
 		public virtual bool CanPromotePlayer(GamePlayer player)
 		{
 			var baseClass = ScriptMgr.FindCharacterBaseClass((int)TrainedClass);
-			
+			ICharacterClass pickedClass = ScriptMgr.FindCharacterClass((int)TrainedClass);
+
 			// Error or Base Trainer...
 			if (baseClass == null || baseClass.ID == (int)TrainedClass)
 				return false;
@@ -329,7 +330,7 @@ namespace DOL.GS
 			if (player.Level < 5 || player.CharacterClass.ID != baseClass.ID)
 				return false;
 			
-			if (!GlobalConstants.RACES_CLASSES_DICT.ContainsKey((eRace)player.Race) || !GlobalConstants.RACES_CLASSES_DICT[(eRace)player.Race].Contains(TrainedClass))
+			if(pickedClass.EligibleRaces.Exists(s => (short)s.ID == player.Race))
 				return false;
 			
 			if (GlobalConstants.CLASS_GENDER_CONSTRAINTS_DICT.ContainsKey(TrainedClass) && GlobalConstants.CLASS_GENDER_CONSTRAINTS_DICT[TrainedClass] != player.Gender)

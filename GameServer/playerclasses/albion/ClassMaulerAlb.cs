@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using DOL.GS.Realm;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Mauler Character Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.MaulerAlb, "Mauler", "Fighter")]
+	[CharacterClass((int)eCharacterClass.MaulerAlb, "Mauler", "Fighter")]
 	public class ClassMaulerAlb : ClassFighter
 	{
 		public ClassMaulerAlb()
@@ -58,5 +56,11 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Korazh, PlayerRace.Briton, PlayerRace.Inconnu,
+		};
+
 	}
 }

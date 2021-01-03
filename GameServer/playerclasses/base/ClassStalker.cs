@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Rogue Base Class Stalker
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Stalker, "Stalker", "Stalker")]
+	[CharacterClass((int)eCharacterClass.Stalker, "Stalker", "Stalker")]
 	public class ClassStalker : CharacterClassBase
 	{
 		public ClassStalker()
@@ -53,5 +51,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar,
+		};
 	}
 }

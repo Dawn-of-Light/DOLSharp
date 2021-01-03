@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.Effects;
+using DOL.GS.Realm;
 
 namespace DOL.GS
 {
@@ -142,6 +143,7 @@ namespace DOL.GS
 		void Notify(DOLEvent e, object sender, EventArgs args);
 		bool CanChangeCastingSpeed(SpellLine line, Spell spell);
 		GameTrainer.eChampionTrainerType ChampionTrainerType();
+		List<PlayerRace> EligibleRaces { get; }
 	}
 
 	/// <summary>

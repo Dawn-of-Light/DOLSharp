@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Spiritmaster Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Spiritmaster, "Spiritmaster", "Mystic")]
+	[CharacterClass((int)eCharacterClass.Spiritmaster, "Spiritmaster", "Mystic")]
 	public class ClassSpiritmaster : ClassMystic
 	{
 		public ClassSpiritmaster()
@@ -41,5 +39,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman,
+		};
 	}
 }

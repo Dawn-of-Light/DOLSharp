@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Mentalist Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Mentalist, "Mentalist", "Magician")]
+	[CharacterClass((int)eCharacterClass.Mentalist, "Mentalist", "Magician")]
 	public class ClassMentalist : ClassMagician
 	{
 		public ClassMentalist()
@@ -41,5 +39,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar,
+		};
 	}
 }
