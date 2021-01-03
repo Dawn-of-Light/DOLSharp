@@ -305,5 +305,10 @@ namespace DOL.GS.Realm
 		SylvanFemale = 708,
 		MinotaurMaleHib = 1419,
 		#endregion
+		#region Hastener
+		AlbionHastener = 244,
+		MidgardHastener = 22,
+		HiberniaHastener = 1910,
+		#endregion Hastener
 	}
 }

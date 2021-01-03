@@ -651,14 +651,7 @@ namespace DOL.GS.Keeps
 		protected override int RespawnTimerCallback(RegionTimer respawnTimer)
 		{
 			int temp = base.RespawnTimerCallback(respawnTimer);
-			if (Component != null && Component.AbstractKeep != null)
-			{
-				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
-			}
-			else
-			{
-				TemplateMgr.RefreshTemplate(this);
-			}
+			RefreshTemplate();
 			return temp;
 		}
 
@@ -764,14 +757,7 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			if (Component != null && Component.AbstractKeep != null)
-			{
-				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
-			}
-			else
-			{
-				TemplateMgr.RefreshTemplate(this);
-			}
+			RefreshTemplate();
 		}
 
 		public void DeleteObject()
@@ -844,10 +830,7 @@ namespace DOL.GS.Keeps
 			m_component = component;
 			component.AbstractKeep.Guards.Add(m_templateID, this);
 			PositionMgr.LoadGuardPosition(pos, this);
-			if (Component != null && Component.AbstractKeep != null)
-				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
-			else
-				TemplateMgr.RefreshTemplate(this);
+			RefreshTemplate();
 			this.AddToWorld();
 		}
 
@@ -1419,7 +1402,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private void SetLevel()
+		public void SetLevel()
 		{
 			if (Component != null)
 			{
@@ -1492,20 +1475,20 @@ namespace DOL.GS.Keeps
 					case eRealm.None:
 					case eRealm.Albion:
 						{
-							Model = TemplateMgr.AlbionHastener;
+							Model = (ushort)eLivingModel.AlbionHastener;
 							Size = 45;
 							break;
 						}
 					case eRealm.Midgard:
 						{
-							Model = TemplateMgr.MidgardHastener;
+							Model = (ushort)eLivingModel.MidgardHastener;
 							Size = 50;
 							Flags ^= GameNPC.eFlags.GHOST;
 							break;
 						}
 					case eRealm.Hibernia:
 						{
-							Model = TemplateMgr.HiberniaHastener;
+							Model = (ushort)eLivingModel.HiberniaHastener;
 							Size = 45;
 							break;
 						}

@@ -235,7 +235,7 @@ namespace DOL.GS.Commands
 								}
 							}
 
-							TemplateMgr.RefreshTemplate(guard);
+							guard.RefreshTemplate();
 							guard.AddToWorld();
 
 							if (guard.Component != null && guard.Component.Keep != null)
