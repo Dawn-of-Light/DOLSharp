@@ -475,6 +475,6 @@ namespace DOL.GS
 			m_profession = "None";
 		}
 
-        public override List<PlayerRace> EligibleRaces => throw new NotImplementedException();
+        public override List<PlayerRace> EligibleRaces => PlayerRace.AllRaces;
     }
 }
