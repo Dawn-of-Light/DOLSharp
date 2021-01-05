@@ -17,8 +17,12 @@
  *
  */
 
+using DOL.AI.Brain;
 using DOL.GS.PlayerClass;
 using DOL.GS.Quests;
+using DOL.GS.ServerProperties;
+using DOL.Language;
+using System;
 
 namespace DOL.GS.Keeps
 {
@@ -261,6 +265,63 @@ namespace DOL.GS.Keeps
 			else if (ModelRealm == eRealm.Midgard) return new ClassWarrior();
 			else if (ModelRealm == eRealm.Hibernia) return new ClassHero();
 			return new DefaultCharacterClass();
+		}
+
+		protected override void SetBlockEvadeParryChance()
+		{
+			base.SetBlockEvadeParryChance();
+
+			BlockChance = 15;
+			ParryChance = 15;
+
+			if (ModelRealm != eRealm.Albion)
+			{
+				EvadeChance = 10;
+				ParryChance = 5;
+			}
+		}
+
+		protected override void SetRespawnTime()
+		{
+			if (Realm == eRealm.None && (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE ||
+			GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP))
+			{
+				// In PvE & PvP servers, lords are really just mobs farmed for seals.
+				int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
+				int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
+					(Util.Random(-iVariance, iVariance)));
+
+				RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
+			}
+			else
+				RespawnInterval = 10000; // 10 seconds
+		}
+
+		protected override void SetAggression()
+		{
+			(Brain as KeepGuardBrain).SetAggression(90, 400);
+		}
+
+		protected override void SetName()
+		{
+			switch (ModelRealm)
+			{
+				case eRealm.None:
+				case eRealm.Albion:
+					Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.CaptainCommander");
+					break;
+				case eRealm.Midgard:
+					Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.HersirCommander");
+					break;
+				case eRealm.Hibernia:
+					Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.ChampionCommander");
+					break;
+			}
+
+			if (Realm == eRealm.None)
+			{
+				Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Renegade", Name);
+			}
 		}
 	}
 

@@ -949,11 +949,6 @@ namespace DOL.GS.Keeps
 			base.DeleteFromDatabase();
 		}
 
-		/// <summary>
-		/// Load the guard from a position
-		/// </summary>
-		/// <param name="pos">The position for the guard</param>
-		/// <param name="component">The component it is being spawned on</param>
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{
 			m_templateID = pos.TemplateID;
@@ -971,8 +966,8 @@ namespace DOL.GS.Keeps
 		public void MoveToPosition(DBKeepPosition position)
 		{
 			PositionMgr.LoadGuardPosition(position, this);
-			if (!this.InCombat)
-				this.MoveTo(this.CurrentRegionID, this.X, this.Y, this.Z, this.Heading);
+			if (!InCombat)
+				MoveTo(CurrentRegionID, X, Y, Z, Heading);
 		}
 		#endregion
 
@@ -988,19 +983,19 @@ namespace DOL.GS.Keeps
 			if (guild != null)
 				guildname = guild.Name;
 
-			this.GuildName = guildname;
+			GuildName = guildname;
 
-			if (this.Inventory == null)
+			if (Inventory == null)
 				return;
 
 			int emblem = 0;
 			if (guild != null)
 				emblem = guild.Emblem;
-			InventoryItem lefthand = this.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+			InventoryItem lefthand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 			if (lefthand != null)
 				lefthand.Emblem = emblem;
 
-			InventoryItem cloak = this.Inventory.GetItem(eInventorySlot.Cloak);
+			InventoryItem cloak = Inventory.GetItem(eInventorySlot.Cloak);
 			if (cloak != null)
 			{
 				cloak.Emblem = emblem;
@@ -1018,10 +1013,6 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// Adding special handling for walking to a point for patrol guards to be in a formation
 		/// </summary>
-		/// <param name="tx"></param>
-		/// <param name="ty"></param>
-		/// <param name="tz"></param>
-		/// <param name="speed"></param>
 		public override void WalkTo(int tx, int ty, int tz, short speed)
 		{
 			int offX = 0; int offY = 0;
@@ -1030,9 +1021,6 @@ namespace DOL.GS.Keeps
 			base.WalkTo(tx - offX, ty - offY, tz, speed);
 		}
 
-		/// <summary>
-		/// Walk to the spawn point, always max speed for keep guards, or continue patrol.
-		/// </summary>
 		public override void WalkToSpawn()
 		{
 			if (PatrolGroup != null)
@@ -1073,282 +1061,30 @@ namespace DOL.GS.Keeps
 			ClothingMgr.SetEmblem(this);
 		}
 
-
-		/// <summary>
-		/// Gets short name of keeps
-		/// </summary>
-		/// <param name="KeepName">Complete name of the Keep</param>
-		private string GetKeepShortName(string KeepName)
+		protected virtual void SetName()
 		{
-			string ShortName;
-			if (KeepName.StartsWith("Caer"))//Albion
-			{
-				ShortName = KeepName.Substring(5);
-			}
-			else if (KeepName.StartsWith("Fort"))
-			{
-				ShortName = KeepName.Substring(5);
-			}
-			else if (KeepName.StartsWith("Dun"))//Hibernia
-			{
-				if (KeepName == "Dun nGed")
-				{
-					ShortName = "Ged";
-				}
-				else if (KeepName == "Dun da Behn")
-				{
-					ShortName = "Behn";
-				}
-				else
-				{
-					ShortName = KeepName.Substring(4);
-				}
-			}
-			else if (KeepName.StartsWith("Castle"))// Albion Relic
-			{
-				ShortName = KeepName.Substring(7);
-			}
-			else//Midgard
-			{
-				if (KeepName.Contains(" "))
-					ShortName = KeepName.Substring(0, KeepName.IndexOf(" ", 0));
-				else
-					ShortName = KeepName;
-			}
-			return ShortName;
-		}
-
-		private void SetName()
-		{
-			if (this is FrontierHastener)
-			{
-				Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Hastener");
-				return;
-			}
-			if (this is GuardLord)
-			{
-				if (Component == null)
-				{
-					Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Commander", CurrentZone.Description);
-					return;
-				}
-				else if (IsTowerGuard)
-				{
-					Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.TowerCaptain");
-					return;
-				}
-			}
-			switch (ModelRealm)
-			{
-				#region Albion / None
-				case eRealm.None:
-				case eRealm.Albion:
-					{
-						if (this is GuardArcher)
-						{
-							if (IsPortalKeepGuard)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.BowmanCommander");
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Scout");
-						}
-						else if (this is GuardCaster)
-						{
-							if (IsPortalKeepGuard)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterWizard");
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Wizard");
-						}
-						else if (this is GuardFighter)
-						{
-							if (IsPortalKeepGuard)
-							{
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.KnightCommander");
-							}
-							else
-							{
-								if (Gender == eGender.Male)
-									Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Armsman");
-								else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Armswoman");
-							}
-						}
-						else if (this is GuardHealer)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Cleric");
-						}
-						else if (this is GuardLord)
-						{
-							if (Gender == eGender.Male)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lord", GetKeepShortName(Component.AbstractKeep.Name));
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lady", GetKeepShortName(Component.AbstractKeep.Name));
-						}
-						else if (this is GuardStealther)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Infiltrator");
-						}
-						else if (this is MissionMaster)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.CaptainCommander");
-						}
-						break;
-					}
-				#endregion
-				#region Midgard
-				case eRealm.Midgard:
-					{
-						if (this is GuardArcher)
-						{
-							if (IsPortalKeepGuard)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.NordicHunter");
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Hunter");
-						}
-						else if (this is GuardCaster)
-						{
-							if (IsPortalKeepGuard)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterRunes");
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Runemaster");
-						}
-						else if (this is GuardFighter)
-						{
-							if (IsPortalKeepGuard)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.NordicJarl");
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Huscarl");
-						}
-						else if (this is GuardHealer)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Healer");
-						}
-						else if (this is GuardLord)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Jarl", GetKeepShortName(Component.AbstractKeep.Name));
-						}
-						else if (this is GuardStealther)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Shadowblade");
-						}
-						else if (this is MissionMaster)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.HersirCommander");
-						}
-						break;
-					}
-				#endregion
-				#region Hibernia
-				case eRealm.Hibernia:
-					{
-						if (this is GuardArcher)
-						{
-							if (IsPortalKeepGuard)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterRanger");
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Ranger");
-						}
-						else if (this is GuardCaster)
-						{
-							if (IsPortalKeepGuard)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.MasterEldritch");
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Eldritch");
-						}
-						else if (this is GuardFighter)
-						{
-							if (IsPortalKeepGuard)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Champion");
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Guardian");
-						}
-						else if (this is GuardHealer)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Druid");
-						}
-						else if (this is GuardLord)
-						{
-							if (Gender == eGender.Male)
-								Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", GetKeepShortName(Component.AbstractKeep.Name));
-							else Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftess", GetKeepShortName(Component.AbstractKeep.Name));
-						}
-						else if (this is GuardStealther)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Nightshade");
-						}
-						else if (this is MissionMaster)
-						{
-							Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.ChampionCommander");
-						}
-						break;
-					}
-					#endregion
-			}
-
 			if (Realm == eRealm.None)
 			{
-				Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Renegade", Name);
+				Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Renegade", Name);
 			}
 		}
 
-		private void SetBlockEvadeParryChance()
+		protected virtual void SetBlockEvadeParryChance()
 		{
 			BlockChance = 0;
 			EvadeChance = 0;
 			ParryChance = 0;
-
-			if (this is GuardLord || this is MissionMaster)
-			{
-				BlockChance = 15;
-				ParryChance = 15;
-
-				if (ModelRealm != eRealm.Albion)
-				{
-					EvadeChance = 10;
-					ParryChance = 5;
-				}
-			}
-			else if (this is GuardStealther)
-			{
-				EvadeChance = 30;
-			}
-			else if (this is GuardFighter)
-			{
-				BlockChance = 10;
-				ParryChance = 10;
-
-				if (ModelRealm != eRealm.Albion)
-				{
-					EvadeChance = 5;
-					ParryChance = 5;
-				}
-			}
-			else if (this is GuardHealer)
-			{
-				BlockChance = 5;
-			}
-			else if (this is GuardArcher)
-			{
-				if (ModelRealm == eRealm.Albion)
-				{
-					BlockChance = 10;
-					EvadeChance = 5;
-				}
-				else
-				{
-					EvadeChance = 15;
-				}
-			}
 		}
+
+		protected virtual KeepGuardBrain GetBrain() => new KeepGuardBrain();
 
 		protected virtual void SetBrain()
 		{
 			if (Brain is KeepGuardBrain == false)
 			{
-				KeepGuardBrain brain = new KeepGuardBrain();
-				if (this is GuardCaster)
-					brain = new CasterBrain();
-				else if (this is GuardHealer)
-					brain = new HealerBrain();
-				else if (this is GuardLord)
-					brain = new LordBrain();
-
+				KeepGuardBrain brain = GetBrain();
 				AddBrain(brain);
 				brain.guard = this;
-			}
-
-			if (this is MissionMaster)
-			{
-				(Brain as KeepGuardBrain).SetAggression(90, 400);
 			}
 		}
 
@@ -1358,11 +1094,7 @@ namespace DOL.GS.Keeps
 			{
 				MaxSpeedBase = 575;
 			}
-			if ((this is GuardLord && Component != null) || this is GuardStaticArcher || this is GuardStaticCaster)
-			{
-				MaxSpeedBase = 0;
-			}
-			else if (Level < 250)
+			if (Level < 250)
 			{
 				if (Realm == eRealm.None)
 				{
@@ -1402,24 +1134,13 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private void SetStats()
+		protected virtual void SetStats()
 		{
-			if (this is GuardLord)
-			{
-				Strength = (short)(Properties.LORD_AUTOSET_STR_BASE + (10 * Level * Properties.LORD_AUTOSET_STR_MULTIPLIER));
-				Dexterity = (short)(Properties.LORD_AUTOSET_DEX_BASE + (Level * Properties.LORD_AUTOSET_DEX_MULTIPLIER));
-				Constitution = (short)(Properties.LORD_AUTOSET_CON_BASE + (Level * Properties.LORD_AUTOSET_CON_MULTIPLIER));
-				Quickness = (short)(Properties.LORD_AUTOSET_QUI_BASE + (Level * Properties.LORD_AUTOSET_QUI_MULTIPLIER));
-				Intelligence = (short)(Properties.LORD_AUTOSET_INT_BASE + (Level * Properties.LORD_AUTOSET_INT_MULTIPLIER));
-			}
-			else
-			{
-				Strength = (short)(Properties.GUARD_AUTOSET_STR_BASE + (10 * Level * Properties.GUARD_AUTOSET_STR_MULTIPLIER));
-				Dexterity = (short)(Properties.GUARD_AUTOSET_DEX_BASE + (Level * Properties.GUARD_AUTOSET_DEX_MULTIPLIER));
-				Constitution = (short)(Properties.GUARD_AUTOSET_CON_BASE + (Level * Properties.GUARD_AUTOSET_CON_MULTIPLIER));
-				Quickness = (short)(Properties.GUARD_AUTOSET_QUI_BASE + (Level * Properties.GUARD_AUTOSET_QUI_MULTIPLIER));
-				Intelligence = (short)(Properties.GUARD_AUTOSET_INT_BASE + (Level * Properties.GUARD_AUTOSET_INT_MULTIPLIER));
-			}
+			Strength = (short)(Properties.GUARD_AUTOSET_STR_BASE + (10 * Level * Properties.GUARD_AUTOSET_STR_MULTIPLIER));
+			Dexterity = (short)(Properties.GUARD_AUTOSET_DEX_BASE + (Level * Properties.GUARD_AUTOSET_DEX_MULTIPLIER));
+			Constitution = (short)(Properties.GUARD_AUTOSET_CON_BASE + (Level * Properties.GUARD_AUTOSET_CON_MULTIPLIER));
+			Quickness = (short)(Properties.GUARD_AUTOSET_QUI_BASE + (Level * Properties.GUARD_AUTOSET_QUI_MULTIPLIER));
+			Intelligence = (short)(Properties.GUARD_AUTOSET_INT_BASE + (Level * Properties.GUARD_AUTOSET_INT_MULTIPLIER));
 		}
 
 		private void SetRealm()
@@ -1427,27 +1148,19 @@ namespace DOL.GS.Keeps
 			if (Component != null)
 			{
 				Realm = Component.AbstractKeep.Realm;
-
-				if (Realm != eRealm.None)
-				{
-					ModelRealm = Realm;
-				}
-				else
-				{
-					ModelRealm = (eRealm)Util.Random(1, 3);
-				}
 			}
 			else
 			{
 				Realm = CurrentZone.Realm;
-				if (Realm != eRealm.None)
-				{
-					ModelRealm = Realm;
-				}
-				else
-				{
-					ModelRealm = (eRealm)Util.Random(1, 3);
-				}
+			}
+
+			if (Realm != eRealm.None)
+			{
+				ModelRealm = Realm;
+			}
+			else
+			{
+				ModelRealm = (eRealm)Util.Random(1, 3);
 			}
 		}
 
@@ -1467,70 +1180,16 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private void SetRespawnTime()
+		protected virtual void SetRespawnTime()
 		{
-			if (this is FrontierHastener)
-			{
-				RespawnInterval = 5000; // 5 seconds
-			}
-			else if (this is GuardLord)
-			{
-				if (Component != null)
-				{
-					RespawnInterval = Component.AbstractKeep.LordRespawnTime;
-				}
-				else
-				{
-					if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE
-						|| GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
-					{
-						// In PvE & PvP servers, lords are really just mobs farmed for seals.
-						int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
-						int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
-							(Util.Random(-iVariance, iVariance)));
+			int iVariance = 1000 * Math.Abs(Properties.GUARD_RESPAWN_VARIANCE);
+			int iRespawn = 60 * ((Math.Abs(Properties.GUARD_RESPAWN) * 1000) +
+				(Util.Random(-iVariance, iVariance)));
 
-						RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
-					}
-					else
-						RespawnInterval = 10000; // 10 seconds
-				}
-			}
-			else if (this is MissionMaster)
-			{
-				if (Realm == eRealm.None && (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE ||
-				GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP))
-				{
-					// In PvE & PvP servers, lords are really just mobs farmed for seals.
-					int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
-					int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
-						(Util.Random(-iVariance, iVariance)));
-
-					RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
-				}
-				else
-					RespawnInterval = 10000; // 10 seconds
-			}
-			else
-			{
-				int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
-				int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
-					(Util.Random(-iVariance, iVariance)));
-
-				RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
-			}
+			RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
 		}
 
-		private void SetAggression()
-		{
-			if (this is GuardStaticCaster)
-			{
-				(Brain as KeepGuardBrain).SetAggression(99, 1850);
-			}
-			else if (this is GuardStaticArcher)
-			{
-				(Brain as KeepGuardBrain).SetAggression(99, 2100);
-			}
-		}
+		protected virtual void SetAggression() { }
 
 		public void SetLevel()
 		{

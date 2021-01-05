@@ -16,11 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using DOL.GS.ServerProperties;
+using DOL.Language;
 using System;
 using System.Collections;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.GS.Spells;
 
 namespace DOL.GS.Keeps
 {
@@ -90,5 +89,16 @@ namespace DOL.GS.Keeps
 			return true;
 		}
 		#endregion Examine/Interact Message
+
+		protected override void SetRespawnTime()
+		{
+				RespawnInterval = 5000;
+		}
+
+		protected override void SetName()
+		{
+			Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Hastener");
+			return;
+		}
 	}
 }
