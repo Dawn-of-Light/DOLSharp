@@ -1562,33 +1562,6 @@ namespace DOL.GS.Keeps
 
 		protected virtual ICharacterClass GetClass()
         {
-			if (ModelRealm == eRealm.Albion)
-			{
-				if (this is GuardArcher) return new ClassScout();
-				else if (this is GuardCaster) return new ClassWizard();
-				else if (this is GuardFighter) return new ClassArmsman();
-				else if (this is GuardHealer) return new ClassCleric();
-				else if (this is GuardLord || this is MissionMaster) return new ClassArmsman();
-				else if (this is GuardStealther) return new ClassInfiltrator();
-			}
-			else if (ModelRealm == eRealm.Midgard)
-			{
-				if (this is GuardArcher) return new ClassHunter();
-				else if (this is GuardCaster) return new ClassRunemaster();
-				else if (this is GuardFighter) return new ClassWarrior();
-				else if (this is GuardHealer) return new ClassHealer();
-				else if (this is GuardLord || this is MissionMaster) return new ClassWarrior();
-				else if (this is GuardStealther) return new ClassShadowblade();
-			}
-			else if(ModelRealm == eRealm.Hibernia)
-            {
-				if (this is GuardArcher) return new ClassRanger();
-				else if (this is GuardCaster) return new ClassEldritch();
-				else if (this is GuardFighter) return new ClassHero();
-				else if (this is GuardHealer) return new ClassDruid();
-				else if (this is GuardLord || this is MissionMaster) return new ClassHero();
-				else if (this is GuardStealther) return new ClassNightshade();
-			}
 			return new DefaultCharacterClass();
 		}
 
@@ -1598,34 +1571,7 @@ namespace DOL.GS.Keeps
 			{
 				return;
 			}
-			if (this is FrontierHastener)
-			{
-				switch (Realm)
-				{
-					case eRealm.None:
-					case eRealm.Albion:
-						{
-							Model = (ushort)eLivingModel.AlbionHastener;
-							Size = 45;
-							break;
-						}
-					case eRealm.Midgard:
-						{
-							Model = (ushort)eLivingModel.MidgardHastener;
-							Size = 50;
-							Flags ^= GameNPC.eFlags.GHOST;
-							break;
-						}
-					case eRealm.Hibernia:
-						{
-							Model = (ushort)eLivingModel.HiberniaHastener;
-							Size = 45;
-							break;
-						}
-				}
-				return;
-			}
-
+			
 			var possibleRaces = GetClass().EligibleRaces.FindAll(s => s.GetModel(Gender) != eLivingModel.None);
 			if (possibleRaces.Count > 0)
 			{

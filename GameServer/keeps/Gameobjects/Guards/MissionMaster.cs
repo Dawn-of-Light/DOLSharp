@@ -17,6 +17,7 @@
  *
  */
 
+using DOL.GS.PlayerClass;
 using DOL.GS.Quests;
 
 namespace DOL.GS.Keeps
@@ -252,6 +253,14 @@ namespace DOL.GS.Keeps
 				SayTo(player, player.Group.Mission.Description);
 
 			return true;
+		}
+
+		protected override ICharacterClass GetClass()
+		{
+			if (ModelRealm == eRealm.Albion) return new ClassArmsman();
+			else if (ModelRealm == eRealm.Midgard) return new ClassWarrior();
+			else if (ModelRealm == eRealm.Hibernia) return new ClassHero();
+			return new DefaultCharacterClass();
 		}
 	}
 

@@ -18,6 +18,7 @@
 
 using DOL.GS;
 using DOL.GS.PacketHandler;
+using DOL.GS.PlayerClass;
 using DOL.Language;
 
 
@@ -70,6 +71,14 @@ namespace DOL.GS.Keeps
 		public override double GetArmorAbsorb(eArmorSlot slot)
 		{
 			return base.GetArmorAbsorb(slot) - 0.05;
+		}
+
+		protected override ICharacterClass GetClass()
+		{
+			if (ModelRealm == eRealm.Albion) return new ClassWizard();
+			else if (ModelRealm == eRealm.Midgard) return new ClassRunemaster();
+			else if (ModelRealm == eRealm.Hibernia) return new ClassEldritch();
+			return new DefaultCharacterClass();
 		}
 	}
 }

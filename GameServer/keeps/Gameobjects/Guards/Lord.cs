@@ -4,6 +4,7 @@ using DOL.AI.Brain;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.GS.PlayerClass;
 
 namespace DOL.GS.Keeps
 {
@@ -345,5 +346,13 @@ namespace DOL.GS.Keeps
 
             return true;
         }
-    }
+
+		protected override ICharacterClass GetClass()
+		{
+			if (ModelRealm == eRealm.Albion) return new ClassArmsman();
+			else if (ModelRealm == eRealm.Midgard) return new ClassWarrior();
+			else if (ModelRealm == eRealm.Hibernia) return new ClassHero();
+			return new DefaultCharacterClass();
+		}
+	}
 }

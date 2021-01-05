@@ -1,3 +1,5 @@
+using DOL.GS.PlayerClass;
+
 namespace DOL.GS.Keeps
 {
 	public class GuardArcher : GameKeepGuard
@@ -8,6 +10,14 @@ namespace DOL.GS.Keeps
 			{
 				return 2100;
 			}
+		}
+
+		protected override ICharacterClass GetClass()
+		{
+			if (ModelRealm == eRealm.Albion) return new ClassScout();
+			else if (ModelRealm == eRealm.Midgard) return new ClassHunter();
+			else if (ModelRealm == eRealm.Hibernia) return new ClassRanger();
+			return new DefaultCharacterClass();
 		}
 	}
 }

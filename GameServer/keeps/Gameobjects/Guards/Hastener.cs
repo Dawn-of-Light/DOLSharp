@@ -34,6 +34,38 @@ namespace DOL.GS.Keeps
 			get { return eFlags.PEACE; }
 		}
 
+		protected override void SetModel()
+		{
+			if (!ServerProperties.Properties.AUTOMODEL_GUARDS_LOADED_FROM_DB && !LoadedFromScript)
+			{
+				return;
+			}
+			switch (Realm)
+			{
+				case eRealm.None:
+				case eRealm.Albion:
+					{
+						Model = (ushort)eLivingModel.AlbionHastener;
+						Size = 45;
+						break;
+					}
+				case eRealm.Midgard:
+					{
+						Model = (ushort)eLivingModel.MidgardHastener;
+						Size = 50;
+						Flags ^= eFlags.GHOST;
+						break;
+					}
+				case eRealm.Hibernia:
+					{
+						Model = (ushort)eLivingModel.HiberniaHastener;
+						Size = 45;
+						break;
+					}
+			}
+			return;
+		}
+
 		#region Examine/Interact Message
 
 		/// <summary>
