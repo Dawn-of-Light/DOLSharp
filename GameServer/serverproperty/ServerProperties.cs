@@ -1,4 +1,3 @@
-
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
@@ -612,7 +611,7 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("world", "world_day_increment", "Day Increment (0 to 512, default is 24).  Larger increments make shorter days.", (uint)24)]
 		public static uint WORLD_DAY_INCREMENT;
 
-		[ServerProperty("world", "world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second). 0 will disable this update.", (uint)10000)]
+		[ServerProperty("world", "world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second). 0 will disable this update.", (uint)8000)]
 		public static uint WORLD_NPC_UPDATE_INTERVAL;
 
 		[ServerProperty("world", "world_object_update_interval", "How often (milliseconds) will objects (static, housing, doors, broadcast updates to the clients. Minimum allowed = 10000 (10 seconds). 0 will disable this update.", (uint)30000)]
