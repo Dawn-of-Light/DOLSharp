@@ -11378,7 +11378,21 @@ namespace DOL.GS
 				//if (item.ExtraBonusType < 20)
 				//Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.ExtraBonusType))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 			}
-
+			if (Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+			{
+				if (item.SpellID > 0)
+				{
+					TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+					TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+					TempProperties.setProperty("ITEMREUSEDELAY" + item.Id_nb, CurrentRegion.Time);
+				}
+				else if (item.SpellID1 > 0)
+				{
+					TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
+					TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
+					TempProperties.setProperty("ITEMREUSEDELAY" + item.Id_nb, CurrentRegion.Time);
+				}
+			}
 			if (ObjectState == eObjectState.Active)
 			{
 				// TODO: remove when properties system is finished
