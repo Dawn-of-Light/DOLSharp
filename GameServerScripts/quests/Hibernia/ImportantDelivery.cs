@@ -172,7 +172,7 @@ namespace DOL.GS.Quests.Hibernia
 				aethic.AddToWorld();
 			}
 			else
-				aethic = npcs[0] as GameStableMaster;
+				aethic = npcs[0];
 
 			npcs = WorldMgr.GetNPCsByName("Freagus", eRealm.Hibernia);
 			if (npcs.Length == 0)
