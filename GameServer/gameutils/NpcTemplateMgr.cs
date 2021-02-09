@@ -181,7 +181,7 @@ namespace DOL.GS
 		/// <returns>The mob template or null if nothing is found</returns>
 		public static NpcTemplate GetTemplate(int templateId)
 		{
-			if (templateId == -1)
+			if (templateId == -1 || templateId == 0)
 				return null;
 			lock (m_mobTemplates.SyncRoot)
 			{
@@ -193,8 +193,7 @@ namespace DOL.GS
 				}
 				else if (entry == null)
 				{
-					//if (log.IsWarnEnabled)
-						//log.Warn("No npctemplate with ID " + templateId + " found.");
+					log.Error("No npctemplate with ID " + templateId + " found.");
 					return null;
 				}
 				return (NpcTemplate)entry;
