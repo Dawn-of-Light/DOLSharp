@@ -147,14 +147,10 @@ namespace DOL.GS
 		#endregion
 
 		#region Properties
-
 		/// <summary>
 		/// Returns the instance
 		/// </summary>
-		public static GameServer Instance
-		{
-			get { return m_instance; }
-		}
+		public static GameServer Instance => m_instance;
 
 		/// <summary>
 		/// Retrieves the server configuration
@@ -192,10 +188,7 @@ namespace DOL.GS
 		/// </summary>
 		public NpcManager NpcManager { get; protected set; }
 
-		/// <summary>
-		/// Gets the current rules used by server
-		/// </summary>
-		public static IServerRules ServerRules
+		protected virtual IServerRules ServerRulesImpl
 		{
 			get
 			{
@@ -218,6 +211,11 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Gets the current rules used by server
+		/// </summary>
+		public static IServerRules ServerRules => m_instance.ServerRulesImpl;
+
 		public static IKeepManager KeepManager
 		{
 			get
@@ -235,13 +233,18 @@ namespace DOL.GS
 			}
 		}
 
+		protected virtual IObjectDatabase DataBaseImpl
+		{
+			get
+			{
+				return Instance.m_database;
+			}
+		}
+
 		/// <summary>
 		/// Gets the database instance
 		/// </summary>
-		public static IObjectDatabase Database
-		{
-			get { return Instance.m_database; }
-		}
+		public static IObjectDatabase Database => m_instance.DataBaseImpl;
 		
 		/// <summary>
 		/// Gets this Instance's Database
@@ -284,6 +287,9 @@ namespace DOL.GS
 		#endregion
 
 		#region Initialization
+
+		public static void LoadTestDouble(GameServer server) { m_instance = server; }
+
 		/// <summary>
 		/// Creates the gameserver instance
 		/// </summary>
@@ -1530,7 +1536,7 @@ namespace DOL.GS
 		{
 			m_gmLog = LogManager.GetLogger(Configuration.GMActionsLoggerName);
 			m_cheatLog = LogManager.GetLogger(Configuration.CheatLoggerName);
-		    m_inventoryLog = LogManager.GetLogger(Configuration.InventoryLoggerName);
+			m_inventoryLog = LogManager.GetLogger(Configuration.InventoryLoggerName);
 
 			if (log.IsDebugEnabled)
 			{
@@ -1546,12 +1552,7 @@ namespace DOL.GS
 				m_udpReceiveCallback = new AsyncCallback(RecvFromCallback);
 				m_udpSendCallback = new AsyncCallback(SendToCallback);
 
-				if (!InitDB() || m_database == null)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Could not initialize DB, please check path/connection string");
-					throw new ApplicationException("DB initialization error");
-				}
+				CheckAndInitDB();
 
 				if (log.IsInfoEnabled)
 					log.Info("Game Server Initialization finished!");
@@ -1561,6 +1562,16 @@ namespace DOL.GS
 				if (log.IsFatalEnabled)
 					log.Fatal("GameServer initialization failed!", e);
 				throw new ApplicationException("Fatal Error: Could not initialize Game Server", e);
+			}
+		}
+
+		protected virtual void CheckAndInitDB()
+		{
+			if (!InitDB() || m_database == null)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("Could not initialize DB, please check path/connection string");
+				throw new ApplicationException("DB initialization error");
 			}
 		}
 		#endregion

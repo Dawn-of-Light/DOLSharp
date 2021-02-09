@@ -132,7 +132,15 @@ namespace DOL.GS.Quests.Midgard
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lynnleigh", eRealm.Midgard);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 100 && npc.X == 760118 && npc.Y == 758453)
+					{
+						Lynnleigh = npc;
+						break;
+					}
+
+			if (Lynnleigh == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Lynnleigh , creating it ...");
@@ -144,9 +152,9 @@ namespace DOL.GS.Quests.Midgard
 				Lynnleigh.CurrentRegionID = 100;
 				Lynnleigh.Size = 51;
 				Lynnleigh.Level = 50;
-				Lynnleigh.X = 760085;
+				Lynnleigh.X = 760118;
 				Lynnleigh.Y = 758453;
-				Lynnleigh.Z = 4736;
+				Lynnleigh.Z = 4737;
 				Lynnleigh.Heading = 2197;
 				Lynnleigh.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -154,26 +162,31 @@ namespace DOL.GS.Quests.Midgard
 					Lynnleigh.SaveIntoDatabase();
 				}
 			}
-			else
-				Lynnleigh = npcs[0];
 			// end npc
 			npcs = WorldMgr.GetNPCsByName("Elizabeth", eRealm.Midgard);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 100 && npc.X == 802597 && npc.Y == 727896)
+					{
+						Elizabeth = npc;
+						break;
+					}
+
+			if (Elizabeth == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Elizabeth , creating it ...");
 				Elizabeth = new GameNPC();
 				Elizabeth.Model = 217;
 				Elizabeth.Name = "Elizabeth";
-				Elizabeth.GuildName = "Enchanter";
 				Elizabeth.Realm = eRealm.Midgard;
 				Elizabeth.CurrentRegionID = 100;
 				Elizabeth.Size = 51;
 				Elizabeth.Level = 41;
-				Elizabeth.X = 802849;
-				Elizabeth.Y = 727081;
-				Elizabeth.Z = 4681;
+				Elizabeth.X = 802597;
+				Elizabeth.Y = 727896;
+				Elizabeth.Z = 4760;
 				Elizabeth.Heading = 2480;
 				Elizabeth.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -182,13 +195,19 @@ namespace DOL.GS.Quests.Midgard
 				}
 
 			}
-			else
-				Elizabeth = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Ydenia of Seithkona", eRealm.None);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 100 && npc.X == 637680 && npc.Y == 767189)
+					{
+						Ydenia = npc;
+						break;
+					}
+
+			if (Ydenia == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Ydenia , creating it ...");
@@ -211,10 +230,7 @@ namespace DOL.GS.Quests.Midgard
 				{
 					Ydenia.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Ydenia = npcs[0];
 			// end npc
 
 			#endregion

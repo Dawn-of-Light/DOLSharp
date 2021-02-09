@@ -201,9 +201,24 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort)item.Color);
 			//						flag |= 0x01; // newGuildEmblem
 			flag |= 0x02; // enable salvage button
-			AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_gameClient.Player.CraftingPrimarySkill);
-			if (skill != null && skill is AdvancedCraftingSkill/* && ((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_gameClient.Player, item)*/)
-				flag |= 0x04; // enable craft button
+
+			// Enable craft button if the item can be modified and the player has alchemy or spellcrafting
+			eCraftingSkill skill = CraftingMgr.GetCraftingSkill(item);
+			switch (skill)
+			{
+				case eCraftingSkill.ArmorCrafting:
+				case eCraftingSkill.Fletching:
+				case eCraftingSkill.Tailoring:
+				case eCraftingSkill.WeaponCrafting:
+					if (m_gameClient.Player.CraftingSkills.ContainsKey(eCraftingSkill.Alchemy)
+						|| m_gameClient.Player.CraftingSkills.ContainsKey(eCraftingSkill.SpellCrafting))
+						flag |= 0x04; // enable craft button
+					break;
+
+				default:
+					break;
+			}
+
 			ushort icon1 = 0;
 			ushort icon2 = 0;
 			string spell_name1 = "";

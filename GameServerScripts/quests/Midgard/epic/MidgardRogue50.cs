@@ -102,7 +102,15 @@ namespace DOL.GS.Quests.Midgard
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Masrim", eRealm.Midgard);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 100 && npc.X == 749099 && npc.Y == 813104)
+					{
+						Masrim = npc;
+						break;
+					}
+
+			if (Masrim == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Masrim , creating it ...");
@@ -123,15 +131,20 @@ namespace DOL.GS.Quests.Midgard
 				{
 					Masrim.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Masrim = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Oona", eRealm.None);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 100 && npc.X == 607233 && npc.Y == 786850)
+					{
+						Oona = npc;
+						break;
+					}
+
+			if (Oona == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Oona , creating it ...");
@@ -153,15 +166,20 @@ namespace DOL.GS.Quests.Midgard
 				{
 					Oona.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Oona = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Morlin Caan", eRealm.Midgard);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 101 && npc.X == 33400 && npc.Y == 33620)
+					{
+						MorlinCaan = npc;
+						break;
+					}
+
+			if (MorlinCaan == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Morlin Caan , creating it ...");
@@ -182,10 +200,7 @@ namespace DOL.GS.Quests.Midgard
 				{
 					MorlinCaan.SaveIntoDatabase();
 				}
-
 			}
-			else
-				MorlinCaan = npcs[0];
 			// end npc
 
 			#endregion

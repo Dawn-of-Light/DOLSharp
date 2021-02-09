@@ -124,22 +124,6 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public override double GetArmorAbsorb(eArmorSlot slot)
-		{
-			double abs = GetModified(eProperty.ArmorAbsorption);
-
-			if (this is GuardLord)
-			{
-				abs += 5;
-			}
-			else if (this is GuardCaster)
-			{
-				abs -= 5;
-			}
-
-			return Math.Max(0.0, abs * 0.01);
-		}
-
 		/// <summary>
 		/// Guards always have Mana to cast spells
 		/// </summary>
@@ -154,6 +138,8 @@ namespace DOL.GS.Keeps
 		}
 
 		private bool m_changingPositions = false;
+
+		public GameLiving HealTarget = null;
 
 		/// <summary>
 		/// The keep lord is under attack, go help them
@@ -441,9 +427,10 @@ namespace DOL.GS.Keeps
 
 		public void GuardStartSpellHealCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
-			if ((response & 0x100) == 0x100)
+			if ((response & 0x100) == 0x100 && HealTarget != null)
 			{
-				SpellMgr.CastHealSpell(this, TargetObject as GameLiving);
+				TargetObject = HealTarget;
+				SpellMgr.CastHealSpell(this, HealTarget as GameLiving);
 			}
 		}
 		public void GuardStartSpellNukeCheckLOS(GamePlayer player, ushort response, ushort targetOID)

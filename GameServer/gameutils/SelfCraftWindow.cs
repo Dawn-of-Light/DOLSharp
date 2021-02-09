@@ -284,10 +284,6 @@ namespace DOL.GS
 							((SpellCrafting)skill).ShowSpellCraftingInfos(m_owner, itemToCombine);
 					}
 				}
-				else
-				{
-					m_owner.Out.SendMessage("You don't have enough skill to combine items.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				}
 
 				m_owner.Out.SendTradeWindow();
 			}

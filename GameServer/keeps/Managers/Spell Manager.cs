@@ -13,6 +13,8 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class SpellMgr
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public static void CheckForNuke(GameKeepGuard guard)
 		{
 			if(guard==null) return;
@@ -41,8 +43,12 @@ namespace DOL.GS.Keeps
 		public static void CheckAreaForHeals(GameKeepGuard guard)
 		{
 			GameLiving target = null;
+			GamePlayer LOSChecker = null;
+
 			foreach (GamePlayer player in guard.GetPlayersInRadius(2000))
 			{
+				LOSChecker = player;
+
 				if(!player.IsAlive) continue;
 				if (GameServer.ServerRules.IsSameRealm(player, guard, true))
 				{
@@ -72,12 +78,7 @@ namespace DOL.GS.Keeps
 
 			if (target != null)
 			{
-				GamePlayer LOSChecker = null;
-				if (target is GamePlayer)
-				{
-					LOSChecker = target as GamePlayer;
-				}
-				else
+				if (LOSChecker == null)
 				{
 					foreach (GamePlayer player in guard.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
@@ -88,7 +89,8 @@ namespace DOL.GS.Keeps
 				if (LOSChecker == null)
 					return;
 				if(!target.IsAlive) return;
-				guard.TargetObject = target;
+				
+				guard.HealTarget = target;
 				LOSChecker.Out.SendCheckLOS(guard, target, new CheckLOSResponse(guard.GuardStartSpellHealCheckLOS));
 			}
 		}

@@ -2327,7 +2327,7 @@ namespace DOL.GS
 			}
 
 			// Everything below this point is already in the mob table
-			if (!template.ReplaceMobValues)
+			if (!template.ReplaceMobValues && !LoadedFromScript)
 				return;
 
 			var m_templatedInventory = new List<string>();
@@ -3992,15 +3992,15 @@ namespace DOL.GS
 				{
 					case Keeps.GameKeepGuard guard:
 						if (ServerProperties.Properties.GUARD_2H_BONUS_DAMAGE)
-							damage = (100 + m_blockChance) / 100.00;
+							damage *= (100 + m_blockChance) / 100.00;
 						break;
 					case GamePet pet:
 						if (ServerProperties.Properties.PET_2H_BONUS_DAMAGE)
-							damage = (100 + m_blockChance) / 100.00;
+							damage *= (100 + m_blockChance) / 100.00;
 						break;
 					default:
 						if (ServerProperties.Properties.MOB_2H_BONUS_DAMAGE)
-							damage = (100 + m_blockChance) / 100.00;
+							damage *= (100 + m_blockChance) / 100.00;
 						break;
 				}
 
@@ -4606,7 +4606,7 @@ namespace DOL.GS
 				foreach (ItemTemplate lootTemplate in lootTemplates)
 				{
 					if (lootTemplate == null) continue;
-					GameStaticItem loot;
+					GameStaticItem loot = null;
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
 					{
 						long value = lootTemplate.Price;
@@ -4666,16 +4666,29 @@ namespace DOL.GS
 					else if (lootTemplate.Name.StartsWith("scroll|"))
 					{
 						String[] scrollData = lootTemplate.Name.Split('|');
-						String artifactID = scrollData[1];
-						int pageNumber = UInt16.Parse(scrollData[2]);
-						loot = ArtifactMgr.CreateScroll(artifactID, pageNumber);
-						loot.X = X;
-						loot.Y = Y;
-						loot.Z = Z;
-						loot.Heading = Heading;
-						loot.CurrentRegion = CurrentRegion;
-						(loot as WorldInventoryItem).Item.IsCrafted = false;
-						(loot as WorldInventoryItem).Item.Creator = Name;
+
+						if (scrollData.Length >= 3)
+						{
+							String artifactID = scrollData[1];
+							int pageNumber = UInt16.Parse(scrollData[2]);
+							loot = ArtifactMgr.CreateScroll(artifactID, pageNumber);
+						}
+
+						if (loot == null)
+						{
+							log.Error($"Artifact scroll could not be created for data string [{lootTemplate.Name}]");
+							continue;
+						}
+						else
+						{
+							loot.X = X;
+							loot.Y = Y;
+							loot.Z = Z;
+							loot.Heading = Heading;
+							loot.CurrentRegion = CurrentRegion;
+							(loot as WorldInventoryItem).Item.IsCrafted = false;
+							(loot as WorldInventoryItem).Item.Creator = Name;
+						}
 					}
 					else
 					{

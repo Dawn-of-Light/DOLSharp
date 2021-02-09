@@ -26,6 +26,7 @@ using DOL.GS.Spells;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
+using DOL.GS.SkillHandler;
 using log4net;
 
 namespace DOL.AI.Brain
@@ -138,36 +139,69 @@ namespace DOL.AI.Brain
         /// <returns>Player owner at the top of the tree.  If there was no player, then return null.</returns>
         public virtual GamePlayer GetPlayerOwner()
         {
-			return GetLivingOwner() as GamePlayer;
+            GameLiving owner = Owner;
+            int i = 0;
+            while (owner is GameNPC && owner != null)
+            {
+                i++;
+                if (i > 50)
+                    throw new Exception("GetPlayerOwner() from " + Owner.Name + "caused a cyclical loop.");
+                //If this is a pet, get its owner
+                if (((GameNPC)owner).Brain is IControlledBrain)
+                    owner = ((IControlledBrain)((GameNPC)owner).Brain).Owner;
+                //This isn't a pet, that means it's at the top of the tree.  This case will only happen if
+                //owner is not a GamePlayer
+                else
+                    break;
+            }
+            //Return if we found the gameplayer
+            if (owner is GamePlayer)
+                return (GamePlayer)owner;
+            //If the root owner was not a player or npc then make sure we know that something went wrong!
+            if (!(owner is GameNPC))
+                throw new Exception("Unrecognized owner: " + owner.GetType().FullName);
+            //No GamePlayer at the top of the tree
+            return null;
         }
 
         public virtual GameNPC GetNPCOwner()
         {
-			return GetLivingOwner() as GameNPC;
+            if (!(Owner is GameNPC))
+                return null;
+
+            GameNPC owner = Owner as GameNPC;
+
+            int i = 0;
+            while (owner != null)
+            {
+                i++;
+                if (i > 50)
+                {
+                    log.Error("Boucle itérative dans GetNPCOwner !");
+                    break;
+                }
+                if (owner.Brain is IControlledBrain)
+                {
+                    if ((owner.Brain as IControlledBrain).Owner is GamePlayer)
+                        return null;
+                    else
+                        owner = (owner.Brain as IControlledBrain).Owner as GameNPC;
+                }
+                else
+                    break;
+            }
+            return owner;
         }
 
         public virtual GameLiving GetLivingOwner()
         {
-			if (Body is GamePet pet)
-			{
-				GamePet currPet = pet;
+            GamePlayer player = GetPlayerOwner();
+            if (player != null)
+                return player;
 
-				for(int i = 0; currPet.Owner is GamePet nextPet; i++)
-				{
-					if (i > 50)
-					{
-						String Err = "GetLivingOwner() caused a cyclical loop for GamePet " + pet.Name;
-						if (Owner != null)
-							Err += ", Owner " + Owner.Name;
-						log.Error(Err);
-						return null;
-					}
-
-					currPet = nextPet;
-				}
-
-				return currPet.Owner;
-			}
+            GameNPC npc = GetNPCOwner();
+            if (npc != null)
+                return npc;
 
             return null;
         }

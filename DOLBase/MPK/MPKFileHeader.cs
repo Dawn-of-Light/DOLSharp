@@ -19,7 +19,6 @@
 using System;
 using System.IO;
 using System.Text;
-using ICSharpCode.SharpZipLib.Checksums;
 
 namespace DOL.MPK
 {
@@ -37,11 +36,6 @@ namespace DOL.MPK
 		/// Compressed size of the file
 		/// </summary>
 		private uint _compressedSize;
-
-		/// <summary>
-		/// Checksum for the compressed file
-		/// </summary>
-		private Crc32 _crc = new Crc32();
 
 		/// <summary>
 		/// Offset of the file header in the directory memory space
@@ -149,14 +143,7 @@ namespace DOL.MPK
 			set { _compressedSize = value; }
 		}
 
-		/// <summary>
-		/// Gets or sets the CRC32 checksum of the MPK
-		/// </summary>
-		public Crc32 CRC
-		{
-			get { return _crc; }
-			set { _crc = value; }
-		}
+		public long CRCValue { get; set; }
 
 		/// <summary>
 		/// Writes a new MPK header into a file
@@ -177,7 +164,7 @@ namespace DOL.MPK
 			file.Write(_uncompressedSize);
 			file.Write(_directoryOffset);
 			file.Write(_compressedSize);
-			file.Write((uint) _crc.Value);
+			file.Write((uint) CRCValue);
 		}
 
 		/// <summary>
@@ -196,7 +183,7 @@ namespace DOL.MPK
 			_uncompressedSize = rdr.ReadUInt32();
 			_directoryOffset = rdr.ReadUInt32();
 			_compressedSize = rdr.ReadUInt32();
-			_crc.Value = rdr.ReadUInt32();
+			CRCValue = rdr.ReadUInt32();
 		}
 
 		/// <summary>
@@ -211,7 +198,7 @@ namespace DOL.MPK
 			Console.WriteLine("Size: {0}", _uncompressedSize);
 			Console.WriteLine("Directory Offset: {0}", _directoryOffset);
 			Console.WriteLine("Compressed Size: {0}", _compressedSize);
-			Console.WriteLine("CRC32: {0}", _crc.Value);
+			Console.WriteLine("CRC32: {0}", CRCValue);
 		}
 	}
 }

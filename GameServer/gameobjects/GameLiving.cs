@@ -1031,7 +1031,34 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual double GetArmorAbsorb(eArmorSlot slot)
 		{
-			return GetModified(eProperty.ArmorAbsorption) * 0.01;
+			double absorbBonus = GetModified(eProperty.ArmorAbsorption) / 100.0;
+
+			double debuffBuffRatio = 2;
+
+			double constitutionPerAbsorptionPercent = 4;
+			double baseConstitutionPerAbsorptionPercent = 12; //kept for DB legacy reasons
+			var constitutionBuffBonus = BaseBuffBonusCategory[eProperty.Constitution] + SpecBuffBonusCategory[eProperty.Constitution];
+			var constitutionDebuffMalus = Math.Abs(DebuffCategory[eProperty.Constitution] + SpecDebuffCategory[eProperty.Constitution]);
+			double constitutionAbsorb = 0;
+			//simulate old behavior for base constitution
+			double baseConstitutionAbsorb = (GetBaseStat((eStat)eProperty.Constitution) - 60) / baseConstitutionPerAbsorptionPercent / 100.0;
+			double consitutionBuffAbsorb = (constitutionBuffBonus - constitutionDebuffMalus * debuffBuffRatio) / constitutionPerAbsorptionPercent / 100;
+			constitutionAbsorb += baseConstitutionAbsorb + consitutionBuffAbsorb;
+
+			//Note: On Live SpecAFBuffs do nothing => Cap to Live baseAF cap;
+			double afPerAbsorptionPercent = 6;
+			double liveBaseAFcap = 150 * 1.25 * 1.25;
+			double afBuffBonus = Math.Min(liveBaseAFcap, BaseBuffBonusCategory[eProperty.ArmorFactor] + SpecBuffBonusCategory[eProperty.ArmorFactor]);
+			double afDebuffMalus = Math.Abs(DebuffCategory[eProperty.ArmorFactor] + SpecDebuffCategory[eProperty.ArmorFactor]);
+			double afBuffAbsorb = (afBuffBonus - afDebuffMalus * debuffBuffRatio) / afPerAbsorptionPercent / 100;
+
+			double baseAbsorb = 0;
+			if (Level >= 30) baseAbsorb = 0.27;
+			else if (Level >= 20) baseAbsorb = 0.19;
+			else if (Level >= 10) baseAbsorb = 0.10;
+
+			double absorb = 1 - (1 - absorbBonus) * (1 - baseAbsorb) * (1 - constitutionAbsorb) * (1 - afBuffAbsorb);
+			return absorb;
 		}
 
 		/// <summary>
@@ -5780,6 +5807,21 @@ namespace DOL.GS
 
 				double heading = Heading * HEADING_TO_RADIAN;
 				SetTickSpeed(-Math.Sin(heading), Math.Cos(heading), 0, speed);
+			}
+		}
+
+		public virtual void UpdateHealthManaEndu()
+		{
+			if (IsAlive)
+			{
+				if (Health < MaxHealth) StartHealthRegeneration();
+				else if (Health > MaxHealth) Health = MaxHealth;
+
+				if (Mana < MaxMana) StartPowerRegeneration();
+				else if (Mana > MaxMana) Mana = MaxMana;
+
+				if (Endurance < MaxEndurance) StartEnduranceRegeneration();
+				else if (Endurance > MaxEndurance) Endurance = MaxEndurance;
 			}
 		}
 

@@ -17,13 +17,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-
 using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
@@ -44,14 +37,20 @@ using DOL.GS.Styles;
 using DOL.GS.Utils;
 using DOL.Language;
 using log4net;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace DOL.GS
 {
-	
-	/// <summary>
-	/// This class represents a player inside the game
-	/// </summary>
-	public class GamePlayer : GameLiving
+
+    /// <summary>
+    /// This class represents a player inside the game
+    /// </summary>
+    public class GamePlayer : GameLiving
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -178,7 +177,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the PacketSender for this player
 		/// </summary>
-		public IPacketLib Out
+		public virtual IPacketLib Out
 		{
 			get { return Client.Out; }
 		}
@@ -938,6 +937,55 @@ namespace DOL.GS
 			{
 				log.ErrorFormat("Cannot cancel all effects - {0}", e);
 			}
+			#region TempPropertiesManager LookUp
+
+			if (ServerProperties.Properties.ACTIVATE_TEMP_PROPERTIES_MANAGER_CHECKUP)
+			{
+				try
+				{
+					foreach (string p in TempProperties.getAllProperties())
+					{
+
+						if (p == "")
+							continue;
+
+						int occurences = 0;
+						string properties = Properties.TEMPPROPERTIES_TO_REGISTER;
+						List<string> registered_temprop = new List<string>(Util.SplitCSV(properties, true));
+						occurences = (from j in registered_temprop
+									  where p.Contains(j)
+									  select j).Count();
+						if (occurences == 0)
+							continue;
+
+						object v = TempProperties.getProperty<object>(p, null);
+
+						if (v == null)
+							continue;
+
+						long longresult = 0;
+						if (long.TryParse(v.ToString(), out longresult))
+						{
+							if (ServerProperties.Properties.ACTIVATE_TEMP_PROPERTIES_MANAGER_CHECKUP_DEBUG)
+								log.Debug("On Disconnection found and was saved: " + p + " with value: " + v.ToString() + " for player: " + Name);
+
+							TempPropertiesManager.TempPropContainerList.Add(new TempPropertiesManager.TempPropContainer(DBCharacter.ObjectId, p, v.ToString()));
+							TempProperties.removeProperty(p);
+						}
+						else
+						{
+							if (ServerProperties.Properties.ACTIVATE_TEMP_PROPERTIES_MANAGER_CHECKUP_DEBUG)
+								log.Debug("On Disconnection found but was not saved (not a long value): " + p + " with value: " + v.ToString() + " for player: " + Name);
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					log.Debug("Error in TempProproperties Manager when saving TempProp: " + e.ToString());
+				}
+			}
+
+			#endregion TempPropertiesManager LookUp
 		}
 
 		/// <summary>
@@ -11218,6 +11266,15 @@ namespace DOL.GS
 			Out.SendEncumberance();
 		}
 
+		public override void UpdateHealthManaEndu()
+		{
+			Out.SendCharStatsUpdate();
+			Out.SendUpdateWeaponAndArmorStats();
+			UpdateEncumberance();
+			UpdatePlayerStatus();
+			base.UpdateHealthManaEndu();
+		}
+
 		/// <summary>
 		/// Get the bonus names
 		/// </summary>
@@ -13390,7 +13447,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the questlist of this player
 		/// </summary>
-		public List<AbstractQuest> QuestList
+		public virtual List<AbstractQuest> QuestList
 		{
 			get { return m_questList; }
 		}
@@ -13398,7 +13455,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the finished quests of this player
 		/// </summary>
-		public List<AbstractQuest> QuestListFinished
+		public virtual List<AbstractQuest> QuestListFinished
 		{
 			get { return m_questListFinished; }
 		}

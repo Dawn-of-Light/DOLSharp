@@ -383,6 +383,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 											{
 												Model = orgitem.Model,
 												Color = orgitem.Color,
+												Emblem = orgitem.Emblem,
 												X = xpos,
 												Y = ypos,
 												Size = orgitem.DPS_AF > 3 ? orgitem.DPS_AF : 100, // max size is 255

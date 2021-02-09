@@ -1,0 +1,74 @@
+﻿<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>..\build\Tests\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{564E8F20-3834-4F3D-B5F3-2981C1FC8300}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <AssemblyName>Tests</AssemblyName>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DOL</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <OutputPath>..\build\Tests\$(Configuration)\lib\</OutputPath>
+    <IntermediateOutputPath>..\build\Tests\$(Configuration)\obj\</IntermediateOutputPath>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>False</Optimize>
+    <DebugType>Full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <PlatformTarget>x86</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <BaseAddress>285212672</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.6" Condition=" '$(OS)' != 'Unix' "/>
+    <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="True" />
+    <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="True" />
+    <ProjectReference Include="..\DOLServer\DOLServer.csproj" Name="DOLServer" />
+    <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" Private="True" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
+      xcopy "$(MSBuildProjectDirectory)\..\GameServer\language\*.txt" "$(MSBuildProjectDirectory)\$(OutputPath)\..\languages" /y /s /q /i
+      xcopy "$(MSBuildProjectDirectory)\..\GameServerScripts\*.cs" "$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts" /y /s /q /i
+      xcopy "$(MSBuildProjectDirectory)\..\GameServerScripts\dbupdater\*.xml" "$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\dbupdater" /y /s /q /i
+    </PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
+      cd "$(MSBuildProjectDirectory)/../GameServer/language/"; mkdir -p "$(MSBuildProjectDirectory)/$(OutputPath)/../languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(MSBuildProjectDirectory)/$(OutputPath)/../languages/"
+      cd "$(MSBuildProjectDirectory)/../GameServerScripts/"; mkdir -p "$(MSBuildProjectDirectory)/$(OutputPath)/../scripts/"; find ./ -name "*.cs" | xargs -i -t cp --parents -f {} "$(MSBuildProjectDirectory)/$(OutputPath)/../scripts/"; find "./dbupdater" -name "*.xml" | xargs -i -t cp --parents -f {} "$(MSBuildProjectDirectory)/$(OutputPath)/../scripts"</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>

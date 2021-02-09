@@ -816,7 +816,7 @@ namespace DOL.AI.Brain
 
 namespace DOL.AI.Brain
 {
-	public class TitanBrain : ControlledNpcBrain, IControlledBrain
+	public class TitanBrain : ControlledNpcBrain
 	{
 		private GameLiving m_target;
 

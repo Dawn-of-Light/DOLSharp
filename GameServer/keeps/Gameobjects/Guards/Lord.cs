@@ -17,6 +17,11 @@ namespace DOL.GS.Keeps
 		private eRealm m_lastRealm = eRealm.None;
 		private long m_lastKillTime = 0;
 
+		public override double GetArmorAbsorb(eArmorSlot slot)
+		{
+			return base.GetArmorAbsorb(slot) + 0.05;
+		}
+
 		/// <summary>
 		/// Lord needs more health at the moment
 		/// </summary>

@@ -134,12 +134,12 @@ namespace DOL.GS
             get { return m_sharedtimergroup; }
         }
 
-		public string Target
+		public virtual string Target
 		{
 			get { return m_target; }
 		}
 
-		public int Range
+		public virtual int Range
 		{
 			get
 			{
@@ -184,7 +184,7 @@ namespace DOL.GS
 
 		}
 
-		public string SpellType
+		public virtual string SpellType
 		{
 			get { return m_spelltype; }
 		}
@@ -195,12 +195,12 @@ namespace DOL.GS
             set { m_duration = value; }
 		}
 
-		public int Frequency
+		public virtual int Frequency
 		{
 			get { return m_frequency; }
 		}
 
-		public int Pulse
+		public virtual int Pulse
 		{
 			get { return m_pulse; }
 		}
@@ -291,7 +291,7 @@ namespace DOL.GS
 			get { return m_uninterruptible; }
 		}
 		
-		public bool IsFocus
+		public virtual bool IsFocus
 		{
 			get { return m_isfocus; }
 		}
