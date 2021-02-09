@@ -2508,15 +2508,64 @@ namespace DOL.GS
 					ticksToTarget = 1;
 				}
 
-				//Genesis : check attack range here, effect: npc's and players will start attack faster instead of waiting another round if the previous failed
-				if (attackTarget != null
-				    && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance
-				    && !owner.IsWithinRadius( attackTarget, owner.AttackRange ))
+				if (attackTarget != null && !owner.IsWithinRadius(attackTarget, owner.AttackRange) && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance)
 				{
-					Interval = 100;
-					return;
+					if (owner is GameNPC && (owner as GameNPC).Brain is StandardMobBrain && ((owner as GameNPC).Brain as StandardMobBrain).AggroTable.Count > 0 && (owner as GameNPC).Brain is IControlledBrain == false)
+					{
+						#region Attack another target in range
+
+						GameNPC npc = owner as GameNPC;
+						StandardMobBrain npc_brain = npc.Brain as StandardMobBrain;
+						GameLiving Possibly_target = null;
+						long maxaggro = 0, aggro = 0;
+
+						foreach (GamePlayer player_test in owner.GetPlayersInRadius((ushort)owner.AttackRange))
+						{
+							if (npc_brain.AggroTable.ContainsKey(player_test))
+							{
+								aggro = npc_brain.GetAggroAmountForLiving(player_test);
+								if (aggro <= 0) continue;
+								if (aggro > maxaggro)
+								{
+									Possibly_target = player_test;
+									maxaggro = aggro;
+								}
+							}
+						}
+						foreach (GameNPC target_possibility in owner.GetNPCsInRadius((ushort)owner.AttackRange))
+						{
+							if (npc_brain.AggroTable.ContainsKey(target_possibility))
+							{
+								aggro = npc_brain.GetAggroAmountForLiving(target_possibility);
+								if (aggro <= 0) continue;
+								if (aggro > maxaggro)
+								{
+									Possibly_target = target_possibility;
+									maxaggro = aggro;
+								}
+							}
+						}
+
+						if (Possibly_target == null)
+						{
+							Interval = 100;
+							return;
+						}
+						else
+						{
+							attackTarget = Possibly_target;
+						}
+
+						#endregion
+
+					}
+					else
+					{
+						Interval = 100;
+						return;
+					}
 				}
-				
+
 				new WeaponOnTargetAction(owner, attackTarget, attackWeapon, leftWeapon, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
 
 				//Are we inactive?

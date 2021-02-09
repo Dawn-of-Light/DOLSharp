@@ -11387,6 +11387,10 @@ namespace DOL.GS
 				//if (item.ExtraBonusType < 20)
 				//Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.ExtraBonusType))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 			}
+			//Check null on client.player bypass region change
+			if (Client.Account.PrivLevel == (uint)ePrivLevel.Player && Client.Player != null && Client.Player.ObjectState == eObjectState.Active)
+				if (item.SpellID > 0 || item.SpellID1 > 0)
+					TempProperties.setProperty("ITEMREUSEDELAY" + item.Id_nb, CurrentRegion.Time);
 
 			if (ObjectState == eObjectState.Active)
 			{
