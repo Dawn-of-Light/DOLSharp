@@ -58,6 +58,21 @@ namespace DOL.GS.ServerProperties
 
 		#region SYSTEM / DEBUG
 		/// <summary>
+		/// TempProperties to register
+		/// </summary>
+		[ServerProperty("system", "tempproperties_to_register", "Serialized list of tempprop string, separated by semi-colon for be registered when a player disconnect", "LastPotionItemUsedTick;SpellAvailableTime;ItemUseDelay;LastChargedItemUsedTick")]
+		public static string TEMPPROPERTIES_TO_REGISTER;
+		/// <summary>
+		/// Do we activate TempProperties manager Checkup on log in
+		/// </summary>
+		[ServerProperty("system", "activate_temp_properties_manager_checkup", "Do we activate TempProperties manager Checkup on log in?", true)]
+		public static bool ACTIVATE_TEMP_PROPERTIES_MANAGER_CHECKUP;
+		/// <summary>
+		/// Do we activate TempProperties manager Checkup debug
+		/// </summary>
+		[ServerProperty("log", "activate_temp_properties_manager_checkup_debug", "Do we activate TempProperties manager Checkup debug?", false)]
+		public static bool ACTIVATE_TEMP_PROPERTIES_MANAGER_CHECKUP_DEBUG;
+		/// <summary>
 		/// Enable Debug mode - used to alter some features during server startup to make debugging easier
 		/// Can be changed while server is running but may require restart to enable all debug features
 		/// </summary>
