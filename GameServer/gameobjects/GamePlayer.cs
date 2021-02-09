@@ -938,6 +938,54 @@ namespace DOL.GS
 			{
 				log.ErrorFormat("Cannot cancel all effects - {0}", e);
 			}
+			#region TempPropertiesManager LookUp
+
+			if (ServerProperties.Properties.ACTIVATE_TEMP_PROPERTIES_MANAGER_CHECKUP)
+			{
+				try
+				{
+					foreach (string p in TempProperties.getAllProperties())
+					{
+
+						if (p == "")
+							continue;
+
+						int occurences = 0;
+						List<string> registered_temprop = new List<string>(Properties.TEMPPROPERTIES_TO_REGISTER.SplitCSV(true));
+						occurences = (from j in registered_temprop
+									  where p.Contains(j)
+									  select j).Count();
+						if (occurences == 0)
+							continue;
+
+						object v = TempProperties.getProperty<object>(p, null);
+
+						if (v == null)
+							continue;
+
+						long longresult = 0;
+						if (long.TryParse(v.ToString(), out longresult))
+						{
+							if (ServerProperties.Properties.ACTIVATE_TEMP_PROPERTIES_MANAGER_CHECKUP_DEBUG)
+								log.Debug("On Disconnection found and was saved: " + p + " with value: " + v.ToString() + " for player: " + Name);
+
+							TempPropertiesManager.TempPropContainerList.Add(new TempPropertiesManager.TempPropContainer(DBCharacter.ObjectId, p, v.ToString()));
+							TempProperties.removeProperty(p);
+						}
+						else
+						{
+							if (ServerProperties.Properties.ACTIVATE_TEMP_PROPERTIES_MANAGER_CHECKUP_DEBUG)
+								log.Debug("On Disconnection found but was not saved (not a long value): " + p + " with value: " + v.ToString() + " for player: " + Name);
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					log.Debug("Error in TempProproperties Manager when saving TempProp: " + e.ToString());
+				}
+			}
+
+			#endregion TempPropertiesManager LookUp
 		}
 
 		/// <summary>
