@@ -2380,6 +2380,16 @@ namespace DOL.GS.ServerProperties
 
 		#region CRAFT / SALVAGE
 		/// <summary>
+		/// Is crafting debug enable
+		/// </summary>
+		[ServerProperty("crafting", "crafting_memory_debug", "Use Crafting Memory debug", true)]
+		public static bool CRAFTING_MEMORY_DEBUG;
+		/// <summary>
+		/// Is crafting can load into memory
+		/// </summary>
+		[ServerProperty("crafting", "crafting_memory_work", "Use Crafting Memory instead of SQL", true)]
+		public static bool CRAFTING_MEMORY_WORK;
+		/// <summary>
 		/// The crafting speed modifier
 		/// </summary>
 		[ServerProperty("craft", "crafting_speed", "Crafting Speed Modifier - Edit this to change the speed at which you craft e.g 1.5 is 50% faster 2.0 is twice as fast (100%) 0.5 is half the speed (50%)", 1.0)]
