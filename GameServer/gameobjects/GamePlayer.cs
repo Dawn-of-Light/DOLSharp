@@ -14054,8 +14054,7 @@ namespace DOL.GS
 					{
 						if (updateMemory)
 						{
-							long pricetoset = (long)(totalprice * 2 * 0.95); // 95 % of crafting raw materials price
-
+							long pricetoset = Math.Abs(totalprice * 2 * 95 / 100); // 95 % of crafting raw materials price
 							if (pricetoset > 0 && itemToCraft.Price != pricetoset)
 							{
 								itemToCraft.Price = pricetoset;
