@@ -180,7 +180,7 @@ namespace DOL.GS.Commands
 			}
 			if (args[1].ToLower() == "crafting")
 			{
-				log.Info(string.Format("Reset crafting memory. {0} will get erased from memory!", CraftedItemCache.craftedItemList.Count));
+				log.Info(string.Format("Reset crafting memory. {0} will get erased from memory!", CraftedItemCache.CraftedItemList.Count));
 				CraftedItemCache.Reload();
 				if (client != null) ChatUtil.SendSystemMessage(client, "Reloaded crafting memory finished..");
 				log.Info("Reset crafting memory finished..");

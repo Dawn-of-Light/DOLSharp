@@ -14001,9 +14001,9 @@ namespace DOL.GS
 			DBCraftedItem recipe = null;
 
 			if (ServerProperties.Properties.CRAFTING_MEMORY_WORK && !CraftedItemCache.m_reload)
-				index = CraftedItemCache.craftedItemList.FindIndex(a => a.Item1.CraftedItemID == itemID.ToString());
+				index = CraftedItemCache.CraftedItemList.FindIndex(a => a.Item1.CraftedItemID == itemID.ToString());
 			if (index != -1)
-				recipe = CraftedItemCache.craftedItemList[index].Item1;
+				recipe = CraftedItemCache.CraftedItemList[index].Item1;
 
 			if (recipe == null)
 				recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(itemID.ToString());
@@ -14016,7 +14016,7 @@ namespace DOL.GS
 				ItemTemplate itemToCraft = null;
 
 				if (ServerProperties.Properties.CRAFTING_MEMORY_WORK && !CraftedItemCache.m_reload && !updateMemory)
-					itemToCraft = CraftedItemCache.craftedItemList[index].Item2;
+					itemToCraft = CraftedItemCache.CraftedItemList[index].Item2;
 
 				if (itemToCraft == null && updateMemory)
 					itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
@@ -14025,7 +14025,7 @@ namespace DOL.GS
 				bool ismissingrawmaterial = false;
 
 				if (ServerProperties.Properties.CRAFTING_MEMORY_WORK && !CraftedItemCache.m_reload && !updateMemory)
-					rawMaterials = (from i in CraftedItemCache.craftedxItemList where i.CraftedItemId_nb == recipe.Id_nb select i).ToList();
+					rawMaterials = (from i in CraftedItemCache.CraftedxItemList where i.CraftedItemId_nb == recipe.Id_nb select i).ToList();
 				long totalprice = 0;
 				if (rawMaterials.Count == 0 && updateMemory)
 				{
@@ -14074,17 +14074,17 @@ namespace DOL.GS
 								GameServer.Database.UpdateInCache<ItemTemplate>(itemToCraft.Id_nb);
 								itemToCraft.Dirty = false;
 								itemToCraft.AllowUpdate = false;
-								CraftedItemCache.craftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
+								CraftedItemCache.CraftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
 							}
 							else
 							{
 								if (ServerProperties.Properties.CRAFTING_MEMORY_WORK)
 									log.Error("Craft: Item=" + itemToCraft.Id_nb + " price seems good");
 
-								CraftedItemCache.craftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
+								CraftedItemCache.CraftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
 							}
 
-							CraftedItemCache.craftedxItemList.AddRange(rawMaterials);
+							CraftedItemCache.CraftedxItemList.AddRange(rawMaterials);
 						}
 						AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)recipe.CraftingSkillType);
 						if (skill != null)
