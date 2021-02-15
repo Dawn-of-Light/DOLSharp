@@ -13996,101 +13996,25 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CraftItem(ushort itemID)
 		{
-			int index = -1;
-			bool updateMemory = false;
-			DBCraftedItem recipe = null;
-
-			if (ServerProperties.Properties.CRAFTING_MEMORY_WORK && !CraftedItemCache.m_reload)
-				index = CraftedItemCache.CraftedItemList.FindIndex(a => a.Item1.CraftedItemID == itemID.ToString());
-			if (index != -1)
-				recipe = CraftedItemCache.CraftedItemList[index].Item1;
-
-			if (recipe == null)
-				recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(itemID.ToString());
-			if (recipe != null)
-				//Here for register dbcrafteditem but if a rawmaterials is missing will not register any... break a craft flood databasse possibility
-				updateMemory = true;
-
+			DBCraftedItem recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(itemID.ToString());
 			if (recipe != null)
 			{
 				ItemTemplate itemToCraft = null;
-
-				if (ServerProperties.Properties.CRAFTING_MEMORY_WORK && !CraftedItemCache.m_reload && !updateMemory)
-					itemToCraft = CraftedItemCache.CraftedItemList[index].Item2;
-
-				if (itemToCraft == null && updateMemory)
-					itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
-
-				List<DBCraftedXItem> rawMaterials = new List<DBCraftedXItem>();
-				bool ismissingrawmaterial = false;
-
-				if (ServerProperties.Properties.CRAFTING_MEMORY_WORK && !CraftedItemCache.m_reload && !updateMemory)
-					rawMaterials = (from i in CraftedItemCache.CraftedxItemList where i.CraftedItemId_nb == recipe.Id_nb select i).ToList();
-				long totalprice = 0;
-				if (rawMaterials.Count == 0 && updateMemory)
-				{
-					rawMaterials = (List<DBCraftedXItem>)GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb)).ToList();
-					foreach (DBCraftedXItem dbitem in rawMaterials)
-					{
-						if (dbitem == null)
-							break;
-						ItemTemplate ingredient = null;
-						ingredient = GameServer.Database.FindObjectByKey<ItemTemplate>(dbitem.IngredientId_nb);
-						if (ingredient == null)
-						{
-							if (ServerProperties.Properties.CRAFTING_MEMORY_WORK)
-								log.Error("Missing raw materials for Craftitem= " + itemID + ". Missing is " + dbitem.IngredientId_nb);
-							ismissingrawmaterial = true;
-							break;
-						}
-						totalprice += ingredient.Price * dbitem.Count;
-					}
-					if (ismissingrawmaterial)
-						rawMaterials.Clear();
-				}
+				itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
+				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb));
 				if (rawMaterials.Count > 0)
 				{
 					if (itemToCraft != null)
 					{
-						if (updateMemory)
-						{
-							long pricetoset = Math.Abs(totalprice * 2 * 95 / 100); // 95 % of crafting raw materials price
-							if (pricetoset > 0 && itemToCraft.Price != pricetoset)
-							{
-								itemToCraft.Price = pricetoset;
-								itemToCraft.AllowUpdate = true;
-								itemToCraft.Dirty = true;
-								itemToCraft.Id_nb = itemToCraft.Id_nb.ToLower();
-								if (GameServer.Database.SaveObject(itemToCraft))
-								{
-									if (ServerProperties.Properties.CRAFTING_MEMORY_WORK)
-										log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset);
-								}
-								else
-								{
-									if (ServerProperties.Properties.CRAFTING_MEMORY_WORK)
-										log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset + " Not Saved");
-								}
-								GameServer.Database.UpdateInCache<ItemTemplate>(itemToCraft.Id_nb);
-								itemToCraft.Dirty = false;
-								itemToCraft.AllowUpdate = false;
-								CraftedItemCache.CraftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
-							}
-							else
-							{
-								if (ServerProperties.Properties.CRAFTING_MEMORY_WORK)
-									log.Error("Craft: Item=" + itemToCraft.Id_nb + " price seems good");
-
-								CraftedItemCache.CraftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
-							}
-
-							CraftedItemCache.CraftedxItemList.AddRange(rawMaterials);
-						}
 						AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)recipe.CraftingSkillType);
 						if (skill != null)
+						{
 							skill.CraftItem(this, recipe, itemToCraft, rawMaterials);
+						}
 						else
+						{
 							Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
 					}
 					else
 					{
