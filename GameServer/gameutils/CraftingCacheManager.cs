@@ -8,36 +8,36 @@ using System.Linq;
 
 namespace DOL.GS
 {
-    public class CraftingCacheManager
-    {
-		
+	public class CraftingCacheManager
+	{
+
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        //All item in database should have id_nb tolower for not cast tolower (taking so much time...)
-        /*All registered items should not contains any null.. or will not get added. 
+		//All item in database should have id_nb tolower for not cast tolower (taking so much time...)
+		/*All registered items should not contains any null.. or will not get added. 
         This permits craft system to be less attractive with database querys*/
-        private static List<Tuple<DBCraftedItem, ItemTemplate>> craftedItemList = new List<Tuple<DBCraftedItem, ItemTemplate>>();
+		private static List<Tuple<DBCraftedItem, ItemTemplate>> craftedItemList = new List<Tuple<DBCraftedItem, ItemTemplate>>();
 		public static List<Tuple<DBCraftedItem, ItemTemplate>> CraftedItemList { get => craftedItemList; set => craftedItemList = value; }
 
 		private static List<DBCraftedXItem> craftedxItemList = new List<DBCraftedXItem>();
 		public static List<DBCraftedXItem> CraftedxItemList { get => craftedxItemList; set => craftedxItemList = value; }
 
 		private static object CacheLock = new object();
-        public static bool m_reload = false;
+		public static bool m_reload = false;
 
 		/// <summary>
-        /// Empty all items into the CraftedItemCache
-        /// </summary>
-        public static bool Empty_Craft_Ram()
-        {
-            m_reload = true;
-            lock (CacheLock)
-            {
-                CraftedItemList.Clear();
-                CraftedxItemList.Clear();
-            }
-            m_reload = false;
-            return true;
-        }
+		/// Empty all items into the CraftedItemCache
+		/// </summary>
+		public static bool Empty_Craft_Ram()
+		{
+			m_reload = true;
+			lock (CacheLock)
+			{
+				CraftedItemList.Clear();
+				CraftedxItemList.Clear();
+			}
+			m_reload = false;
+			return true;
+		}
 		/// <summary>
 		/// This function is called each time a player tries to make a item
 		/// </summary>
@@ -58,7 +58,8 @@ namespace DOL.GS
 				//Here for register dbcrafteditem but if a rawmaterials is missing will not register any... break a craft flood databasse possibility
 				updateMemory = true;
 			else
-				log.Error("Missing recipe " + recipe.Id_nb +  " for Craftitem= " + itemID);
+				log.Error("Missing recipe " + recipe.Id_nb + " for Craftitem= " + itemID);
+
 			if (recipe != null)
 			{
 				ItemTemplate itemToCraft = null;
@@ -104,27 +105,30 @@ namespace DOL.GS
 							long pricetoset = Math.Abs(totalprice * 2 * ServerProperties.Properties.CRAFTING_SELLBACK_PERCENT / 100); // 95 % of crafting raw materials price is live values
 							if (pricetoset > 0 && itemToCraft.Price != pricetoset)
 							{
-								itemToCraft.Price = pricetoset;
-								itemToCraft.AllowUpdate = true;
-								itemToCraft.Dirty = true;
-								itemToCraft.Id_nb = itemToCraft.Id_nb.ToLower();
-								if (GameServer.Database.SaveObject(itemToCraft))
+								if (!itemToCraft.PackageID.Contains("NoPriceUpdate"))// Can be used for price customisation
 								{
-									if (ServerProperties.Properties.CRAFTING_MEMORY_DEBUG)
-										log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset);
+									itemToCraft.Price = pricetoset;
+									itemToCraft.AllowUpdate = true;
+									itemToCraft.Dirty = true;
+									itemToCraft.Id_nb = itemToCraft.Id_nb.ToLower();
+									if (GameServer.Database.SaveObject(itemToCraft))
+									{
+										if (ServerProperties.Properties.CRAFTING_MEMORY_DEBUG)
+											log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset);
+									}
+									else
+									{
+										if (ServerProperties.Properties.CRAFTING_MEMORY_DEBUG)
+											log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset + " Not Saved");
+									}
+									GameServer.Database.UpdateInCache<ItemTemplate>(itemToCraft.Id_nb);
+									itemToCraft.Dirty = false;
+									itemToCraft.AllowUpdate = false;
 								}
-								else
-								{
-									if (ServerProperties.Properties.CRAFTING_MEMORY_DEBUG)
-										log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset + " Not Saved");
-								}
-								GameServer.Database.UpdateInCache<ItemTemplate>(itemToCraft.Id_nb);
-								itemToCraft.Dirty = false;
-								itemToCraft.AllowUpdate = false;
-                                CraftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
+								CraftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
 							}
 							else
-                                CraftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
+								CraftedItemList.Add(new Tuple<DBCraftedItem, ItemTemplate>(recipe, itemToCraft));
 
 							CraftedxItemList.AddRange(rawMaterials);
 						}
@@ -135,19 +139,13 @@ namespace DOL.GS
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					else
-					{
 						player.Out.SendMessage("Crafted ItemTemplate (" + recipe.Id_nb + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
 				}
 				else
-				{
 					player.Out.SendMessage("Craft recipe for (" + recipe.Id_nb + ") is missing raw materials!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
 			}
 			else
-			{
 				player.Out.SendMessage("CraftedItemID: (" + itemID + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
 		}
 	}
 }
