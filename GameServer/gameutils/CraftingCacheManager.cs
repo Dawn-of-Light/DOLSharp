@@ -57,7 +57,8 @@ namespace DOL.GS
 			if (recipe != null)
 				//Here for register dbcrafteditem but if a rawmaterials is missing will not register any... break a craft flood databasse possibility
 				updateMemory = true;
-
+			else
+				log.Error("Missing recipe " + recipe.Id_nb +  " for Craftitem= " + itemID);
 			if (recipe != null)
 			{
 				ItemTemplate itemToCraft = null;
