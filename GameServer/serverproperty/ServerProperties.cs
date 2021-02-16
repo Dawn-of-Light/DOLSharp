@@ -2380,15 +2380,15 @@ namespace DOL.GS.ServerProperties
 
 		#region CRAFT / SALVAGE
 		/// <summary>
+		/// how many % of rawmaterials cost for sellback value
+		/// </summary>
+		[ServerProperty("crafting", "crafting_sellback_peercent", "Use Crafting Memory debug", 95)]
+		public static int CRAFTING_SELLBACK_PERCENT;
+		/// <summary>
 		/// Is crafting debug enable
 		/// </summary>
-		[ServerProperty("crafting", "crafting_memory_debug", "Use Crafting Memory debug", true)]
+		[ServerProperty("crafting", "crafting_memory_debug", "Activate Crafting Memory and sellback value debug", true)]
 		public static bool CRAFTING_MEMORY_DEBUG;
-		/// <summary>
-		/// Is crafting can load into memory
-		/// </summary>
-		[ServerProperty("crafting", "crafting_memory_work", "Use Crafting Memory instead of SQL", true)]
-		public static bool CRAFTING_MEMORY_WORK;
 		/// <summary>
 		/// The crafting speed modifier
 		/// </summary>

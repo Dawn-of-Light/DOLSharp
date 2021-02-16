@@ -30,10 +30,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort ItemID = packet.ReadShort();
-			if (ServerProperties.Properties.CRAFTING_MEMORY_WORK)
-				CraftedCacheManager.CraftItem(ItemID, client.Player);
-			else
-				client.Player.CraftItem(ItemID);
+			CraftingCacheManager.CraftItem(ItemID, client.Player);
+			//client.Player.CraftItem(ItemID);
 		}
 	}
 }

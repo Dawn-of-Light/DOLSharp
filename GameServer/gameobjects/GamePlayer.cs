@@ -13990,13 +13990,11 @@ namespace DOL.GS
 		{
 			return Enum.IsDefined(typeof(eCraftingSkill), craftingSkillToCheck);
 		}
-
+		//Moved into Crafting Cache Manager
 		/// <summary>
 		/// This function is called each time a player tries to make a item
 		/// </summary>
-		public virtual void CraftItem(ushort itemID)
-		{
-			DBCraftedItem recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(itemID.ToString());
+		/*	DBCraftedItem recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(itemID.ToString());
 			if (recipe != null)
 			{
 				ItemTemplate itemToCraft = null;
@@ -14030,7 +14028,7 @@ namespace DOL.GS
 			{
 				Out.SendMessage("CraftedItemID: (" + itemID + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// This function is called each time a player try to salvage a item

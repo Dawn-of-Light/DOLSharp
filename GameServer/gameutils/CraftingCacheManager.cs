@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace DOL.GS
 {
-    public class CraftedCacheManager
+    public class CraftingCacheManager
     {
 		
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -27,7 +27,7 @@ namespace DOL.GS
 		/// <summary>
         /// Empty all items into the CraftedItemCache
         /// </summary>
-        public static bool Reload()
+        public static bool Empty_Craft_Ram()
         {
             m_reload = true;
             lock (CacheLock)
@@ -100,7 +100,7 @@ namespace DOL.GS
 					{
 						if (updateMemory)
 						{
-							long pricetoset = Math.Abs(totalprice * 2 * 95 / 100); // 95 % of crafting raw materials price
+							long pricetoset = Math.Abs(totalprice * 2 * ServerProperties.Properties.CRAFTING_SELLBACK_PERCENT / 100); // 95 % of crafting raw materials price is live values
 							if (pricetoset > 0 && itemToCraft.Price != pricetoset)
 							{
 								itemToCraft.Price = pricetoset;
