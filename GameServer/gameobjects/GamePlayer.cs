@@ -170,7 +170,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the GameClient of this Player
 		/// </summary>
-		public GameClient Client
+		public virtual GameClient Client
 		{
 			get { return m_client; }
 		}

@@ -59,6 +59,7 @@ namespace DOL.UnitTests.Gameserver
         protected override IServerRules ServerRulesImpl => FakeServerRules;
         protected override IObjectDatabase DataBaseImpl => fakeDatabase;
         protected override void CheckAndInitDB() { }
+        public override byte[] AcquirePacketBuffer() => new byte[] { };
 
         public static FakeServer LoadAndReturn()
         {
