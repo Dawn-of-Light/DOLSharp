@@ -27,7 +27,7 @@ namespace DOL
 		/// <summary>
 		/// raw materials for craft item
 		/// </summary>
-		[DataTable(TableName="CraftedXItem")]
+		[DataTable(TableName="CraftedXItem", PreCache = true)]
 		public class DBCraftedXItem : DataObject
 		{
 			private string m_ingredientId_nb;
