@@ -102,10 +102,29 @@ namespace DOL.GS
 					{
 						if (updateMemory)
 						{
-							long pricetoset = Math.Abs(totalprice * 2 * ServerProperties.Properties.CRAFTING_SELLBACK_PERCENT / 100); // 95 % of crafting raw materials price is live values
+
+							bool updatePrice = true;
+							//Materials conversion should not update price
+							if (itemToCraft.Name.Contains("metal bars") || 
+								itemToCraft.Name.Contains("leather square") || 
+								itemToCraft.Name.Contains("cloth square") || 
+								itemToCraft.Name.Contains("wooden boards"))
+								updatePrice = false;
+
+							if (itemToCraft.PackageID.Contains("NoPriceUpdate"))// Can be used for price customisation
+								updatePrice = false;
+
+							long pricetoset = 0;
+							//Secondary craftskill
+							if (recipe.CraftingSkillType == 6 || recipe.CraftingSkillType == 7 || recipe.CraftingSkillType == 8 ||
+								recipe.CraftingSkillType == 14)
+								pricetoset = Math.Abs((long)(totalprice * 2 * 98.572) / 100); //Guessed value, not completely perfect
+							else
+								pricetoset = Math.Abs(totalprice * 2 * ServerProperties.Properties.CRAFTING_SELLBACK_PERCENT / 100); //Live value is actually 95% of rawmaterials price
+
 							if (pricetoset > 0 && itemToCraft.Price != pricetoset)
 							{
-								if (!itemToCraft.PackageID.Contains("NoPriceUpdate"))// Can be used for price customisation
+								if (updatePrice)
 								{
 									itemToCraft.Price = pricetoset;
 									itemToCraft.AllowUpdate = true;
