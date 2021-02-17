@@ -2379,16 +2379,22 @@ namespace DOL.GS.ServerProperties
 		#endregion
 
 		#region CRAFT / SALVAGE
+
 		/// <summary>
-		/// how many % of rawmaterials cost for sellback value
+		/// The crafting price control for secondary craft (trinketing) modifier
 		/// </summary>
-		[ServerProperty("crafting", "crafting_sellback_peercent", "Use Crafting Memory debug", 95)]
+		[ServerProperty("craft", "crafting_sellback_price_review", "Activate Sellback review of any crafted item", true)]
+		public static bool CRAFTING_SELLBACK_PRICE_REVIEW;
+		/// <summary>
+		/// The crafting price control for secondary craft (trinketing) modifier
+		/// </summary>
+		[ServerProperty("craft", "crafting_secondary_sellback_percent", "How many percent of raw materials cost is SellBack values", 98.572)]
+		public static double CRAFTING_SECONDARYCRAFT_SELLBACK_PERCENT;
+		/// <summary>
+		/// The crafting price control for craft modifier
+		/// </summary>
+		[ServerProperty("craft", "crafting_sellback_percent", "How many percent of raw materials cost is SellBack values", 95)]
 		public static int CRAFTING_SELLBACK_PERCENT;
-		/// <summary>
-		/// Is crafting debug enable
-		/// </summary>
-		[ServerProperty("crafting", "crafting_memory_debug", "Activate Crafting Memory and sellback value debug", true)]
-		public static bool CRAFTING_MEMORY_DEBUG;
 		/// <summary>
 		/// The crafting speed modifier
 		/// </summary>

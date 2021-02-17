@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -60,6 +62,60 @@ namespace DOL.GS
 		/// Hold all crafting skill
 		/// </summary>
 		protected static AbstractCraftingSkill[] m_craftingskills = new AbstractCraftingSkill[(int)eCraftingSkill._Last];
+
+		#region SellBack Price Control
+		public static void CheckSellBackPrice(DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
+		{
+			long totalprice = 0;
+			foreach (DBCraftedXItem dbitem in rawMaterials)
+			{
+				if (dbitem == null)
+					break;
+				ItemTemplate ingredient = null;
+				ingredient = GameServer.Database.FindObjectByKey<ItemTemplate>(dbitem.IngredientId_nb);
+				if (ingredient == null)
+					continue;
+
+				totalprice += ingredient.Price * dbitem.Count;
+			}
+
+			bool updatePrice = true;
+			//Materials conversion should not update price
+			if (itemToCraft.Name.EndsWith("metal bars") ||
+				itemToCraft.Name.EndsWith("leather square") ||
+				itemToCraft.Name.EndsWith("cloth square") ||
+				itemToCraft.Name.EndsWith("wooden boards"))
+				updatePrice = false;
+
+			if (itemToCraft.PackageID.Contains("NoPriceUpdate"))// Can be used for price customisation
+				updatePrice = false;
+
+			if (updatePrice)
+			{
+				long pricetoset = 0;
+				if (recipe.CraftingSkillType == 6 || recipe.CraftingSkillType == 7 || recipe.CraftingSkillType == 8 ||
+					recipe.CraftingSkillType == 14)
+					pricetoset = Math.Abs((long)(totalprice * 2 * ServerProperties.Properties.CRAFTING_SECONDARYCRAFT_SELLBACK_PERCENT) / 100); // % percent value need review but is around
+				else
+					pricetoset = Math.Abs(totalprice * 2 * ServerProperties.Properties.CRAFTING_SELLBACK_PERCENT / 100);
+
+				if (pricetoset > 0 && itemToCraft.Price != pricetoset)
+				{
+					itemToCraft.Price = pricetoset;
+					itemToCraft.AllowUpdate = true;
+					itemToCraft.Dirty = true;
+					itemToCraft.Id_nb = itemToCraft.Id_nb.ToLower();
+					if (GameServer.Database.SaveObject(itemToCraft))
+						log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset);
+					else
+						log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset + " Not Saved");
+					GameServer.Database.UpdateInCache<ItemTemplate>(itemToCraft.Id_nb);
+					itemToCraft.Dirty = false;
+					itemToCraft.AllowUpdate = false;
+				}
+			}
+		}
+		#endregion SellBack Price Control
 
 		/// <summary>
 		/// get a crafting skill by the enum index

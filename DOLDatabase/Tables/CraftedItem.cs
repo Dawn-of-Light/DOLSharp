@@ -27,7 +27,7 @@ namespace DOL
 		/// <summary>
 		/// Crafted item table
 		/// </summary>
-		[DataTable(TableName="CraftedItem")]
+		[DataTable(TableName="CraftedItem", PreCache = true)]
 		public class DBCraftedItem : DataObject
 		{
 			private string m_craftedItemID;
