@@ -2381,7 +2381,7 @@ namespace DOL.GS.ServerProperties
 		#region CRAFT / SALVAGE
 
 		/// <summary>
-		/// The crafting price control for secondary craft (trinketing) modifier
+		/// The crafting sellback price control at each craft (calculate a percent of raw materials used)
 		/// </summary>
 		[ServerProperty("craft", "crafting_sellback_price_review", "Activate Sellback review of any crafted item", true)]
 		public static bool CRAFTING_SELLBACK_PRICE_REVIEW;
