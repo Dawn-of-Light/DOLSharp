@@ -101,14 +101,15 @@ namespace DOL.GS
 
 				if (pricetoset > 0 && itemToCraft.Price != pricetoset)
 				{
+					long currentPrice = itemToCraft.Price;
 					itemToCraft.Price = pricetoset;
 					itemToCraft.AllowUpdate = true;
 					itemToCraft.Dirty = true;
 					itemToCraft.Id_nb = itemToCraft.Id_nb.ToLower();
 					if (GameServer.Database.SaveObject(itemToCraft))
-						log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset);
+						log.Error("Craft Price Correction: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + " Actual Price= " + currentPrice + ". Corrected price to= " + pricetoset);
 					else
-						log.Error("Craft: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + ". Corrected price to= " + pricetoset + " Not Saved");
+						log.Error("Craft Price Correction Not SAVED: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + " Actual Price= " + currentPrice + ". Corrected price to= " + pricetoset);
 					GameServer.Database.UpdateInCache<ItemTemplate>(itemToCraft.Id_nb);
 					itemToCraft.Dirty = false;
 					itemToCraft.AllowUpdate = false;
