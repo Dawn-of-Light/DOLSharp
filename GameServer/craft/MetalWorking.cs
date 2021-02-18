@@ -33,15 +33,7 @@ namespace DOL.GS
 			eSkill = eCraftingSkill.MetalWorking;
 		}
 
-		/// <summary>
-		/// Check if the player is near the needed tools (forge, lathe, etc)
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="recipe">the recipe being used</param>
-		/// <param name="itemToCraft">the item to make</param>
-		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
-		/// <returns>true if required tools are found</returns>
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
+		protected override bool CheckForTools(GamePlayer player, Recipe recipe)
 		{
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
@@ -49,7 +41,7 @@ namespace DOL.GS
 					return true;
 			}
 
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Crafting.CheckTool.NotHaveTools", itemToCraft.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Crafting.CheckTool.NotHaveTools", recipe.Product.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (player.Client.Account.PrivLevel > 1)
@@ -58,12 +50,9 @@ namespace DOL.GS
 			return false;
 		}
 
-		/// <summary>
-		/// Gain a point in the appropriate skills for a recipe and materials
-		/// </summary>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
+		public override void GainCraftingSkillPoints(GamePlayer player, Recipe recipe)
 		{
-			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe.Level)))
 			{
                 if (player.GetCraftingSkillValue(eCraftingSkill.MetalWorking) < subSkillCap)
                     player.GainCraftingSkill(eCraftingSkill.MetalWorking, 1);
