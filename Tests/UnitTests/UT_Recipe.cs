@@ -27,6 +27,12 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_Recipe
     {
+        [OneTimeSetUp]
+        public void SetupServer()
+        {
+            FakeServer.LoadAndReturn();
+        }
+
         [Test]
         public void GetIngredientCosts_OneIngredientWithPrice2_2()
         {
@@ -52,6 +58,37 @@ namespace DOL.UnitTests.Gameserver
             var actual = recipe.GetIngredientCost();
 
             var expected = 6;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void SetRecommendedProductPriceInDB_ProductWithPrice2AndNoIngredients_ProductPriceIs2()
+        {
+            var product = new ItemTemplate() { Price = 2 };
+            var ingredients = new List<Ingredient>() { };
+            var recipe = new Recipe(product, ingredients);
+
+            recipe.SetRecommendedProductPriceInDB();
+
+            var actual = product.Price;
+            var expected = 2;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void SetRecommendedProductPriceInDB_ProductWithPrice2AndIngredientCostIs100_ProductPriceIs190()
+        {
+            var product = new ItemTemplate() { Price = 2 };
+            var count = 1;
+            var material = new ItemTemplate() { Price = 100 };
+            var ingredients = new List<Ingredient>() { new Ingredient(count, material) };
+            var recipe = new Recipe(product, ingredients);
+            GS.ServerProperties.Properties.CRAFTING_SELLBACK_PERCENT = 95;
+
+            recipe.SetRecommendedProductPriceInDB();
+
+            var actual = product.Price;
+            var expected = 95 * 2;
             Assert.AreEqual(expected, actual);
         }
     }

@@ -19,13 +19,18 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using DOL.Database;
+
 using log4net;
+
+using DOL.Database;
+using DOL.GS.ServerProperties;
 
 namespace DOL.GS
 {
     public class Recipe
     {
+        protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         private static RecipeCache recipeCache = new RecipeCache();
         private Ingredient[] ingredients;
 
@@ -56,7 +61,7 @@ namespace DOL.GS
         {
             if(recipeCache.Loaded)
             {
-                recipeCache.GetRecipe(dbRecipe.CraftedItemID);
+                return recipeCache.GetRecipe(dbRecipe.CraftedItemID);
             }
 
             ItemTemplate product = GameServer.Database.FindObjectByKey<ItemTemplate>(dbRecipe.Id_nb);
@@ -91,7 +96,7 @@ namespace DOL.GS
         {
             if (recipeCache.Loaded)
             {
-                recipeCache.GetRecipe(recipeID.ToString());
+                return recipeCache.GetRecipe(recipeID.ToString());
             }
 
             DBCraftedItem recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(recipeID.ToString());
@@ -106,12 +111,64 @@ namespace DOL.GS
 
         public long GetIngredientCost()
         {
-            long result = 0;
-            foreach (var ingredient in ingredients)
+            return CostToCraft;
+        }
+
+        public long CostToCraft
+        {
+            get
             {
-                result += ingredient.Cost;
+                long result = 0;
+                foreach (var ingredient in ingredients)
+                {
+                    result += ingredient.Cost;
+                }
+                return result;
             }
-            return result;
+        }
+
+        public void SetRecommendedProductPriceInDB()
+        {
+            var product = Product;
+            var totalPrice = CostToCraft;
+            var secondaryCraftingSkills = new List<eCraftingSkill>() {
+                eCraftingSkill.MetalWorking, eCraftingSkill.LeatherCrafting, eCraftingSkill.ClothWorking, eCraftingSkill.WoodWorking
+            };
+            bool updatePrice = true;
+
+            if (product.Name.EndsWith("metal bars") ||
+                product.Name.EndsWith("leather square") ||
+                product.Name.EndsWith("cloth square") ||
+                product.Name.EndsWith("wooden boards"))
+                updatePrice = false;
+
+            if (product.PackageID.Contains("NoPriceUpdate"))
+                updatePrice = false;
+
+            if (updatePrice)
+            {
+                long pricetoset;
+                if (secondaryCraftingSkills.Contains(RequiredCraftingSkill))
+                    pricetoset = Math.Abs((long)(totalPrice * 2 * Properties.CRAFTING_SECONDARYCRAFT_SELLBACK_PERCENT) / 100);
+                else
+                    pricetoset = Math.Abs(totalPrice * 2 * Properties.CRAFTING_SELLBACK_PERCENT / 100);
+
+                if (pricetoset > 0 && product.Price != pricetoset)
+                {
+                    long currentPrice = product.Price;
+                    product.Price = pricetoset;
+                    product.AllowUpdate = true;
+                    product.Dirty = true;
+                    product.Id_nb = product.Id_nb.ToLower();
+                    if (GameServer.Database.SaveObject(product))
+                        log.Error("Craft Price Correction: " + product.Id_nb + " rawmaterials price= " + totalPrice + " Actual Price= " + currentPrice + ". Corrected price to= " + pricetoset);
+                    else
+                        log.Error("Craft Price Correction Not SAVED: " + product.Id_nb + " rawmaterials price= " + totalPrice + " Actual Price= " + currentPrice + ". Corrected price to= " + pricetoset);
+                    GameServer.Database.UpdateInCache<ItemTemplate>(product.Id_nb);
+                    product.Dirty = false;
+                    product.AllowUpdate = false;
+                }
+            }
         }
 
         public DBCraftedItem ExportDBCraftedItem()

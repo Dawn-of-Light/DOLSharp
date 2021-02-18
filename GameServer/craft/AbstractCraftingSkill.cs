@@ -340,7 +340,7 @@ namespace DOL.GS
 				}
 
 				if (Properties.CRAFTING_SELLBACK_PRICE_REVIEW)
-					CraftingMgr.UpdateSellBackPrice((int)recipe.RequiredCraftingSkill, recipe.Product, totalPrice);
+					recipe.SetRecommendedProductPriceInDB();
 
 				if (missingMaterials != null)
 				{

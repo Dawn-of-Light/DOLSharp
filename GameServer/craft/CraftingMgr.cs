@@ -63,48 +63,6 @@ namespace DOL.GS
 		/// </summary>
 		protected static AbstractCraftingSkill[] m_craftingskills = new AbstractCraftingSkill[(int)eCraftingSkill._Last];
 
-        #region SellBack Price Control
-		public static void UpdateSellBackPrice(int craftingSkillType, ItemTemplate itemToCraft, long totalprice)
-		{
-			bool updatePrice = true;
-
-			if (itemToCraft.Name.EndsWith("metal bars") ||
-				itemToCraft.Name.EndsWith("leather square") ||
-				itemToCraft.Name.EndsWith("cloth square") ||
-				itemToCraft.Name.EndsWith("wooden boards"))
-				updatePrice = false;
-
-			if (itemToCraft.PackageID.Contains("NoPriceUpdate"))
-				updatePrice = false;
-
-			if (updatePrice)
-			{
-				long pricetoset = 0;
-				if (craftingSkillType == 6 || craftingSkillType == 7 || craftingSkillType == 8 ||
-					craftingSkillType == 14)
-					pricetoset = Math.Abs((long)(totalprice * 2 * ServerProperties.Properties.CRAFTING_SECONDARYCRAFT_SELLBACK_PERCENT) / 100);
-				else
-					pricetoset = Math.Abs(totalprice * 2 * ServerProperties.Properties.CRAFTING_SELLBACK_PERCENT / 100);
-
-				if (pricetoset > 0 && itemToCraft.Price != pricetoset)
-				{
-					long currentPrice = itemToCraft.Price;
-					itemToCraft.Price = pricetoset;
-					itemToCraft.AllowUpdate = true;
-					itemToCraft.Dirty = true;
-					itemToCraft.Id_nb = itemToCraft.Id_nb.ToLower();
-					if (GameServer.Database.SaveObject(itemToCraft))
-						log.Error("Craft Price Correction: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + " Actual Price= " + currentPrice + ". Corrected price to= " + pricetoset);
-					else
-						log.Error("Craft Price Correction Not SAVED: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + " Actual Price= " + currentPrice + ". Corrected price to= " + pricetoset);
-					GameServer.Database.UpdateInCache<ItemTemplate>(itemToCraft.Id_nb);
-					itemToCraft.Dirty = false;
-					itemToCraft.AllowUpdate = false;
-				}
-			}
-		}
-		#endregion SellBack Price Control
-
 		/// <summary>
 		/// get a crafting skill by the enum index
 		/// </summary>
