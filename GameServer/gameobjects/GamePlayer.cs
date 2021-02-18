@@ -14009,9 +14009,6 @@ namespace DOL.GS
 						AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)recipe.CraftingSkillType);
 						if (skill != null)
 						{
-							if (ServerProperties.Properties.CRAFTING_SELLBACK_PRICE_REVIEW)
-								CraftingMgr.CheckSellBackPrice(recipe, itemToCraft, rawMaterials);
-
 							skill.CraftItem(this, recipe, itemToCraft, rawMaterials);
 						}
 						else

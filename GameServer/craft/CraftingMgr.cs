@@ -64,20 +64,8 @@ namespace DOL.GS
 		protected static AbstractCraftingSkill[] m_craftingskills = new AbstractCraftingSkill[(int)eCraftingSkill._Last];
 
 		#region SellBack Price Control
-		public static void CheckSellBackPrice(DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
+		public static void CheckSellBackPrice(DBCraftedItem recipe, ItemTemplate itemToCraft, long totalprice)
 		{
-			long totalprice = 0;
-			foreach (DBCraftedXItem dbitem in rawMaterials)
-			{
-				if (dbitem == null)
-					break;
-				ItemTemplate ingredient = null;
-				ingredient = GameServer.Database.FindObjectByKey<ItemTemplate>(dbitem.IngredientId_nb);
-				if (ingredient == null)
-					continue;
-
-				totalprice += ingredient.Price * dbitem.Count;
-			}
 
 			bool updatePrice = true;
 			//Materials conversion should not update price

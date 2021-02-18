@@ -339,7 +339,8 @@ namespace DOL.GS
 		public virtual bool CheckRawMaterials(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
 			ArrayList missingMaterials = null;
-
+			//Calculate total raw materials price  here
+			long totalPrice = 0;
 			lock (player.Inventory)
 			{
 				foreach (DBCraftedXItem material in rawMaterials)
@@ -352,6 +353,8 @@ namespace DOL.GS
 						log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + ") needed for recipe: " + recipe.CraftedItemID);
 						return false;
 					}
+					else
+						totalPrice += template.Price * material.Count;
 
 					bool result = false;
 					int count = material.Count;
@@ -382,6 +385,9 @@ namespace DOL.GS
 						missingMaterials.Add("(" + count + ") " + template.Name);
 					}
 				}
+
+				if (ServerProperties.Properties.CRAFTING_SELLBACK_PRICE_REVIEW)
+					CraftingMgr.CheckSellBackPrice(recipe, itemToCraft, totalPrice);
 
 				if (missingMaterials != null)
 				{
