@@ -69,7 +69,7 @@ namespace DOL.GS
 		{
 
 			bool updatePrice = true;
-			//Materials conversion should not update price
+
 			if (itemToCraft.Name.EndsWith("metal bars") ||
 				itemToCraft.Name.EndsWith("leather square") ||
 				itemToCraft.Name.EndsWith("cloth square") ||
