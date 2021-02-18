@@ -339,7 +339,7 @@ namespace DOL.GS
 		public virtual bool CheckRawMaterials(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
 			ArrayList missingMaterials = null;
-			//Calculate total raw materials price  here
+
 			long totalPrice = 0;
 			lock (player.Inventory)
 			{
@@ -387,7 +387,7 @@ namespace DOL.GS
 				}
 
 				if (ServerProperties.Properties.CRAFTING_SELLBACK_PRICE_REVIEW)
-					CraftingMgr.CheckSellBackPrice(recipe, itemToCraft, totalPrice);
+					CraftingMgr.UpdateSellBackPrice(recipe, itemToCraft, totalPrice);
 
 				if (missingMaterials != null)
 				{

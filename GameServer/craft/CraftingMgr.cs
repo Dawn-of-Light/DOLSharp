@@ -64,10 +64,8 @@ namespace DOL.GS
 		protected static AbstractCraftingSkill[] m_craftingskills = new AbstractCraftingSkill[(int)eCraftingSkill._Last];
 
 		#region SellBack Price Control
-		/// <summary>
-		/// Control that the crafted item got the good Selling Price
-		/// </summary>
-		public static void CheckSellBackPrice(DBCraftedItem recipe, ItemTemplate itemToCraft, long totalprice)
+
+		public static void UpdateSellBackPrice(DBCraftedItem recipe, ItemTemplate itemToCraft, long totalprice)
 		{
 
 			bool updatePrice = true;
@@ -78,7 +76,7 @@ namespace DOL.GS
 				itemToCraft.Name.EndsWith("wooden boards"))
 				updatePrice = false;
 
-			if (itemToCraft.PackageID.Contains("NoPriceUpdate"))// Can be used for price customisation
+			if (itemToCraft.PackageID.Contains("NoPriceUpdate"))
 				updatePrice = false;
 
 			if (updatePrice)
@@ -86,7 +84,7 @@ namespace DOL.GS
 				long pricetoset = 0;
 				if (recipe.CraftingSkillType == 6 || recipe.CraftingSkillType == 7 || recipe.CraftingSkillType == 8 ||
 					recipe.CraftingSkillType == 14)
-					pricetoset = Math.Abs((long)(totalprice * 2 * ServerProperties.Properties.CRAFTING_SECONDARYCRAFT_SELLBACK_PERCENT) / 100); // % percent value need review but is around
+					pricetoset = Math.Abs((long)(totalprice * 2 * ServerProperties.Properties.CRAFTING_SECONDARYCRAFT_SELLBACK_PERCENT) / 100);
 				else
 					pricetoset = Math.Abs(totalprice * 2 * ServerProperties.Properties.CRAFTING_SELLBACK_PERCENT / 100);
 
