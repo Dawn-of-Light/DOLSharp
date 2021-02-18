@@ -64,6 +64,9 @@ namespace DOL.GS
 		protected static AbstractCraftingSkill[] m_craftingskills = new AbstractCraftingSkill[(int)eCraftingSkill._Last];
 
 		#region SellBack Price Control
+		/// <summary>
+		/// Control that the crafted item got the good Selling Price
+		/// </summary>
 		public static void CheckSellBackPrice(DBCraftedItem recipe, ItemTemplate itemToCraft, long totalprice)
 		{
 
