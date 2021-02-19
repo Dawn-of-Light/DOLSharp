@@ -41,6 +41,7 @@ namespace DOL.Integration.Performance
             var fakeServer = new FakeServerWithSQLLiteDB();
             GameServer.LoadTestDouble(fakeServer);
             AddOneCompleteRecipeToDatabase();
+            Recipe.LoadCache();
         }
 
         [Test]
