@@ -123,8 +123,10 @@ namespace DOL.GS
 					rawMatsAndCountTuple.Add(new Tuple<ItemTemplate, int>(template, material.Count));
 				}
 				else
-				player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + ") needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + " needed for recipe: " + recipe.CraftedItemID);
+				{
+					player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + ") needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + " needed for recipe: " + recipe.CraftedItemID);
+				}
 			}
 			return rawMatsAndCountTuple;
 		}
