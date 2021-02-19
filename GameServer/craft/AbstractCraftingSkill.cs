@@ -339,7 +339,7 @@ namespace DOL.GS
 					}
 				}
 
-				if (Properties.CRAFTING_SELLBACK_PRICE_REVIEW)
+				if (Properties.CRAFTING_ADJUST_PRODUCT_PRICE)
 					recipe.SetRecommendedProductPriceInDB();
 
 				if (missingMaterials != null)
