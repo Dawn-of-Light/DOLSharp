@@ -41,7 +41,7 @@ namespace DOL.UnitTests.Gameserver
             var ingredient = new Ingredient(1, item);
             var recipe = new Recipe(null, new List<Ingredient>() { ingredient});
 
-            var actual = recipe.GetIngredientCost();
+            var actual = recipe.CostToCraft;
 
             var expected = 2;
             Assert.AreEqual(expected, actual);
@@ -55,7 +55,7 @@ namespace DOL.UnitTests.Gameserver
             var ingredient2 = new Ingredient(2, item);
             var recipe = new Recipe(null, new List<Ingredient>() { ingredient1, ingredient2 });
 
-            var actual = recipe.GetIngredientCost();
+            var actual = recipe.CostToCraft;
 
             var expected = 6;
             Assert.AreEqual(expected, actual);

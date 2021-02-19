@@ -31,7 +31,6 @@ namespace DOL.GS
     {
         protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static RecipeCache recipeCache = new RecipeCache();
         private Ingredient[] ingredients;
 
         public ItemTemplate Product { get; }
@@ -57,61 +56,11 @@ namespace DOL.GS
             Level = level;
         }
 
-        public static Recipe LoadFromDB(DBCraftedItem dbRecipe)
+        public Recipe(ItemTemplate product, List<Ingredient> ingredients, eCraftingSkill requiredSkill, int level, bool makeTemplated, string databaseID)
+            :this(product,ingredients,requiredSkill,level)
         {
-            if(recipeCache.Loaded)
-            {
-                return recipeCache.GetRecipe(dbRecipe.CraftedItemID);
-            }
-
-            ItemTemplate product = GameServer.Database.FindObjectByKey<ItemTemplate>(dbRecipe.Id_nb);
-            if (product == null) throw new ArgumentException("Product ItemTemplate " + dbRecipe.Id_nb + " for Recipe with ID " + dbRecipe.CraftedItemID +  " does not exist.");
-
-            IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", dbRecipe.Id_nb));
-            if (rawMaterials.Count == 0) throw new ArgumentException("Recipe with ID " + dbRecipe.CraftedItemID + " has no ingredients.");
-
-            bool isRecipeValid = true;
-            var errorText = "";
-            var ingredients = new List<Ingredient>();
-            foreach (DBCraftedXItem material in rawMaterials)
-            {
-                ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
-
-                if (template == null)
-                {
-                    errorText += "Cannot find raw material ItemTemplate: " + material.IngredientId_nb + ") needed for recipe: " + dbRecipe.CraftedItemID + "\n";
-                    isRecipeValid = false;
-                }
-                ingredients.Add(new Ingredient(material.Count, template));
-            }
-            if (!isRecipeValid) throw new ArgumentException(errorText);
-
-            var recipe = new Recipe(product, ingredients, (eCraftingSkill)dbRecipe.CraftingSkillType, dbRecipe.CraftingLevel);
-            recipe.DatabaseID = dbRecipe.CraftedItemID;
-            recipe.MakeTemplated = dbRecipe.MakeTemplated;
-            return recipe;
-        }
-
-        public static Recipe LoadFromDB(ushort recipeID)
-        {
-            if (recipeCache.Loaded)
-            {
-                return recipeCache.GetRecipe(recipeID.ToString());
-            }
-
-            DBCraftedItem recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(recipeID.ToString());
-            if (recipe == null) throw new ArgumentException("No CraftedItem with ID " + recipeID + "exists.");
-            return LoadFromDB(recipe);
-        }
-
-        public static void LoadCache()
-        {
-            recipeCache.Load();
-        }
-
-        public long GetIngredientCost()
-        {
-            return CostToCraft;
+            MakeTemplated = makeTemplated;
+            DatabaseID = databaseID;
         }
 
         public long CostToCraft
@@ -211,28 +160,68 @@ namespace DOL.GS
         public long Cost => Count * Material.Price;
     }
 
-    public class RecipeCache
+    public class RecipeDB
     {
         protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private Dictionary<string, Recipe> recipeCache = null;
+        private static Dictionary<string, Recipe> recipeCache = null;
 
-        public bool Loaded { get; private set; } = false;
+        public static bool Loaded { get; private set; } = false;
 
-        public Recipe GetRecipe(string recipeDatabaseID)
+        public static Recipe FindBy(ushort recipeDatabaseID)
         {
-            if (!Loaded) throw new KeyNotFoundException("RecipeCache is not loaded.");
-            return recipeCache[recipeDatabaseID];
+            if (Loaded) return recipeCache[recipeDatabaseID.ToString()];
+
+            var recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(recipeDatabaseID.ToString());
+            if (recipe == null) throw new ArgumentException("No CraftedItem with ID " + recipeDatabaseID + "exists.");
+            return FindBy(recipe);
         }
 
-        public void Load()
+        private static Recipe FindBy(DBCraftedItem dbRecipe)
         {
+            if (Loaded) return recipeCache[dbRecipe.CraftedItemID];
+
+            return LoadFromDB(dbRecipe);
+        }
+
+        private static Recipe LoadFromDB(DBCraftedItem dbRecipe)
+        {
+            ItemTemplate product = GameServer.Database.FindObjectByKey<ItemTemplate>(dbRecipe.Id_nb);
+            if (product == null) throw new ArgumentException("Product ItemTemplate " + dbRecipe.Id_nb + " for Recipe with ID " + dbRecipe.CraftedItemID + " does not exist.");
+
+            IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", dbRecipe.Id_nb));
+            if (rawMaterials.Count == 0) throw new ArgumentException("Recipe with ID " + dbRecipe.CraftedItemID + " has no ingredients.");
+
+            bool isRecipeValid = true;
+            var errorText = "";
+            var ingredients = new List<Ingredient>();
+            foreach (DBCraftedXItem material in rawMaterials)
+            {
+                ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
+
+                if (template == null)
+                {
+                    errorText += "Cannot find raw material ItemTemplate: " + material.IngredientId_nb + ") needed for recipe: " + dbRecipe.CraftedItemID + "\n";
+                    isRecipeValid = false;
+                }
+                ingredients.Add(new Ingredient(material.Count, template));
+            }
+            if (!isRecipeValid) throw new ArgumentException(errorText);
+
+            var recipe = new Recipe(product, ingredients, (eCraftingSkill)dbRecipe.CraftingSkillType, dbRecipe.CraftingLevel, dbRecipe.MakeTemplated, dbRecipe.CraftedItemID);
+            return recipe;
+        }
+
+        public static void LoadCacheFromObjectDatabase()
+        {
+            log.Info("RecipeDB is filling cache ...");
             recipeCache = new Dictionary<string, Recipe>();
             var allDBRecipes = GameServer.Database.SelectAllObjects<DBCraftedItem>();
             foreach(var dbRecipe in allDBRecipes)
             {
+                if (dbRecipe.CraftingLevel > 1500) continue;
                 try
                 {
-                    recipeCache[dbRecipe.CraftedItemID] = Recipe.LoadFromDB(dbRecipe);
+                    recipeCache[dbRecipe.CraftedItemID] = LoadFromDB(dbRecipe);
                 }
                 catch(Exception e)
                 {
@@ -240,6 +229,7 @@ namespace DOL.GS
                 }
             }
             Loaded = true;
+            log.Info(recipeCache.Count + " crafting recipes loaded in cache.");
         }
     }
 }

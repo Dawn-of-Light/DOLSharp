@@ -13996,7 +13996,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CraftItem(ushort itemID)
 		{
-			var recipe = Recipe.LoadFromDB(itemID);
+			var recipe = RecipeDB.FindBy(itemID);
 
 			AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(recipe.RequiredCraftingSkill);
 			if (skill != null)
