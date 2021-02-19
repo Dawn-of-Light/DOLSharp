@@ -64,8 +64,24 @@ namespace DOL.GS
 		protected static AbstractCraftingSkill[] m_craftingskills = new AbstractCraftingSkill[(int)eCraftingSkill._Last];
 
 		#region SellBack Price Control
-
-		public static void UpdateSellBackPrice(DBCraftedItem recipe, ItemTemplate itemToCraft, long totalprice)
+		public static IList<Tuple<ItemTemplate, int>> GetRawMaterialsItemAndNecessaryCount(IList<DBCraftedXItem> rawmaterials)
+		{
+			return ConstructRawMaterialsItemListAndCount(rawmaterials);
+		}
+		private static IList<Tuple<ItemTemplate, int>> ConstructRawMaterialsItemListAndCount(IList<DBCraftedXItem> rawmaterials)
+		{
+			IList<Tuple<ItemTemplate, int>> rawMatsAndCountTuple = new List<Tuple<ItemTemplate, int>>();
+			foreach (DBCraftedXItem material in rawmaterials)
+			{
+				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
+				if (template != null)
+				{
+					rawMatsAndCountTuple.Add(new Tuple<ItemTemplate, int>(template, material.Count));
+				}
+			}
+			return rawMatsAndCountTuple;
+		}
+		public static void UpdateSellBackPrice(DBCraftedItem recipe, ItemTemplate itemToCraft, IList<Tuple<ItemTemplate, int>> rawListandCounts)
 		{
 
 			bool updatePrice = true;
@@ -79,6 +95,7 @@ namespace DOL.GS
 			if (itemToCraft.PackageID.Contains("NoPriceUpdate"))
 				updatePrice = false;
 
+			long totalprice = 0;
 			if (updatePrice)
 			{
 				long pricetoset = 0;
@@ -94,7 +111,6 @@ namespace DOL.GS
 					itemToCraft.Price = pricetoset;
 					itemToCraft.AllowUpdate = true;
 					itemToCraft.Dirty = true;
-					itemToCraft.Id_nb = itemToCraft.Id_nb.ToLower();
 					if (GameServer.Database.SaveObject(itemToCraft))
 						log.Error("Craft Price Correction: " + itemToCraft.Id_nb + " rawmaterials price= " + totalprice + " Actual Price= " + currentPrice + ". Corrected price to= " + pricetoset);
 					else
@@ -105,6 +121,7 @@ namespace DOL.GS
 				}
 			}
 		}
+
 		#endregion SellBack Price Control
 
 		/// <summary>

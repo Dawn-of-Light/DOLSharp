@@ -43,7 +43,7 @@ namespace DOL.GS
 		/// <param name="itemToCraft">the item to make</param>
 		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
 		/// <returns>true if required tools are found</returns>
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<Tuple<ItemTemplate, int>> rawMatListandCounts)
 		{
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{

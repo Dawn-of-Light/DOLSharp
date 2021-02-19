@@ -13990,7 +13990,7 @@ namespace DOL.GS
 		{
 			return Enum.IsDefined(typeof(eCraftingSkill), craftingSkillToCheck);
 		}
-
+		
 		/// <summary>
 		/// This function is called each time a player tries to make a item
 		/// </summary>
@@ -14002,24 +14002,34 @@ namespace DOL.GS
 				ItemTemplate itemToCraft = null;
 				itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
 				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb));
+				
+				IList<Tuple<ItemTemplate, int>> rawMatsItemTemplateAndNeededCount = CraftingMgr.GetRawMaterialsItemAndNecessaryCount(rawMaterials);
+
 				if (rawMaterials.Count > 0)
 				{
-					if (itemToCraft != null)
+					if (rawMaterials.Count == rawMatsItemTemplateAndNeededCount.Count)
 					{
-						AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)recipe.CraftingSkillType);
-						if (skill != null)
+						if (itemToCraft != null)
 						{
-							skill.CraftItem(this, recipe, itemToCraft, rawMaterials);
+							AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)recipe.CraftingSkillType);
+							if (skill != null)
+							{
+								skill.CraftItem(this, recipe, itemToCraft, rawMatsItemTemplateAndNeededCount);
+							}
+							else
+							{
+								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
 						}
 						else
 						{
-							Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							Out.SendMessage("Crafted ItemTemplate (" + recipe.Id_nb + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 					}
 					else
-					{
-						Out.SendMessage("Crafted ItemTemplate (" + recipe.Id_nb + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
+                    {
+						//TODO Found missings raw materials
+                    }
 				}
 				else
 				{

@@ -20,6 +20,7 @@ using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using System.Collections.Generic;
+using System;
 
 namespace DOL.GS
 {
@@ -41,7 +42,7 @@ namespace DOL.GS
 		/// <param name="itemToCraft">the item to make</param>
 		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
 		/// <returns>true if required tools are found</returns>
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<Tuple<ItemTemplate, int>> rawMatListandCounts)
 		{
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
@@ -61,7 +62,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gain a point in the appropriate skills for a recipe and materials
 		/// </summary>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<Tuple<ItemTemplate, int>> rawMatListandCounts)
 		{
 			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
 			{

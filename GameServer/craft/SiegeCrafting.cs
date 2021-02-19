@@ -52,7 +52,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gain a point in the appropriate skills for a recipe and materials
 		/// </summary>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<Tuple<ItemTemplate, int>> rawMatListandCounts)
 		{
 			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
 			{

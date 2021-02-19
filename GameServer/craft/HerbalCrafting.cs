@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -40,7 +41,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gain a point in the appropriate skills for a recipe and materials
 		/// </summary>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<Tuple<ItemTemplate, int>> rawMatListandCounts)
 		{
 			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
 			{

@@ -50,14 +50,13 @@ namespace DOL.GS
 		/// <param name="itemToCraft">the item to make</param>
 		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
 		/// <returns>true if required tools are found</returns>
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<Tuple<ItemTemplate, int>> rawMatListandCounts)
 		{
             bool needForge = false;
-
-            foreach (DBCraftedXItem material in rawMaterials)
+            foreach (Tuple<ItemTemplate, int> tup in rawMatListandCounts)
             {
-				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
-                if (template != null && template.Model == 519) // metal bar
+				//ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
+                if (tup.Item1.Model == 519) // metal bar
                 {
                     needForge = true;
                     break;
@@ -103,12 +102,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Gain a point in the appropriate skills for a recipe and materials
 		/// </summary>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
+		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<Tuple<ItemTemplate, int>> rawMatListandCounts)
 		{
             if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
             {
                 player.GainCraftingSkill(eCraftingSkill.Tailoring, 1);
-                base.GainCraftingSkillPoints(player, recipe, rawMaterials);
+                base.GainCraftingSkillPoints(player, recipe, rawMatListandCounts);
                 player.Out.SendUpdateCraftingSkills();
             }
         }
