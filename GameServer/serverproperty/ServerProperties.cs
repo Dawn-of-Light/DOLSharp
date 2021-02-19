@@ -2383,7 +2383,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// The crafting sellback price control at each craft (calculate a percent of raw materials used)
 		/// </summary>
-		[ServerProperty("craft", "crafting_sellback_price_review", "Activate Sellback review of any crafted item", true)]
+		[ServerProperty("craft", "crafting_sellback_price_review", "Activate Sellback review of any crafted item", false)]
 		public static bool CRAFTING_SELLBACK_PRICE_REVIEW;
 		/// <summary>
 		/// The crafting price control for secondary craft (trinketing) modifier

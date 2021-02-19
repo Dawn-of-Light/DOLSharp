@@ -64,23 +64,7 @@ namespace DOL.GS
 		protected static AbstractCraftingSkill[] m_craftingskills = new AbstractCraftingSkill[(int)eCraftingSkill._Last];
 
 		#region SellBack Price Control
-		public static IList<Tuple<ItemTemplate, int>> GetRawMaterialsItemAndNecessaryCount(IList<DBCraftedXItem> rawmaterials)
-		{
-			return ConstructRawMaterialsItemListAndCount(rawmaterials);
-		}
-		private static IList<Tuple<ItemTemplate, int>> ConstructRawMaterialsItemListAndCount(IList<DBCraftedXItem> rawmaterials)
-		{
-			IList<Tuple<ItemTemplate, int>> rawMatsAndCountTuple = new List<Tuple<ItemTemplate, int>>();
-			foreach (DBCraftedXItem material in rawmaterials)
-			{
-				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
-				if (template != null)
-				{
-					rawMatsAndCountTuple.Add(new Tuple<ItemTemplate, int>(template, material.Count));
-				}
-			}
-			return rawMatsAndCountTuple;
-		}
+
 		public static void UpdateSellBackPrice(DBCraftedItem recipe, ItemTemplate itemToCraft, IList<Tuple<ItemTemplate, int>> rawListandCounts)
 		{
 
@@ -124,6 +108,26 @@ namespace DOL.GS
 
 		#endregion SellBack Price Control
 
+		public static IList<Tuple<ItemTemplate, int>> GetRawMaterialsItemAndNecessaryCount(GamePlayer player, DBCraftedItem recipe , IList<DBCraftedXItem> rawmaterials)
+		{
+			return ConstructRawMaterialsItemListAndCount(player, recipe, rawmaterials);
+		}
+		private static IList<Tuple<ItemTemplate, int>> ConstructRawMaterialsItemListAndCount(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawmaterials)
+		{
+			IList<Tuple<ItemTemplate, int>> rawMatsAndCountTuple = new List<Tuple<ItemTemplate, int>>();
+			foreach (DBCraftedXItem material in rawmaterials)
+			{
+				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(material.IngredientId_nb);
+				if (template != null)
+				{
+					rawMatsAndCountTuple.Add(new Tuple<ItemTemplate, int>(template, material.Count));
+				}
+				else
+				player.Out.SendMessage("Can't find a material (" + material.IngredientId_nb + ") needed for this recipe.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				log.Error("Cannot find raw material ItemTemplate: " + material.IngredientId_nb + " needed for recipe: " + recipe.CraftedItemID);
+			}
+			return rawMatsAndCountTuple;
+		}
 		/// <summary>
 		/// get a crafting skill by the enum index
 		/// </summary>

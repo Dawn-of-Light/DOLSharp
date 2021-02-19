@@ -17,13 +17,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-
 using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
@@ -44,14 +37,20 @@ using DOL.GS.Styles;
 using DOL.GS.Utils;
 using DOL.Language;
 using log4net;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace DOL.GS
 {
-	
-	/// <summary>
-	/// This class represents a player inside the game
-	/// </summary>
-	public class GamePlayer : GameLiving
+
+    /// <summary>
+    /// This class represents a player inside the game
+    /// </summary>
+    public class GamePlayer : GameLiving
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -13990,7 +13989,7 @@ namespace DOL.GS
 		{
 			return Enum.IsDefined(typeof(eCraftingSkill), craftingSkillToCheck);
 		}
-		
+
 		/// <summary>
 		/// This function is called each time a player tries to make a item
 		/// </summary>
@@ -14002,34 +14001,27 @@ namespace DOL.GS
 				ItemTemplate itemToCraft = null;
 				itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
 				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb));
-				
-				IList<Tuple<ItemTemplate, int>> rawMatsItemTemplateAndNeededCount = CraftingMgr.GetRawMaterialsItemAndNecessaryCount(rawMaterials);
+
+				IList<Tuple<ItemTemplate, int>> rawMatsItemTemplateAndNeededCount = CraftingMgr.GetRawMaterialsItemAndNecessaryCount(this, recipe, rawMaterials);
 
 				if (rawMaterials.Count > 0)
 				{
-					if (rawMaterials.Count == rawMatsItemTemplateAndNeededCount.Count)
+					if (itemToCraft != null)
 					{
-						if (itemToCraft != null)
+						AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)recipe.CraftingSkillType);
+						if (skill != null)
 						{
-							AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)recipe.CraftingSkillType);
-							if (skill != null)
-							{
-								skill.CraftItem(this, recipe, itemToCraft, rawMatsItemTemplateAndNeededCount);
-							}
-							else
-							{
-								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
+							skill.CraftItem(this, recipe, itemToCraft, rawMatsItemTemplateAndNeededCount);
 						}
 						else
 						{
-							Out.SendMessage("Crafted ItemTemplate (" + recipe.Id_nb + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 					}
 					else
-                    {
-						//TODO Found missings raw materials
-                    }
+					{
+						Out.SendMessage("Crafted ItemTemplate (" + recipe.Id_nb + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
 				}
 				else
 				{
