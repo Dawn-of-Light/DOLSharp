@@ -339,9 +339,6 @@ namespace DOL.GS
 					}
 				}
 
-				if (Properties.CRAFTING_ADJUST_PRODUCT_PRICE)
-					recipe.SetRecommendedProductPriceInDB();
-
 				if (missingMaterials != null)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractCraftingSkill.CheckRawMaterial.NoIngredients", recipe.Product.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);

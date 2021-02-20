@@ -80,9 +80,6 @@ namespace DOL.GS
         {
             var product = Product;
             var totalPrice = CostToCraft;
-            var secondaryCraftingSkills = new List<eCraftingSkill>() {
-                eCraftingSkill.MetalWorking, eCraftingSkill.LeatherCrafting, eCraftingSkill.ClothWorking, eCraftingSkill.WoodWorking
-            };
             bool updatePrice = true;
 
             if (product.Name.EndsWith("metal bars") ||
@@ -97,6 +94,10 @@ namespace DOL.GS
             if (updatePrice)
             {
                 long pricetoset;
+                var secondaryCraftingSkills = new List<eCraftingSkill>() { 
+                    eCraftingSkill.MetalWorking, eCraftingSkill.LeatherCrafting, eCraftingSkill.ClothWorking, eCraftingSkill.WoodWorking
+                };
+
                 if (secondaryCraftingSkills.Contains(RequiredCraftingSkill))
                     pricetoset = Math.Abs((long)(totalPrice * 2 * Properties.CRAFTING_SECONDARYCRAFT_SELLBACK_PERCENT) / 100);
                 else
@@ -189,6 +190,8 @@ namespace DOL.GS
             }
             finally
             {
+                if (Properties.CRAFTING_ADJUST_PRODUCT_PRICE)
+                    recipe.SetRecommendedProductPriceInDB();
                 recipeCache[recipeDatabaseID] = recipe;
             }
 
