@@ -481,7 +481,6 @@ namespace DOL.GS
 
 		protected virtual void BuildCraftedItem(GamePlayer player, Recipe recipe)
 		{
-			var dbRecipe = recipe.ExportDBCraftedItem();
 			var product = recipe.Product;
 
 			Dictionary<int, int> changedSlots = new Dictionary<int, int>(5); // key : > 0 inventory ; < 0 ground || value: < 0 = new item count; > 0 = add to old
@@ -548,7 +547,7 @@ namespace DOL.GS
 						}
 					}
 
-					if (dbRecipe.MakeTemplated)
+					if (recipe.MakeTemplated)
 					{
 						newItem = GameInventoryItem.Create(product);
 					}
@@ -580,7 +579,7 @@ namespace DOL.GS
 
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractCraftingSkill.BuildCraftedItem.Successfully", product.Name, newItem.Quality), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
-				if (dbRecipe.MakeTemplated == false && newItem.Quality == 100)
+				if (recipe.MakeTemplated == false && newItem.Quality == 100)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractCraftingSkill.BuildCraftedItem.Masterpiece"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					player.Out.SendPlaySound(eSoundType.Craft, 0x04);

@@ -39,7 +39,6 @@ namespace DOL.GS
         public List<Ingredient> Ingredients => new List<Ingredient>(ingredients);
 
         #region transition members
-        public string DatabaseID { get; private set; } = "-1";
         public bool MakeTemplated { get; private set; } = false;
         #endregion
 
@@ -56,11 +55,10 @@ namespace DOL.GS
             Level = level;
         }
 
-        public Recipe(ItemTemplate product, List<Ingredient> ingredients, eCraftingSkill requiredSkill, int level, bool makeTemplated, string databaseID)
+        public Recipe(ItemTemplate product, List<Ingredient> ingredients, eCraftingSkill requiredSkill, int level, bool makeTemplated)
             :this(product,ingredients,requiredSkill,level)
         {
             MakeTemplated = makeTemplated;
-            DatabaseID = databaseID;
         }
 
         public long CostToCraft
@@ -119,31 +117,6 @@ namespace DOL.GS
                     product.AllowUpdate = false;
                 }
             }
-        }
-
-        public DBCraftedItem ExportDBCraftedItem()
-        {
-            var dbRecipe = new DBCraftedItem();
-            dbRecipe.CraftedItemID = DatabaseID;
-            dbRecipe.Id_nb = Product.Id_nb;
-            dbRecipe.CraftingLevel = Level;
-            dbRecipe.CraftingSkillType = (int)RequiredCraftingSkill;
-            dbRecipe.MakeTemplated = MakeTemplated;
-            return dbRecipe;
-        }
-
-        public IList<DBCraftedXItem> ExportListOfDBCraftedXItem()
-        {
-            var dbCraftedXItemList = new List<DBCraftedXItem>();
-            foreach (var ingredient in ingredients)
-            {
-                var craftedXitem = new DBCraftedXItem();
-                craftedXitem.Count = ingredient.Count;
-                craftedXitem.CraftedItemId_nb = Product.Id_nb;
-                craftedXitem.IngredientId_nb = ingredient.Material.Id_nb;
-                dbCraftedXItemList.Add(craftedXitem);
-            }
-            return dbCraftedXItemList;
         }
     }
 
@@ -226,7 +199,7 @@ namespace DOL.GS
             }
             if (!isRecipeValid) throw new ArgumentException(errorText);
 
-            var recipe = new Recipe(product, ingredients, (eCraftingSkill)dbRecipe.CraftingSkillType, dbRecipe.CraftingLevel, dbRecipe.MakeTemplated, dbRecipe.CraftedItemID);
+            var recipe = new Recipe(product, ingredients, (eCraftingSkill)dbRecipe.CraftingSkillType, dbRecipe.CraftingLevel, dbRecipe.MakeTemplated);
             return recipe;
         }
     }
