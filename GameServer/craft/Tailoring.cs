@@ -48,8 +48,7 @@ namespace DOL.GS
 
             foreach (var ingredient in recipe.Ingredients)
             {
-				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(ingredient.Material.Id_nb);
-                if (template != null && template.Model == 519) // metal bar
+                if (ingredient.Material.Model == 519) // metal bar
                 {
                     needForge = true;
                     break;
