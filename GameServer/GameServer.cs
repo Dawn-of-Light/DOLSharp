@@ -591,8 +591,6 @@ namespace DOL.GS
 
 				AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-				RecipeDB.LoadCacheFromObjectDatabase();
-
 				//---------------------------------------------------------------
 				//Try to compile the Scripts
 				if (!InitComponent(CompileScripts(), "Script compilation"))

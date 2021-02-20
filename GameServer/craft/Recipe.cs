@@ -163,28 +163,44 @@ namespace DOL.GS
     public class RecipeDB
     {
         protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private static Dictionary<string, Recipe> recipeCache = null;
-
-        public static bool Loaded { get; private set; } = false;
+        private static Dictionary<ushort, Recipe> recipeCache = new Dictionary<ushort, Recipe>();
 
         public static Recipe FindBy(ushort recipeDatabaseID)
         {
-            if (Loaded) return recipeCache[recipeDatabaseID.ToString()];
+            Recipe recipe;
+            recipeCache.TryGetValue(recipeDatabaseID, out recipe);
+            if (recipe != null)
+            {
+                //avoid repeated DB access for invalid recipes
+                if (recipe.Product != null) return recipeCache[recipeDatabaseID];
+                else throw new KeyNotFoundException("Recipe is marked as invalid. Check your logs for Recipe with ID " + recipeDatabaseID + ".");
+            }
 
-            var recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(recipeDatabaseID.ToString());
-            if (recipe == null) throw new ArgumentException("No CraftedItem with ID " + recipeDatabaseID + "exists.");
-            return FindBy(recipe);
+            try
+            {
+                recipe = LoadFromDB(recipeDatabaseID);
+                return recipe;
+            }
+            catch (Exception e)
+            {
+                log.Error(e);
+                recipe = NullRecipe;
+                return recipe;
+            }
+            finally
+            {
+                recipeCache[recipeDatabaseID] = recipe;
+            }
+
         }
 
-        private static Recipe FindBy(DBCraftedItem dbRecipe)
-        {
-            if (Loaded) return recipeCache[dbRecipe.CraftedItemID];
+        private static Recipe NullRecipe => new Recipe(null, null);
 
-            return LoadFromDB(dbRecipe);
-        }
-
-        private static Recipe LoadFromDB(DBCraftedItem dbRecipe)
+        private static Recipe LoadFromDB(ushort recipeDatabaseID)
         {
+            var dbRecipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(recipeDatabaseID.ToString());
+            if (dbRecipe == null) throw new ArgumentException("No DBCraftedItem with ID " + recipeDatabaseID + "exists.");
+
             ItemTemplate product = GameServer.Database.FindObjectByKey<ItemTemplate>(dbRecipe.Id_nb);
             if (product == null) throw new ArgumentException("Product ItemTemplate " + dbRecipe.Id_nb + " for Recipe with ID " + dbRecipe.CraftedItemID + " does not exist.");
 
@@ -209,27 +225,6 @@ namespace DOL.GS
 
             var recipe = new Recipe(product, ingredients, (eCraftingSkill)dbRecipe.CraftingSkillType, dbRecipe.CraftingLevel, dbRecipe.MakeTemplated, dbRecipe.CraftedItemID);
             return recipe;
-        }
-
-        public static void LoadCacheFromObjectDatabase()
-        {
-            log.Info("RecipeDB is filling cache ...");
-            recipeCache = new Dictionary<string, Recipe>();
-            var allDBRecipes = GameServer.Database.SelectAllObjects<DBCraftedItem>();
-            foreach(var dbRecipe in allDBRecipes)
-            {
-                if (dbRecipe.CraftingLevel > 1500) continue;
-                try
-                {
-                    recipeCache[dbRecipe.CraftedItemID] = LoadFromDB(dbRecipe);
-                }
-                catch(Exception e)
-                {
-                    log.Error(e.Message);
-                }
-            }
-            Loaded = true;
-            log.Info(recipeCache.Count + " crafting recipes loaded in cache.");
         }
     }
 }
