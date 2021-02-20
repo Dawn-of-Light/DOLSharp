@@ -37,10 +37,7 @@ namespace DOL.GS
         public eCraftingSkill RequiredCraftingSkill { get; }
         public int Level { get; }
         public List<Ingredient> Ingredients => new List<Ingredient>(ingredients);
-
-        #region transition members
-        public bool MakeTemplated { get; private set; } = false;
-        #endregion
+        public bool IsForUniqueProduct { get; private set; } = false;
 
         public Recipe(ItemTemplate product, List<Ingredient> ingredients)
         {
@@ -53,7 +50,7 @@ namespace DOL.GS
         {
             RequiredCraftingSkill = requiredSkill;
             Level = level;
-            MakeTemplated = makeTemplated;
+            IsForUniqueProduct = !makeTemplated;
         }
 
         public long CostToCraft

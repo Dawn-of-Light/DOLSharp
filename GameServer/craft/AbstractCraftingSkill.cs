@@ -547,7 +547,7 @@ namespace DOL.GS
 						}
 					}
 
-					if (recipe.MakeTemplated)
+					if (recipe.IsForUniqueProduct == false)
 					{
 						newItem = GameInventoryItem.Create(product);
 					}
@@ -579,7 +579,7 @@ namespace DOL.GS
 
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractCraftingSkill.BuildCraftedItem.Successfully", product.Name, newItem.Quality), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 
-				if (recipe.MakeTemplated == false && newItem.Quality == 100)
+				if (recipe.IsForUniqueProduct && newItem.Quality == 100)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractCraftingSkill.BuildCraftedItem.Masterpiece"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					player.Out.SendPlaySound(eSoundType.Craft, 0x04);
