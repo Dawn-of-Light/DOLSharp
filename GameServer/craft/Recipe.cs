@@ -48,16 +48,11 @@ namespace DOL.GS
             Product = product;
         }
 
-        public Recipe(ItemTemplate product, List<Ingredient> ingredients, eCraftingSkill requiredSkill, int level) 
+        public Recipe(ItemTemplate product, List<Ingredient> ingredients, eCraftingSkill requiredSkill, int level, bool makeTemplated)
             : this(product, ingredients)
         {
             RequiredCraftingSkill = requiredSkill;
             Level = level;
-        }
-
-        public Recipe(ItemTemplate product, List<Ingredient> ingredients, eCraftingSkill requiredSkill, int level, bool makeTemplated)
-            :this(product,ingredients,requiredSkill,level)
-        {
             MakeTemplated = makeTemplated;
         }
 
