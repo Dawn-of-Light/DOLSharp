@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Enchanter Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Enchanter, "Enchanter", "Magician", "Enchantress")]
+	[CharacterClass((int)eCharacterClass.Enchanter, "Enchanter", "Magician", "Enchantress")]
 	public class ClassEnchanter : ClassMagician
 	{
 		public ClassEnchanter()
@@ -41,5 +39,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Elf, PlayerRace.Lurikeen,
+		};
 	}
 }

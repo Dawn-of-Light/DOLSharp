@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Bonebancer Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Bonedancer, "Bonedancer", "Mystic")]
+	[CharacterClass((int)eCharacterClass.Bonedancer, "Bonedancer", "Mystic")]
 	public class ClassBonedancer : CharacterClassBoneDancer
 	{
 		public ClassBonedancer()
@@ -49,5 +47,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Kobold, PlayerRace.Troll, PlayerRace.Valkyn,
+		};
 	}
 }

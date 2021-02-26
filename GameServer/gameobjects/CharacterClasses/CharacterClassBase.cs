@@ -23,6 +23,7 @@ using DOL.GS.Effects;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using DOL.GS.Realm;
 
 namespace DOL.GS
 {
@@ -140,6 +141,8 @@ namespace DOL.GS
 			
 			Player = player;
 		}
+
+		public abstract List<PlayerRace> EligibleRaces { get; }
 
 		public string FemaleName
 		{
@@ -471,5 +474,7 @@ namespace DOL.GS
 			m_basename = "Unknown Class";
 			m_profession = "None";
 		}
-	}
+
+        public override List<PlayerRace> EligibleRaces => PlayerRace.AllRaces;
+    }
 }

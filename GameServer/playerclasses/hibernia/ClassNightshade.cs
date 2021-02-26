@@ -16,15 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Nightshade Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Nightshade, "Nightshade", "Stalker")]
+	[CharacterClass((int)eCharacterClass.Nightshade, "Nightshade", "Stalker")]
 	public class ClassNightshade : ClassStalker
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };
@@ -59,5 +56,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen,
+		};
 	}
 }

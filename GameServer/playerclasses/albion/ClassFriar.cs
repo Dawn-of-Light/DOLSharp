@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+
+using DOL.GS.Realm;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Friar Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Friar, "Friar", "Acolyte")]
+	[CharacterClass((int)eCharacterClass.Friar, "Friar", "Acolyte")]
 	public class ClassFriar : ClassAcolyte
 	{
 		public ClassFriar()
@@ -43,5 +42,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.Highlander,
+		};
 	}
 }

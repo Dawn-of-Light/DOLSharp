@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Caster Base Class Magician
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Magician, "Magician", "Magician")]
+	[CharacterClass((int)eCharacterClass.Magician, "Magician", "Magician")]
 	public class ClassMagician : CharacterClassBase
 	{
 		public ClassMagician()
@@ -54,5 +52,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar,
+		};
 	}
 }

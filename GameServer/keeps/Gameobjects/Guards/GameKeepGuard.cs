@@ -23,10 +23,10 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-
-using System.Reflection;
-using log4net;
-
+using DOL.GS.ServerProperties;
+using System.Collections.Generic;
+using DOL.GS.Realm;
+using DOL.GS.PlayerClass;
 
 namespace DOL.GS.Keeps
 {
@@ -110,7 +110,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if(IsPortalKeepGuard)
+				if (IsPortalKeepGuard)
 					return 255;
 
 				return base.Level;
@@ -230,7 +230,7 @@ namespace DOL.GS.Keeps
 					{
 						foreach (GameLiving living in guard.Attackers)
 						{
-                            if ( guard.IsWithinRadius( living, guard.AttackRange ) )
+							if (guard.IsWithinRadius(living, guard.AttackRange))
 							{
 								guard.StartAttack(living);
 								return;
@@ -238,7 +238,7 @@ namespace DOL.GS.Keeps
 						}
 					}
 
-                    if ( guard.IsWithinRadius( guard.TargetObject, guard.AttackRangeDistance ) )
+					if (guard.IsWithinRadius(guard.TargetObject, guard.AttackRangeDistance))
 					{
 						if (guard.MaxSpeedBase == 0 || (guard is GuardArcher && !guard.BeenAttackedRecently))
 							guard.SwitchToRanged(guard.TargetObject);
@@ -254,7 +254,7 @@ namespace DOL.GS.Keeps
 					guard.StopAttack();
 					return;
 				}
-                if ( !guard.IsWithinRadius( guard.TargetObject, guard.AttackRange ) )
+				if (!guard.IsWithinRadius(guard.TargetObject, guard.AttackRange))
 				{
 					guard.StopAttack();
 					return;
@@ -429,16 +429,146 @@ namespace DOL.GS.Keeps
 		{
 			if ((response & 0x100) == 0x100 && HealTarget != null)
 			{
-				TargetObject = HealTarget;
-				SpellMgr.CastHealSpell(this, HealTarget as GameLiving);
+				Spell healSpell = GetGuardHealSmallSpell(Realm);
+
+				if (healSpell != null && !IsStunned && !IsMezzed)
+				{
+					StopAttack();
+					TargetObject = HealTarget;
+					CastSpell(healSpell, GuardSpellLine);
+				}
 			}
 		}
+
+		private Spell GetGuardHealSmallSpell(eRealm realm)
+		{
+			switch (realm)
+			{
+				case eRealm.None:
+				case eRealm.Albion:
+					return GuardSpellDB.AlbGuardHealSmallSpell;
+				case eRealm.Midgard:
+					return GuardSpellDB.MidGuardHealSmallSpell;
+				case eRealm.Hibernia:
+					return GuardSpellDB.HibGuardHealSmallSpell;
+			}
+			return null;
+		}
+
+		public void CheckAreaForHeals()
+		{
+			GameLiving target = null;
+			GamePlayer LOSChecker = null;
+
+			foreach (GamePlayer player in GetPlayersInRadius(2000))
+			{
+				LOSChecker = player;
+
+				if (!player.IsAlive) continue;
+				if (GameServer.ServerRules.IsSameRealm(player, this, true))
+				{
+					if (player.HealthPercent < Properties.KEEP_HEAL_THRESHOLD)
+					{
+						target = player;
+						break;
+					}
+				}
+			}
+
+			if (target == null)
+			{
+				foreach (GameNPC npc in GetNPCsInRadius(2000))
+				{
+					if (npc is GameSiegeWeapon) continue;
+					if (GameServer.ServerRules.IsSameRealm(npc, this, true))
+					{
+						if (npc.HealthPercent < Properties.KEEP_HEAL_THRESHOLD)
+						{
+							target = npc;
+							break;
+						}
+					}
+				}
+			}
+
+			if (target != null)
+			{
+				if (LOSChecker == null)
+				{
+					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
+						LOSChecker = player;
+						break;
+					}
+				}
+				if (LOSChecker == null)
+					return;
+				if (!target.IsAlive) return;
+
+				HealTarget = target;
+				LOSChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(GuardStartSpellHealCheckLOS));
+			}
+		}
+
+		public void CheckForNuke()
+		{
+			GameLiving target = TargetObject as GameLiving;
+			if (target == null) return;
+			if (!target.IsAlive) return;
+			if (target is GamePlayer && !GameServer.KeepManager.IsEnemy(this, target as GamePlayer, true)) return;
+			if (!IsWithinRadius(target, WorldMgr.VISIBILITY_DISTANCE)) { TargetObject = null; return; }
+			GamePlayer LOSChecker = null;
+			if (target is GamePlayer) LOSChecker = target as GamePlayer;
+			else
+			{
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					LOSChecker = player;
+					break;
+				}
+			}
+			if (LOSChecker == null) return;
+			LOSChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(GuardStartSpellNukeCheckLOS));
+		}
+
 		public void GuardStartSpellNukeCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if ((response & 0x100) == 0x100)
 			{
-				SpellMgr.CastNukeSpell(this, TargetObject as GameLiving);
+				switch (Realm)
+				{
+					case eRealm.None:
+					case eRealm.Albion: LaunchSpell(47, "Pyromancy"); break;
+					case eRealm.Midgard: LaunchSpell(48, "Runecarving"); break;
+					case eRealm.Hibernia: LaunchSpell(47, "Way of the Eclipse"); break;
+				}
 			}
+		}
+
+		private void LaunchSpell(int spellLevel, string spellLineName)
+		{
+			if (TargetObject == null)
+				return;
+
+			Spell castSpell = null;
+
+			SpellLine castLine = SkillBase.GetSpellLine(spellLineName);
+			List<Spell> spells = SkillBase.GetSpellList(castLine.KeyName);
+
+			foreach (Spell spell in spells)
+			{
+				if (spell.Level == spellLevel)
+				{
+					castSpell = spell;
+					break;
+				}
+			}
+			if (AttackState)
+				StopAttack();
+			if (IsMoving)
+				StopFollowing();
+			TurnTo(TargetObject);
+			CastSpell(castSpell, castLine);
 		}
 
 		/// <summary>
@@ -449,19 +579,19 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.ObjectState != GameObject.eObjectState.Active) return false;
+				if (ObjectState != eObjectState.Active) return false;
 				if (this is GuardFighter) return false;
 				if (this is GuardArcher || this is GuardLord)
 				{
-					if (this.Inventory == null) return false;
-					if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) == null) return false;
-					if (this.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance) return false;
+					if (Inventory == null) return false;
+					if (Inventory.GetItem(eInventorySlot.DistanceWeapon) == null) return false;
+					if (ActiveWeaponSlot == eActiveWeaponSlot.Distance) return false;
 				}
 				if (this is GuardCaster || this is GuardHealer)
 				{
-					if (this.CurrentSpellHandler != null) return false;
+					if (CurrentSpellHandler != null) return false;
 				}
-				return !this.BeenAttackedRecently;
+				return !BeenAttackedRecently;
 			}
 		}
 
@@ -489,12 +619,12 @@ namespace DOL.GS.Keeps
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Standard || ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
 				{
 					//if we are targeting something, and the distance to the target object is greater than the attack range
-                    if( TargetObject != null && !this.IsWithinRadius( TargetObject, AttackRange ) )
+					if (TargetObject != null && !IsWithinRadius(TargetObject, AttackRange))
 					{
 						//stop the attack
 						StopAttack();
 						//if the distance to the attacker is less than the attack range
-						if ( this.IsWithinRadius( ad.Attacker, AttackRange ) )
+						if (IsWithinRadius(ad.Attacker, AttackRange))
 						{
 							//attack it
 							StartAttack(ad.Attacker);
@@ -530,8 +660,8 @@ namespace DOL.GS.Keeps
 			if (guard.Component.AbstractKeep.Guild == null) return;
 
 			int inArea = guard.GetEnemyCountInArea();
-            string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GuardSpam.Killed", guard.Name, guard.Component.AbstractKeep.Name, inArea);
-            KeepGuildMgr.SendMessageToGuild(message, guard.Component.AbstractKeep.Guild);
+			string message = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "GameKeepGuard.GuardSpam.Killed", guard.Name, guard.Component.AbstractKeep.Name, inArea);
+			KeepGuildMgr.SendMessageToGuild(message, guard.Component.AbstractKeep.Guild);
 		}
 
 		/// <summary>
@@ -545,7 +675,7 @@ namespace DOL.GS.Keeps
 			{
 				if (this.Component != null)
 				{
-					if (GameServer.KeepManager.IsEnemy(this.Component.AbstractKeep, NearbyPlayers))
+					if (GameServer.KeepManager.IsEnemy(Component.AbstractKeep, NearbyPlayers))
 						inArea++;
 				}
 				else
@@ -581,17 +711,17 @@ namespace DOL.GS.Keeps
 		{
 			base.RoamingRange = 0;
 			base.TetherRange = 10000;
-			
+
 			if (!base.AddToWorld())
 				return false;
-			
-			if(IsPortalKeepGuard&&(Brain as KeepGuardBrain!=null))
+
+			if (IsPortalKeepGuard && (Brain as KeepGuardBrain != null))
 			{
-				(this.Brain as KeepGuardBrain).AggroRange=2000;
-				(this.Brain as KeepGuardBrain).AggroLevel=99;
+				(this.Brain as KeepGuardBrain).AggroRange = 2000;
+				(this.Brain as KeepGuardBrain).AggroLevel = 99;
 			}
-			
-			GameEventMgr.AddHandler(this, GameNPCEvent.AttackFinished, new DOLEventHandler(AttackFinished));
+
+			GameEventMgr.AddHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(AttackFinished));
 
 			if (PatrolGroup != null && !m_changingPositions)
 			{
@@ -626,7 +756,7 @@ namespace DOL.GS.Keeps
 		{
 			if (base.RemoveFromWorld())
 			{
-				GameEventMgr.RemoveHandler(this, GameNPCEvent.AttackFinished, new DOLEventHandler(AttackFinished));
+				GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(AttackFinished));
 				return true;
 			}
 
@@ -651,14 +781,7 @@ namespace DOL.GS.Keeps
 		protected override int RespawnTimerCallback(RegionTimer respawnTimer)
 		{
 			int temp = base.RespawnTimerCallback(respawnTimer);
-			if (Component != null && Component.AbstractKeep != null)
-			{
-				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
-			}
-			else
-			{
-				TemplateMgr.RefreshTemplate(this);
-			}
+			RefreshTemplate();
 			return temp;
 		}
 
@@ -673,18 +796,18 @@ namespace DOL.GS.Keeps
 			//You examine the Armswoman. She is friendly and is a realm guard.
 			//She has upgraded equipment (5).
 			IList list = new ArrayList(4);
-            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.YouTarget", GetName(0, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.YouTarget", GetName(0, false)));
 
 			if (Realm != eRealm.None)
 			{
-                list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+				list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
 				if (this.Component != null)
 				{
 					string text = "";
-					if (this.Component.AbstractKeep.Level > 1 && this.Component.AbstractKeep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
-                        text = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.AbstractKeep.Level);
-					if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.AbstractKeep.Region == 163 && !(this.Component.AbstractKeep is GameKeepTower))
-                        text += LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.AbstractKeep.BaseLevel - 50).ToString());
+					if (Component.AbstractKeep.Level > 1 && Component.AbstractKeep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
+						text = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), Component.AbstractKeep.Level);
+					if (Properties.USE_KEEP_BALANCING && Component.AbstractKeep.Region == 163 && !(Component.AbstractKeep is GameKeepTower))
+						text += LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.AbstractKeep.BaseLevel - 50).ToString());
 					if (text != "")
 						list.Add(text);
 				}
@@ -707,8 +830,8 @@ namespace DOL.GS.Keeps
 					{
 						// Subjective
 						if (Gender == GS.eGender.Male)
-                            s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.He");
-                        else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.She");
+							s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.He");
+						else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.She");
 						if (!firstLetterUppercase)
 							s = s.ToLower();
 						break;
@@ -716,9 +839,9 @@ namespace DOL.GS.Keeps
 				case 1:
 					{
 						// Possessive
-                        if (Gender == eGender.Male)
-                            s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.His");
-                        else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Hers");
+						if (Gender == eGender.Male)
+							s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.His");
+						else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Hers");
 						if (!firstLetterUppercase)
 							s = s.ToLower();
 						break;
@@ -726,9 +849,9 @@ namespace DOL.GS.Keeps
 				case 2:
 					{
 						// Objective
-                        if (Gender == eGender.Male)
-                            s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Him");
-                        else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Her");
+						if (Gender == eGender.Male)
+							s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Him");
+						else s = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetPronoun.Her");
 						if (!firstLetterUppercase)
 							s = s.ToLower();
 						break;
@@ -764,14 +887,7 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			if (Component != null && Component.AbstractKeep != null)
-			{
-				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
-			}
-			else
-			{
-				TemplateMgr.RefreshTemplate(this);
-			}
+			RefreshTemplate();
 		}
 
 		public void DeleteObject()
@@ -827,27 +943,19 @@ namespace DOL.GS.Keeps
 				if (area is KeepArea && Component != null)
 				{
 					Component.AbstractKeep.Guards.Remove(m_dataObjectID); //Remove(this.InternalID); LoadFromDatabase() adds using m_dataObjectID
-					// break; This is a bad idea.  If there are multiple KeepAreas, we could end up with instantiated keep items that are no longer in the DB
+																		  // break; This is a bad idea.  If there are multiple KeepAreas, we could end up with instantiated keep items that are no longer in the DB
 				}
 			}
 			base.DeleteFromDatabase();
 		}
 
-		/// <summary>
-		/// Load the guard from a position
-		/// </summary>
-		/// <param name="pos">The position for the guard</param>
-		/// <param name="component">The component it is being spawned on</param>
 		public void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{
 			m_templateID = pos.TemplateID;
 			m_component = component;
 			component.AbstractKeep.Guards.Add(m_templateID, this);
 			PositionMgr.LoadGuardPosition(pos, this);
-			if (Component != null && Component.AbstractKeep != null)
-				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
-			else
-				TemplateMgr.RefreshTemplate(this);
+			RefreshTemplate();
 			this.AddToWorld();
 		}
 
@@ -858,8 +966,8 @@ namespace DOL.GS.Keeps
 		public void MoveToPosition(DBKeepPosition position)
 		{
 			PositionMgr.LoadGuardPosition(position, this);
-			if (!this.InCombat)
-				this.MoveTo(this.CurrentRegionID, this.X, this.Y, this.Z, this.Heading);
+			if (!InCombat)
+				MoveTo(CurrentRegionID, X, Y, Z, Heading);
 		}
 		#endregion
 
@@ -875,19 +983,19 @@ namespace DOL.GS.Keeps
 			if (guild != null)
 				guildname = guild.Name;
 
-			this.GuildName = guildname;
+			GuildName = guildname;
 
-			if (this.Inventory == null)
+			if (Inventory == null)
 				return;
 
 			int emblem = 0;
 			if (guild != null)
 				emblem = guild.Emblem;
-			InventoryItem lefthand = this.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+			InventoryItem lefthand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 			if (lefthand != null)
 				lefthand.Emblem = emblem;
 
-			InventoryItem cloak = this.Inventory.GetItem(eInventorySlot.Cloak);
+			InventoryItem cloak = Inventory.GetItem(eInventorySlot.Cloak);
 			if (cloak != null)
 			{
 				cloak.Emblem = emblem;
@@ -905,10 +1013,6 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// Adding special handling for walking to a point for patrol guards to be in a formation
 		/// </summary>
-		/// <param name="tx"></param>
-		/// <param name="ty"></param>
-		/// <param name="tz"></param>
-		/// <param name="speed"></param>
 		public override void WalkTo(int tx, int ty, int tz, short speed)
 		{
 			int offX = 0; int offY = 0;
@@ -917,9 +1021,6 @@ namespace DOL.GS.Keeps
 			base.WalkTo(tx - offX, ty - offY, tz, speed);
 		}
 
-		/// <summary>
-		/// Walk to the spawn point, always max speed for keep guards, or continue patrol.
-		/// </summary>
 		public override void WalkToSpawn()
 		{
 			if (PatrolGroup != null)
@@ -941,5 +1042,344 @@ namespace DOL.GS.Keeps
 			}
 		}
 
+		public void RefreshTemplate()
+		{
+			SetRealm();
+			SetGuild();
+			SetRespawnTime();
+			SetGender();
+			SetModel();
+			SetName();
+			SetBlockEvadeParryChance();
+			SetBrain();
+			SetSpeed();
+			SetLevel();
+			SetResists();
+			SetStats();
+			SetAggression();
+			ClothingMgr.EquipGuard(this);
+			ClothingMgr.SetEmblem(this);
+		}
+
+		protected virtual void SetName()
+		{
+			if (Realm == eRealm.None)
+			{
+				Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Renegade", Name);
+			}
+		}
+
+		protected virtual void SetBlockEvadeParryChance()
+		{
+			BlockChance = 0;
+			EvadeChance = 0;
+			ParryChance = 0;
+		}
+
+		protected virtual KeepGuardBrain GetBrain() => new KeepGuardBrain();
+
+		protected virtual void SetBrain()
+		{
+			if (Brain is KeepGuardBrain == false)
+			{
+				KeepGuardBrain brain = GetBrain();
+				AddBrain(brain);
+				brain.guard = this;
+			}
+		}
+
+		protected virtual void SetSpeed()
+		{
+			if (IsPortalKeepGuard)
+			{
+				MaxSpeedBase = 575;
+			}
+			if (Level < 250)
+			{
+				if (Realm == eRealm.None)
+				{
+					MaxSpeedBase = 200;
+				}
+				else if (Level < 50)
+				{
+					MaxSpeedBase = 210;
+				}
+				else
+				{
+					MaxSpeedBase = 250;
+				}
+			}
+			else
+			{
+				MaxSpeedBase = 575;
+			}
+		}
+
+		private void SetResists()
+		{
+			for (int i = (int)eProperty.Resist_First; i <= (int)eProperty.Resist_Last; i++)
+			{
+				if (this is GuardLord)
+				{
+					BaseBuffBonusCategory[i] = 40;
+				}
+				else if (Level < 50)
+				{
+					BaseBuffBonusCategory[i] = Level / 2 + 1;
+				}
+				else
+				{
+					BaseBuffBonusCategory[i] = 26;
+				}
+			}
+		}
+
+		protected virtual void SetStats()
+		{
+			Strength = (short)(Properties.GUARD_AUTOSET_STR_BASE + (10 * Level * Properties.GUARD_AUTOSET_STR_MULTIPLIER));
+			Dexterity = (short)(Properties.GUARD_AUTOSET_DEX_BASE + (Level * Properties.GUARD_AUTOSET_DEX_MULTIPLIER));
+			Constitution = (short)(Properties.GUARD_AUTOSET_CON_BASE + (Level * Properties.GUARD_AUTOSET_CON_MULTIPLIER));
+			Quickness = (short)(Properties.GUARD_AUTOSET_QUI_BASE + (Level * Properties.GUARD_AUTOSET_QUI_MULTIPLIER));
+			Intelligence = (short)(Properties.GUARD_AUTOSET_INT_BASE + (Level * Properties.GUARD_AUTOSET_INT_MULTIPLIER));
+		}
+
+		private void SetRealm()
+		{
+			if (Component != null)
+			{
+				Realm = Component.AbstractKeep.Realm;
+			}
+			else
+			{
+				Realm = CurrentZone.Realm;
+			}
+
+			if (Realm != eRealm.None)
+			{
+				ModelRealm = Realm;
+			}
+			else
+			{
+				ModelRealm = (eRealm)Util.Random(1, 3);
+			}
+		}
+
+		private void SetGuild()
+		{
+			if (Component == null)
+			{
+				GuildName = "";
+			}
+			else if (Component.AbstractKeep.Guild == null)
+			{
+				GuildName = "";
+			}
+			else
+			{
+				GuildName = Component.AbstractKeep.Guild.Name;
+			}
+		}
+
+		protected virtual void SetRespawnTime()
+		{
+			int iVariance = 1000 * Math.Abs(Properties.GUARD_RESPAWN_VARIANCE);
+			int iRespawn = 60 * ((Math.Abs(Properties.GUARD_RESPAWN) * 1000) +
+				(Util.Random(-iVariance, iVariance)));
+
+			RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
+		}
+
+		protected virtual void SetAggression() { }
+
+		public void SetLevel()
+		{
+			if (Component != null)
+			{
+				Component.AbstractKeep.SetGuardLevel(this);
+			}
+		}
+
+		private void SetGender()
+		{
+			//portal keep guards are always male
+			if (IsPortalKeepGuard)
+			{
+				Gender = eGender.Male;
+			}
+			else
+			{
+				if (Util.Chance(50))
+				{
+					Gender = eGender.Male;
+				}
+				else
+				{
+					Gender = eGender.Female;
+				}
+			}
+		}
+
+		protected virtual ICharacterClass GetClass()
+        {
+			return new DefaultCharacterClass();
+		}
+
+		protected virtual void SetModel()
+		{
+			if (!Properties.AUTOMODEL_GUARDS_LOADED_FROM_DB && !LoadedFromScript)
+			{
+				return;
+			}
+			
+			var possibleRaces = GetClass().EligibleRaces.FindAll(s => s.GetModel(Gender) != eLivingModel.None);
+			if (possibleRaces.Count > 0)
+			{
+				var indexPick = Util.Random(0, possibleRaces.Count - 1);
+				Model = (ushort)possibleRaces[indexPick].GetModel(Gender);
+			}
+		}
+
+		private static SpellLine GuardSpellLine { get; } = new SpellLine("GuardSpellLine", "Guard Spells", "unknown", false);
+	}
+
+	public class GuardSpellDB
+    {
+		private static Spell m_albLordHealSpell;
+		private static Spell m_midLordHealSpell;
+		private static Spell m_hibLordHealSpell;
+
+		private static DBSpell BaseHealSpell
+        {
+			get
+            {
+				DBSpell spell = new DBSpell();
+				spell.AllowAdd = false;
+				spell.CastTime = 2;
+				spell.Name = "Guard Heal";
+				spell.Range = WorldMgr.VISIBILITY_DISTANCE;
+				spell.Type = "Heal";
+				return spell;
+			}
+        }
+
+		private static DBSpell LordBaseHealSpell
+		{
+			get
+			{
+				DBSpell spell = BaseHealSpell;
+				spell.CastTime = 2;
+				spell.Target = "Self";
+				spell.Value = 225;
+				if (GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvE)
+					spell.Uninterruptible = true;
+				return spell;
+			}
+		}
+
+		private static DBSpell GuardBaseHealSpell
+		{
+			get
+			{
+				DBSpell spell = BaseHealSpell;
+				spell.CastTime = 2;
+				spell.Value = 200;
+				spell.Target = "Realm";
+				return spell;
+			}
+		}
+
+		public static Spell AlbLordHealSpell
+		{
+			get
+			{
+				if (m_albLordHealSpell == null)
+				{
+					DBSpell spell = LordBaseHealSpell;
+					spell.ClientEffect = 1340;
+					spell.SpellID = 90001;
+					m_albLordHealSpell = new Spell(spell, 50);
+				}
+				return m_albLordHealSpell;
+			}
+		}
+
+		public static Spell MidLordHealSpell
+		{
+			get
+			{
+				if (m_midLordHealSpell == null)
+				{
+					DBSpell spell = LordBaseHealSpell;
+					spell.ClientEffect = 3011;
+					spell.SpellID = 90002;
+					m_midLordHealSpell = new Spell(spell, 50);
+				}
+				return m_midLordHealSpell;
+			}
+		}
+
+		public static Spell HibLordHealSpell
+		{
+			get
+			{
+				if (m_hibLordHealSpell == null)
+				{
+					DBSpell spell = LordBaseHealSpell;
+					spell.ClientEffect = 3030;
+					spell.SpellID = 90003;
+					m_hibLordHealSpell = new Spell(spell, 50);
+				}
+				return m_hibLordHealSpell;
+			}
+		}
+
+		private static Spell m_albGuardHealSmallSpell;
+		private static Spell m_midGuardHealSmallSpell;
+		private static Spell m_hibGuardHealSmallSpell;
+
+		public static Spell AlbGuardHealSmallSpell
+		{
+			get
+			{
+				if (m_albGuardHealSmallSpell == null)
+				{
+					DBSpell spell = GuardBaseHealSpell;
+					spell.ClientEffect = 1340;
+					spell.SpellID = 90004;
+					m_albGuardHealSmallSpell = new Spell(spell, 50);
+				}
+				return m_albGuardHealSmallSpell;
+			}
+		}
+
+		public static Spell MidGuardHealSmallSpell
+		{
+			get
+			{
+				if (m_midGuardHealSmallSpell == null)
+				{
+					DBSpell spell = GuardBaseHealSpell;
+					spell.ClientEffect = 3011;
+					spell.SpellID = 90005;
+					m_midGuardHealSmallSpell = new Spell(spell, 50);
+				}
+				return m_midGuardHealSmallSpell;
+			}
+		}
+
+		public static Spell HibGuardHealSmallSpell
+		{
+			get
+			{
+				if (m_hibGuardHealSmallSpell == null)
+				{
+					DBSpell spell = GuardBaseHealSpell;
+					spell.ClientEffect = 3030;
+					spell.SpellID = 90006;
+					m_hibGuardHealSmallSpell = new Spell(spell, 50);
+				}
+				return m_hibGuardHealSmallSpell;
+			}
+		}
 	}
 }

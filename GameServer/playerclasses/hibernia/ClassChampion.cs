@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Champion Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Champion, "Champion", "Guardian")]
+	[CharacterClass((int)eCharacterClass.Champion, "Champion", "Guardian")]
 	public class ClassChampion : ClassGuardian
 	{
 		public ClassChampion()
@@ -48,5 +46,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar,
+		};
 	}
 }

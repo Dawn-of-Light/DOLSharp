@@ -16,17 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Valkyrie Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Valkyrie, "Valkyrie", "Viking")]
+	[CharacterClass((int)eCharacterClass.Valkyrie, "Valkyrie", "Viking")]
 	public class ClassValkyrie : ClassViking
 	{
-
 		public ClassValkyrie()
 			: base()
 		{
@@ -49,5 +46,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Norseman,
+		};
 	}
 }

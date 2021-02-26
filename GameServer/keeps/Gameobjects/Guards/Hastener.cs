@@ -16,11 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using DOL.GS.ServerProperties;
+using DOL.Language;
 using System;
 using System.Collections;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.GS.Spells;
 
 namespace DOL.GS.Keeps
 {
@@ -32,6 +31,38 @@ namespace DOL.GS.Keeps
 		public override eFlags Flags
 		{
 			get { return eFlags.PEACE; }
+		}
+
+		protected override void SetModel()
+		{
+			if (!ServerProperties.Properties.AUTOMODEL_GUARDS_LOADED_FROM_DB && !LoadedFromScript)
+			{
+				return;
+			}
+			switch (Realm)
+			{
+				case eRealm.None:
+				case eRealm.Albion:
+					{
+						Model = (ushort)eLivingModel.AlbionHastener;
+						Size = 45;
+						break;
+					}
+				case eRealm.Midgard:
+					{
+						Model = (ushort)eLivingModel.MidgardHastener;
+						Size = 50;
+						Flags ^= eFlags.GHOST;
+						break;
+					}
+				case eRealm.Hibernia:
+					{
+						Model = (ushort)eLivingModel.HiberniaHastener;
+						Size = 45;
+						break;
+					}
+			}
+			return;
 		}
 
 		#region Examine/Interact Message
@@ -58,5 +89,16 @@ namespace DOL.GS.Keeps
 			return true;
 		}
 		#endregion Examine/Interact Message
+
+		protected override void SetRespawnTime()
+		{
+				RespawnInterval = 5000;
+		}
+
+		protected override void SetName()
+		{
+			Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Hastener");
+			return;
+		}
 	}
 }

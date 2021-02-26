@@ -16,15 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Ranger Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Ranger, "Ranger", "Stalker")]
+	[CharacterClass((int)eCharacterClass.Ranger, "Ranger", "Stalker")]
 	public class ClassRanger : ClassStalker
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery, Specs.RecurveBow };
@@ -146,5 +143,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar,
+		};
 	}
 }

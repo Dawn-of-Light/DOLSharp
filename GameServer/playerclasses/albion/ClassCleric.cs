@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using DOL.GS.Realm;
+using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Cleric Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Cleric, "Cleric", "Acolyte")]
+	[CharacterClass((int)eCharacterClass.Cleric, "Cleric", "Acolyte")]
 	public class ClassCleric : ClassAcolyte
 	{
 		public ClassCleric()
@@ -42,5 +40,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.Highlander,
+		};
 	}
 }

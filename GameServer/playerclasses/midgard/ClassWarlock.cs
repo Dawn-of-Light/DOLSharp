@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Warlock Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Warlock, "Warlock", "Mystic")]
+	[CharacterClass((int)eCharacterClass.Warlock, "Warlock", "Mystic")]
 	public class ClassWarlock : ClassMystic
 	{
 		public ClassWarlock()
@@ -78,5 +76,10 @@ namespace DOL.GS.PlayerClass
 
 			return true;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman,
+		};
 	}
 }

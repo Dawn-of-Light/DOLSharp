@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Base Caster Class Disciple
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Disciple, "Disciple", "Disciple")]
+	[CharacterClass((int)eCharacterClass.Disciple, "Disciple", "Disciple")]
 	public class ClassDisciple : CharacterClassBase
 	{
 		public ClassDisciple()
@@ -54,5 +52,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Briton, PlayerRace.Inconnu, PlayerRace.Saracen,
+		};
 	}
 }

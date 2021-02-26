@@ -21,13 +21,13 @@ namespace DOL.AI.Brain
 				{
 					case eRealm.None:
 					case eRealm.Albion:
-						Body.Spells.Add(SpellMgr.AlbLordHealSpell);
+						Body.Spells.Add(GuardSpellDB.AlbLordHealSpell);
 						break;
 					case eRealm.Midgard:
-						Body.Spells.Add(SpellMgr.MidLordHealSpell);
+						Body.Spells.Add(GuardSpellDB.MidLordHealSpell);
 						break;
 					case eRealm.Hibernia:
-						Body.Spells.Add(SpellMgr.HibLordHealSpell);
+						Body.Spells.Add(GuardSpellDB.HibLordHealSpell);
 						break;
 				}
 			}

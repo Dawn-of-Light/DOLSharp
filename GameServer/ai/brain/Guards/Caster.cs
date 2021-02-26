@@ -19,7 +19,7 @@ namespace DOL.AI.Brain
 		{
 			if(guard==null) return;
 			if (guard.CanUseRanged)
-				SpellMgr.CheckForNuke(guard);
+				guard.CheckForNuke();
 		}
 	}
 }

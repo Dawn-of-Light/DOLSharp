@@ -17,9 +17,7 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.Language;
 
@@ -1038,6 +1036,61 @@ namespace DOL.GS
         public const string Realm_Spells = "Realm Spells"; // Resurrection illness, Speed of the realm
     }
 
+	public enum eLivingModel : ushort
+	{
+		None = 0,
+		#region AlbionClassModels
+		BritonMale = 32,
+		BritonFemale = 35,
+		HighlanderMale = 39,
+		HighlanderFemale = 43,
+		SaracenMale = 48,
+		SaracenFemale = 52,
+		AvalonianMale = 61,
+		AvalonianFemale = 65,
+		InconnuMale = 716,
+		InconnuFemale = 724,
+		HalfOgreMale = 1008,
+		HalfOgreFemale = 1020,
+		MinotaurMaleAlb = 1395,
+		#endregion
+		#region MidgardClassModels
+		TrollMale = 137,
+		TrollFemale = 145,
+		NorseMale = 503,
+		NorseFemale = 507,
+		KoboldMale = 169,
+		KoboldFemale = 177,
+		DwarfMale = 185,
+		DwarfFemale = 193,
+		ValkynMale = 773,
+		ValkynFemale = 781,
+		FrostalfMale = 1051,
+		FrostalfFemale = 1063,
+		MinotaurMaleMid = 1407,
+		#endregion
+		#region HiberniaClassModels
+		FirbolgMale = 286,
+		FirbolgFemale = 294,
+		CeltMale = 302,
+		CeltFemale = 310,
+		LurikeenMale = 318,
+		LurikeenFemale = 326,
+		ElfMale = 334,
+		ElfFemale = 342,
+		SharMale = 1075,
+		SharFemale = 1087,
+		SylvanMale = 700,
+		SylvanFemale = 708,
+		MinotaurMaleHib = 1419,
+		#endregion
+		#region Hastener
+		AlbionHastener = 244,
+		MidgardHastener = 22,
+		HiberniaHastener = 1910,
+		#endregion Hastener
+	}
+
 	public static class GlobalConstants
 	{
 		private static readonly Dictionary<GameLiving.eAttackResult, byte> AttackResultByte = new Dictionary<GameLiving.eAttackResult, byte>()
@@ -1944,339 +1997,7 @@ namespace DOL.GS
 				eCharacterClass.MaulerHib	 	// Mauler_Hib = 62,
 			}},
 		};
-		
-		/// <summary>
-		/// Allowed Classes for Each Races
-		/// </summary>
-		public static Dictionary<eRace, List<eCharacterClass>> RACES_CLASSES_DICT = new Dictionary<eRace, List<eCharacterClass>>()
-		{
-			{eRace.Unknown, new List<eCharacterClass>()},
-			// pre 1.93
-			{eRace.Briton, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.Elementalist, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
-				// post 1.93
-				eCharacterClass.Armsman,
-				eCharacterClass.Reaver,
-				eCharacterClass.Mercenary,
-				eCharacterClass.Paladin,
-				eCharacterClass.Cleric,
-				eCharacterClass.Heretic,
-				eCharacterClass.Friar,
-				eCharacterClass.Sorcerer,
-				eCharacterClass.Cabalist,
-				eCharacterClass.Theurgist,
-				eCharacterClass.Necromancer,
-				eCharacterClass.MaulerAlb,
-				eCharacterClass.Wizard,
-				eCharacterClass.Minstrel,
-				eCharacterClass.Infiltrator,
-				eCharacterClass.Scout,
-				eCharacterClass.Fighter,
-				eCharacterClass.Acolyte,
-				eCharacterClass.Mage,
-				eCharacterClass.Elementalist,
-				eCharacterClass.AlbionRogue,
-				eCharacterClass.Disciple
-				}},
-			{eRace.Avalonian, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.Elementalist,
-				// post 1.93
-				eCharacterClass.Paladin,
-				eCharacterClass.Cleric,
-				eCharacterClass.Wizard,
-				eCharacterClass.Theurgist,
-				eCharacterClass.Armsman,
-				eCharacterClass.Mercenary,
-				eCharacterClass.Sorcerer,
-				eCharacterClass.Cabalist,
-				eCharacterClass.Heretic,
-				eCharacterClass.Friar,
-				eCharacterClass.Fighter,
-				eCharacterClass.Acolyte,
-				eCharacterClass.Mage,
-				eCharacterClass.Elementalist
-				}},
-			{eRace.Highlander, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.AlbionRogue,
-				// post 1.93
-				eCharacterClass.Armsman,
-				eCharacterClass.Mercenary,
-				eCharacterClass.Paladin,
-				eCharacterClass.Cleric,
-				eCharacterClass.Minstrel,
-				eCharacterClass.Scout,
-				eCharacterClass.Friar,
-				eCharacterClass.Fighter,
-				eCharacterClass.Acolyte,
-				eCharacterClass.AlbionRogue
-				}},
-			{eRace.Saracen, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Mage, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
-				// post 1.93
-				eCharacterClass.Sorcerer,
-				eCharacterClass.Cabalist,
-				eCharacterClass.Paladin,
-				eCharacterClass.Reaver,
-				eCharacterClass.Mercenary,
-				eCharacterClass.Armsman,
-				eCharacterClass.Infiltrator,
-				eCharacterClass.Minstrel,
-				eCharacterClass.Scout,
-				eCharacterClass.Necromancer,
-				eCharacterClass.Fighter,
-				eCharacterClass.Mage,
-				eCharacterClass.AlbionRogue,
-				eCharacterClass.Disciple
-				}},
-			
-			{eRace.Norseman, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
-				// post 1.93
-				eCharacterClass.Healer,
-				eCharacterClass.Warrior,
-				eCharacterClass.Berserker,
-				eCharacterClass.Thane,
-				eCharacterClass.Warlock,
-				eCharacterClass.Skald,
-				eCharacterClass.Valkyrie,
-				eCharacterClass.Spiritmaster,
-				eCharacterClass.Runemaster,
-				eCharacterClass.Savage,
-				eCharacterClass.MaulerMid,
-				eCharacterClass.Shadowblade,
-				eCharacterClass.Hunter,
-				eCharacterClass.Viking,
-				eCharacterClass.Mystic,
-				eCharacterClass.Seer,
-				eCharacterClass.MidgardRogue
-				}},
-			{eRace.Troll, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer,
-				// post 1.93
-				eCharacterClass.Berserker,
-				eCharacterClass.Warrior,
-				eCharacterClass.Savage,
-				eCharacterClass.Thane,
-				eCharacterClass.Skald,
-				eCharacterClass.Bonedancer,
-				eCharacterClass.Shaman,
-				eCharacterClass.Viking,
-				eCharacterClass.Mystic,
-				eCharacterClass.Seer
-				}},
-			{eRace.Dwarf, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
-				// post 1.93
-				eCharacterClass.Healer,
-				eCharacterClass.Thane,
-				eCharacterClass.Berserker,
-				eCharacterClass.Warrior,
-				eCharacterClass.Savage,
-				eCharacterClass.Skald,
-				eCharacterClass.Valkyrie,
-				eCharacterClass.Runemaster,
-				eCharacterClass.Hunter,
-				eCharacterClass.Shaman,
-				eCharacterClass.Viking,
-				eCharacterClass.Mystic,
-				eCharacterClass.Seer,
-				eCharacterClass.MidgardRogue
-				}},
-			{eRace.Kobold, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
-				// post 1.93
-				eCharacterClass.Shaman,
-				eCharacterClass.Warrior,
-				eCharacterClass.Skald,
-				eCharacterClass.Savage,
-				eCharacterClass.Runemaster,
-				eCharacterClass.Spiritmaster,
-				eCharacterClass.Bonedancer,
-				eCharacterClass.Warlock,
-				eCharacterClass.Hunter,
-				eCharacterClass.Shadowblade,
-				eCharacterClass.MaulerMid,
-				eCharacterClass.Viking,
-				eCharacterClass.Mystic,
-				eCharacterClass.Seer,
-				eCharacterClass.MidgardRogue
-				}},
-				
-			{eRace.Celt, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Naturalist, eCharacterClass.Magician, eCharacterClass.Forester,
-				// post 1.93
-				eCharacterClass.Bard,
-				eCharacterClass.Druid,
-				eCharacterClass.Warden,
-				eCharacterClass.Blademaster,
-				eCharacterClass.Hero,
-				eCharacterClass.Vampiir,
-				eCharacterClass.Champion,
-				eCharacterClass.MaulerHib,
-				eCharacterClass.Mentalist,
-				eCharacterClass.Bainshee,
-				eCharacterClass.Ranger,
-				eCharacterClass.Animist,
-				eCharacterClass.Valewalker,
-				eCharacterClass.Nightshade,
-				eCharacterClass.Guardian,
-				eCharacterClass.Stalker,
-				eCharacterClass.Naturalist,
-				eCharacterClass.Magician,
-				eCharacterClass.Forester
-				}},
-			{eRace.Firbolg, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Naturalist, eCharacterClass.Forester,
-				// post 1.93
-				eCharacterClass.Bard,
-				eCharacterClass.Druid,
-				eCharacterClass.Warden,
-				eCharacterClass.Hero,
-				eCharacterClass.Blademaster,
-				eCharacterClass.Animist,
-				eCharacterClass.Valewalker,
-				eCharacterClass.Guardian,
-				eCharacterClass.Naturalist,
-				eCharacterClass.Forester
-				}},
-			{eRace.Elf, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Magician,
-				// post 1.93
-				eCharacterClass.Blademaster,
-				eCharacterClass.Champion,
-				eCharacterClass.Ranger,
-				eCharacterClass.Nightshade,
-				eCharacterClass.Bainshee,
-				eCharacterClass.Enchanter,
-				eCharacterClass.Eldritch,
-				eCharacterClass.Mentalist,
-				eCharacterClass.Guardian,
-				eCharacterClass.Stalker,
-				eCharacterClass.Magician
-				}},
-			{eRace.Lurikeen, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Magician,
-				// post 1.93
-				eCharacterClass.Hero,
-				eCharacterClass.Champion,
-				eCharacterClass.Vampiir,
-				eCharacterClass.Eldritch,
-				eCharacterClass.Enchanter,
-				eCharacterClass.Mentalist,
-				eCharacterClass.Bainshee,
-				eCharacterClass.Nightshade,
-				eCharacterClass.Ranger,
-				eCharacterClass.MaulerHib,
-				eCharacterClass.Guardian,
-				eCharacterClass.Stalker,
-				eCharacterClass.Magician
-				}},
-			
-			{eRace.Inconnu, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
-				// post 1.93
-				eCharacterClass.Reaver,
-				eCharacterClass.Sorcerer,
-				eCharacterClass.Cabalist,
-				eCharacterClass.Heretic,
-				eCharacterClass.Necromancer,
-				eCharacterClass.Armsman,
-				eCharacterClass.Mercenary,
-				eCharacterClass.Infiltrator,
-				eCharacterClass.Scout,
-				eCharacterClass.MaulerAlb,
-				eCharacterClass.Fighter,
-				eCharacterClass.Acolyte,
-				eCharacterClass.Mage,
-				eCharacterClass.AlbionRogue,
-				eCharacterClass.Disciple
-				}},
-			
-			{eRace.Valkyn, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.MidgardRogue,
-				// post 1.93
-				eCharacterClass.Savage,
-				eCharacterClass.Berserker,
-				eCharacterClass.Bonedancer,
-				eCharacterClass.Warrior,
-				eCharacterClass.Shadowblade,
-				eCharacterClass.Hunter,
-				eCharacterClass.Viking,
-				eCharacterClass.Mystic,
-				eCharacterClass.MidgardRogue
-				}},
-			
-			{eRace.Sylvan, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Naturalist, eCharacterClass.Forester,
-				// post 1.93
-				eCharacterClass.Animist,
-				eCharacterClass.Druid,
-				eCharacterClass.Valewalker,
-				eCharacterClass.Hero,
-				eCharacterClass.Warden,
-				eCharacterClass.Guardian,
-				eCharacterClass.Naturalist,
-				eCharacterClass.Forester
-				}},
-			
-			{eRace.HalfOgre, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Mage, eCharacterClass.Elementalist,
-				// post 1.93
-				eCharacterClass.Wizard,
-				eCharacterClass.Theurgist,
-				eCharacterClass.Cabalist,
-				eCharacterClass.Sorcerer,
-				eCharacterClass.Mercenary,
-				eCharacterClass.Armsman,
-				eCharacterClass.Fighter,
-				eCharacterClass.Mage,
-				eCharacterClass.Elementalist
-				}},
-			
-			{eRace.Frostalf, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
-				// post 1.93
-				eCharacterClass.Healer,
-				eCharacterClass.Shaman,
-				eCharacterClass.Thane,
-				eCharacterClass.Spiritmaster,
-				eCharacterClass.Runemaster,
-				eCharacterClass.Warlock,
-				eCharacterClass.Valkyrie,
-				eCharacterClass.Hunter,
-				eCharacterClass.Shadowblade,
-				eCharacterClass.Viking,
-				eCharacterClass.Mystic,
-				eCharacterClass.Seer,
-				eCharacterClass.MidgardRogue
-				}},
-			
-			{eRace.Shar, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Magician,
-				// post 1.93
-				eCharacterClass.Champion,
-				eCharacterClass.Hero,
-				eCharacterClass.Blademaster,
-				eCharacterClass.Vampiir,
-				eCharacterClass.Ranger,
-				eCharacterClass.Mentalist,
-				eCharacterClass.Guardian,
-				eCharacterClass.Stalker,
-				eCharacterClass.Magician
-				}},
-			
-			{eRace.AlbionMinotaur, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.Elementalist, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
-				// post 1.93
-				eCharacterClass.Heretic,
-				eCharacterClass.MaulerAlb,
-				eCharacterClass.Armsman,
-				eCharacterClass.Mercenary,
-				eCharacterClass.Fighter,
-				eCharacterClass.Acolyte
-				}},
-			
-			{eRace.MidgardMinotaur, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
-				// post 1.93
-				eCharacterClass.Berserker,
-				eCharacterClass.MaulerMid,
-				eCharacterClass.Thane,
-				eCharacterClass.Viking,
-				eCharacterClass.Warrior
-				}},
-			
-			{eRace.HiberniaMinotaur, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Naturalist, eCharacterClass.Magician, eCharacterClass.Forester,
-				// post 1.93
-				eCharacterClass.Hero,
-				eCharacterClass.Blademaster,
-				eCharacterClass.MaulerHib,
-				eCharacterClass.Warden,
-				eCharacterClass.Guardian,
-				eCharacterClass.Naturalist
-				}},
-		};
-		
+
 		/// <summary>
 		/// Race to Gender Constraints
 		/// </summary>

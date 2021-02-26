@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.GS.Realm;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Base Support Class Seer
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Seer, "Seer", "Seer")]
+	[CharacterClass((int)eCharacterClass.Seer, "Seer", "Seer")]
 	public class ClassSeer : CharacterClassBase
 	{
 		public ClassSeer()
@@ -54,5 +52,10 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
+
+		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Troll,
+		};
 	}
 }
