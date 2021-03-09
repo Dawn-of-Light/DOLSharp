@@ -52,26 +52,9 @@ namespace DOL.GS
             }
 		}
 
-		/// <summary>
-		/// Check if the player is near the needed tools (forge, lathe, etc)
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="recipe">the recipe being used</param>
-		/// <param name="itemToCraft">the item to make</param>
-		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
-		/// <returns>true if required tools are found</returns>
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
+		public override void GainCraftingSkillPoints(GamePlayer player, Recipe recipe)
 		{
-			// TODO : implement tool checks based on recipes
-			return true;
-		}
-
-		/// <summary>
-		/// Gain a point in the appropriate skills for a recipe and materials
-		/// </summary>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
-		{
-			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe.Level)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.BasicCrafting, 1);
 				player.Out.SendUpdateCraftingSkills();

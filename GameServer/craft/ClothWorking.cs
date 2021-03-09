@@ -31,12 +31,9 @@ namespace DOL.GS
 			eSkill = eCraftingSkill.ClothWorking;
 		}
 
-		/// <summary>
-		/// Gain a point in the appropriate skills for a recipe and materials
-		/// </summary>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
+		public override void GainCraftingSkillPoints(GamePlayer player, Recipe recipe)
 		{
-			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe.Level)))
 			{
                 if (player.GetCraftingSkillValue(eCraftingSkill.ClothWorking) < subSkillCap)
                 {

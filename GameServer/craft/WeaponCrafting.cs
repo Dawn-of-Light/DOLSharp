@@ -42,15 +42,7 @@ namespace DOL.GS
             }
         }
 
-		/// <summary>
-		/// Check if the player is near the needed tools (forge, lathe, etc)
-		/// </summary>
-		/// <param name="player">the crafting player</param>
-		/// <param name="recipe">the recipe being used</param>
-		/// <param name="itemToCraft">the item to make</param>
-		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
-		/// <returns>true if required tools are found</returns>
-		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
+		protected override bool CheckForTools(GamePlayer player, Recipe recipe)
 		{
 			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
 			{
@@ -58,7 +50,7 @@ namespace DOL.GS
 					return true;
 			}
 
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Crafting.CheckTool.NotHaveTools", itemToCraft.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Crafting.CheckTool.NotHaveTools", recipe.Product.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Crafting.CheckTool.FindForge"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (player.Client.Account.PrivLevel > 1)
@@ -70,9 +62,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Calculate the minumum needed secondary crafting skill level to make the item
 		/// </summary>
-		public override int GetSecondaryCraftingSkillMinimumLevel(DBCraftedItem recipe, ItemTemplate itemToCraft)
+		public override int GetSecondaryCraftingSkillMinimumLevel(Recipe recipe)
 		{
-			switch (itemToCraft.Object_Type)
+			switch (recipe.Product.Object_Type)
 			{
 				case (int)eObjectType.CrushingWeapon:
 				case (int)eObjectType.SlashingWeapon:
@@ -91,21 +83,18 @@ namespace DOL.GS
 				case (int)eObjectType.LargeWeapons:
 				case (int)eObjectType.CelticSpear:
 				case (int)eObjectType.Scythe:
-					return recipe.CraftingLevel - 60;
+					return recipe.Level - 60;
 			}
 
-			return base.GetSecondaryCraftingSkillMinimumLevel(recipe, itemToCraft);
+			return base.GetSecondaryCraftingSkillMinimumLevel(recipe);
 		}
 
-		/// <summary>
-		/// Gain a point in the appropriate skills for a recipe and materials
-		/// </summary>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
+		public override void GainCraftingSkillPoints(GamePlayer player, Recipe recipe)
 		{
-			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe.Level)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.WeaponCrafting, 1);
-				base.GainCraftingSkillPoints(player, recipe, rawMaterials);
+				base.GainCraftingSkillPoints(player, recipe);
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}

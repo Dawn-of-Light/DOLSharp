@@ -49,22 +49,20 @@ namespace DOL.GS
             }
         }
 
-		/// <summary>
-		/// Gain a point in the appropriate skills for a recipe and materials
-		/// </summary>
-		public override void GainCraftingSkillPoints(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
+		public override void GainCraftingSkillPoints(GamePlayer player, Recipe recipe)
 		{
-			if (Util.Chance(CalculateChanceToGainPoint(player, recipe)))
+			if (Util.Chance(CalculateChanceToGainPoint(player, recipe.Level)))
 			{
 				player.GainCraftingSkill(eCraftingSkill.SiegeCrafting, 1);
 				player.Out.SendUpdateCraftingSkills();
 			}
 		}
 
-		protected override void BuildCraftedItem(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft)
+		protected override void BuildCraftedItem(GamePlayer player, Recipe recipe)
 		{
-			GameSiegeWeapon siegeweapon = null;
-			switch ((eObjectType)itemToCraft.Object_Type)
+			var product = recipe.Product;
+			GameSiegeWeapon siegeweapon;
+			switch ((eObjectType)product.Object_Type)
 			{
 				case eObjectType.SiegeBalista:
 					{
@@ -93,15 +91,15 @@ namespace DOL.GS
 					break;
 				default:
 					{
-						base.BuildCraftedItem(player, recipe, itemToCraft);
+						base.BuildCraftedItem(player, recipe);
 						return;
 					}
 			}
 
 			//actually stores the Id_nb of the siegeweapon
-			siegeweapon.ItemId = itemToCraft.Id_nb;
+			siegeweapon.ItemId = product.Id_nb;
 
-			siegeweapon.LoadFromDatabase(itemToCraft);
+			siegeweapon.LoadFromDatabase(product);
 			siegeweapon.CurrentRegion = player.CurrentRegion;
 			siegeweapon.Heading = player.Heading;
 			siegeweapon.X = player.X;

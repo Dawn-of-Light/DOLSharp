@@ -178,7 +178,7 @@ namespace DOL.GS.Commands
 					ReloadStaticItem(region, args[2], arg);
 				}
 			}
-			
+
 			if (args[1].ToLower() == "spells")
 			{
 				SkillBase.ReloadDBSpells();

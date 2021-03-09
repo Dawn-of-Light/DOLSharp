@@ -170,7 +170,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the GameClient of this Player
 		/// </summary>
-		public GameClient Client
+		public virtual GameClient Client
 		{
 			get { return m_client; }
 		}
@@ -13996,39 +13996,16 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CraftItem(ushort itemID)
 		{
-			DBCraftedItem recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(itemID.ToString());
-			if (recipe != null)
+			var recipe = RecipeDB.FindBy(itemID);
+
+			AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(recipe.RequiredCraftingSkill);
+			if (skill != null)
 			{
-				ItemTemplate itemToCraft = null;
-				itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
-				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb));
-				if (rawMaterials.Count > 0)
-				{
-					if (itemToCraft != null)
-					{
-						AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum((eCraftingSkill)recipe.CraftingSkillType);
-						if (skill != null)
-						{
-							skill.CraftItem(this, recipe, itemToCraft, rawMaterials);
-						}
-						else
-						{
-							Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						}
-					}
-					else
-					{
-						Out.SendMessage("Crafted ItemTemplate (" + recipe.Id_nb + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-				}
-				else
-				{
-					Out.SendMessage("Craft recipe for (" + recipe.Id_nb + ") is missing raw materials!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
+				skill.CraftItem(this, recipe);
 			}
 			else
 			{
-				Out.SendMessage("CraftedItemID: (" + itemID + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CraftItem.DontHaveAbilityMake"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
