@@ -158,7 +158,7 @@ namespace DOL.GS.Keeps
 
 			PositionMgr.LoadKeepItemPosition(pos, this);
 			string sKey = this.TemplateID;
-			if (component.AbstractKeep.Banners.ContainsKey(sKey))
+			if (component.AbstractKeep.Banners.ContainsKey(sKey) == false)
 			{
 				component.AbstractKeep.Banners.Add(sKey, this);
 				if (BannerType == eBannerType.Guild)
