@@ -36,8 +36,6 @@ namespace DOL.Integration.Performance
         [OneTimeSetUp]
         public void SetupFakeServer()
         {
-            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
             var fakeServer = new FakeServerWithSQLLiteDB();
             GameServer.LoadTestDouble(fakeServer);
             AddOneCompleteRecipeToDatabase();

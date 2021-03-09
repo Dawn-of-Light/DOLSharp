@@ -10,15 +10,6 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_SpellHandler
     {
-        [SetUp]
-        public void SetUp()
-        {
-            GS.ServerProperties.Properties.DEBUG_LOAD_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
-            GS.ServerProperties.Properties.PVE_SPELL_DAMAGE = 1;
-        }
-
         #region CastSpell
         [Test]
         public void CastSpell_OnNPCTarget_True()

@@ -14,9 +14,6 @@ namespace DOL.UnitTests.Gameserver
         [SetUp]
         public void Init()
         {
-            GS.ServerProperties.Properties.DEBUG_LOAD_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
             fakeServer = FakeServer.LoadAndReturn();
         }
         #region Accessor

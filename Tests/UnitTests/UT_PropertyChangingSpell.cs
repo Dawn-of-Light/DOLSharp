@@ -11,9 +11,6 @@ namespace DOL.UnitTests.Gameserver
         [SetUp]
         public void Init()
         {
-            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
-            GS.ServerProperties.Properties.DEBUG_LOAD_REGIONS = "";
             GameLiving.LoadCalculators();
         }
 

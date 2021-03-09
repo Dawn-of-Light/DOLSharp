@@ -7,13 +7,6 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
     [TestFixture]
     public class UT_StatCalculator
     {
-        [SetUp]
-        public void Init()
-        {
-            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
-        }
-
         [Test]
         public void CalcValueFromBuffs_GameNPCWith100ConstBaseBuff_100()
         {

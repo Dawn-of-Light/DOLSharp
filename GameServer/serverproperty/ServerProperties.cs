@@ -184,7 +184,7 @@ namespace DOL.GS.ServerProperties
 		/// A serialised list of disabled expansion IDs
 		/// </summary>
 		[ServerProperty("system", "disabled_expansions", "Serialized list of disabled expansions IDs, expansion IDs are client type seperated by ;", "")]
-		public static string DISABLED_EXPANSIONS;
+		public static string DISABLED_EXPANSIONS = "";
 
 		/// <summary>
 		/// Server Language
@@ -609,7 +609,7 @@ namespace DOL.GS.ServerProperties
 		/// A serialised list of disabled RegionIDs
 		/// </summary>
 		[ServerProperty("world", "disabled_regions", "Serialized list of disabled region IDs, separated by semi-colon or a range with a dash (ie 1-5;7;9)", "")]
-		public static string DISABLED_REGIONS;
+		public static string DISABLED_REGIONS = "";
 
 		/// <summary>
 		/// Should the server disable the tutorial zone
@@ -893,7 +893,7 @@ namespace DOL.GS.ServerProperties
 		/// The damage players do against monsters with spells
 		/// </summary>
 		[ServerProperty("rates", "pve_spell_damage", "The PvE Spell Damage Modifier - Edit this to change the amount of spell damage done when fighting mobs e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
-		public static double PVE_SPELL_DAMAGE;
+		public static double PVE_SPELL_DAMAGE = 1.0;
 
 		/// <summary>
 		/// The percent per con difference (-1 = blue, 0 = yellow, 1 = OJ, 2 = red ...) subtracted to hitchance for spells in PVE.  0 is none, 5 is 5% per con, etc.  Default is 10%

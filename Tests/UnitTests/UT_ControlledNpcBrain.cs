@@ -24,13 +24,6 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_ControlledNpcBrain
     {
-        [SetUp]
-        public void Init()
-        {
-            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
-        }
-
         [Test]
         public void GetPlayerOwner_InitWithPlayer_Player()
         {
