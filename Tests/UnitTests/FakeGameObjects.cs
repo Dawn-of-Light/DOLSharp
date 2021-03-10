@@ -23,6 +23,7 @@ namespace DOL.UnitTests.Gameserver
         public FakePlayer() : base(null, null)
         {
             this.ObjectState = eObjectState.Active;
+            this.m_invulnerabilityTick = -1;
         }
 
         public override ICharacterClass CharacterClass { get { return fakeCharacterClass; } }

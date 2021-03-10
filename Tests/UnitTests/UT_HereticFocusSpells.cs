@@ -11,7 +11,7 @@ namespace DOL.UnitTests.Gameserver
         [SetUp]
         public void SetUp()
         {
-            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = true;
+            GameServer.LoadTestDouble(new FakeServer());
         }
 
         [Test]

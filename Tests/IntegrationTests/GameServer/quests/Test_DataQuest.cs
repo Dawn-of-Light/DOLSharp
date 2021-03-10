@@ -69,7 +69,7 @@ namespace DOL.Integration.Gameserver
         public void ParseQuest_GivenDBDataQuest_CompareStepData()
         {
             var dataQuest = new DataQuestSpy(dbDataQuest);
-            FakeServer.LoadAndReturn();
+            FakeServer.Load();
 
             var stepCount = 5;
             for (int i = 1; i <= stepCount; i++)

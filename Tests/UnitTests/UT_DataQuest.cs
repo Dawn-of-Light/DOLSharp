@@ -10,12 +10,14 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_DataQuest
     {
-        FakeServer fakeServer;
+        FakeServer fakeServer = new FakeServer();
+
         [SetUp]
         public void Init()
         {
-            fakeServer = FakeServer.LoadAndReturn();
+            GameServer.LoadTestDouble(fakeServer);
         }
+
         #region Accessor
         [Test]
         public void MoneyReward_Init_Zero()
