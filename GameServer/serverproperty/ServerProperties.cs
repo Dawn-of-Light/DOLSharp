@@ -1519,7 +1519,7 @@ namespace DOL.GS.ServerProperties
 		/// Load Keeps
 		/// </summary>
 		[ServerProperty("keeps", "load_keeps", "Load keeps", true)]
-		public static bool LOAD_KEEPS;
+		public static bool LOAD_KEEPS = true;
 
 		/// <summary>
 		/// The level keeps start at when not claimed - please note only levels 4 and 5 are supported correctly at this time

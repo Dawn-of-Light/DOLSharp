@@ -208,7 +208,9 @@ namespace DOL.UnitTests.Gameserver
             dataQuest.SpyDBDataQuest.MaxCount = 3;
             dataQuest.SpyDBDataQuest.StartType = (byte)DataQuest.eStartType.Collection;
             dataQuest.SpyCharQuest.Count = 3;
-            fakeServer.fakeDatabase.SelectObjectReturns = new List<CharacterXDataQuest>() { dataQuest.SpyCharQuest };
+            var fakeDatabase = new FakeDatabase();
+            fakeServer.SetDatabase(fakeDatabase);
+            fakeDatabase.SelectObjectReturns = new List<CharacterXDataQuest>() { dataQuest.SpyCharQuest };
 
             bool isQualified = dataQuest.CheckQuestQualification(player);
 

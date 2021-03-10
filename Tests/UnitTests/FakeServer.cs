@@ -52,11 +52,12 @@ namespace DOL.UnitTests.Gameserver
 
     public class FakeServer : GameServer
     {
-        public FakeDatabase fakeDatabase = new FakeDatabase();
+        private IObjectDatabase database = new FakeDatabase();
 
-        protected override IObjectDatabase DataBaseImpl => fakeDatabase;
+        protected override IObjectDatabase DataBaseImpl => database;
         protected override void CheckAndInitDB() { }
         public override byte[] AcquirePacketBuffer() => new byte[] { };
+        public void SetDatabase(IObjectDatabase database) { this.database = database; }
 
         public static void Load() => LoadTestDouble(new FakeServer());
     }

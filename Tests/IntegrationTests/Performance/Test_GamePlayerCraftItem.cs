@@ -16,15 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Diagnostics;
-using System.IO;
-using System.Reflection;
+
+using NUnit.Framework;
+
 using DOL.Database;
-using DOL.Database.Connection;
 using DOL.GS;
 using DOL.UnitTests.Gameserver;
-using NUnit.Framework;
 
 namespace DOL.Integration.Performance
 {
@@ -36,8 +34,15 @@ namespace DOL.Integration.Performance
         [OneTimeSetUp]
         public void SetupFakeServer()
         {
-            var fakeServer = new FakeServerWithSQLLiteDB();
+            var sqliteDB = Create.TemporarySQLiteDB();
+            sqliteDB.RegisterDataObject(typeof(DBCraftedItem));
+            sqliteDB.RegisterDataObject(typeof(DBCraftedXItem));
+            sqliteDB.RegisterDataObject(typeof(ItemTemplate));
+
+            var fakeServer = new FakeServer();
+            fakeServer.SetDatabase(sqliteDB);
             GameServer.LoadTestDouble(fakeServer);
+
             AddOneCompleteRecipeToDatabase();
         }
 
@@ -54,7 +59,7 @@ namespace DOL.Integration.Performance
             }
             var duration = sw.ElapsedMilliseconds;
             sw.Stop();
-            Assert.Fail("{0} executions of GamePlayer.CraftItem took {1} ms.", repetitions, duration);
+            Assert.Warn($"{repetitions} executions of GamePlayer.CraftItem took {duration} ms.");
         }
 
         private static DBCraftedItem AddOneCompleteRecipeToDatabase()
@@ -64,27 +69,27 @@ namespace DOL.Integration.Performance
             itemToCraft.Name = "Item To Craft";
             itemToCraft.AllowedClasses = "";
             itemToCraft.CanUseEvery = 0;
-            AddOrUpdateDatabaseEntry(itemToCraft);
+            AddDatabaseEntry(itemToCraft);
 
             var craftedItem = new DBCraftedItem();
             craftedItem.CraftedItemID = itemToCraftID.ToString();
             craftedItem.Id_nb = itemToCraft.Id_nb;
             craftedItem.CraftingLevel = 1;
             craftedItem.CraftingSkillType = 1;
-            AddOrUpdateDatabaseEntry(craftedItem);
+            AddDatabaseEntry(craftedItem);
 
             var ingredient1 = new DBCraftedXItem();
             ingredient1.Count = 1;
             ingredient1.ObjectId = "id1";
             ingredient1.CraftedItemId_nb = craftedItem.Id_nb;
             ingredient1.IngredientId_nb = "item1_id";
-            AddOrUpdateDatabaseEntry(ingredient1);
+            AddDatabaseEntry(ingredient1);
             var ingredient2 = new DBCraftedXItem();
             ingredient2.Count = 2;
             ingredient2.ObjectId = "id2";
             ingredient2.CraftedItemId_nb = craftedItem.Id_nb;
             ingredient2.IngredientId_nb = "item2_id";
-            AddOrUpdateDatabaseEntry(ingredient2);
+            AddDatabaseEntry(ingredient2);
 
             var ingredientItem1 = new ItemTemplate();
             ingredientItem1.Id_nb = ingredient1.IngredientId_nb;
@@ -92,53 +97,22 @@ namespace DOL.Integration.Performance
             ingredientItem1.AllowedClasses = "";
             ingredientItem1.Price = 10000;
             ingredientItem1.CanUseEvery = 0;
-            AddOrUpdateDatabaseEntry(ingredientItem1);
+            AddDatabaseEntry(ingredientItem1);
             var ingredientItem2 = new ItemTemplate();
             ingredientItem2.Id_nb = ingredient2.IngredientId_nb;
             ingredientItem2.Name = "Second Ingredient Name";
             ingredientItem2.AllowedClasses = "";
             ingredientItem2.CanUseEvery = 0;
             ingredientItem2.Price = 20000;
-            AddOrUpdateDatabaseEntry(ingredientItem2);
+            AddDatabaseEntry(ingredientItem2);
 
             return craftedItem;
         }
 
-        private static bool AddOrUpdateDatabaseEntry(DataObject dataObject)
+        private static void AddDatabaseEntry(DataObject dataObject)
         {
             dataObject.AllowAdd = true;
-            bool successfullyAddedOrUpdated = GameServer.Database.AddObject(dataObject);
-            if (!successfullyAddedOrUpdated)
-            {
-                successfullyAddedOrUpdated = GameServer.Database.SaveObject(dataObject);
-            }
-            return successfullyAddedOrUpdated;
-        }
-
-        private class FakeServerWithSQLLiteDB : FakeServer
-        {
-            private IObjectDatabase realDB;
-
-            protected override IObjectDatabase DataBaseImpl => realDB;
-
-            public FakeServerWithSQLLiteDB()
-            {
-                SetupDatabase();
-            }
-
-            private void SetupDatabase()
-            {
-                var configDBType = ConnectionType.DATABASE_SQLITE;
-                DirectoryInfo CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory;
-                DirectoryInfo FakeRoot = CodeBase.Parent;
-                var configRootDirectory = FakeRoot.FullName;
-                var configDBConnectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
-                                                 Path.Combine(configRootDirectory, "performance.sqlite3.db"));
-                realDB = ObjectDatabase.GetObjectDatabase(configDBType, configDBConnectionString);
-                realDB.RegisterDataObject(typeof(DBCraftedItem));
-                realDB.RegisterDataObject(typeof(DBCraftedXItem));
-                realDB.RegisterDataObject(typeof(ItemTemplate));
-            }
+            GameServer.Database.AddObject(dataObject);
         }
     }
 }
