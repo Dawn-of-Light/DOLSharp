@@ -432,7 +432,7 @@ namespace DOL.GS.Keeps
 					if (positionGroup[i] is DBKeepPosition position)
 					{
 						bool create = false;
-						string sKey = position.TemplateID;
+						string sKey = position.TemplateID + ID;
 
 						switch (position.ClassType)
 						{

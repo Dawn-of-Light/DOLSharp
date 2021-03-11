@@ -953,7 +953,7 @@ namespace DOL.GS.Keeps
 		{
 			m_templateID = pos.TemplateID;
 			m_component = component;
-			component.AbstractKeep.Guards.Add(m_templateID, this);
+			component.AbstractKeep.Guards.Add(m_templateID + component.ID, this);
 			PositionMgr.LoadGuardPosition(pos, this);
 			RefreshTemplate();
 			this.AddToWorld();
