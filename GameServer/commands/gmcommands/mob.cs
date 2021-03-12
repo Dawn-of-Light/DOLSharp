@@ -1251,7 +1251,7 @@ namespace DOL.GS.Commands
 				Keeps.IKeepItem keepItem = targetMob as Keeps.IKeepItem;
 				if (keepItem.Component != null && keepItem.Component.Keep != null)
 				{
-					info.Add(" + KeepItem: " + keepItem.Component.AbstractKeep.Name);
+					info.Add(" + KeepItem: " + keepItem.Component.Keep.Name);
 				}
 				else
 				{

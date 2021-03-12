@@ -2165,8 +2165,8 @@ namespace DOL.GS.Commands
 							d.AddToWorld();
 
 							d.Component = new GameKeepComponent();
-							d.Component.AbstractKeep = k;
-							d.Component.AbstractKeep.Doors.Add(d.DoorID.ToString(), d);
+							d.Component.Keep = k;
+							d.Component.Keep.Doors.Add(d.DoorID.ToString(), d);
 
 							d.Health = d.MaxHealth;
 							d.StartHealthRegeneration();

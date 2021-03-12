@@ -37,13 +37,13 @@ namespace DOL.GS.Keeps
 					return 0;
 				}
 
-				if (this.Component == null || this.Component.AbstractKeep == null)
+				if (Component == null || Component.Keep == null)
 				{
 					return 5000;
 				}
 				else
 				{
-					return this.Component.AbstractKeep.RealmPointsValue();
+					return Component.Keep.RealmPointsValue();
 				}
 			}
 		}
@@ -62,9 +62,9 @@ namespace DOL.GS.Keeps
 					return 0;
 				}
 
-				if (this.Component != null && this.Component.AbstractKeep != null)
+				if (Component != null && Component.Keep != null)
 				{
-					return this.Component.AbstractKeep.BountyPointsValue();
+					return Component.Keep.BountyPointsValue();
 				}
 
 				return base.BountyPointsValue;
@@ -81,9 +81,9 @@ namespace DOL.GS.Keeps
 					return 0;
 				}
 
-				if (this.Component != null && this.Component.AbstractKeep != null)
+				if (Component != null && Component.Keep != null)
 				{
-					return this.Component.AbstractKeep.ExperiencePointsValue();
+					return Component.Keep.ExperiencePointsValue();
 				}
 
 				return base.ExperienceValue;
@@ -94,9 +94,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component != null && this.Component.AbstractKeep != null)
+				if (Component != null && Component.Keep != null)
 				{
-					return this.Component.AbstractKeep.ExceedXPCapAmount();
+					return Component.Keep.ExceedXPCapAmount();
 				}
 
 				return base.ExceedXPCapAmount;
@@ -113,9 +113,9 @@ namespace DOL.GS.Keeps
 					return 0;
 				}
 
-				if (this.Component != null && this.Component.AbstractKeep != null)
+				if (Component != null && Component.Keep != null)
 				{
-					return this.Component.AbstractKeep.MoneyValue();
+					return Component.Keep.MoneyValue();
 				}
 
 				return base.MoneyValue;
@@ -155,10 +155,10 @@ namespace DOL.GS.Keeps
 				{
 					if (this.Component != null)
 					{
-						DOL.Database.KeepCaptureLog keeplog = new DOL.Database.KeepCaptureLog();
-						keeplog.KeepName = Component.AbstractKeep.Name;
+						Database.KeepCaptureLog keeplog = new Database.KeepCaptureLog();
+						keeplog.KeepName = Component.Keep.Name;
 
-						if (Component.AbstractKeep is GameKeep)
+						if (Component.Keep is GameKeep)
 							keeplog.KeepType = "Keep";
 						else
 							keeplog.KeepType = "Tower";
@@ -169,9 +169,9 @@ namespace DOL.GS.Keeps
 						keeplog.XPReward = ExperienceValue;
 						keeplog.MoneyReward = MoneyValue;
 
-						if (Component.AbstractKeep.StartCombatTick > 0)
+						if (Component.Keep.StartCombatTick > 0)
 						{
-							keeplog.CombatTime = (int)((Component.AbstractKeep.CurrentRegion.Time - Component.AbstractKeep.StartCombatTick) / 1000 / 60);
+							keeplog.CombatTime = (int)((Component.Keep.CurrentRegion.Time - Component.Keep.StartCombatTick) / 1000 / 60);
 						}
 
 						keeplog.CapturedBy = GlobalConstants.RealmToName(killer.Realm);
@@ -225,10 +225,10 @@ namespace DOL.GS.Keeps
 			if (Component == null)
 				return false;
 
-			if (InCombat || Component.AbstractKeep.InCombat)
+			if (InCombat || Component.Keep.InCombat)
 			{
 				player.Out.SendMessage("You can't talk to the lord while under siege.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				log.DebugFormat("KEEPWARNING: {0} attempted to interact with {1} of {2} while keep or lord in combat.", player.Name, Name, Component.AbstractKeep.Name);
+				log.DebugFormat("KEEPWARNING: {0} attempted to interact with {1} of {2} while keep or lord in combat.", player.Name, Name, Component.Keep.Name);
 				return false;
 			}
 
@@ -262,7 +262,7 @@ namespace DOL.GS.Keeps
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			int distance;
-			if (Component != null && Component.AbstractKeep != null && Component.AbstractKeep is GameKeep)
+			if (Component != null && Component.Keep != null && Component.Keep is GameKeep)
 				distance = 400;
 			else 
 				distance = 300;
@@ -285,10 +285,10 @@ namespace DOL.GS.Keeps
 				return;
 			}
 
-			if (attacker != null && Component != null && Component.AbstractKeep != null && IsAlive && !GameServer.ServerRules.IsSameRealm(this, attacker, true))
+			if (attacker != null && Component != null && Component.Keep != null && IsAlive && !GameServer.ServerRules.IsSameRealm(this, attacker, true))
 			{
 				if (Realm == m_lastRealm && m_lastRealm != eRealm.None)
-					Component.AbstractKeep.LastAttackedByEnemyTick = CurrentRegion.Time; // light up the keep/tower
+					Component.Keep.LastAttackedByEnemyTick = CurrentRegion.Time; // light up the keep/tower
 			}
 
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
@@ -312,16 +312,16 @@ namespace DOL.GS.Keeps
             {
                 case "Claim Keep":
                     {
-                        if (PlayerMgr.IsAllowedToInteract(player, Component.AbstractKeep, eInteractType.Claim))
+                        if (PlayerMgr.IsAllowedToInteract(player, Component.Keep, eInteractType.Claim))
                         {
-                            player.Out.SendDialogBox(eDialogCode.KeepClaim, (ushort)player.ObjectID, 0, 0, 0, eDialogType.YesNo, false, "Do you wish to claim\n" + this.Component.AbstractKeep.Name + "?");
+                            player.Out.SendDialogBox(eDialogCode.KeepClaim, (ushort)player.ObjectID, 0, 0, 0, eDialogType.YesNo, false, "Do you wish to claim\n" + Component.Keep.Name + "?");
                             return true;
                         }
                         break;
                     }
                 case "Release Keep":
                     {
-                        if (PlayerMgr.IsAllowedToInteract(player, Component.AbstractKeep, eInteractType.Release))
+                        if (PlayerMgr.IsAllowedToInteract(player, Component.Keep, eInteractType.Release))
                         {
                             flag += 4;
                         }
@@ -329,7 +329,7 @@ namespace DOL.GS.Keeps
                     }
             }
             if (flag > 0)
-                player.Out.SendKeepClaim(Component.AbstractKeep, flag);
+                player.Out.SendKeepClaim(Component.Keep, flag);
 
             return true;
         }
@@ -371,7 +371,7 @@ namespace DOL.GS.Keeps
 		{
 			if (Component != null)
 			{
-				RespawnInterval = Component.AbstractKeep.LordRespawnTime;
+				RespawnInterval = Component.Keep.LordRespawnTime;
 			}
 			else
 			{
@@ -457,16 +457,16 @@ namespace DOL.GS.Keeps
 				case eRealm.None:
 				case eRealm.Albion:
 					if (Gender == eGender.Male)
-						Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Lord", GetKeepShortName(Component.AbstractKeep.Name));
-					else Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Lady", GetKeepShortName(Component.AbstractKeep.Name));
+						Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Lord", GetKeepShortName(Component.Keep.Name));
+					else Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Lady", GetKeepShortName(Component.Keep.Name));
 					break;
 				case eRealm.Midgard:
-					Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Jarl", GetKeepShortName(Component.AbstractKeep.Name));
+					Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Jarl", GetKeepShortName(Component.Keep.Name));
 					break;
 				case eRealm.Hibernia:
 					if (Gender == eGender.Male)
-						Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", GetKeepShortName(Component.AbstractKeep.Name));
-					else Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Chieftess", GetKeepShortName(Component.AbstractKeep.Name));
+						Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", GetKeepShortName(Component.Keep.Name));
+					else Name = LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "SetGuardName.Chieftess", GetKeepShortName(Component.Keep.Name));
 					break;
 			}
 

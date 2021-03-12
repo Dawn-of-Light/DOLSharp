@@ -265,7 +265,7 @@ namespace DOL.GS.Keeps
 					foreach (GameKeepHookPoint hp in component.KeepHookPoints.Values)
 					{
 						var item = items.FirstOrDefault(
-							it => it.KeepID == component.AbstractKeep.KeepID && it.ComponentID == component.ID && it.HookPointID == hp.ID);
+							it => it.KeepID == component.Keep.KeepID && it.ComponentID == component.ID && it.HookPointID == hp.ID);
 						if (item != null)
 							HookPointItem.Invoke(component.KeepHookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
 					}
@@ -643,16 +643,16 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the guard</returns>
 		public virtual bool IsEnemy(GameKeepGuard checker, GamePlayer target)
 		{
-			if (checker.Component == null || checker.Component.AbstractKeep == null)
+			if (checker.Component == null || checker.Component.Keep == null)
 				return GameServer.ServerRules.IsAllowedToAttack(checker, target, true);
-			return IsEnemy(checker.Component.AbstractKeep, target);
+			return IsEnemy(checker.Component.Keep, target);
 		}
 
 		public virtual bool IsEnemy(GameKeepGuard checker, GamePlayer target, bool checkGroup)
 		{
-			if (checker.Component == null || checker.Component.AbstractKeep == null)
+			if (checker.Component == null || checker.Component.Keep == null)
 				return GameServer.ServerRules.IsAllowedToAttack(checker, target, true);
-			return IsEnemy(checker.Component.AbstractKeep, target, checkGroup);
+			return IsEnemy(checker.Component.Keep, target, checkGroup);
 		}
 
 		/// <summary>
@@ -663,7 +663,7 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the door</returns>
 		public virtual bool IsEnemy(GameKeepDoor checker, GamePlayer target)
 		{
-			return IsEnemy(checker.Component.AbstractKeep, target);
+			return IsEnemy(checker.Component.Keep, target);
 		}
 
 		/// <summary>
@@ -674,7 +674,7 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the component</returns>
 		public virtual bool IsEnemy(GameKeepComponent checker, GamePlayer target)
 		{
-			return IsEnemy(checker.AbstractKeep, target);
+			return IsEnemy(checker.Keep, target);
 		}
 
 		/// <summary>

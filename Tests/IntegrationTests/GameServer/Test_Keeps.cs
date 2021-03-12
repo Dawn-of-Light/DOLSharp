@@ -52,15 +52,15 @@ namespace DOL.Integration.Keeps
             var keep = CreateKeep();
             var keepComponent = CreateKeepWall();
             keepComponent.ID = 1;
-            keepComponent.AbstractKeep = keep;
+            keepComponent.Keep = keep;
             keepComponent.LoadPositions();
             keepComponent.FillPositions();
             var keepComponent2 = CreateKeepWall();
             keepComponent2.ID = 2;
-            keepComponent2.AbstractKeep = keep;
+            keepComponent2.Keep = keep;
             keepComponent2.LoadPositions();
             keepComponent2.FillPositions();
-            Assert.AreEqual(2, keepComponent.AbstractKeep.Guards.Count);
+            Assert.AreEqual(2, keepComponent.Keep.Guards.Count);
         }
 
         [Test]
@@ -70,15 +70,15 @@ namespace DOL.Integration.Keeps
             keep.Level = 2; //Height = 1
             var keepComponent = CreateKeepWall();
             keepComponent.ID = 1;
-            keepComponent.AbstractKeep = keep;
+            keepComponent.Keep = keep;
             keepComponent.LoadPositions();
             keepComponent.FillPositions();
             var keepComponent2 = CreateKeepWall();
             keepComponent2.ID = 2;
-            keepComponent2.AbstractKeep = keep;
+            keepComponent2.Keep = keep;
             keepComponent2.LoadPositions();
             keepComponent2.FillPositions();
-            Assert.AreEqual(4, keepComponent.AbstractKeep.Guards.Count);
+            Assert.AreEqual(4, keepComponent.Keep.Guards.Count);
         }
 
         private void AddKeepPositions()

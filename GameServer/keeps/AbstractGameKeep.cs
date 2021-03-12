@@ -78,7 +78,7 @@ namespace DOL.GS.Keeps
 		public long LastAttackedByEnemyTick
 		{
 			get { return m_lastAttackedByEnemyTick; }
-			set 
+			set
 			{
 				// if we aren't currently in combat then treat this attack as the beginning of combat
 				if (!InCombat)
@@ -114,7 +114,7 @@ namespace DOL.GS.Keeps
 			{
 				if (m_lastAttackedByEnemyTick == 0)
 					return false;
-				return m_currentRegion.Time - m_lastAttackedByEnemyTick < (5 * 60 * 1000); 
+				return CurrentRegion.Time - m_lastAttackedByEnemyTick < (5 * 60 * 1000);
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace DOL.GS.Keeps
 		/// The Keep Type
 		/// This enum holds type of keep related to shape - Repurposed this due to game changes that eliminated melee/magic... keep types
 		/// </summary>
-		public enum eKeepType: byte
+		public enum eKeepType : byte
 		{
 			/*
 				update keep set keeptype = 0 where keeptype = 1;
@@ -153,149 +153,58 @@ namespace DOL.GS.Keeps
 		}
 
 		#region Properties
+		public List<GameKeepComponent> KeepComponents { get; set; } = new List<GameKeepComponent>();
 
-		/// <summary>
-		/// This hold all keep components
-		/// </summary>
-		protected List<GameKeepComponent> m_keepComponents;
-
-		public List<GameKeepComponent> KeepComponents
-		{
-			get { return m_keepComponents; }
-			set { m_keepComponents = value; }
-		}
-		
 		/// <summary>
 		/// Keep components ( wall, tower, gate,...)
 		/// </summary>
 		public List<IGameKeepComponent> SentKeepComponents
 		{
-			get	
+			get
 			{
 				List<IGameKeepComponent> ret = new List<IGameKeepComponent>();
-				foreach(GameKeepComponent comp in m_keepComponents)
+				foreach (GameKeepComponent comp in KeepComponents)
 					ret.Add(comp);
-				
-				return ret; 
+
+				return ret;
 			}
-			set 
+			set
 			{
 				List<GameKeepComponent> newList = new List<GameKeepComponent>();
-				foreach(IGameKeepComponent comp in value)
+				foreach (IGameKeepComponent comp in value)
 					newList.Add((GameKeepComponent)comp);
-				m_keepComponents = newList;
+				KeepComponents = newList;
 			}
 		}
 
-		/// <summary>
-		/// This hold list of all keep doors
-		/// </summary>
-		//protected ArrayList m_doors;
-		protected Dictionary<string,GameKeepDoor> m_doors;
+		public Dictionary<string, GameKeepDoor> Doors { get; set; } = new Dictionary<string, GameKeepDoor>();
 
-		/// <summary>
-		/// keep doors
-		/// </summary>
-		//public ArrayList Doors
-		public Dictionary<string, GameKeepDoor> Doors
-		{
-			get	{ return m_doors; }
-			set { m_doors = value; }
-		}
+		public DBKeep DBKeep { get; set; }
 
-		/// <summary>
-		/// the keep db object
-		/// </summary>
-		protected DBKeep m_dbkeep;
+		public Dictionary<string, GameKeepGuard> Guards { get; } = new Dictionary<string, GameKeepGuard>();
 
-		/// <summary>
-		/// the keepdb object
-		/// </summary>
-		public DBKeep DBKeep
-		{
-			get	{ return m_dbkeep; }
-			set { m_dbkeep = value;}
-		}
+		public Dictionary<string, GameKeepBanner> Banners { get; set; } = new Dictionary<string, GameKeepBanner>();
 
-		/// <summary>
-		/// This hold list of all guards of keep
-		/// </summary>
-		protected Dictionary<string,GameKeepGuard> m_guards;
+		public Dictionary<string, Patrol> Patrols { get; set; } = new Dictionary<string, Patrol>();
 
-		/// <summary>
-		/// List of all guards of keep
-		/// </summary>
-		public Dictionary<string, GameKeepGuard> Guards
-		{
-			get	{ return m_guards; }
-		}
+		public Region CurrentRegion { get; set; }
 
-		/// <summary>
-		/// List of all banners
-		/// </summary>
-		protected Dictionary<string, GameKeepBanner> m_banners;
-
-		/// <summary>
-		/// List of all banners
-		/// </summary>
-		public Dictionary<string, GameKeepBanner> Banners
-		{
-			get	{ return m_banners; }
-			set	{ m_banners = value; }
-		}
-
-		protected Dictionary<string, Patrol> m_patrols;
-		/// <summary>
-		/// List of all patrols
-		/// </summary>
-		public Dictionary<string, Patrol> Patrols
-		{
-			get { return m_patrols; }
-			set { m_patrols = value; }
-		}
-
-		/// <summary>
-		/// region of the keep
-		/// </summary>
-		protected Region m_currentRegion;
-
-		/// <summary>
-		/// region of the keep
-		/// </summary>
-		public Region CurrentRegion
-		{
-			get	{ return m_currentRegion; }
-			set	{ m_currentRegion = value; }
-		}
-
-		/// <summary>
-		/// zone of the keep
-		/// </summary>
 		public Zone CurrentZone
 		{
 			get
 			{
-				if (m_currentRegion != null)
+				if (CurrentRegion != null)
 				{
-					return m_currentRegion.GetZone(X, Y);
+					return CurrentRegion.GetZone(X, Y);
 				}
 				return null;
 			}
 		}
 
 		/// <summary>
-		/// This hold the guild which has claimed the keep
-		/// </summary>
-		protected Guild m_guild = null;
-
-		/// <summary>
 		/// The guild which has claimed the keep
 		/// </summary>
-		public Guild Guild
-		{
-			get	{ return m_guild; }
-			set { m_guild = value; }
-		}
+		public Guild Guild { get; set; } = null;
 
 		/// <summary>
 		/// Difficulty level of keep for each realm
@@ -403,7 +312,6 @@ namespace DOL.GS.Keeps
 			set
 			{
 				m_baseLevel = value;
-				//DBKeep.BaseLevel = value;
 			}
 		}
 
@@ -529,18 +437,6 @@ namespace DOL.GS.Keeps
 
 		#endregion
 
-		/// <summary>
-		/// AbstractGameKeep constructor
-		/// </summary>
-		public AbstractGameKeep()
-		{
-			m_guards = new Dictionary<string, GameKeepGuard>();
-			m_keepComponents = new List<GameKeepComponent>();
-			m_banners = new Dictionary<string, GameKeepBanner>();
-			m_doors = new Dictionary<string, GameKeepDoor>();
-			m_patrols = new Dictionary<string, Patrol>();
-		}
-
 		~AbstractGameKeep()
 		{
 			log.Debug("AbstractGameKeep destructor called for " + Name);
@@ -589,21 +485,21 @@ namespace DOL.GS.Keeps
 		/// <param name="area"></param>
 		public virtual void Remove(KeepArea area)
 		{
-			Dictionary<string, GameKeepGuard> guards = new Dictionary<string, GameKeepGuard>(m_guards); // Use a shallow copy
+			Dictionary<string, GameKeepGuard> guards = new Dictionary<string, GameKeepGuard>(Guards); // Use a shallow copy
 			foreach (GameKeepGuard guard in guards.Values)
 			{
 				guard.Delete();
 				guard.DeleteFromDatabase();
 			}
 
-			Dictionary<string, GameKeepBanner> banners = new Dictionary<string, GameKeepBanner>(m_banners); // Use a shallow copy
+			Dictionary<string, GameKeepBanner> banners = new Dictionary<string, GameKeepBanner>(Banners); // Use a shallow copy
 			foreach (GameKeepBanner banner in banners.Values)
 			{
 				banner.Delete();
 				banner.DeleteFromDatabase();
 			}
 
-			Dictionary<string, GameKeepDoor> doors = new Dictionary<string, GameKeepDoor>(m_doors); // Use a shallow copy
+			Dictionary<string, GameKeepDoor> doors = new Dictionary<string, GameKeepDoor>(Doors); // Use a shallow copy
 			foreach (GameKeepDoor door in doors.Values)
 			{
 				door.Delete();
@@ -640,24 +536,24 @@ namespace DOL.GS.Keeps
 		/// <param name="keep"></param>
 		public virtual void LoadFromDatabase(DataObject keep)
 		{
-			m_dbkeep = keep as DBKeep;
+			DBKeep = keep as DBKeep;
 			InternalID = keep.ObjectId;
-			m_difficultyLevel[0] = m_dbkeep.AlbionDifficultyLevel;
-			m_difficultyLevel[1] = m_dbkeep.MidgardDifficultyLevel;
-			m_difficultyLevel[2] = m_dbkeep.HiberniaDifficultyLevel;
-			if (m_dbkeep.ClaimedGuildName != null && m_dbkeep.ClaimedGuildName != "")
+			m_difficultyLevel[0] = DBKeep.AlbionDifficultyLevel;
+			m_difficultyLevel[1] = DBKeep.MidgardDifficultyLevel;
+			m_difficultyLevel[2] = DBKeep.HiberniaDifficultyLevel;
+			if (DBKeep.ClaimedGuildName != null && DBKeep.ClaimedGuildName != "")
 			{
-				Guild myguild = GuildMgr.GetGuildByName(m_dbkeep.ClaimedGuildName);
+				Guild myguild = GuildMgr.GetGuildByName(DBKeep.ClaimedGuildName);
 				if (myguild != null)
 				{
-					this.m_guild = myguild;
-					this.m_guild.ClaimedKeeps.Add(this);
+					Guild = myguild;
+					Guild.ClaimedKeeps.Add(this);
 					StartDeductionTimer();
 				}
 			}
-			if (Level < ServerProperties.Properties.MAX_KEEP_LEVEL && m_guild != null)
+			if (Level < ServerProperties.Properties.MAX_KEEP_LEVEL && Guild != null)
 				StartChangeLevel((byte)ServerProperties.Properties.MAX_KEEP_LEVEL);
-			else if (Level <= ServerProperties.Properties.MAX_KEEP_LEVEL && Level > ServerProperties.Properties.STARTING_KEEP_LEVEL && m_guild == null)
+			else if (Level <= ServerProperties.Properties.MAX_KEEP_LEVEL && Level > ServerProperties.Properties.STARTING_KEEP_LEVEL && Guild == null)
 				StartChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
 		}
 
@@ -666,7 +562,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public virtual void RemoveFromDatabase()
 		{
-			GameServer.Database.DeleteObject(m_dbkeep);
+			GameServer.Database.DeleteObject(DBKeep);
 			log.Warn("Keep ID " + KeepID + " removed from database!");
 		}
 
@@ -675,17 +571,17 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public virtual void SaveIntoDatabase()
 		{
-			if (m_guild != null)
-				m_dbkeep.ClaimedGuildName = m_guild.Name;
+			if (Guild != null)
+				DBKeep.ClaimedGuildName = Guild.Name;
 			else
-				m_dbkeep.ClaimedGuildName = "";
+				DBKeep.ClaimedGuildName = "";
 			if(InternalID == null)
 			{
-				GameServer.Database.AddObject(m_dbkeep);
-				InternalID = m_dbkeep.ObjectId;
+				GameServer.Database.AddObject(DBKeep);
+				InternalID = DBKeep.ObjectId;
 			}
 			else
-				GameServer.Database.SaveObject(m_dbkeep);
+				GameServer.Database.SaveObject(DBKeep);
 
 			foreach (GameKeepComponent comp in this.KeepComponents)
 				comp.SaveIntoDatabase();
@@ -788,7 +684,7 @@ namespace DOL.GS.Keeps
 		/// <param name="player">the player who have claim the keep</param>
 		public virtual void Claim(GamePlayer player)
 		{
-			this.m_guild = player.Guild;
+			Guild = player.Guild;
 			
 			if (ServerProperties.Properties.GUILDS_CLAIM_LIMIT > 1)
 				player.Guild.SendMessageToGuildMembers("Your guild has currently claimed " + player.Guild.ClaimedKeeps.Count + " keeps of a maximum of " + ServerProperties.Properties.GUILDS_CLAIM_LIMIT, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
@@ -887,9 +783,9 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public virtual void Release()
 		{
-			this.Guild.ClaimedKeeps.Remove(this);
+			Guild.ClaimedKeeps.Remove(this);
 			PlayerMgr.BroadcastRelease(this);
-			this.m_guild = null;
+			Guild = null;
 			StopDeductionTimer();
 			StopChangeLevelTimer();
 			ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
@@ -962,16 +858,16 @@ namespace DOL.GS.Keeps
 
 			if (guard is GuardLord)
 			{
-				if (guard.Component.AbstractKeep is GameKeep)
-					return (byte)(guard.Component.AbstractKeep.BaseLevel + ((guard.Component.AbstractKeep.BaseLevel / 10) + 1) * 2);
+				if (guard.Component.Keep is GameKeep)
+					return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1) * 2);
 				else
-					return (byte)(guard.Component.AbstractKeep.BaseLevel + 2); // flat increase for tower captains
+					return (byte)(guard.Component.Keep.BaseLevel + 2); // flat increase for tower captains
 			}
 
-			if (guard.Component.AbstractKeep is GameKeep)
-				return (byte)(guard.Component.AbstractKeep.BaseLevel + 1);
+			if (guard.Component.Keep is GameKeep)
+				return (byte)(guard.Component.Keep.BaseLevel + 1);
 
-			return guard.Component.AbstractKeep.BaseLevel;
+			return guard.Component.Keep.BaseLevel;
 		}
 
 
@@ -989,9 +885,9 @@ namespace DOL.GS.Keeps
 				if (guard.Component != null)
 				{
 					// level is usually 4 unless upgraded, BaseLevel is usually 50
-					bonusLevel = guard.Component.AbstractKeep.Level;
+					bonusLevel = guard.Component.Keep.Level;
 
-					if (guard.Component.AbstractKeep is GameKeepTower)
+					if (guard.Component.Keep is GameKeepTower)
 						multiplier = ServerProperties.Properties.TOWER_GUARD_LEVEL_MULTIPLIER;
 				}
 
@@ -1108,17 +1004,17 @@ namespace DOL.GS.Keeps
 				}
 			}
             byte maxlevel = 0;
-            if (m_guild != null)
+            if (Guild != null)
                 maxlevel = (byte)ServerProperties.Properties.MAX_KEEP_LEVEL;
             else
                 maxlevel = (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL;
 
 
-            if (Level < maxlevel && m_guild != null)
+            if (Level < maxlevel && Guild != null)
             {
                 ChangeLevel((byte)(this.Level + 1));
             }
-            else if (Level > maxlevel && m_guild == null)
+            else if (Level > maxlevel && Guild == null)
                 ChangeLevel((byte)(this.Level - 1));
 
 			if (this.Level != 10 && this.Level != 1)

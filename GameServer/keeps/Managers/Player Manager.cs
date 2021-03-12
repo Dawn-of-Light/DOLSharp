@@ -212,7 +212,7 @@ namespace DOL.GS.Keeps
 					if (obj is GamePlayer)
 					{
 						GamePlayer player = obj as GamePlayer;
-						if (lord.Component.AbstractKeep != null && lord.Component.AbstractKeep is GameKeep)
+						if (lord.Component.Keep != null && lord.Component.Keep is GameKeep)
 							player.CapturedKeeps++;
 						else player.CapturedTowers++;
 					}

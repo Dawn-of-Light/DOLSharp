@@ -255,7 +255,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							var door = mydoor as GameKeepDoor;
 							//portal keeps left click = right click
-							if (door.Component.AbstractKeep is GameKeepTower && door.Component.AbstractKeep.KeepComponents.Count > 1)
+							if (door.Component.Keep is GameKeepTower && door.Component.Keep.KeepComponents.Count > 1)
 								door.Interact(player);
 							success = true;
 						}

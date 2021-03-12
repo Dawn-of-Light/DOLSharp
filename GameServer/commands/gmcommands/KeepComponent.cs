@@ -150,7 +150,7 @@ namespace DOL.GS.Commands
 						component.CurrentRegion = client.Player.CurrentRegion;
 						component.Health = component.MaxHealth;
 						component.ID = myKeep.KeepComponents.Count;
-						component.AbstractKeep.KeepComponents.Add(component);
+						component.Keep.KeepComponents.Add(component);
 						component.SaveInDB = true;
 						component.AddToWorld();
 						component.SaveIntoDatabase();
