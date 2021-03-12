@@ -47,9 +47,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (client.Account.PrivLevel > 1)
 					client.Out.SendMessage("DEBUG : selected hookpoint id " + HPindex, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 
-				GameKeepComponent hp = keep.KeepComponents[wallId] as GameKeepComponent;
+				GameKeepComponent hp = keep.KeepComponents[wallId];
 				client.Out.SendClearKeepComponentHookPoint(hp, HPindex);
-				client.Out.SendHookPointStore(hp.KeepHookPoints[HPindex] as GameKeepHookPoint);
+				client.Out.SendHookPointStore(hp.HookPoints[HPindex]);
 			}
 		}
 	}

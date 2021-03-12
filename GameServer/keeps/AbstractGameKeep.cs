@@ -1074,7 +1074,7 @@ namespace DOL.GS.Keeps
 			{
 				if (!component.IsRaized)
 					component.Repair(component.MaxHealth - component.Health);
-				foreach (GameKeepHookPoint hp in component.KeepHookPoints.Values)
+				foreach (GameKeepHookPoint hp in component.HookPoints.Values)
 				{
 					if (hp.Object != null)
 						hp.Object.Die(null);
@@ -1160,7 +1160,7 @@ namespace DOL.GS.Keeps
 			if (component == null)
 				return;
 
-			GameKeepHookPoint hookpoint = component.KeepHookPoints[97] as GameKeepHookPoint;
+			GameKeepHookPoint hookpoint = component.HookPoints[97] as GameKeepHookPoint;
 
 			if (hookpoint == null)
 				return;

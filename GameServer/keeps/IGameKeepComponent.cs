@@ -36,7 +36,7 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// Hook point Collection
 		/// </summary>
-		IDictionary<int, DOL.GS.Keeps.GameKeepHookPoint> HookPoints { get; }
+		Dictionary<int, GameKeepHookPoint> HookPoints { get; }
 		
 		/// <summary>
 		/// Keep Component ID.
