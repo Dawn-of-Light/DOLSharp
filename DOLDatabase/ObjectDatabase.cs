@@ -729,7 +729,7 @@ namespace DOL.Database
 		public TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
 			where TObject : DataObject
 		{
-			IList<TObject> list = SelectObjects<TObject>(whereExpression, parameters).First();
+			IList<TObject> list = SelectObjects<TObject>(whereExpression, parameters).FirstOrDefault();
 			if (list != null)
 				return list.First();
 			return null;
@@ -745,7 +745,7 @@ namespace DOL.Database
 		public TObject SelectObject<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
 			where TObject : DataObject
 		{
-			return SelectObjects<TObject>(whereExpression, parameter).First();
+			return SelectObjects<TObject>(whereExpression, parameter).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -758,7 +758,7 @@ namespace DOL.Database
 		public TObject SelectObject<TObject>(string whereExpression, QueryParameter param)
 			where TObject : DataObject
 		{
-			return SelectObjects<TObject>(whereExpression, param).First();
+			return SelectObjects<TObject>(whereExpression, param).FirstOrDefault();
 		}
 
 		/// <summary>
