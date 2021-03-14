@@ -247,7 +247,7 @@ namespace DOL.GS.PacketHandler
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentHookpointStore)))
 			{
 
-				pak.WriteShort((ushort)hookPoint.Component.AbstractKeep.KeepID);
+				pak.WriteShort((ushort)hookPoint.Component.Keep.KeepID);
 				pak.WriteShort((ushort)hookPoint.Component.ID);
 				pak.WriteShort((ushort)hookPoint.ID);
 				pak.Fill(0x01, 3);

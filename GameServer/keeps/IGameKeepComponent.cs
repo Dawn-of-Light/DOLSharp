@@ -31,12 +31,12 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// Reference to owning Keep
 		/// </summary>
-		IGameKeep Keep { get; }
+		AbstractGameKeep Keep { get; }
 		
 		/// <summary>
 		/// Hook point Collection
 		/// </summary>
-		IDictionary<int, DOL.GS.Keeps.GameKeepHookPoint> HookPoints { get; }
+		Dictionary<int, GameKeepHookPoint> HookPoints { get; }
 		
 		/// <summary>
 		/// Keep Component ID.

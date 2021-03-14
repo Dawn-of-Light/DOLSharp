@@ -10,15 +10,14 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_DataQuest
     {
-        FakeServer fakeServer;
+        FakeServer fakeServer = new FakeServer();
+
         [SetUp]
         public void Init()
         {
-            GS.ServerProperties.Properties.DEBUG_LOAD_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
-            fakeServer = FakeServer.LoadAndReturn();
+            GameServer.LoadTestDouble(fakeServer);
         }
+
         #region Accessor
         [Test]
         public void MoneyReward_Init_Zero()
@@ -209,7 +208,9 @@ namespace DOL.UnitTests.Gameserver
             dataQuest.SpyDBDataQuest.MaxCount = 3;
             dataQuest.SpyDBDataQuest.StartType = (byte)DataQuest.eStartType.Collection;
             dataQuest.SpyCharQuest.Count = 3;
-            fakeServer.fakeDatabase.SelectObjectReturns = new List<CharacterXDataQuest>() { dataQuest.SpyCharQuest };
+            var fakeDatabase = new FakeDatabase();
+            fakeServer.SetDatabase(fakeDatabase);
+            fakeDatabase.SelectObjectReturns = new List<CharacterXDataQuest>() { dataQuest.SpyCharQuest };
 
             bool isQualified = dataQuest.CheckQuestQualification(player);
 

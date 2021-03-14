@@ -239,18 +239,19 @@ namespace DOL.GS.Keeps
 							foreach (DBKeepHookPoint dbhookPoint in hookPointList[key])
 							{
 								GameKeepHookPoint myhookPoint = new GameKeepHookPoint(dbhookPoint, component);
-								component.KeepHookPoints.Add(dbhookPoint.HookPointID, myhookPoint);
+								component.HookPoints.Add(dbhookPoint.HookPointID, myhookPoint);
 							}
+							Console.WriteLine(component.HookPoints.Count);
 							continue;
 						}
 					}
 					//add this to keep hookpoint system until DB is not full
 					for (int i = 0; i < 38; i++)
-						component.KeepHookPoints.Add(i, new GameKeepHookPoint(i, component));
+						component.HookPoints.Add(i, new GameKeepHookPoint(i, component));
 
-					component.KeepHookPoints.Add(65, new GameKeepHookPoint(0x41, component));
-					component.KeepHookPoints.Add(97, new GameKeepHookPoint(0x61, component));
-					component.KeepHookPoints.Add(129, new GameKeepHookPoint(0x81, component));
+					component.HookPoints.Add(65, new GameKeepHookPoint(0x41, component));
+					component.HookPoints.Add(97, new GameKeepHookPoint(0x61, component));
+					component.HookPoints.Add(129, new GameKeepHookPoint(0x81, component));
 				}
 			}
 
@@ -260,14 +261,14 @@ namespace DOL.GS.Keeps
 			IList<DBKeepHookPointItem> items = GameServer.Database.SelectAllObjects<DBKeepHookPointItem>();
 			foreach (AbstractGameKeep keep in m_keepList.Values)
 			{
-				foreach (GameKeepComponent component in keep.KeepComponents)
+				foreach (var component in keep.KeepComponents)
 				{
-					foreach (GameKeepHookPoint hp in component.KeepHookPoints.Values)
+					foreach (var hp in component.HookPoints.Values)
 					{
 						var item = items.FirstOrDefault(
-							it => it.KeepID == component.AbstractKeep.KeepID && it.ComponentID == component.ID && it.HookPointID == hp.ID);
+							it => it.KeepID == component.Keep.KeepID && it.ComponentID == component.ID && it.HookPointID == hp.ID);
 						if (item != null)
-							HookPointItem.Invoke(component.KeepHookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
+							HookPointItem.Invoke(component.HookPoints[hp.ID], item.ClassType);
 					}
 				}
 			}
@@ -643,16 +644,16 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the guard</returns>
 		public virtual bool IsEnemy(GameKeepGuard checker, GamePlayer target)
 		{
-			if (checker.Component == null || checker.Component.AbstractKeep == null)
+			if (checker.Component == null || checker.Component.Keep == null)
 				return GameServer.ServerRules.IsAllowedToAttack(checker, target, true);
-			return IsEnemy(checker.Component.AbstractKeep, target);
+			return IsEnemy(checker.Component.Keep, target);
 		}
 
 		public virtual bool IsEnemy(GameKeepGuard checker, GamePlayer target, bool checkGroup)
 		{
-			if (checker.Component == null || checker.Component.AbstractKeep == null)
+			if (checker.Component == null || checker.Component.Keep == null)
 				return GameServer.ServerRules.IsAllowedToAttack(checker, target, true);
-			return IsEnemy(checker.Component.AbstractKeep, target, checkGroup);
+			return IsEnemy(checker.Component.Keep, target, checkGroup);
 		}
 
 		/// <summary>
@@ -663,7 +664,7 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the door</returns>
 		public virtual bool IsEnemy(GameKeepDoor checker, GamePlayer target)
 		{
-			return IsEnemy(checker.Component.AbstractKeep, target);
+			return IsEnemy(checker.Component.Keep, target);
 		}
 
 		/// <summary>
@@ -674,7 +675,7 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the component</returns>
 		public virtual bool IsEnemy(GameKeepComponent checker, GamePlayer target)
 		{
-			return IsEnemy(checker.AbstractKeep, target);
+			return IsEnemy(checker.Keep, target);
 		}
 
 		/// <summary>

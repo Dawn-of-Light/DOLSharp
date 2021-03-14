@@ -11,11 +11,7 @@ namespace DOL.UnitTests.Gameserver
         [SetUp]
         public void SetUp()
         {
-            GS.ServerProperties.Properties.DEBUG_LOAD_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
-            GS.ServerProperties.Properties.PVE_SPELL_DAMAGE = 1;
-            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = true;
+            GameServer.LoadTestDouble(new FakeServer());
         }
 
         [Test]

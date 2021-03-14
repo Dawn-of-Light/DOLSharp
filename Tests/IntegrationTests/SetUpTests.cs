@@ -50,7 +50,7 @@ namespace DOL.Integration.Server
 			DirectoryInfo FakeRoot = CodeBase.Parent;
 			Console.WriteLine("Fake Root: " + FakeRoot.FullName);
 
-			if (GameServer.Instance == null)
+			if (GameServer.Instance == null || GameServer.Instance.GetType() != typeof(GameServer))
 			{
 				GameServerConfiguration config = new GameServerConfiguration();
 				config.RootDirectory = FakeRoot.FullName;

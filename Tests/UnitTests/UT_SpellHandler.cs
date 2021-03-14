@@ -10,13 +10,10 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_SpellHandler
     {
-        [SetUp]
-        public void SetUp()
+        [OneTimeSetUp]
+        public void SetUpFakeServer()
         {
-            GS.ServerProperties.Properties.DEBUG_LOAD_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
-            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
-            GS.ServerProperties.Properties.PVE_SPELL_DAMAGE = 1;
+            FakeServer.Load();
         }
 
         #region CastSpell
@@ -56,11 +53,10 @@ namespace DOL.UnitTests.Gameserver
             var target = NewFakePlayer();
             var spell = NewFakeSpell();
             spell.fakeIsFocus = true;
-            spell.fakeTarget = "Enemy";
+            spell.fakeTarget = "Realm";
             spell.Duration = 20;
             var spellHandler = new SpellHandler(caster, spell, NewSpellLine());
             var gameEventMgrSpy = GameEventMgrSpy.LoadAndReturn();
-            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = true;
             UtilChanceIsHundredPercent.Enable();
 
             spellHandler.CastSpell(target);
@@ -78,11 +74,10 @@ namespace DOL.UnitTests.Gameserver
             var target = NewFakeNPC();
             var spell = NewFakeSpell();
             spell.fakeIsFocus = true;
-            spell.fakeTarget = "realm";
+            spell.fakeTarget = "Enemy";
             spell.Duration = 20;
             var spellHandler = new SpellHandler(caster, spell, NewSpellLine());
             var gameEventMgrSpy = GameEventMgrSpy.LoadAndReturn();
-            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = false;
             UtilChanceIsHundredPercent.Enable();
 
             spellHandler.CastSpell(target);
@@ -108,7 +103,6 @@ namespace DOL.UnitTests.Gameserver
             spell.fakePulse = 1;
             var spellHandler = new SpellHandler(caster, spell, NewSpellLine());
             var gameEventMgrSpy = GameEventMgrSpy.LoadAndReturn();
-            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = false;
 
             Assert.IsTrue(spellHandler.CastSpell(target));
             target.fakeRegion.fakeElapsedTime = 2;
@@ -482,7 +476,7 @@ namespace DOL.UnitTests.Gameserver
         #endregion
 
         private static GameLiving NewFakeLiving() => new FakeLiving();
-        private static FakePlayerSpy NewFakePlayer() => new FakePlayerSpy();
+        private static FakePlayerSpy NewFakePlayer() => new FakePlayerSpy() { Realm = eRealm.Albion };
         private static FakeNPC NewFakeNPC() => new FakeNPC();
         private static FakeSpell NewFakeSpell() => new FakeSpell();
         private static SpellLine NewSpellLine() => new SpellLine("", "", "", false);

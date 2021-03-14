@@ -80,7 +80,7 @@ namespace DOL.GS.Commands
             if (obj is GameKeepDoor)
             {
                 GameKeepDoor doorcomponent = obj as GameKeepDoor;
-                if (doorcomponent.Component.AbstractKeep.InCombat)
+                if (doorcomponent.Component.Keep.InCombat)
                 {
                     DisplayMessage(player, "You can't repair the keep door while keep is under attack!");
                     return false;

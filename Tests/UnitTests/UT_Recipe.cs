@@ -30,7 +30,7 @@ namespace DOL.UnitTests.Gameserver
         [OneTimeSetUp]
         public void SetupServer()
         {
-            FakeServer.LoadAndReturn();
+            FakeServer.Load();
         }
 
         [Test]

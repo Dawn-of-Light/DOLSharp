@@ -42,7 +42,7 @@ namespace DOL.GS.Keeps
 
 		public GameKeepHookPoint(DBKeepHookPoint dbhookPoint, GameKeepComponent component)
 		{
-			double angle = component.AbstractKeep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
+			double angle = component.Keep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
 			switch (component.ComponentHeading)
 			{
 				case 0:
@@ -120,7 +120,7 @@ namespace DOL.GS.Keeps
 			m_hookpointTimer.Start(300000);//5*60*1000 = 5 min
 			GameEventMgr.RemoveHandler(m_object, GameLivingEvent.Dying, new DOLEventHandler(ObjectDie));
 			DBKeepHookPointItem item = GameServer.Database.SelectObjects<DBKeepHookPointItem>("`KeepID` = @KeepID AND `ComponentID` = @ComponentID AND `HookPointID` @HookPointID", 
-			                                                                                  new[] { new QueryParameter("@KeepID", Component.AbstractKeep.KeepID), new QueryParameter("@ComponentID", Component.ID), new QueryParameter("@HookPointID", ID) }).FirstOrDefault();
+			                                                                                  new[] { new QueryParameter("@KeepID", Component.Keep.KeepID), new QueryParameter("@ComponentID", Component.ID), new QueryParameter("@HookPointID", ID) }).FirstOrDefault();
 			if (item != null)
 				GameServer.Database.DeleteObject(item);
 		}

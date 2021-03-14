@@ -104,12 +104,12 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component == null || this.Component.AbstractKeep == null)
+				if (Component == null || Component.Keep == null)
 				{
 					return eRealm.None;
 				}
 
-				return this.Component.AbstractKeep.Realm;
+				return Component.Keep.Realm;
 			}
 		}
 
@@ -142,12 +142,12 @@ namespace DOL.GS.Keeps
 		{
 			get 
 			{
-				if (this.Component == null || this.Component.AbstractKeep == null)
+				if (Component == null || Component.Keep == null)
 				{
 					return 0;
 				}
 
-				return (byte)this.Component.AbstractKeep.Level;
+				return Component.Keep.Level;
 			}
 		}
 
@@ -172,25 +172,25 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component == null || this.Component.AbstractKeep == null)
+				if (Component == null || Component.Keep == null)
 					return false;
 
-				if (this.Component.AbstractKeep is GameKeepTower)
+				if (Component.Keep is GameKeepTower)
 				{
-					if (this.DoorIndex == 1)
+					if (DoorIndex == 1)
 						return true;
 				}
-				else if (this.Component.AbstractKeep is GameKeep)
+				else if (Component.Keep is GameKeep)
 				{
-					if (this.Component.Skin == 10 || this.Component.Skin == 30) //old and new inner keep
+					if (Component.Skin == 10 || Component.Skin == 30) //old and new inner keep
 					{
-						if (this.DoorIndex == 1)
+						if (DoorIndex == 1)
 							return true;
 					}
-					if (this.Component.Skin == 0 || this.Component.Skin == 24)//old and new main gate
+					if (Component.Skin == 0 || Component.Skin == 24)//old and new main gate
 					{
-						if (this.DoorIndex == 1 ||
-							this.DoorIndex == 2)
+						if (DoorIndex == 1 ||
+							DoorIndex == 2)
 							return true;
 					}
 				}
@@ -300,7 +300,7 @@ namespace DOL.GS.Keeps
 		{
 			if (damageAmount > 0)
 			{
-				this.Component.AbstractKeep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
+				Component.Keep.LastAttackedByEnemyTick = CurrentRegion.Time;
 				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 
 				//only on hp change
@@ -322,26 +322,26 @@ namespace DOL.GS.Keeps
 			if (attackData.DamageType == eDamageType.GM)
 				return;
 
-			int toughness = ServerProperties.Properties.SET_KEEP_DOOR_TOUGHNESS;
+			int toughness = Properties.SET_KEEP_DOOR_TOUGHNESS;
 			int baseDamage = attackData.Damage;
 			int styleDamage = attackData.StyleDamage;
 			int criticalDamage = 0;
 
 			GameLiving source = attackData.Attacker;
 
-			if (this.Component.AbstractKeep is GameKeepTower)
+			if (Component.Keep is GameKeepTower)
 			{
-				toughness = ServerProperties.Properties.SET_TOWER_DOOR_TOUGHNESS;
+				toughness = Properties.SET_TOWER_DOOR_TOUGHNESS;
 			}
 
 			if (source is GamePlayer)
 			{
-				baseDamage = (baseDamage - (baseDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
-				styleDamage = (styleDamage - (styleDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
+				baseDamage = (baseDamage - (baseDamage * 5 * Component.Keep.Level / 100)) * toughness / 100;
+				styleDamage = (styleDamage - (styleDamage * 5 * Component.Keep.Level / 100)) * toughness / 100;
 			}
 			else if (source is GameNPC)
 			{
-				if (!ServerProperties.Properties.DOORS_ALLOWPETATTACK)
+				if (!Properties.DOORS_ALLOWPETATTACK)
 				{
 					baseDamage = 0;
 					styleDamage = 0;
@@ -349,24 +349,24 @@ namespace DOL.GS.Keeps
 				}
 				else
 				{
-					baseDamage = (baseDamage - (baseDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
-					styleDamage = (styleDamage - (styleDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
+					baseDamage = (baseDamage - (baseDamage * 5 * Component.Keep.Level / 100)) * toughness / 100;
+					styleDamage = (styleDamage - (styleDamage * 5 * Component.Keep.Level / 100)) * toughness / 100;
 
-					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
+					if (((GameNPC)source).Brain is AI.Brain.IControlledBrain)
 					{
-						GamePlayer player = (((DOL.AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
+						GamePlayer player = (((AI.Brain.IControlledBrain)((GameNPC)source).Brain).Owner as GamePlayer);
 						if (player != null)
 						{
 							// special considerations for pet spam classes
 							if (player.CharacterClass.ID == (int)eCharacterClass.Theurgist || player.CharacterClass.ID == (int)eCharacterClass.Animist)
 							{
-								baseDamage = (int)(baseDamage * ServerProperties.Properties.PET_SPAM_DAMAGE_MULTIPLIER);
-								styleDamage = (int)(styleDamage * ServerProperties.Properties.PET_SPAM_DAMAGE_MULTIPLIER);
+								baseDamage = (int)(baseDamage * Properties.PET_SPAM_DAMAGE_MULTIPLIER);
+								styleDamage = (int)(styleDamage * Properties.PET_SPAM_DAMAGE_MULTIPLIER);
 							}
 							else
 							{
-								baseDamage = (int)(baseDamage * ServerProperties.Properties.PET_DAMAGE_MULTIPLIER);
-								styleDamage = (int)(styleDamage * ServerProperties.Properties.PET_DAMAGE_MULTIPLIER);
+								baseDamage = (int)(baseDamage * Properties.PET_DAMAGE_MULTIPLIER);
+								styleDamage = (int)(styleDamage * Properties.PET_DAMAGE_MULTIPLIER);
 							}
 						}
 					}
@@ -416,7 +416,7 @@ namespace DOL.GS.Keeps
 					distance = 100;
 
 				//calculate Z
-				if (this.Component.AbstractKeep is GameKeepTower && !this.Component.AbstractKeep.IsPortalKeep)
+				if (Component.Keep is GameKeepTower && !Component.Keep.IsPortalKeep)
 				{
 					//when entering a tower, we need to raise Z
 					//portal keeps are considered towers too, so we check component count
@@ -441,7 +441,7 @@ namespace DOL.GS.Keeps
 						//the component for the keep and the component for the gate
 						int keepdistance = int.MaxValue;
 						int gatedistance = int.MaxValue;
-						foreach (GameKeepComponent c in this.Component.AbstractKeep.KeepComponents)
+						foreach (GameKeepComponent c in Component.Keep.KeepComponents)
 						{
 							if ((GameKeepComponent.eComponentSkin)c.Skin == GameKeepComponent.eComponentSkin.Keep)
 							{
@@ -564,9 +564,9 @@ namespace DOL.GS.Keeps
 
 			if (Component != null)
 			{
-				if (Component.AbstractKeep != null)
+				if (Component.Keep != null)
 				{
-					Component.AbstractKeep.Doors.Remove(this.ObjectID.ToString());
+					Component.Keep.Doors.Remove(ObjectID.ToString());
 				}
 
 				Component.Delete();
@@ -632,7 +632,7 @@ namespace DOL.GS.Keeps
 					if (!keepArea.Keep.Doors.ContainsKey(sKey))
 					{
 						Component = new GameKeepComponent();
-						Component.AbstractKeep = keepArea.Keep;
+						Component.Keep = keepArea.Keep;
 						keepArea.Keep.Doors.Add(sKey, this);
 					}
 					break;
@@ -650,7 +650,7 @@ namespace DOL.GS.Keeps
 			m_component = component;
 
 			PositionMgr.LoadKeepItemPosition(pos, this);
-			component.AbstractKeep.Doors[m_templateID] = this;
+			component.Keep.Doors[m_templateID] = this;
 
 			m_oldMaxHealth = MaxHealth;
 			m_health = MaxHealth;
@@ -667,7 +667,7 @@ namespace DOL.GS.Keeps
 			}
 			else
 			{
-				log.Error("Failed to load keep door from keepposition_id =" + pos.ObjectId + ". Component SkinID=" + component.Skin + ". KeepID=" + component.AbstractKeep.KeepID);
+				log.Error("Failed to load keep door from keepposition_id =" + pos.ObjectId + ". Component SkinID=" + component.Skin + ". KeepID=" + component.Keep.KeepID);
 			}
 
 		}
@@ -681,9 +681,9 @@ namespace DOL.GS.Keeps
 			int ownerKeepID = 0;
 			int towerIndex = 0;
 
-			if (m_component.AbstractKeep is GameKeepTower)
+			if (m_component.Keep is GameKeepTower)
 			{
-				GameKeepTower tower = m_component.AbstractKeep as GameKeepTower;
+				GameKeepTower tower = m_component.Keep as GameKeepTower;
 
 				if (tower.Keep != null)
 				{
@@ -698,7 +698,7 @@ namespace DOL.GS.Keeps
 			}
 			else
 			{
-				ownerKeepID = m_component.AbstractKeep.KeepID;
+				ownerKeepID = m_component.Keep.KeepID;
 			}
 
 			int componentID = m_component.ID;
@@ -771,10 +771,10 @@ namespace DOL.GS.Keeps
 
 		public int RepairTimerCallback(RegionTimer timer)
 		{
-			if (Component == null || Component.AbstractKeep == null)
+			if (Component == null || Component.Keep == null)
 				return 0;
 
-			if (HealthPercent == 100 || Component.AbstractKeep.InCombat)
+			if (HealthPercent == 100 || Component.Keep.InCombat)
 				return repairInterval;
 
 			Repair((MaxHealth / 100) * 5);

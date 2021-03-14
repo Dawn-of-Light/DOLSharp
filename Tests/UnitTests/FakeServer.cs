@@ -2,7 +2,6 @@
 using DOL.Database.Transaction;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.ServerRules;
 using System;
 using System.Collections.Generic;
 
@@ -53,30 +52,14 @@ namespace DOL.UnitTests.Gameserver
 
     public class FakeServer : GameServer
     {
-        public FakeServerRules FakeServerRules = new FakeServerRules();
-        public FakeDatabase fakeDatabase = new FakeDatabase();
+        private IObjectDatabase database = new FakeDatabase();
 
-        protected override IServerRules ServerRulesImpl => FakeServerRules;
-        protected override IObjectDatabase DataBaseImpl => fakeDatabase;
+        protected override IObjectDatabase DataBaseImpl => database;
         protected override void CheckAndInitDB() { }
         public override byte[] AcquirePacketBuffer() => new byte[] { };
+        public void SetDatabase(IObjectDatabase database) { this.database = database; }
 
-        public static FakeServer LoadAndReturn()
-        {
-            var fakeServer = new FakeServer();
-            LoadTestDouble(fakeServer);
-            return fakeServer;
-        }
-    }
-
-    public class FakeServerRules : NormalServerRules
-    {
-        public bool fakeIsAllowedToAttack = false;
-
-        public override bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
-        {
-            return fakeIsAllowedToAttack;
-        }
+        public static void Load() => LoadTestDouble(new FakeServer());
     }
 
     public class FakeDatabase : IObjectDatabase
