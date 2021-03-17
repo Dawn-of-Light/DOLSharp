@@ -241,7 +241,6 @@ namespace DOL.GS.Keeps
 								GameKeepHookPoint myhookPoint = new GameKeepHookPoint(dbhookPoint, component);
 								component.HookPoints.Add(dbhookPoint.HookPointID, myhookPoint);
 							}
-							Console.WriteLine(component.HookPoints.Count);
 							continue;
 						}
 					}
