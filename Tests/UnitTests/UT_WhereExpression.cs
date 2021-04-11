@@ -32,7 +32,7 @@ namespace DOL.UnitTests.Database
 
             var firstQueryParameter = expression.QueryParameters[0];
             var placeHolder = firstQueryParameter.Item1;
-            Assert.AreEqual(expression.WhereClause, "key=" + placeHolder);
+            Assert.AreEqual(expression.WhereClause, "key = " + placeHolder);
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace DOL.UnitTests.Database
             var placeHolder1 = expression1.QueryParameters[0].Item1;
             var placeHolder2 = expression2.QueryParameters[0].Item1;
             var actual = andExpression.WhereClause;
-            var expected = $"(foo={placeHolder1} AND bar={placeHolder2})";
+            var expected = $"(foo = {placeHolder1} AND bar = {placeHolder2})";
             Assert.AreEqual(expected, actual);
         }
 

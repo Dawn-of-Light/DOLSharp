@@ -97,7 +97,7 @@ namespace DOL.UnitTests.Gameserver
         public IList<TObject> SelectObjects<TObject>(string whereExpression) where TObject : DataObject => throw new NotImplementedException();
         public IList<TObject> SelectObjects<TObject>(string whereExpression, IsolationLevel isolation) where TObject : DataObject => throw new NotImplementedException();
 
-        public IList<TObject> SelectObjects<TObject>(WhereExpression whereExpression) where TObject : DataObject => throw new NotImplementedException();
+        public IList<TObject> SelectObjects<TObject>(WhereExpression whereExpression) where TObject : DataObject => (IList<TObject>)SelectObjectReturns;
 
         public bool UpdateInCache<TObject>(object key) where TObject : DataObject => false;
         public bool UpdateObjsInCache<TObject>(IEnumerable<object> keys) where TObject : DataObject => throw new NotImplementedException();

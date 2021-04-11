@@ -39,7 +39,7 @@ namespace DOL.Database
         }
 
         public override string WhereClause
-            => columnName + op + GetPlaceHolder(id);
+            => $"{columnName} {op} {GetPlaceHolder(id)}";
         public override QueryParameter[] QueryParameters
             => new QueryParameter[] { new QueryParameter(GetPlaceHolder(id), val) };
 
