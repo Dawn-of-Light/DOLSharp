@@ -913,15 +913,21 @@ namespace DOL.Integration.Database
 			var complexWhere = Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(objInitial.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(objInitial.ObjectId)));
 			
 			CollectionAssert.Contains(complexWhere.Select(obj => obj.ObjectId.ToLower()), objInitial.ObjectId.ToLower(), "Select Objects with Complex Where clause should retrieve Object similar to Created one...");
-			
+
+			Assert.IsTrue(Database.DeleteObject(Database.SelectObjects<TestTable>(DB.Column("TestField").IsNull())));
 			var objNull = new TestTable { TestField = null };
 			var nullAdd = Database.AddObject(objNull);
 			
 			Assert.IsTrue(nullAdd, "Select Objects null parameter Test Need some null object to be Accurate...");
-			
+
 			var nullParam = Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(null));
 			
 			CollectionAssert.IsEmpty(nullParam, "Select Objects with Null Parameter Query should not return any record...");
+
+			var resultsWithTestfieldNull = Database.SelectObjects<TestTable>(DB.Column("TestField").IsNull());
+			var allObjectsAfter = Database.SelectAllObjects<TestTable>();
+
+			Assert.AreEqual(1, resultsWithTestfieldNull.Count);
 		}
 		
 		/// <summary>

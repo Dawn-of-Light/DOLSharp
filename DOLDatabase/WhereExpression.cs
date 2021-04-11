@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections.Generic;
 
 namespace DOL.Database
@@ -60,6 +61,21 @@ namespace DOL.Database
         private uint GetID() => ++placeHolderIndex - 1;
     }
 
+    internal class PlainTextExpression : WhereExpression
+    {
+        private string columnName;
+        private string op;
+
+        internal PlainTextExpression(string columnName, string op)
+        {
+            this.columnName = columnName;
+            this.op = op;
+        }
+
+        public override string WhereClause => $"{columnName} {op}";
+        public override QueryParameter[] QueryParameters => new QueryParameter[] { };
+    }
+
     internal class ChainingExpression : WhereExpression
     {
         private WhereExpression left;
@@ -75,6 +91,7 @@ namespace DOL.Database
 
         public override string WhereClause
             => $"({left.WhereClause} {chainingOperator} {right.WhereClause})";
+
         public override QueryParameter[] QueryParameters
         {
             get
@@ -94,12 +111,6 @@ namespace DOL.Database
 
         public WhereExpression And(WhereExpression rightExpression) => new ChainingExpression(this, "AND", rightExpression);
         public WhereExpression Or(WhereExpression rightExpression) => new ChainingExpression(this, "OR", rightExpression);
-    }
-
-    public interface SQLWhere
-    {
-        string Clause { get; }
-        QueryParameter[] QueryParameters { get; }
     }
 
     public class DB
@@ -123,5 +134,7 @@ namespace DOL.Database
         public WhereExpression IsLessThan(object val) => new FilterExpression(Name, "<", val);
         public WhereExpression IsLessOrEqualTo(object val) => new FilterExpression(Name, "<=", val);
         public WhereExpression IsLike(object val) => new FilterExpression(Name, "LIKE", val);
+        public WhereExpression IsNull() => new PlainTextExpression(Name, "IS NULL");
+        public WhereExpression IsNotNull() => new PlainTextExpression(Name, "IS NOT NULL");
     }
 }
