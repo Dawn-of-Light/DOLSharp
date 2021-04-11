@@ -127,9 +127,8 @@ namespace DOL.GS.PacketHandler
 
 					if (charsBySlot.Any())
 					{
-						var allItems = GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID AND `SlotPosition` >= @MinEquipable AND `SlotPosition` <= @MaxEquipable",
-																						charsBySlot.Select(kv => new[] { new QueryParameter("@OwnerID", kv.Value.ObjectId), new QueryParameter("@MinEquipable", (int)eInventorySlot.MinEquipable), new QueryParameter("@MaxEquipable", (int)eInventorySlot.MaxEquipable) }))
-							.SelectMany(objs => objs);
+						var filterBySlotPosition = DB.Column("SlotPosition").IsGreaterOrEqualTo((int)eInventorySlot.MinEquipable).And(DB.Column("SlotPosition").IsLessOrEqualTo((int)eInventorySlot.MaxEquipable));
+						var allItems = DOLDB<InventoryItem>.MultipleSelectObjects(charsBySlot.Select(kv => DB.Column("OwnerID").IsEqualTo(kv.Value.ObjectId).And(filterBySlotPosition))).SelectMany(objs => objs);
 
 						foreach (InventoryItem item in allItems)
 						{

@@ -478,7 +478,7 @@ namespace DOL.GS.Commands
 								if (myclient == null)
 								{
 									// Patch 1.84: look for offline players
-									obj = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playername)).FirstOrDefault();
+									obj = DOLDB<DOLCharacters>.SelectObject(DB.Column("Name").IsEqualTo(playername));
 								}
 								else
 									obj = myclient.Player;
@@ -556,7 +556,7 @@ namespace DOL.GS.Commands
 
 							string playername = String.Join(" ", args, 2, args.Length - 2);
 							// Patch 1.84: look for offline players
-							var chs = GameServer.Database.SelectObjects<DOLCharacters>("`AccountName` = @AccountName AND `GuildID` = @GuildID", new[] { new QueryParameter("@AccountName", playername), new QueryParameter("@GuildID", client.Player.GuildID) });
+							var chs = DOLDB<DOLCharacters>.SelectObjects(DB.Column("AccountName").IsEqualTo(playername).And(DB.Column("GuildID").IsEqualTo(client.Player.GuildID)));
 							if (chs.Count > 0)
 							{
 								GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);
@@ -1292,7 +1292,7 @@ namespace DOL.GS.Commands
 								if (onlineClient == null)
 								{
 									// Patch 1.84: look for offline players
-									obj = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playerName)).FirstOrDefault();
+									obj = DOLDB<DOLCharacters>.SelectObject(DB.Column("Name").IsEqualTo(playerName));
 									useDB = true;
 								}
 								else
@@ -1429,7 +1429,7 @@ namespace DOL.GS.Commands
 								if (myclient == null)
 								{
 									// Patch 1.84: look for offline players
-									obj = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playername)).FirstOrDefault();
+									obj = DOLDB<DOLCharacters>.SelectObject(DB.Column("Name").IsEqualTo(playername));
 								}
 								else
 									obj = myclient.Player;
@@ -1694,9 +1694,7 @@ namespace DOL.GS.Commands
 								}
 								else
 								{
-									DOLCharacters c = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playername)).FirstOrDefault();
-									//if (c == null)
-									//c = (Character)GameServer.Database.SelectObject<CharacterArchive>("Name = '" + GameServer.Database.Escape(playername) + "'");
+									DOLCharacters c = DOLDB<DOLCharacters>.SelectObject(DB.Column("Name").IsEqualTo(playername));
 
 									if (c == null)
 									{
@@ -1707,8 +1705,8 @@ namespace DOL.GS.Commands
 									accountId = c.AccountName;
 								}
 								List<DOLCharacters> chars = new List<DOLCharacters>();
-								chars.AddRange(GameServer.Database.SelectObjects<DOLCharacters>("`AccountName` = @AccountName", new QueryParameter("@AccountName", accountId)));
-								//chars.AddRange((Character[])GameServer.Database.SelectObjects<CharacterArchive>("AccountID = '" + accountId + "'"));
+								chars.AddRange(DOLDB<DOLCharacters>.SelectObjects(DB.Column("AccountName").IsEqualTo(accountId)));
+								//chars.AddRange((Character[])DOLDB<CharacterArchive>.SelectObjects("AccountID = '" + accountId + "'"));
 
 								foreach (DOLCharacters ply in chars)
 								{
@@ -1728,9 +1726,7 @@ namespace DOL.GS.Commands
 								}
 								else
 								{
-									DOLCharacters c = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", args[2])).FirstOrDefault();
-									//if (c == null)
-									//    c = (Character)GameServer.Database.SelectObject<CharacterArchive>("Name = '" + GameServer.Database.Escape(args[2]) + "'");
+									var c = DOLDB<DOLCharacters>.SelectObject(DB.Column("Name").IsEqualTo(args[2]));
 									if (c == null)
 									{
 										client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PlayerNotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);

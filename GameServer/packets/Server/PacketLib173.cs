@@ -299,8 +299,7 @@ namespace DOL.GS.PacketHandler
 							if (characters[j].AccountSlot == i)
 							{
 								pak.FillString(characters[j].Name, 24);
-								items = GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID AND `SlotPosition` >= @SlotPositionMin AND `SlotPosition` <= @SlotPositionMax",
-								                                                         new[] { new QueryParameter("@OwnerID", characters[j].ObjectId), new QueryParameter("@SlotPositionMin", 10), new QueryParameter("@SlotPositionMax", 37) });
+								items = DOLDB<InventoryItem>.SelectObjects(DB.Column("OwnerID").IsEqualTo(characters[j].ObjectId).And(DB.Column("SlotPosition").IsGreaterOrEqualTo(10)).And(DB.Column("SlotPosition").IsLessOrEqualTo(37)));
 								byte ExtensionTorso = 0;
 								byte ExtensionGloves = 0;
 								byte ExtensionBoots = 0;

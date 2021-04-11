@@ -33,8 +33,7 @@ namespace DOL.GS
 
 		public static bool HasPermission(GamePlayer player,string command)
 		{
-			DataObject obj = GameServer.Database.SelectObjects<DBSinglePermission>("`Command` = @Command AND (`PlayerID` = @PlayerID OR `PlayerID` = @PlayerAccount)",
-			                                                                      new[] { new QueryParameter("@Command", command), new QueryParameter("@PlayerID", player.ObjectId), new QueryParameter("@PlayerAccount", player.AccountName) }).FirstOrDefault();
+			var obj = DOLDB<DBSinglePermission>.SelectObject(DB.Column("Command").IsEqualTo(command).And(DB.Column("PlayerID").IsEqualTo(player.ObjectId).Or(DB.Column("PlayerID").IsEqualTo(player.AccountName))));
 			if (obj == null)
 				return false;
 			return true;
@@ -58,8 +57,7 @@ namespace DOL.GS
 
 		public static bool removePermission(GamePlayer player,string command)
 		{
-			DataObject obj = GameServer.Database.SelectObjects<DBSinglePermission>("`Command` = @Command AND `PlayerID` = @PlayerID",
-			                                                                       new[] { new QueryParameter("@Command", command), new QueryParameter("@PlayerID", player.ObjectId) }).FirstOrDefault();
+			var obj = DOLDB<DBSinglePermission>.SelectObject(DB.Column("Command").IsEqualTo(command).And(DB.Column("PlayerID").IsEqualTo(player.ObjectId)));
 			if (obj == null)
 			{
 				return false;
@@ -70,8 +68,7 @@ namespace DOL.GS
 
         public static bool removePermissionAccount(GamePlayer player, string command)
         {
-            DataObject obj = GameServer.Database.SelectObjects<DBSinglePermission>("`Command` = @Command AND `PlayerID` = @PlayerID",
-			                                                                       new[] { new QueryParameter("@Command", command), new QueryParameter("@PlayerID", player.AccountName) }).FirstOrDefault();
+            var obj = DOLDB<DBSinglePermission>.SelectObject(DB.Column("Command").IsEqualTo(command).And(DB.Column("PlayerID").IsEqualTo(player.AccountName)));
             if (obj == null)
             {
                 return false;

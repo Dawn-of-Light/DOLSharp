@@ -42,13 +42,12 @@ namespace DOL.GS.DatabaseUpdate
 				log.Info("Start Searching for records that need update...");
 			
 			// Change the Leader Relation if Missing
-			var alliances = GameServer.Database.SelectObjects<DBAlliance>("LeaderGuildID = @LeaderGuildID OR LeaderGuildID IS NULL", new QueryParameter("@LeaderGuildID", string.Empty));
+			var alliances = DOLDB<DBAlliance>.SelectObjects(DB.Column("LeaderGuildID").IsEqualTo(string.Empty).Or(DB.Column("LeaderGuildID").IsNull()));
 			
 			if (alliances.Any())
 			{
 				
-				var leadingGuilds = GameServer.Database.SelectObjects<DBGuild>("AllianceID = @AllianceID AND GuildName = @GuildName",
-				                                                               alliances.Select(al => new [] { new QueryParameter("@AllianceID", al.ObjectId), new QueryParameter("@GuildName", al.AllianceName) }));
+				var leadingGuilds = DOLDB<DBGuild>.MultipleSelectObjects(alliances.Select(al => DB.Column("AllianceID").IsEqualTo(al.ObjectId).And(DB.Column("GuildName").IsEqualTo(al.AllianceName))));
 				
 				var alliancesWithLeader = leadingGuilds.Select((gd, i) => {
 				                                               	var al = alliances[i];

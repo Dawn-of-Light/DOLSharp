@@ -182,8 +182,8 @@ namespace DOL.GS
 		/// </summary>
 		public IList<InventoryItem> DBItems(GamePlayer player = null)
 		{
-			return GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID and `SlotPosition` >= @FirstDBSlot and `SlotPosition` <= @LastDBSlot",
-			                                                        new [] { new QueryParameter("@OwnerID", GetOwner(player)), new QueryParameter("@FirstDBSlot", FirstDBSlot), new QueryParameter("@LastDBSlot", LastDBSlot) });
+			var filterBySlot = DB.Column("SlotPosition").IsGreaterOrEqualTo(FirstDBSlot).And(DB.Column("SlotPosition").IsLessOrEqualTo(LastDBSlot));
+			return DOLDB<InventoryItem>.SelectObjects(DB.Column("OwnerID").IsEqualTo(GetOwner(player)).And(filterBySlot));
 		}
 
 		/// <summary>

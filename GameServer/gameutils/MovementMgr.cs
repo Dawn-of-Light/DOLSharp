@@ -82,7 +82,7 @@ namespace DOL.GS.Movement
 		{
 			log.DebugFormat("Updating path {0} in path cache.", pathID);
 
-			DBPath dbpath = GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)).FirstOrDefault();
+			var dbpath = DOLDB<DBPath>.SelectObject(DB.Column("PathID").IsEqualTo(pathID));
 			if (dbpath != null)
 			{
 				if (m_pathCache.ContainsKey(pathID))
@@ -95,7 +95,7 @@ namespace DOL.GS.Movement
 				}
 			}
 
-			IList<DBPathPoint> pathPoints = GameServer.Database.SelectObjects<DBPathPoint>("`PathID` = @PathID", new QueryParameter("@PathID", pathID));
+			var pathPoints = DOLDB<DBPathPoint>.SelectObjects(DB.Column("PathID").IsEqualTo(pathID));
 			SortedList<int, DBPathPoint> pList = new SortedList<int, DBPathPoint>();
 			if (m_pathpointCache.ContainsKey(pathID))
 			{
@@ -191,13 +191,13 @@ namespace DOL.GS.Movement
 
 			// First delete any path with this pathID from the database
 
-			DBPath dbpath = GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)).FirstOrDefault();
+			var dbpath = DOLDB<DBPath>.SelectObject(DB.Column("PathID").IsEqualTo(pathID));
 			if (dbpath != null)
 			{
 				GameServer.Database.DeleteObject(dbpath);
 			}
 
-			GameServer.Database.DeleteObject(GameServer.Database.SelectObjects<DBPathPoint>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)));
+			GameServer.Database.DeleteObject(DOLDB<DBPathPoint>.SelectObjects(DB.Column("PathID").IsEqualTo(pathID)));
 
 			// Now add this path and iterate through the PathPoint linked list to add all the path points
 

@@ -73,30 +73,23 @@ namespace DOL.GS
 			int salvageLevel = CraftingMgr.GetItemCraftLevel(item) / 100;
 			if(salvageLevel > 9) salvageLevel = 9; // max 9
 
-			string sql = "";
-
-			List<QueryParameter> qp = new List<QueryParameter>();
+			var whereClause = WhereExpression.Empty;
 
 			if (item.SalvageYieldID == 0)
 			{
-				sql = "`ObjectType` = @objectype AND `SalvageLevel` = @salvagelvl";
-				qp.Add(new QueryParameter("@objectype", item.Object_Type));
-				qp.Add(new QueryParameter("@salvagelvl", salvageLevel));
+				whereClause = DB.Column("ObjectType").IsEqualTo(item.Object_Type).And(DB.Column("SalvageLevel").IsEqualTo(salvageLevel));
 			}
 			else
 			{
-				sql = "`ID` = @salvageyieldid";
-				qp.Add(new QueryParameter("@salvageyieldid", item.SalvageYieldID));
+				whereClause = DB.Column("ID").IsEqualTo(item.SalvageYieldID);
 			}
 
 			if (ServerProperties.Properties.USE_SALVAGE_PER_REALM)
 			{
-				// Some items use realm, some do not, so allow a find of either a set realm, or 0
-				sql += " AND (`Realm` = 0 OR `Realm` = @realm )";
-				qp.Add(new QueryParameter("@realm", item.Realm));
+				whereClause = whereClause.And(DB.Column("Realm").IsEqualTo((int)eRealm.None).Or(DB.Column("Realm").IsEqualTo(item.Realm)));
 			}
 
-			salvageYield = GameServer.Database.SelectObject<SalvageYield>(sql, qp);
+			salvageYield = DOLDB<SalvageYield>.SelectObject(whereClause);
 			ItemTemplate material = null;
 
 			if (salvageYield != null && string.IsNullOrEmpty(salvageYield.MaterialId_nb) == false)
@@ -179,7 +172,7 @@ namespace DOL.GS
 			siegeWeapon.ReleaseControl();
 			siegeWeapon.RemoveFromWorld();
 			bool error = false;
-			DBCraftedItem recipe = GameServer.Database.SelectObjects<DBCraftedItem>("`Id_nb` = @Id_nb", new QueryParameter("@Id_nb", siegeWeapon.ItemId)).FirstOrDefault();
+			var recipe = DOLDB<DBCraftedItem>.SelectObject(DB.Column("Id_nb").IsEqualTo(siegeWeapon.ItemId));
 
 			if (recipe == null)
             {
@@ -188,7 +181,7 @@ namespace DOL.GS
 				return 1;
             }
 
-			IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb));
+			var rawMaterials = DOLDB<DBCraftedXItem>.SelectObjects(DB.Column("CraftedItemId_nb").IsEqualTo(recipe.Id_nb));
 
 			if (rawMaterials == null || rawMaterials.Count == 0)
             {

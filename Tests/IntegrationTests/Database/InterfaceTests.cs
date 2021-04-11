@@ -950,7 +950,7 @@ namespace DOL.Integration.Database
 			Assert.IsTrue(added, "TestTable Objects should be added successfully...");
 
 			var parameters = new[] { "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" };
-			var retrieve = parameters.Select(parameter => Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(parameter)));
+			var retrieve = Database.MultipleSelectObjects<TestTable>(parameters.Select(parameter => DB.Column("TestField").IsEqualTo(parameter)));
 
 			var objectByGroup = new []{ "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" }
 			.Select((grp, index) => new { Grp = grp, Objects = retrieve.ElementAt(index) });
@@ -969,7 +969,7 @@ namespace DOL.Integration.Database
 			}
 
 			var orderedObjs = objs.SelectMany(obj => obj.Value).ToArray();
-			var retrieveMany = orderedObjs.Select(obj => Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(obj.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(obj.ObjectId))));
+			var retrieveMany = Database.MultipleSelectObjects<TestTable>(orderedObjs.Select(obj => DB.Column("TestField").IsEqualTo(obj.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(obj.ObjectId))));
 			
 			Assert.IsNotNull(retrieveMany, "Retrieve Sets from Select Objects should not return null value...");
 			Assert.IsNotEmpty(retrieveMany, "Retrieve Set from Select Objects should not be Empty...");

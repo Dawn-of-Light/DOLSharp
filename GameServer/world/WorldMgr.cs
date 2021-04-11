@@ -346,7 +346,7 @@ namespace DOL.GS
 			{
 				foreach (string loadRegion in Util.SplitCSV(ServerProperties.Properties.DEBUG_LOAD_REGIONS, true))
 				{
-					mobList.AddRange(GameServer.Database.SelectObjects<Mob>("`Region` = @Region", new QueryParameter("@Region", loadRegion)));
+					mobList.AddRange(DOLDB<Mob>.SelectObjects(DB.Column("Region").IsEqualTo(loadRegion)));
 				}
 			}
 			else

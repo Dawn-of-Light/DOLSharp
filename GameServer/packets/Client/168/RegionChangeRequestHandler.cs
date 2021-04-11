@@ -55,14 +55,8 @@ namespace DOL.GS.PacketHandler.Client.v168
                 targetRealm = client.Player.CurrentZone.Realm;
 			}
 
-			var zonePoint =	GameServer.Database.SelectObjects<ZonePoint>(
-				"`Id` = @Id AND (`Realm` = @Realm OR `Realm` = @DefaultRealm OR `Realm` IS NULL)",
-				new [] {
-					new QueryParameter("@Id", jumpSpotId),
-					new QueryParameter("@Realm", (byte)targetRealm),
-					new QueryParameter("@DefaultRealm", 0)
-				})
-				.FirstOrDefault();
+			var filterRealm = DB.Column("Realm").IsEqualTo((byte)targetRealm).Or(DB.Column("Realm").IsEqualTo(0)).Or(DB.Column("Realm").IsNull());
+			var zonePoint = DOLDB<ZonePoint>.SelectObject(DB.Column("Id").IsEqualTo(jumpSpotId).And(filterRealm));
 
 			if (zonePoint == null || zonePoint.TargetRegion == 0)
 			{

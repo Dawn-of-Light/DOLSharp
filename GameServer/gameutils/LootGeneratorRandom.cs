@@ -58,14 +58,10 @@ namespace DOL.GS
 			{
 				try
 				{
-					itemTemplates = GameServer.Database.SelectObjects<ItemTemplate>("`Level` >= @LevelMin AND `Level` <= @LevelMax AND `IsPickable` = @IsPickable AND `IsDropable` = @IsDropable AND `CanDropAsloot` = @CanDropAsloot AND `Item_Type` >= @MinSlot AND `Item_Type` <= @MaxSlot",
-							                                                        new[] { new QueryParameter("@LevelMin", (i * LEVEL_RANGE)),
-							                                                            new QueryParameter("@LevelMax", ((i + 1) * LEVEL_RANGE)),
-							                                                            new QueryParameter("@IsPickable", 1),
-							                                                            new QueryParameter("@IsDropable", 1),
-																						new QueryParameter("@CanDropAsloot", 1),
-																						new QueryParameter("@MinSlot", (int)eInventorySlot.MinEquipable),
-																						new QueryParameter("@MaxSlot", (int)eInventorySlot.MaxEquipable) });
+					var filterLevel = DB.Column("Level").IsGreaterOrEqualTo(i * LEVEL_RANGE).And(DB.Column("Level").IsLessOrEqualTo((i + 1) * LEVEL_RANGE));
+					var filterByFlags = DB.Column("IsPickable").IsEqualTo(1).And(DB.Column("IsDropable").IsEqualTo(1)).And(DB.Column("CanDropAsLoot").IsEqualTo(1));
+					var filterBySlot = DB.Column("Item_Type").IsGreaterOrEqualTo((int)eInventorySlot.MinEquipable).And(DB.Column("Item_Type").IsLessOrEqualTo((int)eInventorySlot.MaxEquipable));
+					itemTemplates = DOLDB<ItemTemplate>.SelectObjects(filterLevel.And(filterByFlags).And(filterBySlot));
 				}
 				catch (Exception e)
 				{

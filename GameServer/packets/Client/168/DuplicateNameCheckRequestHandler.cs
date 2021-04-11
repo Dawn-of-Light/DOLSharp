@@ -32,7 +32,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			string name = packet.ReadString(30);
 
-			var character = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", name)).FirstOrDefault();
+			var character = DOLDB<DOLCharacters>.SelectObject(DB.Column("Name").IsEqualTo(name));
 			byte result = 0;
 			// Bad Name check.
 			if (character != null)

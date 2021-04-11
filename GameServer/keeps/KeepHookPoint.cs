@@ -119,8 +119,7 @@ namespace DOL.GS.Keeps
 		{
 			m_hookpointTimer.Start(300000);//5*60*1000 = 5 min
 			GameEventMgr.RemoveHandler(m_object, GameLivingEvent.Dying, new DOLEventHandler(ObjectDie));
-			DBKeepHookPointItem item = GameServer.Database.SelectObjects<DBKeepHookPointItem>("`KeepID` = @KeepID AND `ComponentID` = @ComponentID AND `HookPointID` @HookPointID", 
-			                                                                                  new[] { new QueryParameter("@KeepID", Component.Keep.KeepID), new QueryParameter("@ComponentID", Component.ID), new QueryParameter("@HookPointID", ID) }).FirstOrDefault();
+			var item = DOLDB<DBKeepHookPointItem>.SelectObject(DB.Column("KeepID").IsEqualTo(Component.Keep.KeepID).And(DB.Column("ComponentID").IsEqualTo(Component.ID)).And(DB.Column("HookPointID").IsEqualTo(ID)));
 			if (item != null)
 				GameServer.Database.DeleteObject(item);
 		}

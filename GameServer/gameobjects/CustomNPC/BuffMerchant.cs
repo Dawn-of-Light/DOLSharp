@@ -1985,11 +1985,11 @@ public class BuffTokensList
 	[GameServerStartedEvent]
 	public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
 	{
-		ItemTemplate[] buffMerch = GameServer.Database.SelectObjects<ItemTemplate>("`PackageID` LIKE @PackageID", new QueryParameter("@PackageID", "BuffTokens")).OrderBy(it => it.Item_Type).ToArray();
+		ItemTemplate[] buffMerch = DOLDB<ItemTemplate>.SelectObjects(DB.Column("PackageID").IsLike("BuffTokens")).OrderBy(it => it.Item_Type).ToArray();
 		MerchantItem m_item = null;
 		int pagenumber = 0;
 		int slotposition = 0;
-		m_item = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", "BuffTokens")).FirstOrDefault();
+		m_item = DOLDB<MerchantItem>.SelectObject(DB.Column("ItemListID").IsEqualTo("BuffTokens"));
 		if (m_item == null)
 		{
 			foreach (ItemTemplate item in buffMerch)
@@ -2020,11 +2020,11 @@ public class BPBuffTokensList
 	[GameServerStartedEvent]
 	public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
 	{
-		ItemTemplate[] buffMerch = GameServer.Database.SelectObjects<ItemTemplate>("`PackageID` LIKE @PackageID", new QueryParameter("@PackageID", "BPBuffTokens")).OrderBy(it => it.Item_Type).ToArray();
+		ItemTemplate[] buffMerch = DOLDB<ItemTemplate>.SelectObjects(DB.Column("PackageID").IsLike("BPBuffTokens")).OrderBy(it => it.Item_Type).ToArray();
 		MerchantItem m_item = null;
 		int pagenumber = 0;
 		int slotposition = 0;
-		m_item = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", "BPBuffTokens")).FirstOrDefault();
+		m_item = DOLDB<MerchantItem>.SelectObject(DB.Column("ItemListID").IsEqualTo("BPBuffTokens"));
 		if (m_item == null)
 		{
 			foreach (ItemTemplate item in buffMerch)

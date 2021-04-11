@@ -210,7 +210,7 @@ namespace DOL.UnitTests.Gameserver
             dataQuest.SpyCharQuest.Count = 3;
             var fakeDatabase = new FakeDatabase();
             fakeServer.SetDatabase(fakeDatabase);
-            fakeDatabase.SelectObjectReturns = new List<CharacterXDataQuest>() { dataQuest.SpyCharQuest };
+            fakeDatabase.SelectObjectReturns = new List<DataObject>() { dataQuest.SpyCharQuest };
 
             bool isQualified = dataQuest.CheckQuestQualification(player);
 

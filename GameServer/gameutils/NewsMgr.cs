@@ -72,10 +72,9 @@ namespace DOL.GS
 				//we can see all captures
 				IList<DBNews> newsList;
 				if (type > 0)
-					newsList = GameServer.Database.SelectObjects<DBNews>("`Type` = @Type AND (`Realm` = @DefaultRealm OR `Realm` = @Realm)",
-					                                                     new[] { new QueryParameter("@Type", type), new QueryParameter("@DefaultRealm", 0), new QueryParameter("@Realm", realm) });
+					newsList = DOLDB<DBNews>.SelectObjects(DB.Column("Type").IsEqualTo(type).And(DB.Column("Realm").IsEqualTo(0).Or(DB.Column("Realm").IsEqualTo(realm))));
 				else
-					newsList = GameServer.Database.SelectObjects<DBNews>("`Type` = @Type", new QueryParameter("@Type", type));
+					newsList = DOLDB<DBNews>.SelectObjects(DB.Column("Type").IsEqualTo(type));
 
 				newsList = newsList.OrderByDescending(it => it.CreationDate).Take(5).ToArray();
 				int n = newsList.Count;

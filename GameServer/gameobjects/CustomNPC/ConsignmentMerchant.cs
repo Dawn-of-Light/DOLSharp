@@ -206,7 +206,7 @@ namespace DOL.GS
                 {
                     m_totalMoney = value;
 
-                    var merchant = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
+                    var merchant = DOLDB<HouseConsignmentMerchant>.SelectObject(DB.Column("HouseNumber").IsEqualTo(HouseNumber));
                     merchant.Money = m_totalMoney;
                     GameServer.Database.SaveObject(merchant);
                 }
@@ -750,7 +750,7 @@ namespace DOL.GS
 
 			SetInventoryTemplate();
 
-			var houseCM = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
+			var houseCM = DOLDB<HouseConsignmentMerchant>.SelectObject(DB.Column("HouseNumber").IsEqualTo(HouseNumber));
 			if (houseCM != null)
 			{
 				TotalMoney = houseCM.Money;
@@ -782,7 +782,7 @@ namespace DOL.GS
 
 			bool isFixed = false;
 
-			var items = GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID AND `SlotPosition` >= @SlotPositionMin AND `SlotPosition` <= @SlotPositionMax AND `OwnerLot` = @OwnerLot", new[] { new QueryParameter("@OwnerID", house.OwnerID), new QueryParameter("@SlotPositionMin", FirstDBSlot), new QueryParameter("@SlotPositionMax", LastDBSlot), new QueryParameter("@OwnerLot", 0) });
+			var items = DOLDB<InventoryItem>.SelectObjects(DB.Column("OwnerID").IsEqualTo(house.OwnerID).And(DB.Column("SlotPosition").IsGreaterOrEqualTo(FirstDBSlot)).And(DB.Column("SlotPosition").IsLessOrEqualTo(LastDBSlot)).And(DB.Column("OwnerLot").IsEqualTo(0)));
 
 			foreach (InventoryItem item in items)
 			{
@@ -879,7 +879,7 @@ namespace DOL.GS
 
             if (house.DatabaseItem.GuildHouse)
             {
-            	var guild = GameServer.Database.SelectObjects<DBGuild>("`GuildName` = @GuildName",new QueryParameter("@GuildName", house.DatabaseItem.GuildName)).FirstOrDefault();
+            	var guild = DOLDB<DBGuild>.SelectObject(DB.Column("GuildName").IsEqualTo(house.DatabaseItem.GuildName));
                 int emblem = guild.Emblem;
 
                 InventoryItem cloak = Inventory.GetItem(eInventorySlot.Cloak);

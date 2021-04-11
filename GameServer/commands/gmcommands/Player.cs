@@ -118,7 +118,7 @@ namespace DOL.GS.Commands
                         if (player == null)
                             player = client.Player;
 
-                        var character = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", args[2])).FirstOrDefault();
+                        var character = DOLDB<DOLCharacters>.SelectObject(DB.Column("Name").IsEqualTo(args[2]));
 
                         if (character != null)
                         {
