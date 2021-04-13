@@ -948,11 +948,10 @@ namespace DOL.Integration.Database
 			var added = Database.AddObject(objs.SelectMany(obj => obj.Value));
 			
 			Assert.IsTrue(added, "TestTable Objects should be added successfully...");
-			
-			var parameters = new []{ "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" }
-			.Select(grp => new [] { new QueryParameter("@TestField", grp) } );
-			
-			var retrieve = Database.SelectObjects<TestTable>("`TestField` = @TestField", parameters);
+
+			var parameters = new[] { "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" };
+			var retrieve = parameters.Select(parameter => Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(parameter)));
+
 			var objectByGroup = new []{ "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" }
 			.Select((grp, index) => new { Grp = grp, Objects = retrieve.ElementAt(index) });
 			
@@ -968,10 +967,9 @@ namespace DOL.Integration.Database
 				                              "Retrieve SubSets from Select Objects should return the same ObjectId Sets as Created...");
 				
 			}
-			
+
 			var orderedObjs = objs.SelectMany(obj => obj.Value).ToArray();
-			var parameterMany = orderedObjs.Select(obj => new [] { new QueryParameter("@Testfield", obj.TestField), new QueryParameter("@ObjectId", obj.ObjectId) });
-			var retrieveMany = Database.SelectObjects<TestTable>("`TestField` = @TestField AND `Test_Table_ID` = @ObjectId", parameterMany);
+			var retrieveMany = orderedObjs.Select(obj => Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(obj.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(obj.ObjectId))));
 			
 			Assert.IsNotNull(retrieveMany, "Retrieve Sets from Select Objects should not return null value...");
 			Assert.IsNotEmpty(retrieveMany, "Retrieve Set from Select Objects should not be Empty...");
@@ -981,7 +979,7 @@ namespace DOL.Integration.Database
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set ObjectId...");
 			CollectionAssert.AreEqual(orderedObjs.Select(obj => obj.TestField.ToLower()), resultsMany.Select(obj => obj.TestField.ToLower()),
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set Field Value...");
-			
+
 			var parameterManyWithMissing = new [] { new [] { new QueryParameter("@TestField", "No Known Value"), new QueryParameter("@ObjectId", "Probably Nothing") },
 			new [] { new QueryParameter("@TestField", "Absolutely None"), new QueryParameter("@ObjectId", "Nothing for Sure") } }
 			.Concat(orderedObjs.Select(obj => new [] { new QueryParameter("@Testfield", obj.TestField), new QueryParameter("@ObjectId", obj.ObjectId) }));
@@ -1014,7 +1012,7 @@ namespace DOL.Integration.Database
 			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", new QueryParameter()), "Trying to Query a Non Registered Table should throw a DatabaseException...");
 			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", new [] { new QueryParameter() }), "Trying to Query a Non Registered Table should throw a DatabaseException...");
 			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", new [] { new [] { new QueryParameter() } }), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			
+
 		}
 		
 		/// <summary>
@@ -1060,7 +1058,7 @@ namespace DOL.Integration.Database
 			var retrieveParameters = Database.SelectObjects<TestTable>(null, new QueryParameter[] { });
 			
 			CollectionAssert.AreEquivalent(allobjects.Select(obj => obj.ObjectId), retrieveParameters.Select(obj => obj.ObjectId), "");
-			
+
 			var retrieveMultipleParameters = Database.SelectObjects<TestTable>(null, new [] { new QueryParameter[] { } });
 			
 			CollectionAssert.AreEquivalent(allobjects.Select(obj => obj.ObjectId), retrieveMultipleParameters.First().Select(obj => obj.ObjectId), "");
@@ -1075,9 +1073,9 @@ namespace DOL.Integration.Database
 			
 			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>(null, new [] { new QueryParameter[] { null } }), "");
 			
-			Assert.Throws(typeof(ArgumentNullException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] { null }), "");
+			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] { null }), "");
 
-			Assert.Throws(typeof(InvalidOperationException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] {  }), "");
+			Assert.Throws(typeof(ArgumentException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] {  }), "");
 
 			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>((WhereExpression)null), "");
 		}

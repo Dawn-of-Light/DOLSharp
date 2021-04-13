@@ -503,15 +503,14 @@ namespace DOL.Database
 		/// <param name="dbParams">DbParameter Object to Fill</param>
 		protected virtual void FillSQLParameter(IEnumerable<QueryParameter> parameter, DbParameterCollection dbParams)
 		{
-			// Specififc Handling for Char Cast from DB Integer
-			foreach(var param in parameter.Where(param => param.Name != null))
+			dbParams.Clear();
+			foreach(var param in parameter)
     		{
-    			if (param.Value is char)
-    				dbParams[param.Name].Value = Convert.ToUInt16(param.Value);
-    			else
-    				dbParams[param.Name].Value = param.Value;
+				dbParams.Add(ConvertToDBParameter(param));
     		}
 		}
+
+		protected abstract DbParameter ConvertToDBParameter(QueryParameter queryParameter);
 		#endregion
 		
 		#region Abstract Properties		

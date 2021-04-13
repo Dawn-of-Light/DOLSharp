@@ -146,28 +146,6 @@ namespace DOL.Database.Handlers
 		}
 		
 		/// <summary>
-		/// Fill SQL Command Parameter with Converted Values.
-		/// </summary>
-		/// <param name="parameter">Parameter collection for this Command</param>
-		/// <param name="dbParams">DbParameter Object to Fill</param>
-		protected override void FillSQLParameter(IEnumerable<QueryParameter> parameter, DbParameterCollection dbParams)
-		{
-			// Specififc Handling for Char Cast from DB Integer
-			// And Non Signed Integer Handling
-    		foreach(var param in parameter)
-    		{
-    			if (param.Value is char)
-    				dbParams[param.Name].Value = Convert.ToUInt16(param.Value);
-    			else if (param.Value is uint)
-    				dbParams[param.Name].Value = Convert.ToInt64(param.Value);
-    			else if (param.Value is ulong)
-    				dbParams[param.Name].Value = unchecked((long)Convert.ToUInt64(param.Value));
-    			else
-    				dbParams[param.Name].Value = param.Value;
-    		}
-		}
-		
-		/// <summary>
 		/// Set Value to DataObject Field according to ElementBinding
 		/// Override for SQLite to Handle some Specific Case (Unsigned Int64...)
 		/// </summary>
@@ -628,24 +606,22 @@ namespace DOL.Database.Handlers
 			{
 				repeat = false;
 
+				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
+
 				using (var conn = new SQLiteConnection(ConnectionString))
 				{
-				    using (var cmd = new SQLiteCommand(SQLCommand, conn))
+				    using (var cmd = conn.CreateCommand())
 					{
 						try
 						{
 					    	conn.Open();
-					    	cmd.Prepare();
-					    	
 					    	long start = (DateTime.UtcNow.Ticks / 10000);
-					    	
-					    	// Register Parameter
-					    	foreach(var keys in parameters.First().Select(kv => kv.Name))
-					    		cmd.Parameters.Add(new SQLiteParameter(keys));
-					    	
-					    	foreach(var parameter in parameters.Skip(current))
-					    	{
-					    		FillSQLParameter(parameter, cmd.Parameters);
+
+							foreach (var parameter in parameters.Skip(current))
+							{
+								cmd.CommandText = SQLCommand;
+								FillSQLParameter(parameter, cmd.Parameters);
+								cmd.Prepare();
 					    	
 							    using (var reader = cmd.ExecuteReader())
 							    {
@@ -687,12 +663,29 @@ namespace DOL.Database.Handlers
 						{
 							conn.Close();
 						}
-				    }
+					}
 				}
 			}
 			while (repeat);
 		}
-		
+
+		protected override DbParameter ConvertToDBParameter(QueryParameter queryParameter)
+		{
+			var dbParam = new SQLiteParameter();
+			dbParam.ParameterName = queryParameter.Name;
+
+			if (queryParameter.Value is char)
+				dbParam.Value = Convert.ToUInt16(queryParameter.Value);
+			else if (queryParameter.Value is uint)
+				dbParam.Value = Convert.ToInt64(queryParameter.Value);
+			else if (dbParam.Value is ulong)
+				dbParam.Value = unchecked((long)Convert.ToUInt64(queryParameter.Value));
+			else
+				dbParam.Value = queryParameter.Value;
+
+			return dbParam;
+		}
+
 		/// <summary>
 		/// Implementation of Raw Non-Query with Parameters for Prepared Query
 		/// </summary>
@@ -711,6 +704,8 @@ namespace DOL.Database.Handlers
 			{
 				repeat = false;
 
+				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
+
 				using (var conn = new SQLiteConnection(ConnectionString))
 				{
 					using (var cmd = new SQLiteCommand(SQLCommand, conn))
@@ -721,15 +716,12 @@ namespace DOL.Database.Handlers
 					    	cmd.Prepare();
 						    
 					    	long start = (DateTime.UtcNow.Ticks / 10000);
-						    
-					    	// Register Parameter
-					    	foreach(var keys in parameters.First().Select(kv => kv.Name))
-					    		cmd.Parameters.Add(new SQLiteParameter(keys));
 					    	
 					    	foreach(var parameter in parameters.Skip(current))
 					    	{
 					    		FillSQLParameter(parameter, cmd.Parameters);
-					    		var result = -1;
+								cmd.Prepare();
+								var result = -1;
 					    		try
 					    		{
 							    	result = cmd.ExecuteNonQuery();
@@ -801,7 +793,9 @@ namespace DOL.Database.Handlers
 			do
 			{
 				repeat = false;
-				
+
+				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
+
 				using (var conn = new SQLiteConnection(ConnectionString))
 				{					    
 					using (var cmd = new SQLiteCommand(SQLCommand, conn))
@@ -811,16 +805,13 @@ namespace DOL.Database.Handlers
 						    conn.Open();
 					    	cmd.Prepare();
 						    long start = (DateTime.UtcNow.Ticks / 10000);
-
-						    // Register Parameter
-					    	foreach(var keys in parameters.First().Select(kv => kv.Name))
-					    		cmd.Parameters.Add(new SQLiteParameter(keys));
 					    	
 					    	foreach(var parameter in parameters.Skip(current))
 					    	{
 					    		FillSQLParameter(parameter, cmd.Parameters);
-					    		
-					    		if (retrieveLastInsertID)
+								cmd.Prepare();
+
+								if (retrieveLastInsertID)
 					    		{
 					    			using (var tran = conn.BeginTransaction(System.Data.IsolationLevel.ReadCommitted))
 					    			{
