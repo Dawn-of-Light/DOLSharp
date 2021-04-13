@@ -722,9 +722,7 @@ namespace DOL.Database
 		public TObject SelectObject<TObject>(WhereExpression whereExpression)
 			where TObject : DataObject
 		{
-			var whereClause = whereExpression.WhereClause;
-			var parameters = whereExpression.QueryParameters;
-			return SelectObject<TObject>(whereClause, parameters);
+			return SelectObjects<TObject>(whereExpression).FirstOrDefault();
 		}
 
 		public IList<TObject> SelectObjects<TObject>(WhereExpression whereExpression)
