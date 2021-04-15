@@ -558,6 +558,76 @@ namespace DOL.Database.Handlers
 			while (repeat);
 		}
 
+		protected override void ExecuteSelectImpl(string selectFromExpression, IEnumerable<WhereExpression> whereExpressionBatch, Action<IDataReader> Reader, IsolationLevel Isolation)
+		{
+			if (!whereExpressionBatch.Any()) throw new ArgumentException("No parameter list was given.");
+
+			if (log.IsDebugEnabled)
+				log.DebugFormat("ExecuteSelectImpl: {0}", selectFromExpression);
+
+			bool repeat;
+			var current = 0;
+			do
+			{
+				repeat = false;
+
+				using (var conn = new MySqlConnection(ConnectionString))
+				{
+					using (var cmd = conn.CreateCommand())
+					{
+						try
+						{
+							conn.Open();
+							long start = (DateTime.UtcNow.Ticks / 10000);
+
+							foreach (var whereExpression in whereExpressionBatch.Skip(current))
+							{
+								cmd.CommandText = selectFromExpression + whereExpression.WhereClause;
+								FillSQLParameter(whereExpression.QueryParameters, cmd.Parameters);
+								cmd.Prepare();
+
+								using (var reader = cmd.ExecuteReader())
+								{
+									try
+									{
+										Reader(reader);
+									}
+									catch (Exception es)
+									{
+										if (log.IsWarnEnabled)
+											log.WarnFormat("ExecuteSelectImpl: Exception in Select Callback : {2}{0}{2}{1}", es, Environment.StackTrace, Environment.NewLine);
+									}
+									finally
+									{
+										reader.Close();
+									}
+								}
+								current++;
+							}
+
+							if (log.IsDebugEnabled)
+								log.DebugFormat("ExecuteSelectImpl: SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
+								log.WarnFormat("ExecuteSelectImpl: SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), selectFromExpression);
+
+						}
+						catch (Exception e)
+						{
+							if (!HandleException(e))
+							{
+								if (log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteSelectImpl: UnHandled Exception in Select Query \"{0}\"\n{1}", selectFromExpression, e);
+
+								throw;
+							}
+							repeat = true;
+						}
+					}
+				}
+			}
+			while (repeat);
+		}
+
 		protected override DbParameter ConvertToDBParameter(QueryParameter queryParameter)
 		{
 			var dbParam = new MySqlParameter();

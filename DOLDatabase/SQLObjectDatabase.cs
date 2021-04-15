@@ -444,7 +444,48 @@ namespace DOL.Database
 			
 			return dataObjects.ToArray();
 		}
-		
+
+		protected override IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereExpression> whereExpressionBatch, Transaction.IsolationLevel isolation)
+		{
+			var columns = tableHandler.FieldElementBindings.ToArray();
+
+			string selectFromExpression = string.Format("SELECT {0} FROM `{1}` WHERE ",
+										string.Join(", ", columns.Select(col => string.Format("`{0}`", col.ColumnName))),
+										tableHandler.TableName);
+
+			var primary = columns.FirstOrDefault(col => col.PrimaryKey != null);
+			var dataObjects = new List<IList<DataObject>>();
+			ExecuteSelectImpl(selectFromExpression, whereExpressionBatch, reader => {
+				var list = new List<DataObject>();
+
+				var data = new object[reader.FieldCount];
+				while (reader.Read())
+				{
+					reader.GetValues(data);
+					var obj = Activator.CreateInstance(tableHandler.ObjectType) as DataObject;
+
+					// Fill Object
+					var current = 0;
+					foreach (var column in columns)
+					{
+						DatabaseSetValue(obj, column, data[current]);
+						current++;
+					}
+
+					// Set Primary Key
+					if (primary != null)
+						obj.ObjectId = primary.GetValue(obj).ToString();
+
+					list.Add(obj);
+					obj.Dirty = false;
+					obj.IsPersisted = true;
+				}
+				dataObjects.Add(list.ToArray());
+			}, isolation);
+
+			return dataObjects.ToArray();
+		}
+
 		/// <summary>
 		/// Set Value to DataObject Field according to ElementBinding
 		/// </summary>
@@ -572,8 +613,10 @@ namespace DOL.Database
 		/// <param name="Reader">Reader Method</param>
 		/// <param name="Isolation">Transaction Isolation</param>
 		protected abstract void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation);
+
+		protected abstract void ExecuteSelectImpl(string selectFromExpression, IEnumerable<WhereExpression> whereExpressionBatch, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation);
 		#endregion
-		
+
 		#region Non Query Implementation
 		/// <summary>
 		/// Execute a Raw Non-Query on the Database

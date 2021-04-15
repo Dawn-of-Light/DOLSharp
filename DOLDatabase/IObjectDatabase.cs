@@ -110,6 +110,14 @@ namespace DOL.Database
 			where TObject : DataObject;
 
 		/// <summary>
+		/// Retrieve a Two-Dimensional Collection of DataObjects from database based on the WhereExpressionBatch with implied parameters
+		/// </summary>
+		/// <param name="whereExpressionBatch">Batch of WhereExpressions with implied parameters</param>
+		/// <returns>Collection of matching DataObjects</returns
+		IList<IList<TObject>> MultipleSelectObjects<TObject>(IEnumerable<WhereExpression> whereExpressionBatch)
+			where TObject : DataObject;
+
+		/// <summary>
 		/// Retrieve a Single DataObject from the database based on the Where Expression and Parameters Collection
 		/// </summary>
 		/// <typeparam name="TObject"></typeparam>

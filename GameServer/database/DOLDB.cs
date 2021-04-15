@@ -27,10 +27,13 @@ namespace DOL.GS
         public static IList<T> SelectAllObjects()
             => GameServer.Database.SelectAllObjects<T>();
 
-        public static IList<T> SelectObjects(WhereExpression whereExpression) 
-            => GameServer.Database.SelectObjects<T>(whereExpression);
-
         public static T SelectObject(WhereExpression whereExpression) 
             => GameServer.Database.SelectObject<T>(whereExpression);
+
+        public static IList<T> SelectObjects(WhereExpression whereExpression)
+            => GameServer.Database.SelectObjects<T>(whereExpression);
+
+        public static IList<IList<T>> MultipleSelectObjects(IEnumerable<WhereExpression> whereExpressionBatch)
+            => GameServer.Database.MultipleSelectObjects<T>(whereExpressionBatch);
     }
 }
