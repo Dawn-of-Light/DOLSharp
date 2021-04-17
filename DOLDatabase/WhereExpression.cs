@@ -22,15 +22,40 @@ using System.Linq;
 
 namespace DOL.Database
 {
+    public abstract class WhereExpression
+    {
+        public abstract string WhereClause { get; }
+        public abstract QueryParameter[] QueryParameters { get; }
+
+        public virtual WhereExpression And(WhereExpression rightExpression) => new ChainingExpression(this, "AND", rightExpression);
+        public virtual WhereExpression Or(WhereExpression rightExpression) => new ChainingExpression(this, "OR", rightExpression);
+
+        public static WhereExpression Empty => new EmptyWhereExpression();
+
+        public override int GetHashCode() => base.GetHashCode();
+    }
+
+    internal class EmptyWhereExpression : WhereExpression
+    {
+        public override string WhereClause => "";
+        public override QueryParameter[] QueryParameters => new QueryParameter[0];
+
+        public override WhereExpression And(WhereExpression rightExpression) => rightExpression;
+        public override WhereExpression Or(WhereExpression rightExpression) => rightExpression;
+
+        public override bool Equals(object obj) => obj is EmptyWhereExpression;
+        public override int GetHashCode() => base.GetHashCode();
+    }
+
     internal class FilterExpression : WhereExpression
     {
         private static string alphabet = "abcdefghijklmnopqrstuvwxyz";
         private static uint placeHolderIndex = 0;
 
-        string columnName;
-        string op;
-        object val;
-        uint id;
+        private string columnName;
+        private string op;
+        private object val;
+        private uint id;
 
         internal FilterExpression(string columnName, string op, object val)
         {
@@ -79,6 +104,19 @@ namespace DOL.Database
         }
 
         private uint GetID() => ++placeHolderIndex - 1;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is FilterExpression filterExpression)
+            {
+                return filterExpression.op.Equals(op) 
+                    && filterExpression.columnName.Equals(columnName) 
+                    && filterExpression.val.Equals(val);
+            }
+            return false;
+        }
+
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     internal class PlainTextExpression : WhereExpression
@@ -102,7 +140,7 @@ namespace DOL.Database
         private WhereExpression right;
         private string chainingOperator;
 
-        internal ChainingExpression(WhereExpression left, string chainingOperator,  WhereExpression right)
+        internal ChainingExpression(WhereExpression left, string chainingOperator, WhereExpression right)
         {
             this.left = left;
             this.right = right;
@@ -110,7 +148,13 @@ namespace DOL.Database
         }
 
         public override string WhereClause
-            => $"({left.WhereClause} {chainingOperator} {right.WhereClause})";
+        {
+            get
+            {
+                if (right is EmptyWhereExpression) return left.WhereClause;
+                return $"({left.WhereClause} {chainingOperator} {right.WhereClause})";
+            }
+        }
 
         public override QueryParameter[] QueryParameters
         {
@@ -122,15 +166,19 @@ namespace DOL.Database
                 return list.ToArray();
             }
         }
-    }
 
-    public abstract class WhereExpression
-    {
-        public abstract string WhereClause { get; }
-        public abstract QueryParameter[] QueryParameters { get; }
+        public override bool Equals(object obj)
+        {
+            if (obj is ChainingExpression chainingExpression)
+            {
+                return chainingExpression.left.Equals(left)
+                    && chainingExpression.chainingOperator.Equals(chainingOperator)
+                    && chainingExpression.right.Equals(right);
+            }
+            return false;
+        }
 
-        public WhereExpression And(WhereExpression rightExpression) => new ChainingExpression(this, "AND", rightExpression);
-        public WhereExpression Or(WhereExpression rightExpression) => new ChainingExpression(this, "OR", rightExpression);
+        public override int GetHashCode() => base.GetHashCode();
     }
 
     public class DB

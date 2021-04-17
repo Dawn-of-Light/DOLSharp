@@ -20,8 +20,6 @@ using NUnit.Framework;
 
 using DOL.Database;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DOL.UnitTests.Database
 {
@@ -109,6 +107,62 @@ namespace DOL.UnitTests.Database
         }
 
         [Test]
+        public void EmptyWhereExpressionWhereClause__EmptyString()
+        {
+            var expression = WhereExpression.Empty;
+
+            var actual = expression.WhereClause;
+            var expected = string.Empty;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void EmptyWhereExpressionWhereClause__QueryParametersEmpty()
+        {
+            var expression = WhereExpression.Empty;
+
+            var actual = expression.WhereClause;
+            var expected = string.Empty;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void EmptyWhereExpression_AndFilterExpression_OnlyFilterExpression()
+        {
+            var emptyExpression = WhereExpression.Empty;
+            var filterExpression = DB.Column("foo").IsEqualTo(0);
+
+            var andExpression = emptyExpression.And(filterExpression);
+
+            var actual = andExpression.WhereClause;
+            var expected = $"foo = {andExpression.QueryParameters[0].Item1}";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void FilterExpression_AndEmptyWhereExpression_OnlyFilterExpression()
+        {
+            var emptyExpression = WhereExpression.Empty;
+            var filterExpression = DB.Column("foo").IsEqualTo(0);
+
+            var andExpression = filterExpression.And(emptyExpression);
+
+            var actual = andExpression.WhereClause;
+            var expected = $"foo = {andExpression.QueryParameters[0].Item1}";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void EmptyExpression_AndEmptyExpression_OnlyFilterExpression()
+        {
+            var andExpression = WhereExpression.Empty.And(WhereExpression.Empty);
+
+            var actual = andExpression.WhereClause;
+            var expected = string.Empty;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void DBColumn_Null_ThrowArgumentException()
         {
             Assert.Throws(typeof(ArgumentException), () => DB.Column(null));
@@ -118,6 +172,68 @@ namespace DOL.UnitTests.Database
         public void DBColumn_EmptyString_ThrowArgumentException()
         {
             Assert.Throws(typeof(ArgumentException), () => DB.Column(string.Empty));
+        }
+
+        [Test]
+        public void Equals_TwoFreshEmptyWhereExpressions_True()
+        {
+            Assert.IsTrue(WhereExpression.Empty.Equals(WhereExpression.Empty));
+        }
+
+        [Test]
+        public void Equals_TwoFilterExpressionsWithSameProperties_True()
+        {
+            var expression1 = DB.Column("foo").IsEqualTo(1);
+            var expression2 = DB.Column("foo").IsEqualTo(1);
+
+            Assert.IsTrue(expression1.Equals(expression2));
+        }
+
+        [Test]
+        public void Equals_TwoFilterExpressionsWithOnlyDifferentValue_False()
+        {
+            var expression1 = DB.Column("foo").IsEqualTo(0);
+            var expression2 = DB.Column("foo").IsEqualTo(1);
+
+            Assert.IsFalse(expression1.Equals(expression2));
+        }
+
+        [Test]
+        public void Equals_TwoFilterExpressionsWithOnlyDifferentColumnName_False()
+        {
+            var expression1 = DB.Column("foo").IsEqualTo(1);
+            var expression2 = DB.Column("bar").IsEqualTo(1);
+
+            Assert.IsFalse(expression1.Equals(expression2));
+        }
+
+        [Test]
+        public void Equals_TwoFilterExpressionsWithOnlyDifferentOperator_False()
+        {
+            var expression1 = DB.Column("foo").IsEqualTo(1);
+            var expression2 = DB.Column("foo").IsNotEqualTo(1);
+
+            Assert.IsFalse(expression1.Equals(expression2));
+        }
+
+        [Test]
+        public void Equals_TwoAndExpressionsWithSameExpressions_True()
+        {
+            var filterExpression = DB.Column("foo").IsEqualTo(1);
+            var andExpression1 = filterExpression.And(filterExpression);
+            var andExpression2 = filterExpression.And(filterExpression);
+
+            Assert.IsTrue(andExpression1.Equals(andExpression2));
+        }
+
+        [Test]
+        public void Equals_AndExpressionsAndOrExpressionWithSameExpressions_False()
+        {
+            var filterExpression = DB.Column("foo").IsEqualTo(1);
+            var andExpression = filterExpression.And(filterExpression);
+            var orExpression = filterExpression.Or(filterExpression);
+
+            Assert.IsFalse(andExpression.Equals(orExpression));
         }
     }
 }
