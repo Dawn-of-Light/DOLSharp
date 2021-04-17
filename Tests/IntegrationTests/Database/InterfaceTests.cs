@@ -980,11 +980,10 @@ namespace DOL.Integration.Database
 			CollectionAssert.AreEqual(orderedObjs.Select(obj => obj.TestField.ToLower()), resultsMany.Select(obj => obj.TestField.ToLower()),
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set Field Value...");
 
-			var parameterManyWithMissing = new [] { new [] { new QueryParameter("@TestField", "No Known Value"), new QueryParameter("@ObjectId", "Probably Nothing") },
-			new [] { new QueryParameter("@TestField", "Absolutely None"), new QueryParameter("@ObjectId", "Nothing for Sure") } }
-			.Concat(orderedObjs.Select(obj => new [] { new QueryParameter("@Testfield", obj.TestField), new QueryParameter("@ObjectId", obj.ObjectId) }));
-			
-			var retrieveManyWithMissing = Database.SelectObjects<TestTable>("`TestField` = @TestField AND `Test_Table_ID` = @ObjectId", parameterManyWithMissing);
+			var parameterManyWithMissing = new [] { ("No Known Value", "Probably Nothing"),("Absolutely None","Nothing for Sure")}
+			.Concat(orderedObjs.Select(obj => (obj.TestField, obj.ObjectId)));
+			var manyQueriesWithMissing = parameterManyWithMissing.Select(tuple => DB.Column("TestField").IsEqualTo(tuple.Item1).And(DB.Column("Test_Table_ID").IsEqualTo(tuple.Item2)));
+			var retrieveManyWithMissing = Database.MultipleSelectObjects<TestTable>(manyQueriesWithMissing);
 			
 			Assert.IsNotNull(retrieveManyWithMissing, "Retrieve Sets from Select Objects should not return null value...");
 			Assert.IsNotEmpty(retrieveManyWithMissing, "Retrieve Set from Select Objects should not be Empty...");
