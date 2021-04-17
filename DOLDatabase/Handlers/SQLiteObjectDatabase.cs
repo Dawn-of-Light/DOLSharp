@@ -153,8 +153,8 @@ namespace DOL.Database.Handlers
 			}
 			catch (Exception e)
 			{
-				if (ObjectDatabase.log.IsErrorEnabled)
-                    ObjectDatabase.log.ErrorFormat("{0}: {1} = {2} doesnt fit to {3}\n{4}", obj.TableName, bind.ColumnName, value.GetType().FullName, bind.ValueType, e);
+				if (log.IsErrorEnabled)
+                    log.ErrorFormat("{0}: {1} = {2} doesnt fit to {3}\n{4}", obj.TableName, bind.ColumnName, value.GetType().FullName, bind.ValueType, e);
 			}
 			
 			base.DatabaseSetValue(obj, bind, value);
