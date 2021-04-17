@@ -124,6 +124,7 @@ namespace DOL.Database
 
         internal DBColumn(string columnName)
         {
+            if (string.IsNullOrEmpty(columnName)) throw new ArgumentException("ColumnName may not be null or empty.");
             Name = columnName;
         }
 

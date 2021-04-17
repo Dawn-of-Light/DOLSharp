@@ -1076,8 +1076,10 @@ namespace DOL.Integration.Database
 			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>(null, new [] { new QueryParameter[] { null } }), "");
 			
 			Assert.Throws(typeof(ArgumentNullException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] { null }), "");
-			
+
 			Assert.Throws(typeof(InvalidOperationException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] {  }), "");
+
+			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>((WhereExpression)null), "");
 		}
 		
 		#endregion

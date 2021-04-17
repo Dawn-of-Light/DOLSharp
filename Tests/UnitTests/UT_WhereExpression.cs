@@ -19,6 +19,7 @@
 using NUnit.Framework;
 
 using DOL.Database;
+using System;
 
 namespace DOL.UnitTests.Database
 {
@@ -81,6 +82,18 @@ namespace DOL.UnitTests.Database
             var actual = andExpression.QueryParameters;
             var expected = new QueryParameter[] { expression1.QueryParameters[0], expression2.QueryParameters[0] };
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void DBColumn_Null_ThrowArgumentException()
+        {
+            Assert.Throws(typeof(ArgumentException), () => DB.Column(null));
+        }
+
+        [Test]
+        public void DBColumn_EmptyString_ThrowArgumentException()
+        {
+            Assert.Throws(typeof(ArgumentException), () => DB.Column(string.Empty));
         }
     }
 }
