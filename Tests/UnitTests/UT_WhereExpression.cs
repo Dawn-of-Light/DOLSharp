@@ -27,33 +27,20 @@ namespace DOL.UnitTests.Database
     class UT_WhereExpression
     {
         [Test]
-        public void FilterExpressionWhereClause_KeyColumn_KeyEqualsPlaceHolder()
+        public void WhereClause_KeyIsEqualToOne_KeyEqualAtA()
         {
             var expression = DB.Column("key").IsEqualTo(1);
 
-            var firstQueryParameter = expression.QueryParameters[0];
-            var placeHolder = firstQueryParameter.Item1;
-            Assert.AreEqual(expression.WhereClause, "key = " + placeHolder);
+            Assert.AreEqual(expression.WhereClause, "key = @a");
         }
 
         [Test]
-        public void FilterExpressionWhereQueryParameters_KeyColumnIsEqualToOne_FirstQueryParameterValueIsOne()
+        public void QueryParameters_KeyColumnIsEqualToOne_FirstQueryParameterValueIsOne()
         {
             var expression = DB.Column("key").IsEqualTo(1);
 
             var firstQueryParameter = expression.QueryParameters[0];
             Assert.AreEqual(firstQueryParameter.Value, 1);
-        }
-
-        [Test]
-        public void FilterExpressionQueryParameters_TwoCreated_PlaceHoldersAreNotEqual()
-        {
-            var expression1 = DB.Column("foo").IsEqualTo(1);
-            var expression2 = DB.Column("foo").IsEqualTo(1);
-
-            var placeHolder1 = expression1.QueryParameters[0];
-            var placeHolder2 = expression2.QueryParameters[0];
-            Assert.AreNotEqual(placeHolder1.Item1, placeHolder2.Item1);
         }
 
         [Test]
@@ -64,10 +51,8 @@ namespace DOL.UnitTests.Database
 
             var andExpression = expression1.And(expression2);
 
-            var placeHolder1 = expression1.QueryParameters[0].Item1;
-            var placeHolder2 = expression2.QueryParameters[0].Item1;
             var actual = andExpression.WhereClause;
-            var expected = $"(foo = {placeHolder1} AND bar = {placeHolder2})";
+            var expected = $"( foo = @a AND bar = @b )";
             Assert.AreEqual(expected, actual);
         }
 
@@ -78,7 +63,7 @@ namespace DOL.UnitTests.Database
             var placeHolder1 = expr.QueryParameters[0].Item1;
             var placeHolder2 = expr.QueryParameters[1].Item1;
             var actual = expr.WhereClause;
-            var expected = $"foo IN ({placeHolder1},{placeHolder2})";
+            var expected = $"foo IN ( {placeHolder1} , {placeHolder2} )";
             Assert.AreEqual(expected, actual);
         }
 
@@ -89,12 +74,12 @@ namespace DOL.UnitTests.Database
             var placeHolder1 = expr.QueryParameters[0].Item1;
             var placeHolder2 = expr.QueryParameters[1].Item1;
             var actual = expr.WhereClause;
-            var expected = $"foo IN ({placeHolder1},{placeHolder2})";
+            var expected = $"foo IN ( {placeHolder1} , {placeHolder2} )";
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void AndExpressionWhereClause_TwoFilterExpressions_FilterExpressionParametersInArray()
+        public void QueryParameters_Expression1AndExpression2_ConcatenationOfBothQueryParameters()
         {
             var expression1 = DB.Column("foo").IsEqualTo(1);
             var expression2 = DB.Column("bar").IsEqualTo(2);
@@ -102,12 +87,12 @@ namespace DOL.UnitTests.Database
             var andExpression = expression1.And(expression2);
 
             var actual = andExpression.QueryParameters;
-            var expected = new QueryParameter[] { expression1.QueryParameters[0], expression2.QueryParameters[0] };
+            var expected = new[] { new QueryParameter("@a", 1), new QueryParameter("@b", 2) };
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void EmptyWhereExpressionWhereClause__EmptyString()
+        public void WhereClause_EmptyWhereExpression_EmptyString()
         {
             var expression = WhereExpression.Empty;
 
@@ -117,7 +102,7 @@ namespace DOL.UnitTests.Database
         }
 
         [Test]
-        public void EmptyWhereExpressionWhereClause__QueryParametersEmpty()
+        public void QueryParameters_EmptyWhereExpression_Empty()
         {
             var expression = WhereExpression.Empty;
 
@@ -127,28 +112,28 @@ namespace DOL.UnitTests.Database
         }
 
         [Test]
-        public void EmptyWhereExpression_AndFilterExpression_OnlyFilterExpression()
+        public void And_EmptyAndFilterExpression_EqualsFilterExpression()
         {
             var emptyExpression = WhereExpression.Empty;
             var filterExpression = DB.Column("foo").IsEqualTo(0);
 
             var andExpression = emptyExpression.And(filterExpression);
 
-            var actual = andExpression.WhereClause;
-            var expected = $"foo = {andExpression.QueryParameters[0].Item1}";
+            var actual = andExpression;
+            var expected = filterExpression;
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void FilterExpression_AndEmptyWhereExpression_OnlyFilterExpression()
+        public void And_FilterExpressionAndEmpty_EqualsFilterExpression()
         {
             var emptyExpression = WhereExpression.Empty;
-            var filterExpression = DB.Column("foo").IsEqualTo(0);
+            var filterExpression = DB.Column("foo").IsEqualTo(2);
 
             var andExpression = filterExpression.And(emptyExpression);
 
-            var actual = andExpression.WhereClause;
-            var expected = $"foo = {andExpression.QueryParameters[0].Item1}";
+            var actual = andExpression;
+            var expected = filterExpression;
             Assert.AreEqual(expected, actual);
         }
 
