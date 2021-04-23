@@ -31,7 +31,7 @@ namespace DOL.UnitTests.Database
         {
             var expression = DB.Column("key").IsEqualTo(1);
 
-            Assert.AreEqual(expression.WhereClause, "key = @a");
+            Assert.AreEqual("WHERE key = @a", expression.WhereClause);
         }
 
         [Test]
@@ -44,15 +44,15 @@ namespace DOL.UnitTests.Database
         }
 
         [Test]
-        public void AndExpressionWhereClause_TwoFilterExpressions_FilterExpressionWhereClausesConnectedWithAND()
+        public void WhereClause_FooIsEqualToOneAndBarIsEqualToOne_WhereFooEqualAtAAndBarEqualAtB()
         {
             var expression1 = DB.Column("foo").IsEqualTo(1);
-            var expression2 = DB.Column("bar").IsEqualTo(2);
+            var expression2 = DB.Column("bar").IsEqualTo(1);
 
             var andExpression = expression1.And(expression2);
 
             var actual = andExpression.WhereClause;
-            var expected = $"( foo = @a AND bar = @b )";
+            var expected = $"WHERE ( foo = @a AND bar = @b )";
             Assert.AreEqual(expected, actual);
         }
 
@@ -96,9 +96,8 @@ namespace DOL.UnitTests.Database
         {
             var expression = WhereExpression.Empty;
 
-            var actual = expression.WhereClause;
-            var expected = string.Empty;
-            Assert.AreEqual(expected, actual);
+            var actual = expression.QueryParameters;
+            Assert.IsEmpty(actual);
         }
 
         [Test]
@@ -144,6 +143,14 @@ namespace DOL.UnitTests.Database
 
             var actual = andExpression.WhereClause;
             var expected = string.Empty;
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void WhereClause_DBColumnFooIsNull_WhereFooIsNull()
+        {
+            var actual = DB.Column("Foo").IsNull().WhereClause;
+            var expected = "WHERE Foo IS NULL";
             Assert.AreEqual(expected, actual);
         }
 

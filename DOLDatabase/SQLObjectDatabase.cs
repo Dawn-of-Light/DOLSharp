@@ -419,18 +419,18 @@ namespace DOL.Database
 			return dataObjects.ToArray();
 		}
 
-		protected override IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereExpression> whereExpressionBatch, Transaction.IsolationLevel isolation)
+		protected override IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereExpression> whereExpressionBatch)
 		{
 			var columns = tableHandler.FieldElementBindings.ToArray();
 
-			string selectFromExpression = string.Format("SELECT {0} FROM `{1}` WHERE ",
+			string selectFromExpression = string.Format("SELECT {0} FROM `{1}` ",
 										string.Join(", ", columns.Select(col => string.Format("`{0}`", col.ColumnName))),
 										tableHandler.TableName);
 
 			var primary = columns.FirstOrDefault(col => col.PrimaryKey != null);
 			var dataObjects = new List<IList<DataObject>>();
 
-			ExecuteSelectImpl(selectFromExpression, whereExpressionBatch, reader => FillQueryResultList(reader, tableHandler, columns, primary, dataObjects), isolation);
+			ExecuteSelectImpl(selectFromExpression, whereExpressionBatch, reader => FillQueryResultList(reader, tableHandler, columns, primary, dataObjects));
 
 			return dataObjects.ToArray();
 		}
@@ -664,7 +664,7 @@ namespace DOL.Database
 			while (repeat);
 		}
 
-		protected virtual void ExecuteSelectImpl(string selectFromExpression, IEnumerable<WhereExpression> whereExpressionBatch, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+		protected virtual void ExecuteSelectImpl(string selectFromExpression, IEnumerable<WhereExpression> whereExpressionBatch, Action<IDataReader> Reader)
 		{
 			if (!whereExpressionBatch.Any()) throw new ArgumentException("No parameter list was given.");
 
@@ -712,9 +712,9 @@ namespace DOL.Database
 							}
 
 							if (log.IsDebugEnabled)
-								log.DebugFormat("ExecuteSelectImpl: SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
+								log.DebugFormat("ExecuteSelectImpl: SQL Select exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
 							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
-								log.WarnFormat("ExecuteSelectImpl: SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), selectFromExpression);
+								log.WarnFormat("ExecuteSelectImpl: SQL Select took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), selectFromExpression);
 
 						}
 						catch (Exception e)

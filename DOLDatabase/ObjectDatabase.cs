@@ -744,7 +744,7 @@ namespace DOL.Database
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
 
-			var objs = MultipleSelectObjectsImpl(tableHandler, whereExpressionBatch, Transaction.IsolationLevel.DEFAULT).Select(res => res.OfType<TObject>().ToArray()).ToArray();
+			var objs = MultipleSelectObjectsImpl(tableHandler, whereExpressionBatch).Select(res => res.OfType<TObject>().ToArray()).ToArray();
 
 			FillObjectRelations(objs.SelectMany(obj => obj), false);
 
@@ -932,7 +932,7 @@ namespace DOL.Database
 			if (tableHandler.UsesPreCaching)
 				return tableHandler.SearchPreCachedObjects(obj => obj != null).OfType<TObject>().ToArray();
 			
-			var dataObjects = SelectObjectsImpl(tableHandler, null, new [] { new QueryParameter[] { } }, isolation).Single().OfType<TObject>().ToArray();
+			var dataObjects = MultipleSelectObjectsImpl(tableHandler, new[] { WhereExpression.Empty }).Single().OfType<TObject>().ToArray();
 			
 			FillObjectRelations(dataObjects, false);
 			
@@ -1032,7 +1032,7 @@ namespace DOL.Database
 		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
 		protected abstract IList<IList<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation);
 
-		protected abstract IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereExpression> whereExpressionBatch, Transaction.IsolationLevel isolation);
+		protected abstract IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereExpression> whereExpressionBatch);
 
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
