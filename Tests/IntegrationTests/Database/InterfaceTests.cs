@@ -1071,7 +1071,6 @@ namespace DOL.Integration.Database
 		public void TestSelectAllNonRegistered()
 		{
 			Assert.Throws(typeof(DatabaseException), () => Database.SelectAllObjects<TableNotRegistered>(), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			Assert.Throws(typeof(DatabaseException), () => Database.SelectAllObjects<TableNotRegistered>(DOL.Database.Transaction.IsolationLevel.DEFAULT), "Trying to Query a Non Registered Table should throw a DatabaseException...");
 		}
 		#endregion
 		

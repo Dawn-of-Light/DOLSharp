@@ -230,6 +230,7 @@ namespace DOL.Database
 		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
 		/// <param name="isolation">Isolation Level</param>
 		/// <returns>Collection of all DataObject for this Type</returns>
+		[Obsolete("Use SelectAllObjects() instead.")]
 		IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
 		#endregion

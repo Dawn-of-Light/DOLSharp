@@ -92,8 +92,8 @@ namespace DOL.Database
 				if (dataTableHandler.UsesPreCaching)
 				{
 					var primary = dataTableHandler.PrimaryKeys.Single();
-					var objects = SelectObjectsImpl(dataTableHandler, string.Empty, new [] { new QueryParameter[] { } }, Transaction.IsolationLevel.DEFAULT).First();
-					
+					var objects = MultipleSelectObjectsImpl(dataTableHandler, new [] { WhereExpression.Empty }).First();
+
 					foreach (var obj in objects)
 						dataTableHandler.SetPreCachedObject(primary.GetValue(obj), obj);
 				}
@@ -351,18 +351,21 @@ namespace DOL.Database
 			
 			if (!primary.Any())
 				throw new DatabaseException(string.Format("Table {0} has no primary key for finding by key...", tableHandler.TableName));
+
+			var whereExpressions = new List<WhereExpression>();
+			foreach (var key in keys)
+			{
+				var whereExpression = WhereExpression.Empty;
+				foreach (var column in primary)
+				{
+					whereExpression = whereExpression.And(DB.Column(column.ColumnName).IsEqualTo(key));
+				}
+				whereExpressions.Add(whereExpression);
+			}
+
+			var resultByKeys = MultipleSelectObjectsImpl(tableHandler, whereExpressions).Select(results => results.SingleOrDefault());
 			
-			var whereClause = string.Format("{0}",
-			                                string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
-			
-			var keysArray = keys.ToArray();
-			var parameters = keysArray.Select(key => primary.Select(col => new QueryParameter(col.ParamName, key, col.ParamType)));
-			
-			var objs = SelectObjectsImpl(tableHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
-			
-			var resultByKeys = objs.Select((results, index) => new { Key = keysArray[index], DataObject = results.SingleOrDefault() });
-			
-			return resultByKeys.Select(obj => obj.DataObject).ToArray();
+			return resultByKeys.ToArray();
 		}
 
 		/// <summary>

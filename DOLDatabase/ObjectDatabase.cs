@@ -633,12 +633,8 @@ namespace DOL.Database
 			}
 			else
 			{
-				
-				var whereClause = string.Format("`{0}` = @{0}", remoteBind.ColumnName);
-				
-				var parameters = objects.Select(obj => new [] { new QueryParameter(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj), localBind.ValueType) });
-				
-				objsResults = SelectObjectsImpl(remoteHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
+				var whereExpressions = objects.Select(obj => DB.Column(remoteBind.ColumnName).IsEqualTo(localBind.GetValue(obj)));
+				objsResults = MultipleSelectObjectsImpl(remoteHandler, whereExpressions);
 			}
 			
 			var resultByObjs = objsResults.Select((obj, index) => new { DataObject = objects[index], Results = obj }).ToArray();
@@ -753,13 +749,6 @@ namespace DOL.Database
 		#endregion
 
 		#region Public Object Select API With Parameters
-		/// <summary>
-		/// Retrieve a Single DataObject from the database based on the Where Expression and Parameters Collection
-		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereExpression"></param>
-		/// <param name="parameters"></param>
-		/// <returns>DataObject or null</returns>
 		public TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
 			where TObject : DataObject
 		{
@@ -769,38 +758,18 @@ namespace DOL.Database
 			return null;
 		}
 
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression and Parameters
-		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereExpression"></param>
-		/// <param name="parameter"></param>
-		/// <returns></returns>
 		public TObject SelectObject<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
 			where TObject : DataObject
 		{
 			return SelectObjects<TObject>(whereExpression, parameter).FirstOrDefault();
 		}
 
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression and Parameter
-		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereExpression"></param>
-		/// <param name="param"></param>
-		/// <returns></returns>
 		public TObject SelectObject<TObject>(string whereExpression, QueryParameter param)
 			where TObject : DataObject
 		{
 			return SelectObjects<TObject>(whereExpression, param).FirstOrDefault();
 		}
 
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameters Collection
-		/// </summary>
-		/// <param name="whereExpression">Parametrized Where Expression</param>
-		/// <param name="parameters">Collection of Parameters</param>
-		/// <returns>Collection of Objects Sets for each matching Parametrized Query</returns>
 		public IList<IList<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
 			where TObject : DataObject
 		{
@@ -822,12 +791,7 @@ namespace DOL.Database
 			
 			return objs;
 		}
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter Collection
-		/// </summary>
-		/// <param name="whereExpression">Parametrized Where Expression</param>
-		/// <param name="parameter">Collection of Parameter</param>
-		/// <returns>Collection of Objects matching Parametrized Query</returns>
+		
 		public IList<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
 			where TObject : DataObject
 		{
@@ -836,12 +800,7 @@ namespace DOL.Database
 			
 			return SelectObjects<TObject>(whereExpression, new [] { parameter }).First();
 		}
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter
-		/// </summary>
-		/// <param name="whereExpression">Parametrized Where Expression</param>
-		/// <param name="param">Single Parameter</param>
-		/// <returns>Collection of Objects matching Parametrized Query</returns>
+
 		public IList<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param)
 			where TObject : DataObject
 		{
@@ -853,46 +812,24 @@ namespace DOL.Database
 		#endregion
 		
 		#region Public Object Select API Without Parameters
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <returns>Single Object or First Object if multiple matches</returns>
 		public TObject SelectObject<TObject>(string whereExpression)
 			where TObject : DataObject
 		{
 			return SelectObject<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
 		}
 
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Single Object or First Object if multiple matches</returns>
 		public TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
 			return SelectObjects<TObject>(whereExpression, isolation).FirstOrDefault();
 		}
 
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <returns>Collection of DataObjects matching filter</returns>
 		public IList<TObject> SelectObjects<TObject>(string whereExpression)
 			where TObject : DataObject
 		{
 			return SelectObjects<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
 		}
 
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Collection of DataObjects matching filter</returns>
 		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
@@ -901,23 +838,7 @@ namespace DOL.Database
 		#endregion
 		
 		#region Public Object Select All API
-		/// <summary>
-		/// Select all Objects From Table holding TObject Type
-		/// </summary>
-		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
-		/// <returns>Collection of all DataObject for this Type</returns>
 		public IList<TObject> SelectAllObjects<TObject>()
-			where TObject : DataObject
-		{
-			return SelectAllObjects<TObject>(Transaction.IsolationLevel.DEFAULT);
-		}
-		/// <summary>
-		/// Select all Objects From Table holding TObject Type
-		/// </summary>
-		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Collection of all DataObject for this Type</returns>
-		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
@@ -925,18 +846,24 @@ namespace DOL.Database
 			{
 				if (log.IsErrorEnabled)
 					log.ErrorFormat("SelectAllObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
-				
+
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
-			
+
 			if (tableHandler.UsesPreCaching)
 				return tableHandler.SearchPreCachedObjects(obj => obj != null).OfType<TObject>().ToArray();
-			
+
 			var dataObjects = MultipleSelectObjectsImpl(tableHandler, new[] { WhereExpression.Empty }).Single().OfType<TObject>().ToArray();
-			
+
 			FillObjectRelations(dataObjects, false);
-			
+
 			return dataObjects;
+		}
+
+		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
+			where TObject : DataObject
+		{
+			return SelectAllObjects<TObject>();
 		}
 		#endregion
 		
