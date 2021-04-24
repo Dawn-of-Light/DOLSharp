@@ -90,16 +90,33 @@ namespace DOL.Database
 		IList<TObject> FindObjectsByKey<TObject>(IEnumerable<object> keys)
 			where TObject : DataObject;
 		#endregion
-		
+
 		#region Select Where Clause With Parameters
 		/// <summary>
- 		/// Retrieve a Single DataObject from the database based on the Where Expression and Parameters Collection
- 		/// </summary>
- 		/// <typeparam name="TObject"></typeparam>
- 		/// <param name="whereExpression"></param>
- 		/// <param name="parameters"></param>
- 		/// <returns></returns>
- 		TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
+		/// Retrieve a Single DataObject from the database based on the WhereExpression with implied parameters
+		/// </summary>
+		/// <typeparam name="TObject"></typeparam>
+		/// <param name="whereExpression">WhereExpression object with implied parameters</param>
+		/// <returns></returns>
+		TObject SelectObject<TObject>(WhereExpression whereExpression)
+			where TObject : DataObject;
+
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on the WhereExpression with implied parameters
+		/// </summary>
+		/// <param name="whereExpression">WhereExpression object with implied parameters</param>
+		/// <returns>Collection of matching DataObjects</returns>
+		IList<TObject> SelectObjects<TObject>(WhereExpression whereExpression)
+			where TObject : DataObject;
+
+		/// <summary>
+		/// Retrieve a Single DataObject from the database based on the Where Expression and Parameters Collection
+		/// </summary>
+		/// <typeparam name="TObject"></typeparam>
+		/// <param name="whereExpression"></param>
+		/// <param name="parameters"></param>
+		/// <returns></returns>
+		TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
  			where TObject : DataObject;
  
  		/// <summary>

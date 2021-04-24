@@ -906,22 +906,28 @@ namespace DOL.Integration.Database
 			
 			CollectionAssert.AreEqual(allobjects.Select(obj => obj.ObjectId), dumbWhere.Select(obj => obj.ObjectId), "Select Objects with Dumb Where clause should retrieve Objects similar to Select All...");
 			
-			var simpleWhere = Database.SelectObjects<TestTable>("`TestField` = @TestField", new QueryParameter("@TestField", objInitial.TestField));
+			var simpleWhere = Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(objInitial.TestField));
 			
 			CollectionAssert.Contains(simpleWhere.Select(obj => obj.ObjectId), objInitial.ObjectId, "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
-			
-			var complexWhere = Database.SelectObjects<TestTable>("`TestField` = @TestField AND `Test_Table_ID` = @ObjectId", new [] { new QueryParameter("@TestField", objInitial.TestField), new QueryParameter("@ObjectId", objInitial.ObjectId) });
+
+			var complexWhere = Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(objInitial.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(objInitial.ObjectId)));
 			
 			CollectionAssert.Contains(complexWhere.Select(obj => obj.ObjectId.ToLower()), objInitial.ObjectId.ToLower(), "Select Objects with Complex Where clause should retrieve Object similar to Created one...");
-			
+
+			Assert.IsTrue(Database.DeleteObject(Database.SelectObjects<TestTable>(DB.Column("TestField").IsNull())));
 			var objNull = new TestTable { TestField = null };
 			var nullAdd = Database.AddObject(objNull);
 			
 			Assert.IsTrue(nullAdd, "Select Objects null parameter Test Need some null object to be Accurate...");
-			
-			var nullParam = Database.SelectObjects<TestTable>("`TestField` = @TestField", new QueryParameter("@TestField", null));
+
+			var nullParam = Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(null));
 			
 			CollectionAssert.IsEmpty(nullParam, "Select Objects with Null Parameter Query should not return any record...");
+
+			var resultsWithTestfieldNull = Database.SelectObjects<TestTable>(DB.Column("TestField").IsNull());
+			var allObjectsAfter = Database.SelectAllObjects<TestTable>();
+
+			Assert.AreEqual(1, resultsWithTestfieldNull.Count);
 		}
 		
 		/// <summary>
@@ -1031,7 +1037,7 @@ namespace DOL.Integration.Database
 			
 			Assert.IsNotEmpty(allobjects, "This Test Need some Data to be Accurate...");
 			
-			var retrieveNull = Database.SelectObject<TestTable>(null);
+			var retrieveNull = Database.SelectObject<TestTable>((string)null);
 			
 			CollectionAssert.Contains(allobjects.Select(obj => obj.ObjectId), retrieveNull.ObjectId, "");
 			
@@ -1039,7 +1045,7 @@ namespace DOL.Integration.Database
 			
 			CollectionAssert.Contains(allobjects.Select(obj => obj.ObjectId), retrieveNullWithIsolation.ObjectId, "");
 
-			var retrieveMultipleNull = Database.SelectObjects<TestTable>(null);
+			var retrieveMultipleNull = Database.SelectObjects<TestTable>((string)null);
 
 			CollectionAssert.AreEquivalent(allobjects.Select(obj => obj.ObjectId), retrieveMultipleNull.Select(obj => obj.ObjectId), "");
 			
@@ -1070,8 +1076,10 @@ namespace DOL.Integration.Database
 			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>(null, new [] { new QueryParameter[] { null } }), "");
 			
 			Assert.Throws(typeof(ArgumentNullException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] { null }), "");
-			
+
 			Assert.Throws(typeof(InvalidOperationException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] {  }), "");
+
+			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>((WhereExpression)null), "");
 		}
 		
 		#endregion
