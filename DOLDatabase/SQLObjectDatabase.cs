@@ -417,7 +417,7 @@ namespace DOL.Database
 			
 			var primary = columns.FirstOrDefault(col => col.PrimaryKey != null);
 			var dataObjects = new List<IList<DataObject>>();
-			ExecuteSelectImpl(command, parameters, reader => FillQueryResultList(reader, tableHandler, columns, primary, dataObjects), isolation);
+			ExecuteSelectImpl(command, parameters, reader => FillQueryResultList(reader, tableHandler, columns, primary, dataObjects));
 			
 			return dataObjects.ToArray();
 		}
@@ -549,56 +549,30 @@ namespace DOL.Database
 		/// <param name="table">Table Handler</param>
 		public abstract void CheckOrCreateTableImpl(DataTableHandler table);
 		#endregion
-		
-		#region Select Implementation
-		/// <summary>
-		/// Raw SQL Select Implementation
-		/// </summary>
-		/// <param name="SQLCommand">Command for reading</param>
-		/// <param name="Reader">Reader Method</param>
-		/// <param name="Isolation">Transaction Isolation</param>
-		protected void ExecuteSelectImpl(string SQLCommand, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
-		{
-			ExecuteSelectImpl(SQLCommand, new [] { new QueryParameter[] { } }, Reader, Isolation);
-		}
 
-		/// <summary>
-		/// Raw SQL Select Implementation with Single Parameter for Prepared Query
-		/// </summary>
-		/// <param name="SQLCommand">Command for reading</param>
-		/// <param name="param">Parameter for Single Read</param>
-		/// <param name="Reader">Reader Method</param>
-		/// <param name="Isolation">Transaction Isolation</param>
+		#region Select Implementation
+		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
+		protected void ExecuteSelectImpl(string SQLCommand, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+			=> ExecuteSelectImpl(SQLCommand, new [] { new QueryParameter[] { } }, Reader);
+
+		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
 		protected void ExecuteSelectImpl(string SQLCommand, QueryParameter param, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
-		{
-			ExecuteSelectImpl(SQLCommand, new [] { new [] { param } }, Reader, Isolation);
-		}
-		
-		/// <summary>
-		/// Raw SQL Select Implementation with Parameters for Single Prepared Query
-		/// </summary>
-		/// <param name="SQLCommand">Command for reading</param>
-		/// <param name="parameter">Collection of Parameters for Single Read</param>
-		/// <param name="Reader">Reader Method</param>
-		/// <param name="Isolation">Transaction Isolation</param>
+			=> ExecuteSelectImpl(SQLCommand, new [] { new [] { param } }, Reader);
+
+		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
 		protected void ExecuteSelectImpl(string SQLCommand, IEnumerable<QueryParameter> parameter, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
-		{
-			ExecuteSelectImpl(SQLCommand, new [] { parameter }, Reader, Isolation);
-		}
-		
-		/// <summary>
-		/// Raw SQL Select Implementation with Parameters for Prepared Query
-		/// </summary>
-		/// <param name="SQLCommand">Command for reading</param>
-		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
-		/// <param name="Reader">Reader Method</param>
-		/// <param name="Isolation">Transaction Isolation</param>
+			=> ExecuteSelectImpl(SQLCommand, new [] { parameter }, Reader);
+
+		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
 		protected virtual void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+			=> ExecuteSelectImpl(SQLCommand, parameters, Reader);
+
+		protected virtual void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader)
 		{
 			if (log.IsDebugEnabled)
 				log.DebugFormat("ExecuteSelectImpl: {0}", SQLCommand);
 
-			var repeat = false;
+			bool repeat;
 			var current = 0;
 			do
 			{
@@ -641,9 +615,9 @@ namespace DOL.Database
 							}
 
 							if (log.IsDebugEnabled)
-								log.DebugFormat("ExecuteSelectImpl: SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
+								log.DebugFormat("ExecuteSelectImpl: SQL Select exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
 							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
-								log.WarnFormat("ExecuteSelectImpl: SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+								log.WarnFormat("ExecuteSelectImpl: SQL Select took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
 
 						}
 						catch (Exception e)

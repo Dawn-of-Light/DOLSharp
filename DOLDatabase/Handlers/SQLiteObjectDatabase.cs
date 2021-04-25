@@ -211,21 +211,22 @@ namespace DOL.Database.Handlers
 			try
 			{
 				ExecuteSelectImpl(string.Format("PRAGMA TABLE_INFO(`{0}`)", table.TableName),
-				                  reader =>
-				                  {
-				                  	while (reader.Read())
-				                  	{
-				                  		var column = reader.GetString(1);
-				                  		var colType = reader.GetString(2);
-				                  		var allowNull = !reader.GetBoolean(3);
-				                  		var primary = reader.GetInt64(5) > 0;
-				                  		currentTableColumns.Add(new TableRowBindind(column, colType, allowNull, primary));
-				                  		if (log.IsDebugEnabled)
-				                  			log.DebugFormat("CheckOrCreateTable: Found Column {0} in existing table {1}", column, table.TableName);
-				                  	}
-				                  	if (log.IsDebugEnabled)
-				                  		log.DebugFormat("CheckOrCreateTable: {0} columns existing in table {1}", currentTableColumns.Count, table.TableName);
-				                  }, IsolationLevel.DEFAULT);
+					new[] { new QueryParameter[] { } },
+					reader =>
+					{
+						while (reader.Read())
+						{
+							var column = reader.GetString(1);
+							var colType = reader.GetString(2);
+							var allowNull = !reader.GetBoolean(3);
+							var primary = reader.GetInt64(5) > 0;
+							currentTableColumns.Add(new TableRowBindind(column, colType, allowNull, primary));
+							if (log.IsDebugEnabled)
+								log.DebugFormat("CheckOrCreateTable: Found Column {0} in existing table {1}", column, table.TableName);
+						}
+						if (log.IsDebugEnabled)
+							log.DebugFormat("CheckOrCreateTable: {0} columns existing in table {1}", currentTableColumns.Count, table.TableName);
+					});
 			}
 			catch (Exception e)
 			{
@@ -359,12 +360,12 @@ namespace DOL.Database.Handlers
 			try
 			{
 				ExecuteSelectImpl("SELECT name, sql FROM sqlite_master WHERE type == 'index' AND sql is not null AND tbl_name == @tableName",
-				                  new QueryParameter("@tableName", table.TableName),
+				                  new[] { new[] { new QueryParameter("@tableName", table.TableName) } },
 				                  reader =>
 				                  {
 				                  	while (reader.Read())
 				                  		currentIndexes.Add(new Tuple<string, string>(reader.GetString(0), reader.GetString(1)));
-				                  }, IsolationLevel.DEFAULT);
+				                  });
 			}
 			catch (Exception e)
 			{
@@ -457,12 +458,12 @@ namespace DOL.Database.Handlers
 			try
 			{
 				ExecuteSelectImpl("SELECT name FROM sqlite_master WHERE type == 'index' AND sql is not null AND tbl_name == @tableName",
-				                  new QueryParameter("@tableName", table.TableName),
+				                  new[] { new[] { new QueryParameter("@tableName", table.TableName) } },
 				                  reader =>
 				                  {
 				                  	while (reader.Read())
 				                  		currentIndexes.Add(reader.GetString(0));
-				                  }, IsolationLevel.DEFAULT);
+				                  });
 			}
 			catch (Exception e)
 			{

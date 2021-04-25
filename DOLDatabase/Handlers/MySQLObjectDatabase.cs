@@ -213,21 +213,22 @@ namespace DOL.Database.Handlers
 			try
 			{
 				ExecuteSelectImpl(string.Format("DESCRIBE `{0}`", table.TableName),
-				                  reader =>
-				                  {
-				                  	while (reader.Read())
-				                  	{
-				                  		var column = reader.GetString(0);
-				                  		var colType = reader.GetString(1);
-				                  		var allowNull = reader.GetString(2).ToLower() == "yes";
-				                  		var primary = reader.GetString(3).ToLower() == "pri";
-				                  		currentTableColumns.Add(new TableRowBindind(column, colType, allowNull, primary));
-				                  		if (log.IsDebugEnabled)
-				                  			log.DebugFormat("CheckOrCreateTable: Found Column {0} in existing table {1}", column, table.TableName);
-				                  	}
-				                  	if (log.IsDebugEnabled)
-				                  		log.DebugFormat("CheckOrCreateTable: {0} columns existing in table {1}", currentTableColumns.Count, table.TableName);
-				                  }, IsolationLevel.DEFAULT);
+					new[] { new QueryParameter[] { } },
+					reader =>
+					{
+						while (reader.Read())
+						{
+							var column = reader.GetString(0);
+							var colType = reader.GetString(1);
+							var allowNull = reader.GetString(2).ToLower() == "yes";
+							var primary = reader.GetString(3).ToLower() == "pri";
+							currentTableColumns.Add(new TableRowBindind(column, colType, allowNull, primary));
+							if (log.IsDebugEnabled)
+								log.DebugFormat("CheckOrCreateTable: Found Column {0} in existing table {1}", column, table.TableName);
+						}
+						if (log.IsDebugEnabled)
+							log.DebugFormat("CheckOrCreateTable: {0} columns existing in table {1}", currentTableColumns.Count, table.TableName);
+					});
 			}
 			catch (Exception e)
 			{
@@ -313,20 +314,21 @@ namespace DOL.Database.Handlers
 			try
 			{
 				ExecuteSelectImpl(string.Format("SHOW INDEX FROM `{0}`", table.TableName),
-				                  reader =>
-				                  {
-				                  	while (reader.Read())
-				                  	{
-				                  		var unique = reader.GetInt64(1) < 1;
-				                  		var indexname = reader.GetString(2);
-				                  		var column = reader.GetString(4);
-				                  		indexes.Add(new Tuple<bool, string, string>(unique, indexname, column));
-				                  		if (log.IsDebugEnabled)
-				                  			log.DebugFormat("AlterTable: Found Index `{0}` (Unique:{1}) on `{2}` in existing table {3}", indexname, unique, column, table.TableName);
-				                  	}
-				                  	if (log.IsDebugEnabled)
-				                  		log.DebugFormat("AlterTable: {0} Indexes existing in table {1}", indexes.Count, table.TableName);
-				                  }, IsolationLevel.DEFAULT);
+					new[] { new QueryParameter[] { } },
+					reader =>
+					{
+						while (reader.Read())
+						{
+							var unique = reader.GetInt64(1) < 1;
+							var indexname = reader.GetString(2);
+							var column = reader.GetString(4);
+							indexes.Add(new Tuple<bool, string, string>(unique, indexname, column));
+							if (log.IsDebugEnabled)
+								log.DebugFormat("AlterTable: Found Index `{0}` (Unique:{1}) on `{2}` in existing table {3}", indexname, unique, column, table.TableName);
+						}
+						if (log.IsDebugEnabled)
+							log.DebugFormat("AlterTable: {0} Indexes existing in table {1}", indexes.Count, table.TableName);
+					});
 			}
 			catch (Exception e)
 			{
