@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOLGameServerConsole;
@@ -36,6 +37,13 @@ namespace DOL.DOLServer.Actions
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		[DllImport("kernel32.dll", SetLastError = true)]
+		private static extern IntPtr GetStdHandle(int nStdHandle);
+		[DllImport("kernel32.dll")]
+		private static extern int GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+		[DllImport("kernel32.dll", SetLastError = true)]
+		private static extern int SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
 		/// <summary>
 		/// returns the name of this action
@@ -71,6 +79,18 @@ namespace DOL.DOLServer.Actions
 
 		public void OnAction(Hashtable parameters)
 		{
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major >= 10)
+			{
+				// enable VT100 emulation
+				var handle = GetStdHandle(-11); // STD_OUTPUT_HANDLE
+				if (handle != null)
+				{
+					uint mode;
+					if (GetConsoleMode(handle, out mode) != 0)
+						SetConsoleMode(handle, mode | 0x0004); // ENABLE_VIRTUAL_TERMINAL_PROCESSING
+				}
+			}
+
 			Console.WriteLine("Starting GameServer ... please wait a moment!");
 			FileInfo configFile;
 			FileInfo currentAssembly = null;
