@@ -210,13 +210,13 @@ namespace DOL.GS.Commands
                         switch ((eRealm)cha.Realm)
                         {
                             case eRealm.Albion:
-                                firstAccountSlot = 1 * 8;
+                                firstAccountSlot = 100;
                                 break;
                             case eRealm.Midgard:
-                                firstAccountSlot = 2 * 8;
+                                firstAccountSlot = 200;
                                 break;
                             case eRealm.Hibernia:
-                                firstAccountSlot = 3 * 8;
+                                firstAccountSlot = 300;
                                 break;
                             default:
                                 DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.CharNotFromValidRealm"));
