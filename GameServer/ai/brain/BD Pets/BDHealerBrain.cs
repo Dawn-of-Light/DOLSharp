@@ -214,7 +214,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="living"></param>
 		/// <param name="aggroamount"></param>
-		public override void AddToAggroList(GameLiving living, int aggroamount) { }
+		public override void AddToAggroList(GameLiving living, int aggroamount, bool checkLOS) { }
 
 		public override void  RemoveFromAggroList(GameLiving living) { }
 

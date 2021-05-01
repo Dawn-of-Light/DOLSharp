@@ -428,7 +428,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="living"></param>
 		/// <param name="aggroamount"></param>
-		public virtual void AddToAggroList(GameLiving living, int aggroamount)
+		public void AddToAggroList(GameLiving living, int aggroamount)
 		{
 			AddToAggroList(living, aggroamount, false);
 		}
