@@ -166,8 +166,9 @@ namespace DOL.AI.Brain
 				PathPoint path = MovementMgr.LoadPath(Body.PathID);
 				if (path != null)
 				{
-					Body.CurrentWayPoint = path;
-					Body.MoveOnPath((short)path.MaxSpeed);
+					var p = path.GetNearestNextPoint(Body);
+					Body.CurrentWayPoint = p;
+					Body.MoveOnPath((short)p.MaxSpeed);
 				}
 				else
 				{
