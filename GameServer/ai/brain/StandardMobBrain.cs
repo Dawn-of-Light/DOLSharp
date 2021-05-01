@@ -1245,6 +1245,17 @@ namespace DOL.AI.Brain
                             Body.TargetObject = Body.ControlledBrain.Body;
 							break;
 						}
+						if (spell.Target == "realm")
+						{
+							foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)Math.Max(spell.Radius, spell.Range)))
+							{
+								if (Body.IsFriend(npc) && Util.Chance(60) && !LivingHasEffect(npc, spell))
+								{
+									Body.TargetObject = npc;
+									break;
+								}
+							}
+						}
 						break;
 					}
 					#endregion Buffs
@@ -1261,6 +1272,17 @@ namespace DOL.AI.Brain
 					{
 						Body.TargetObject = Body.ControlledBrain.Body;
 						break;
+					}
+					if (spell.Target == "realm")
+					{
+						foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)Math.Max(spell.Radius, spell.Range)))
+						{
+							if (Body.IsFriend(npc) && Util.Chance(60) && npc.IsDiseased)
+							{
+								Body.TargetObject = npc;
+								break;
+							}
+						}
 					}
 					break;
 				case "CUREPOISON":
@@ -1502,7 +1524,7 @@ namespace DOL.AI.Brain
 					GameSpellEffect speffect = effect as GameSpellEffect;
 
 					//if the effect effectgroup is the same as the checking spells effectgroup then these are considered the same
-					if (speffect.Spell.EffectGroup == spell.EffectGroup)
+					if (speffect.Spell.SpellType == spell.SpellType || (speffect.Spell.EffectGroup != 0 && speffect.Spell.EffectGroup == spell.EffectGroup))
 						return true;
 				}
 			}
