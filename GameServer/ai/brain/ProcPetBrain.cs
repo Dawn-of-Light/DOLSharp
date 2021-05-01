@@ -17,6 +17,7 @@
  *
  */
 
+using System;
 using DOL.GS;
 
 namespace DOL.AI.Brain
@@ -33,26 +34,28 @@ namespace DOL.AI.Brain
 				m_target = m_owner.TargetObject as GameLiving;
 			AggroLevel = 100;
 			IsMainPet = false;
-        }
+		}
 
-        public virtual GameNPC GetNPCOwner()
-        {
-            return null;
-        }
-        public virtual GameLiving GetLivingOwner()
-        {
-            GamePlayer player = GetPlayerOwner();
-            if (player != null)
-                return player;
+		public virtual GameLiving GetLivingOwner()
+		{
+			var owner = Owner;
+			int i = 0;
+			while (owner is GameNPC && owner != null)
+			{
+				i++;
+				if (i > 50)
+					throw new Exception("GetLivingOwner() from " + Owner.Name + "caused a cyclical loop.");
+				//If this is a pet, get its owner
+				if (((GameNPC)owner).Brain is IControlledBrain)
+					owner = ((IControlledBrain)((GameNPC)owner).Brain).Owner;
+				//This isn't a pet, that means it's at the top of the tree.  This case will only happen if
+				//owner is not a GamePlayer
+				else
+					break;
+			}
+			return owner;
+		}
 
-            GameNPC npc = GetNPCOwner();
-            if (npc != null)
-                return npc;
-
-            return null;
-        }
-
-		
 
 		public override int ThinkInterval { get { return 1500; } }
 
@@ -85,7 +88,8 @@ namespace DOL.AI.Brain
 		public void ComeHere() { }
 		public void Goto(GameObject target) { }
 		public void UpdatePetWindow() { }
-		public GamePlayer GetPlayerOwner() { return m_owner as GamePlayer; }
+		public GamePlayer GetPlayerOwner() { return GetLivingOwner() as GamePlayer; }
+		public GameNPC GetNPCOwner() { return GetLivingOwner() as GameNPC; }
 		public bool IsMainPet { get { return false; } set { } }
 		#endregion
 	}

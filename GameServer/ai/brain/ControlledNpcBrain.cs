@@ -137,15 +137,25 @@ namespace DOL.AI.Brain
         /// Find the player owner of the pets at the top of the tree
         /// </summary>
         /// <returns>Player owner at the top of the tree.  If there was no player, then return null.</returns>
-        public virtual GamePlayer GetPlayerOwner()
+        public GamePlayer GetPlayerOwner()
         {
-            GameLiving owner = Owner;
+            return GetLivingOwner() as GamePlayer;
+        }
+
+        public GameNPC GetNPCOwner()
+        {
+            return GetLivingOwner() as GameNPC;
+        }
+
+        public virtual GameLiving GetLivingOwner()
+        {
+            var owner = Owner;
             int i = 0;
             while (owner is GameNPC && owner != null)
             {
                 i++;
                 if (i > 50)
-                    throw new Exception("GetPlayerOwner() from " + Owner.Name + "caused a cyclical loop.");
+                    throw new Exception("GetLivingOwner() from " + Owner.Name + "caused a cyclical loop.");
                 //If this is a pet, get its owner
                 if (((GameNPC)owner).Brain is IControlledBrain)
                     owner = ((IControlledBrain)((GameNPC)owner).Brain).Owner;
@@ -154,56 +164,7 @@ namespace DOL.AI.Brain
                 else
                     break;
             }
-            //Return if we found the gameplayer
-            if (owner is GamePlayer)
-                return (GamePlayer)owner;
-            //If the root owner was not a player or npc then make sure we know that something went wrong!
-            if (!(owner is GameNPC))
-                throw new Exception("Unrecognized owner: " + owner.GetType().FullName);
-            //No GamePlayer at the top of the tree
-            return null;
-        }
-
-        public virtual GameNPC GetNPCOwner()
-        {
-            if (!(Owner is GameNPC))
-                return null;
-
-            GameNPC owner = Owner as GameNPC;
-
-            int i = 0;
-            while (owner != null)
-            {
-                i++;
-                if (i > 50)
-                {
-                    log.Error("Boucle itérative dans GetNPCOwner !");
-                    break;
-                }
-                if (owner.Brain is IControlledBrain)
-                {
-                    if ((owner.Brain as IControlledBrain).Owner is GamePlayer)
-                        return null;
-                    else
-                        owner = (owner.Brain as IControlledBrain).Owner as GameNPC;
-                }
-                else
-                    break;
-            }
             return owner;
-        }
-
-        public virtual GameLiving GetLivingOwner()
-        {
-            GamePlayer player = GetPlayerOwner();
-            if (player != null)
-                return player;
-
-            GameNPC npc = GetNPCOwner();
-            if (npc != null)
-                return npc;
-
-            return null;
         }
 
 		/// <summary>
@@ -385,8 +346,8 @@ namespace DOL.AI.Brain
 		{
 			GamePlayer playerowner = GetPlayerOwner();
 
-			long lastUpdate;
-			if (!playerowner.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID), out lastUpdate))
+			long lastUpdate = 0;
+			if (playerowner != null && !playerowner.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID), out lastUpdate))
 				lastUpdate = 0;
 
 			// Load abilities on first Think cycle.
@@ -454,21 +415,18 @@ namespace DOL.AI.Brain
 					{
 						case Abilities.Intercept:
 							{
-								if (GetPlayerOwner() is GamePlayer player)
-									//the pet should intercept even if a player is till intercepting for the owner
-									new InterceptEffect().Start(Body, player);
+								//the pet should intercept even if a player is till intercepting for the owner
+								new InterceptEffect().Start(Body, GetLivingOwner());
 								break;
 							}
 						case Abilities.Guard:
 							{
-								if (GetPlayerOwner() is GamePlayer player)
-									new GuardEffect().Start(Body, player);
+								new GuardEffect().Start(Body, GetLivingOwner());
 								break;
 							}
 						case Abilities.Protect:
 							{
-								if (GetPlayerOwner() is GamePlayer player)
-									new ProtectEffect().Start(player);
+								new ProtectEffect().Start(GetLivingOwner());
 								break;
 							}
 						case Abilities.ChargeAbility:

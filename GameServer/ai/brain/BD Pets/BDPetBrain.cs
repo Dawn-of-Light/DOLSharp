@@ -34,21 +34,6 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-		/// Find the player owner of the pets at the top of the tree
-		/// </summary>
-		/// <returns>Player owner at the top of the tree.  If there was no player, then return null.</returns>
-		public override GamePlayer GetPlayerOwner()
-		{
-			GameNPC commanderOwner = (GameNPC)Owner;
-			if (commanderOwner != null && commanderOwner.Brain is IControlledBrain)
-			{
-				GamePlayer playerOwner = (commanderOwner.Brain as IControlledBrain).Owner as GamePlayer;
-				return playerOwner;
-			}
-			return null;
-		}
-
-		/// <summary>
 		/// Are minions assisting the commander?
 		/// </summary>
 		public bool MinionsAssisting
