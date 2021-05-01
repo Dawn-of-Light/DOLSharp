@@ -38,8 +38,9 @@ namespace DOL.AI.Brain
 
 		public override int ThinkInterval
 		{
-			get { return 1500; }
+			get { return 300; }
 		}
+		private int _thinkCounter = 5;
 
 
 		/// <summary>
@@ -49,6 +50,15 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
+			// fast thinking part - just to turn the turret in front of its target so casting doesn't fail
+			if (Body.TargetObject != null)
+				Body.TurnTo(Body.TargetObject);
+
+			_thinkCounter++;
+			if (_thinkCounter < 5)
+				return;
+			_thinkCounter = 0;
+
 		  GamePlayer playerowner = GetPlayerOwner();
 			if (playerowner != null && (GameTimer.GetTickCount() - playerowner.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID)]) > ThinkInterval)
 		  {

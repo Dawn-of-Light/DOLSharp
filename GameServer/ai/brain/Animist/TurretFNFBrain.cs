@@ -104,7 +104,7 @@ namespace DOL.AI.Brain
                 if (living.IsMezzed || living.IsStealthed)
                     continue;
 
-                if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
                     continue;
 
                 if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && (living.HasAbility(Abilities.RootImmunity) || living.HasAbility(Abilities.DamageImmunity)))
