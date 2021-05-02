@@ -219,8 +219,18 @@ namespace DOL.GS.Commands
 
 		protected void RespecDialogResponse(GamePlayer player, byte response)
 		{
-
-			if (response != 0x01) return; //declined
+			if (response != 0x01)
+			{
+				// declined
+				// clear all properties
+				player.TempProperties.removeProperty(ALL_RESPEC);
+				player.TempProperties.removeProperty(DOL_RESPEC);
+				player.TempProperties.removeProperty(RA_RESPEC);
+				player.TempProperties.removeProperty(CHAMP_RESPEC);
+				player.TempProperties.removeProperty(LINE_RESPEC);
+				player.TempProperties.removeProperty(BUY_RESPEC);
+				return;
+			}
 
 			int specPoints = player.SkillSpecialtyPoints;
 			int realmSpecPoints = player.RealmSpecialtyPoints;
