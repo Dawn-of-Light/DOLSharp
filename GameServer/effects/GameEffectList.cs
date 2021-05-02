@@ -173,6 +173,9 @@ namespace DOL.GS.Effects
 				return;
 
 			foreach (PlayerXEffect eff in effs)
+				GameServer.Database.DeleteObject(eff);
+
+			foreach (PlayerXEffect eff in effs.GroupBy(e => e.Var1).Select(e => e.First()))
 			{
 				if (eff.SpellLine == GlobalSpellsLines.Reserved_Spells)
 					continue;
@@ -208,8 +211,6 @@ namespace DOL.GS.Effects
 					e.RestoreVars = vars;
 					e.Start(player);
 				}
-
-				GameServer.Database.DeleteObject(eff);
 			}
 		}
 
