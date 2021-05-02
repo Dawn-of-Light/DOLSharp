@@ -6330,7 +6330,7 @@ namespace DOL.GS
 		/// <param name="interruptDuration"></param>
 		/// <param name="dualWield"></param>
 		/// <returns></returns>
-		protected override AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
+		protected override AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield, bool ignoreLOS)
 		{
 			if (IsCrafting)
 			{
@@ -6340,7 +6340,7 @@ namespace DOL.GS
 				Out.SendCloseTimerWindow();
 			}
 
-			AttackData ad = base.MakeAttack(target, weapon, style, effectiveness * Effectiveness, interruptDuration, dualWield);
+			AttackData ad = base.MakeAttack(target, weapon, style, effectiveness * Effectiveness, interruptDuration, dualWield, ignoreLOS);
 
 			//Clear the styles for the next round!
 			NextCombatStyle = null;

@@ -70,7 +70,7 @@ namespace DOL.GS.Scripts
 
             return 666; //Invisible Model.
         }
-        protected override AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
+        protected override AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield, bool ignoreLOS)
         {
             if (target is GamePlayer)
             {
@@ -80,7 +80,7 @@ namespace DOL.GS.Scripts
                 }
             }
 
-            return base.MakeAttack(target, weapon, style, effectiveness, interruptDuration, dualWield);
+            return base.MakeAttack(target, weapon, style, effectiveness, interruptDuration, dualWield, ignoreLOS);
         }
         public void StealToken(GamePlayer player)
         {
