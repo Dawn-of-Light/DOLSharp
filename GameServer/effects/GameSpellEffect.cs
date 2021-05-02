@@ -713,7 +713,7 @@ namespace DOL.GS.Effects
 
 		public PlayerXEffect getSavedEffect()
 		{
-			if (this.RestoredEffect)
+			if (this.RestoredEffect && this.RemainingTime > 5000)
 			{
 				PlayerXEffect eff = new PlayerXEffect();
 				eff.Duration = this.RemainingTime;
