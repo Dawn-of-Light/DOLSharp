@@ -3108,7 +3108,7 @@ namespace DOL.GS
 				else
 					resistIndex = (int)type - (int)eProperty.Resist_First;
 
-				if (resistIndex < m_raceResists[race].Length)
+				if (resistIndex >= 0 && resistIndex < m_raceResists[race].Length)
 				{
 					resistValue = m_raceResists[race][resistIndex];
 				}

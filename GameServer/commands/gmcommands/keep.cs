@@ -92,7 +92,9 @@ namespace DOL.GS.Commands
 			}
 
 			AbstractGameKeep myKeep = (AbstractGameKeep)client.Player.TempProperties.getProperty<object>(TEMP_KEEP_LAST, null);
+			if (myKeep == null) myKeep = (client.Player.TargetObject as GameKeepComponent)?.AbstractKeep;
 			if (myKeep == null) myKeep = GameServer.KeepManager.GetKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, 10000);
+
 			
 			switch (args[1])
 			{
@@ -1987,6 +1989,11 @@ namespace DOL.GS.Commands
 
 						log.Debug("Keep creation: complete, saving");
 
+						keep.Area = new KeepArea(keep);
+						keep.Area.CanBroadcast = true;
+						keep.Area.CheckLOS = true;
+						keep.CurrentRegion.AddArea(keep.Area);
+
 						keep.SaveIntoDatabase();
 						break;
 					}
@@ -2193,24 +2200,7 @@ namespace DOL.GS.Commands
 				#region Remove
 				case "remove":
 					{
-						KeepArea karea = null;
-						foreach (AbstractArea area in client.Player.CurrentAreas)
-						{
-							if (area is KeepArea)
-							{
-								karea = area as KeepArea;
-								break;
-							}
-						}
-
-						if (karea == null)
-						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.YourNotInAKeepArea"));
-							return;
-						}
-
-						karea.Keep.Remove(karea);
-
+						myKeep.Remove(myKeep.Area);
 						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.KeepUnloaded"));
 						break;
 					}

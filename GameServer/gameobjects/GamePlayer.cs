@@ -10072,6 +10072,9 @@ namespace DOL.GS
 		/// </summary>
 		public override void Delete()
 		{			
+			if (ObjectState == eObjectState.Deleted)
+				return;
+
 			// do some Cleanup
 			CleanupOnDisconnect();
 			

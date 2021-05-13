@@ -1231,6 +1231,7 @@ namespace DOL.GS
 				return;
 			//client.Player.RemoveFromWorld();
 			client.Player.Delete();
+			client.Player = null;
 			return;
 		}
 

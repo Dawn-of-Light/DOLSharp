@@ -204,7 +204,7 @@ namespace DOL.GS.Spells
 		private void OnAttack(DOLEvent e, object sender, EventArgs arguments)
 		{
 			GameLiving living = sender as GameLiving;
-			if (living == null) return;
+			if (living == null || arguments == null) return;
 			AttackedByEnemyEventArgs attackedByEnemy = arguments as AttackedByEnemyEventArgs;
 			AttackFinishedEventArgs attackFinished = arguments as AttackFinishedEventArgs;
 			CastingEventArgs castFinished = arguments as CastingEventArgs;
