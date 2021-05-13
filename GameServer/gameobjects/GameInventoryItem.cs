@@ -403,30 +403,28 @@ namespace DOL.GS
 				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.CrafterName", Creator));
 				delve.Add(" ");
 			}
-			else if (Description != null && Description != "")
+			if (Description != null && Description != "")
 			{
 				delve.Add(Description);
 				delve.Add(" ");
 			}
 
+			WriteUsableClasses(delve, player.Client);
 			if ((Object_Type >= (int)eObjectType.GenericWeapon) && (Object_Type <= (int)eObjectType._LastWeapon) ||
 			    Object_Type == (int)eObjectType.Instrument)
 			{
-				WriteUsableClasses(delve, player.Client);
 				WriteMagicalBonuses(delve, player.Client, false);
 				DelveWeaponStats(delve, player);
 			}
 
 			if (Object_Type >= (int)eObjectType.Cloth && Object_Type <= (int)eObjectType.Scale)
 			{
-				WriteUsableClasses(delve, player.Client);
 				WriteMagicalBonuses(delve, player.Client, false);
 				DelveArmorStats(delve, player);
 			}
 
 			if (Object_Type == (int)eObjectType.Shield)
 			{
-				WriteUsableClasses(delve, player.Client);
 				WriteMagicalBonuses(delve, player.Client, false);
 				DelveShieldStats(delve, player.Client);
 			}
@@ -770,7 +768,7 @@ namespace DOL.GS
 				#region Poison
 				if (PoisonSpellID != 0)
 				{
-					if (GlobalConstants.IsWeapon(Object_Type))// Poisoned Weapon
+					if (GlobalConstants.IsWeapon(Object_Type) || (eObjectType)Object_Type == eObjectType.Poison)// Poisoned Weapon
 					{
 						SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
 						if (poisonLine != null)
