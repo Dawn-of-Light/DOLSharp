@@ -663,14 +663,10 @@ namespace DOL.GS
 							log.WarnFormat("RelocateRegions() took {0}ms", took);
 					}
 				}
-				catch (ThreadAbortException)
-				{
-					//On Threadabort exit!
-					return;
-				}
 				catch (ThreadInterruptedException)
 				{
-					//On sleep interrupt do nothing
+					//On Thread interrupt exit!
+					return;
 				}
 				catch (Exception e)
 				{
@@ -813,12 +809,12 @@ namespace DOL.GS
 				}
 				if (m_WorldUpdateThread != null)
 				{
-					m_WorldUpdateThread.Abort();
+					m_WorldUpdateThread.Interrupt();
 					m_WorldUpdateThread = null;
 				}
 				if (m_relocationThread != null)
 				{
-					m_relocationThread.Abort();
+					m_relocationThread.Interrupt();
 					m_relocationThread = null;
 				}
 

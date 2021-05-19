@@ -587,7 +587,7 @@ namespace DOL.GS
 						}
 						finally
 						{
-							m_timeThread.Abort();
+							m_timeThread.Interrupt();
 							try
 							{
 								while(!m_timeThread.Join(2000))
@@ -596,7 +596,7 @@ namespace DOL.GS
 								
 									try
 									{
-										m_timeThread.Abort();
+										m_timeThread.Interrupt();
 									}
 									catch
 									{
@@ -1071,7 +1071,7 @@ namespace DOL.GS
 							workStart = workEnd;
 						}
 					}
-					catch (ThreadAbortException e)
+					catch (ThreadInterruptedException e)
 					{
 						if (log.IsWarnEnabled)
 							log.Warn("Time manager thread \"" + m_name + "\" was aborted", e);
