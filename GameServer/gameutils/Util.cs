@@ -411,7 +411,7 @@ namespace DOL.GS
 
 			try
 			{
-				trace = new StackTrace(thread, true);
+				trace = new StackTrace(true);
 			}
 			catch(Exception e)
 			{

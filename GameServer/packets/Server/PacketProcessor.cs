@@ -883,7 +883,7 @@ namespace DOL.GS.PacketHandler
 						StackTrace trace;
 						try
 						{
-							trace = new StackTrace(thread, true);
+							trace = new StackTrace(true);
 						}
 						finally
 						{
