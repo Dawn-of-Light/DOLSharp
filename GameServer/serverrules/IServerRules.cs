@@ -212,6 +212,8 @@ namespace DOL.GS.ServerRules
 		/// <returns>true if equals</returns>
 		bool IsObjectTypesEqual(eObjectType type1, eObjectType type2);
 
+		eObjectType[] GetCompatibleObjectTypes(eObjectType objectType);
+
 		/// <summary>
 		/// Get object specialization level based on server type
 		/// </summary>

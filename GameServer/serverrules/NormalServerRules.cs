@@ -252,7 +252,7 @@ namespace DOL.GS.ServerRules
 		/// </summary>
 		/// <param name="objectType">The object type</param>
 		/// <returns>An array of compatible object types</returns>
-		protected override eObjectType[] GetCompatibleObjectTypes(eObjectType objectType)
+		public override eObjectType[] GetCompatibleObjectTypes(eObjectType objectType)
 		{
 			if(m_compatibleObjectTypes == null)
 			{

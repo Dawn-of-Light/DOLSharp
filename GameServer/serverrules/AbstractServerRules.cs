@@ -922,7 +922,10 @@ namespace DOL.GS.ServerRules
 
 			foreach (eObjectType obj in GetCompatibleObjectTypes(objectType))
 			{
-				int spec = player.GetModifiedSpecLevel(SkillBase.ObjectTypeToSpec(obj));
+				var specName = SkillBase.ObjectTypeToSpec(obj);
+				if (specName == null)
+					continue;
+				int spec = player.GetModifiedSpecLevel(specName);
 				if (res < spec)
 					res = spec;
 			}
@@ -980,7 +983,7 @@ namespace DOL.GS.ServerRules
 		/// </summary>
 		/// <param name="objectType">The object type</param>
 		/// <returns>An array of compatible object types</returns>
-		protected virtual eObjectType[] GetCompatibleObjectTypes(eObjectType objectType)
+		public virtual eObjectType[] GetCompatibleObjectTypes(eObjectType objectType)
 		{
 			if (m_compatibleObjectTypes == null)
 			{
@@ -1028,7 +1031,7 @@ namespace DOL.GS.ServerRules
 
 			eObjectType[] res = (eObjectType[])m_compatibleObjectTypes[(int)objectType];
 			if (res == null)
-				return new eObjectType[0];
+				return new[] { objectType };
 			return res;
 		}
 
