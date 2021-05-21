@@ -40,7 +40,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		/// <param name="amount">amount of hit points to heal</param>
 		/// <returns>true if heal was done</returns>
-		public override bool HealTarget (GameLiving target, int amount)
+		public override bool HealTarget (GameLiving target, double amount)
 		{
 			Hashtable injuredTargets = new Hashtable();
 			GameLiving mostInjuredLiving = target;

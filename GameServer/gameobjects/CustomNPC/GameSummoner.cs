@@ -90,14 +90,13 @@ namespace DOL.GS
         /// <summary>
 		/// This living takes damage
 		/// </summary>
-		/// <param name="ad">AttackData containing damage details</param>
-        public override void TakeDamage(AttackData ad)
+        public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
         {
             // If people kill the pet first, the owner summons a new one when attacked.
             if (Health >= MaxHealth)
                 m_resummonTime = 0;
 
-            base.TakeDamage(ad);
+            base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 
             if (!IsAlive)
                 ReleasePet();
@@ -110,9 +109,9 @@ namespace DOL.GS
                     SummonPet();
             }
 
-            if (m_pet != null && m_pet.IsAlive && !m_pet.InCombat && m_pet.Brain is StandardMobBrain petBrain)
+            if (source is GameLiving && m_pet != null && m_pet.IsAlive && !m_pet.InCombat && m_pet.Brain is StandardMobBrain petBrain)
             {
-                petBrain.AddToAggroList(ad.Attacker, 1);
+                petBrain.AddToAggroList((GameLiving)source, 1);
                 petBrain.Think();
              }
         }
