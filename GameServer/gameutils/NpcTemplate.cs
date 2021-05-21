@@ -120,6 +120,10 @@ namespace DOL.GS
 			m_piety = data.Piety;
 			m_charisma = data.Charisma;
 			m_empathy = data.Empathy;
+			WeaponDps = data.WeaponDps;
+			WeaponSpd = data.WeaponSpd;
+			ArmorFactor = data.ArmorFactor;
+			ArmorAbsorb = data.ArmorAbsorb;
 
 			//Time to add Spells/Styles and Abilties to the templates
 			m_abilities = new ArrayList();
@@ -228,6 +232,10 @@ namespace DOL.GS
 			m_piety = mob.Piety;
 			m_quickness = mob.Quickness;
 			m_strength = mob.Strength;
+			WeaponDps = mob.WeaponDps;
+			WeaponSpd = mob.WeaponSpd;
+			ArmorFactor = mob.ArmorFactor;
+			ArmorAbsorb = mob.ArmorAbsorb;
 			m_size = mob.Size.ToString();
 			m_templateId = GetNextFreeTemplateId();
 			m_tetherRange = mob.TetherRange;
@@ -595,6 +603,11 @@ namespace DOL.GS
 			get { return m_charisma; }
 			set { m_charisma = value; }
 		}
+
+		public virtual int WeaponDps { get; set; } = 0;
+		public virtual int WeaponSpd { get; set; } = 30;
+		public virtual int ArmorFactor { get; set; } = 0;
+		public virtual int ArmorAbsorb { get; set; } = 0;
 
 		public byte AggroLevel
 		{

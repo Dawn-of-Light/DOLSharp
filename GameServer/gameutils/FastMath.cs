@@ -53,6 +53,23 @@ namespace DOL.GS.Utils
 
 			return val;
 		}
+
+		public static double Clamp(this double input, double min, double max)
+		{
+			double val = input;
+
+			if (input < min)
+			{
+				val = min;
+			}
+
+			if (input > max)
+			{
+				val = max;
+			}
+
+			return val;
+		}
 	}
 }
 

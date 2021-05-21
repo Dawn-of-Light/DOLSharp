@@ -247,7 +247,11 @@ namespace DOL.GS.Commands
 					case "int":
 					case "emp":
 					case "pie":
-						case "cha": stat(client, targetMob, args); break;
+					case "cha":
+					case "dps":
+					case "spd":
+					case "af":
+					case "abs": stat(client, targetMob, args); break;
 						case "tether": tether(client, targetMob, args); break;
 						case "hood": hood(client, targetMob, args); break;
 						case "cloak": cloak(client, targetMob, args); break;
@@ -1305,6 +1309,7 @@ namespace DOL.GS.Commands
 			info.Add(" + " + targetMob.Strength + " (" + targetMob.GetModified(eProperty.Strength) + ")  /  " + targetMob.Constitution + " (" + targetMob.GetModified(eProperty.Constitution) + ")  /  " + targetMob.Dexterity + " (" + targetMob.GetModified(eProperty.Dexterity) + ")  /  " + targetMob.Quickness + " (" + targetMob.GetModified(eProperty.Quickness) + ")");
 			info.Add(" +     INT      /     EMP     /     PIE     /     CHR");
 			info.Add(" + " + targetMob.Intelligence + " (" + targetMob.GetModified(eProperty.Intelligence) + ")  /  " + targetMob.Empathy + " (" + targetMob.GetModified(eProperty.Empathy) + ")  /  " + targetMob.Piety + " (" + targetMob.GetModified(eProperty.Piety) + ")  /  " + targetMob.Charisma + " (" + targetMob.GetModified(eProperty.Charisma) + ")");
+			info.Add(" + DPS/SPD/AF/ABS: " + targetMob.WeaponDps + " / " + targetMob.WeaponSpd + " / " + targetMob.ArmorFactor + " / " + targetMob.ArmorAbsorb);
 			info.Add(" + Block / Parry / Evade %:  " + targetMob.BlockChance + " / " + targetMob.ParryChance + " / " + targetMob.EvadeChance);
 			info.Add(" + Attack Speed (Melee Speed Increase %):  " + targetMob.AttackSpeed(targetMob.AttackWeapon) + " (" + (100 - targetMob.GetModified(eProperty.MeleeSpeed)) + ")");
 
@@ -2784,6 +2789,10 @@ namespace DOL.GS.Commands
 						case "EMP": targetMob.Empathy = statval; break;
 						case "PIE": targetMob.Piety = statval; break;
 						case "CHA": targetMob.Charisma = statval; break;
+					case "DPS": targetMob.WeaponDps = statval; break;
+					case "SPD": targetMob.WeaponSpd = statval; break;
+					case "AF": targetMob.ArmorFactor = statval; break;
+					case "ABS": targetMob.ArmorAbsorb = statval; break;
 				}
 
 				targetMob.SaveIntoDatabase();

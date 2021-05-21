@@ -153,28 +153,10 @@ namespace DOL.GS.Commands
 						info.Add(" + OwnerID: " + target.OwnerID);
 						
 					info.Add(" ");
-					if (target.Strength > 0)
-						info.Add(" + STR: "+ target.Strength);
-					if (target.Constitution > 0)
-						info.Add(" + CON: "+ target.Constitution);
-					if (target.Dexterity > 0)
-						info.Add(" + DEX: "+ target.Dexterity);
-					if (target.Quickness > 0)
-						info.Add(" + QUI: "+ target.Quickness);
-					if (target.Intelligence > 0)
-						info.Add(" + INT: "+ target.Intelligence);
-					if (target.Empathy > 0)
-						info.Add(" + EMP: "+ target.Empathy);
-					if (target.Piety > 0)
-						info.Add(" + PIE: "+ target.Piety);
-					if (target.Charisma > 0)
-						info.Add(" + CHR: "+ target.Charisma);
-					if (target.BlockChance > 0)
-						info.Add(" + Block: "+ target.BlockChance);
-					if (target.ParryChance > 0)
-						info.Add(" + Parry: "+ target.ParryChance);
-					if (target.EvadeChance > 0)
-						info.Add(" + Evade %:  "+ target.EvadeChance);
+					info.Add($" + {target.Strength} STR / {target.Constitution} CON / {target.Dexterity} DEX / {target.Quickness} QUI");
+					info.Add($" + {target.Intelligence} INT / {target.Empathy} EMP / {target.Piety} PIE / {target.Charisma} CHR");
+					info.Add($" + {target.WeaponDps} DPS / {target.WeaponSpd} SPD / {target.ArmorFactor} AF / {target.ArmorAbsorb} ABS");
+					info.Add($" + {target.BlockChance}% Block / {target.ParryChance}% Parry / {target.EvadeChance}% Evade");
 					
 					info.Add(" + Damage type: " + target.MeleeDamageType);
 					if (target.LeftHandSwingChance > 0)

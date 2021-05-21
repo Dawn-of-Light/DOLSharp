@@ -67,6 +67,11 @@ namespace DOL.Database
 		private short m_piety = 0;
 		private short m_empathy = 0;
 		private short m_charisma = 0;
+
+		private int m_weapondps = 0;
+		private int m_weaponspd = 30;
+		private int m_armorfactor = 0;
+		private int m_armorabsorb = 0;
 		private string m_abilities = string.Empty;
 		private byte m_aggroLevel = 0;
 		private int m_aggroRange = 0;
@@ -506,6 +511,50 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_empathy = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int WeaponDps
+		{
+			get { return m_weapondps; }
+			set
+			{
+				Dirty = true;
+				m_weapondps = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int WeaponSpd
+		{
+			get { return m_weaponspd; }
+			set
+			{
+				Dirty = true;
+				m_weaponspd = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int ArmorFactor
+		{
+			get { return m_armorfactor; }
+			set
+			{
+				Dirty = true;
+				m_armorfactor = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = false)]
+		public int ArmorAbsorb
+		{
+			get { return m_armorabsorb; }
+			set
+			{
+				Dirty = true;
+				m_armorabsorb = value;
 			}
 		}
 

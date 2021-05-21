@@ -255,6 +255,10 @@ namespace DOL.GS
 				Empathy = NPCTemplate.Empathy;	
 				Piety = NPCTemplate.Piety;
 				Charisma = NPCTemplate.Charisma;
+				WeaponDps = NPCTemplate.WeaponDps;
+				WeaponSpd = NPCTemplate.WeaponSpd;
+				ArmorFactor = NPCTemplate.ArmorFactor;
+				ArmorAbsorb = NPCTemplate.ArmorAbsorb;
 			}
 			else
 			{
@@ -287,6 +291,10 @@ namespace DOL.GS
 					Empathy = 0;
 					Piety = 0;
 					Charisma = 0;
+					WeaponDps = 0;
+					WeaponSpd = 0;
+					ArmorFactor = 0;
+					ArmorAbsorb = 0;
 				}
 			}
 
@@ -333,6 +341,15 @@ namespace DOL.GS
 
 			if (Charisma < 1)
 				Charisma = (short)(29 + Level);
+
+			if (WeaponDps < 1)
+				WeaponDps = (int)((1.4 + 0.3 * Level + Level * Level * 0.002) * 10);
+			if (WeaponSpd < 1)
+				WeaponSpd = 30;
+			if (ArmorFactor < 1)
+				ArmorFactor = (int)((1.0 + (Level / 100.0)) * Level * 1.8);
+			if (ArmorAbsorb < 1)
+				ArmorAbsorb = (int)((Level - 10) * 0.5 - (Level - 60) * Level * 0.0015).Clamp(0, 75);
 		}
 
 		/// <summary>
@@ -649,6 +666,11 @@ namespace DOL.GS
 			get { return m_charStat[eStat.CHR - eStat._First]; }
 			set { m_charStat[eStat.CHR - eStat._First] = value; }
 		}
+
+		public virtual int WeaponDps { get; set; }
+		public virtual int WeaponSpd { get; set; }
+		public virtual int ArmorFactor { get; set; }
+		public virtual int ArmorAbsorb { get; set; }
 		#endregion
 
 		#region Flags/Position/SpawnPosition/UpdateTick/Tether
@@ -4823,6 +4845,14 @@ namespace DOL.GS
 			//DealDamage needs to be called after addxpgainer!
 		}
 
+		public override double GetArmorAF(eArmorSlot slot)
+		{
+			return 5 + ArmorFactor + GetModified(eProperty.ArmorFactor) / 5;
+		}
+		public override double GetArmorAbsorb(eArmorSlot slot)
+		{
+			return ArmorAbsorb / 100.0 + GetModified(eProperty.ArmorAbsorption) * 0.01;
+		}
 		#endregion
 
 		#region Spell

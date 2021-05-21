@@ -67,8 +67,7 @@ namespace DOL.GS.PropertyCalc
 			}
 			else
 			{
-				return (int)((1 + (living.Level / 170.0)) * (living.Level << 1) * 4.67)
-				+ living.SpecBuffBonusCategory[(int)property]
+				return living.SpecBuffBonusCategory[(int)property]
 				- Math.Abs(living.DebuffCategory[(int)property])
 				+ living.BuffBonusCategory4[(int)property];
 			}

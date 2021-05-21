@@ -25,6 +25,7 @@ using DOL.Events;
 using DOL.GS.ServerProperties;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
+using DOL.GS.Utils;
 using DOL.AI;
 
 namespace DOL.GS
@@ -427,6 +428,10 @@ namespace DOL.GS
 				Empathy += (short)(Level - 1);
 				Piety += (short)(Level - 1);
 				Charisma += (short)(Level - 1);
+				WeaponDps = (int)((1.4 + 0.3 * Level + Level * Level * 0.002) * 10);
+				WeaponSpd = 30;
+				ArmorFactor = (int)((1.0 + (Level / 100.0)) * Level * 1.8);
+				ArmorAbsorb = (int)((Level - 10) * 0.5 - (Level - 60) * Level * 0.0015).Clamp(0, 75);
 			}
 
 			// Now scale them according to NPCTemplate values
@@ -450,6 +455,15 @@ namespace DOL.GS
 					Piety = (short)NPCTemplate.Piety;
 				if (NPCTemplate.Charisma > 0)
 					Charisma = (short)NPCTemplate.Charisma;
+				if (NPCTemplate.WeaponDps > 0)
+					WeaponDps = NPCTemplate.WeaponDps;
+				if (NPCTemplate.WeaponSpd > 0)
+					WeaponSpd = NPCTemplate.WeaponSpd;
+				if (NPCTemplate.ArmorFactor > 0)
+					ArmorFactor = NPCTemplate.ArmorFactor;
+				if (NPCTemplate.ArmorAbsorb > 0)
+					ArmorAbsorb = NPCTemplate.ArmorAbsorb;
+
 			}
 		}
 		#endregion
