@@ -51,14 +51,17 @@ namespace DOL.GS.Commands
 			
 			if (client.Player.TargetObject != null)
 			{
+				if (!string.IsNullOrEmpty(client.Player.TargetObject.Name))
+					name = client.Player.TargetObject.Name;
+
 				#region Mob
 				/********************* MOB ************************/
 				if (client.Player.TargetObject is GameNPC)
 				{
 					var target = client.Player.TargetObject as GameNPC;
-					name = target.Name;
-					
-					
+
+					if (target.NPCTemplate != null)
+						info.Add(" + NPCTemplate: " + "[" + target.NPCTemplate.TemplateId + "] " + target.NPCTemplate.Name);
 					info.Add(" + Class: " + target.GetType().ToString());
 					info.Add(" + Brain: " + (target.Brain == null ? "(null)" : target.Brain.GetType().ToString()));
 					if (target.LoadedFromScript)
@@ -108,6 +111,9 @@ namespace DOL.GS.Commands
 					
 					info.Add(" + Speed(current/max): " + target.CurrentSpeed + "/" + target.MaxSpeedBase);
 					info.Add(" + Health: " + target.Health + "/" + target.MaxHealth);
+					info.Add(" + Endu: " + target.Endurance + "/" + target.MaxEndurance);
+					info.Add(" + Mana: " + target.Mana + "/" + target.MaxMana);
+					info.Add(" + Conc: " + target.Concentration + "/" + target.MaxConcentration);
 					
 					IOldAggressiveBrain aggroBrain = target.Brain as IOldAggressiveBrain;
 					if (aggroBrain != null)
@@ -408,8 +414,6 @@ namespace DOL.GS.Commands
 				{
 					var target = client.Player.TargetObject as GameStaticItem;
 					
-					if (!string.IsNullOrEmpty(target.Name))
-						name = target.Name;
 					info.Add("  ------- OBJECT ------\n");
 					info.Add(" Name: " + name);
 					info.Add(" Model: " + target.Model);
