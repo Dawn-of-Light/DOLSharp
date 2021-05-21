@@ -1,0 +1,47 @@
+﻿<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>..\build\DOLServer\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>..\..\DOLServer\icon.ico</ApplicationIcon>
+    <AssemblyName>DOLServer</AssemblyName>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <OutputPath>..\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>..\build\DOLServer\$(Configuration)\obj\</IntermediateOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>False</Optimize>
+    <DebugType>Full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Core.System.ServiceProcess" Version="1.0.2" />
+    <PackageReference Include="log4net" Version="2.0.12" />
+    <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\DOLServer\**\*.cs" />
+  </ItemGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>
