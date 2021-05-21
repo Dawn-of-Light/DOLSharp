@@ -98,5 +98,25 @@ namespace DOL.GS.Movement
 			get { return m_waitTime; }
 			set { m_waitTime = value; }
 		}
+
+		public PathPoint GetNearestNextPoint(IPoint3D pos)
+		{
+			var nearest = this;
+			var dist = nearest.GetDistanceTo(pos);
+
+			var pp = this;
+			while (pp.Next != null)
+			{
+				pp = pp.Next;
+				var d = pp.GetDistanceTo(pos);
+				if (d < dist)
+				{
+					nearest = pp;
+					dist = d;
+				}
+			}
+
+			return nearest;
+		}
 	}
 }

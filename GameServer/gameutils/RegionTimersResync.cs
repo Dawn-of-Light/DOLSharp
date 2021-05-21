@@ -193,8 +193,9 @@ namespace DOL.GS.GameEvents
 											PathPoint path = MovementMgr.LoadPath(npc.PathID);
 											if (path != null)
 											{
-												npc.CurrentWayPoint = path;
-												npc.MoveOnPath((short)path.MaxSpeed);
+												var p = path.GetNearestNextPoint(npc);
+												npc.CurrentWayPoint = p;
+												npc.MoveOnPath((short)p.MaxSpeed);
 											}
 										}
                                         try

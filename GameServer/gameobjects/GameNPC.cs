@@ -3019,8 +3019,9 @@ namespace DOL.GS
 				PathPoint path = MovementMgr.LoadPath(PathID);
 				if (path != null)
 				{
-					CurrentWayPoint = path;
-					MoveOnPath((short)path.MaxSpeed);
+					var p = path.GetNearestNextPoint(this);
+					CurrentWayPoint = p;
+					MoveOnPath((short)p.MaxSpeed);
 				}
 			}
 
