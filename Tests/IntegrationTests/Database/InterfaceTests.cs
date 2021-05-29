@@ -1023,8 +1023,8 @@ namespace DOL.Integration.Database
 			
 			Assert.IsNotEmpty(allobjects, "This Test Need some Data to be Accurate...");
 
-			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObject<TestTable>((WhereExpression)null), "");
-			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>((WhereExpression)null), "");
+			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObject<TestTable>((WhereClause)null), "");
+			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>((WhereClause)null), "");
 			Assert.Throws(typeof(ArgumentNullException), () => Database.MultipleSelectObjects<TestTable>(null));
 		}
 		

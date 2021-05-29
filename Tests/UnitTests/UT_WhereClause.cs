@@ -24,96 +24,96 @@ using System;
 namespace DOL.UnitTests.Database
 {
     [TestFixture]
-    class UT_WhereExpression
+    class UT_WhereClause
     {
         [Test]
-        public void WhereClause_KeyIsEqualToOne_KeyEqualAtA()
+        public void ParameterizedText_KeyIsEqualToOne_KeyEqualAtA()
         {
             var expression = DB.Column("key").IsEqualTo(1);
 
-            Assert.AreEqual("WHERE key = @a", expression.WhereClause);
+            Assert.AreEqual("WHERE key = @a", expression.ParameterizedText);
         }
 
         [Test]
-        public void QueryParameters_KeyColumnIsEqualToOne_FirstQueryParameterValueIsOne()
+        public void Parameters_KeyColumnIsEqualToOne_FirstQueryParameterValueIsOne()
         {
             var expression = DB.Column("key").IsEqualTo(1);
 
-            var firstQueryParameter = expression.QueryParameters[0];
+            var firstQueryParameter = expression.Parameters[0];
             Assert.AreEqual(firstQueryParameter.Value, 1);
         }
 
         [Test]
-        public void WhereClause_FooIsEqualToOneAndBarIsEqualToOne_WhereFooEqualAtAAndBarEqualAtB()
+        public void ParameterizedText_FooIsEqualToOneAndBarIsEqualToOne_WhereFooEqualAtAAndBarEqualAtB()
         {
             var expression1 = DB.Column("foo").IsEqualTo(1);
             var expression2 = DB.Column("bar").IsEqualTo(1);
 
             var andExpression = expression1.And(expression2);
 
-            var actual = andExpression.WhereClause;
+            var actual = andExpression.ParameterizedText;
             var expected = $"WHERE ( foo = @a AND bar = @b )";
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void InExpressionWhereClause_WithIntValues()
+        public void ParameterizedText_FooIsInOneAndTwo_FooIsInAtACommaAtB()
         {
             var expr = DB.Column("foo").IsIn(new [] { 1, 2 });
-            var placeHolder1 = expr.QueryParameters[0].Item1;
-            var placeHolder2 = expr.QueryParameters[1].Item1;
-            var actual = expr.WhereClause;
-            var expected = $"foo IN ( {placeHolder1} , {placeHolder2} )";
+            var placeHolder1 = expr.Parameters[0].Item1;
+            var placeHolder2 = expr.Parameters[1].Item1;
+            var actual = expr.ParameterizedText;
+            var expected = $"WHERE foo IN ( {placeHolder1} , {placeHolder2} )";
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void InExpressionWhereClause_WithStringValues()
+        public void ParameterizedText_FooIsInAandB_FooIsInAtACommaAtB()
         {
             var expr = DB.Column("foo").IsIn(new [] { "a", "b" });
-            var placeHolder1 = expr.QueryParameters[0].Item1;
-            var placeHolder2 = expr.QueryParameters[1].Item1;
-            var actual = expr.WhereClause;
-            var expected = $"foo IN ( {placeHolder1} , {placeHolder2} )";
+            var placeHolder1 = expr.Parameters[0].Item1;
+            var placeHolder2 = expr.Parameters[1].Item1;
+            var actual = expr.ParameterizedText;
+            var expected = $"WHERE foo IN ( {placeHolder1} , {placeHolder2} )";
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void QueryParameters_Expression1AndExpression2_ConcatenationOfBothQueryParameters()
+        public void Parameters_Expression1AndExpression2_ConcatenationOfBothParameters()
         {
             var expression1 = DB.Column("foo").IsEqualTo(1);
             var expression2 = DB.Column("bar").IsEqualTo(2);
 
             var andExpression = expression1.And(expression2);
 
-            var actual = andExpression.QueryParameters;
+            var actual = andExpression.Parameters;
             var expected = new[] { new QueryParameter("@a", 1), new QueryParameter("@b", 2) };
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void WhereClause_EmptyWhereExpression_EmptyString()
+        public void ParameterizedText_EmptyWhereClause_EmptyString()
         {
-            var expression = WhereExpression.Empty;
+            var expression = WhereClause.Empty;
 
-            var actual = expression.QueryParameters;
-            Assert.IsEmpty(actual);
-        }
-
-        [Test]
-        public void QueryParameters_EmptyWhereExpression_Empty()
-        {
-            var expression = WhereExpression.Empty;
-
-            var actual = expression.WhereClause;
+            var actual = expression.ParameterizedText;
             var expected = string.Empty;
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
+        public void Parameters_EmptyWhereClause_Empty()
+        {
+            var expression = WhereClause.Empty;
+
+            var actual = expression.Parameters;
+            Assert.IsEmpty(actual);
+        }
+
+        [Test]
         public void And_EmptyAndFilterExpression_EqualsFilterExpression()
         {
-            var emptyExpression = WhereExpression.Empty;
+            var emptyExpression = WhereClause.Empty;
             var filterExpression = DB.Column("foo").IsEqualTo(0);
 
             var andExpression = emptyExpression.And(filterExpression);
@@ -126,7 +126,7 @@ namespace DOL.UnitTests.Database
         [Test]
         public void And_FilterExpressionAndEmpty_EqualsFilterExpression()
         {
-            var emptyExpression = WhereExpression.Empty;
+            var emptyExpression = WhereClause.Empty;
             var filterExpression = DB.Column("foo").IsEqualTo(2);
 
             var andExpression = filterExpression.And(emptyExpression);
@@ -139,17 +139,17 @@ namespace DOL.UnitTests.Database
         [Test]
         public void EmptyExpression_AndEmptyExpression_OnlyFilterExpression()
         {
-            var andExpression = WhereExpression.Empty.And(WhereExpression.Empty);
+            var andExpression = WhereClause.Empty.And(WhereClause.Empty);
 
-            var actual = andExpression.WhereClause;
+            var actual = andExpression.ParameterizedText;
             var expected = string.Empty;
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void WhereClause_DBColumnFooIsNull_WhereFooIsNull()
+        public void ParameterizedText_DBColumnFooIsNull_WhereFooIsNull()
         {
-            var actual = DB.Column("Foo").IsNull().WhereClause;
+            var actual = DB.Column("Foo").IsNull().ParameterizedText;
             var expected = "WHERE Foo IS NULL";
             Assert.AreEqual(expected, actual);
         }
@@ -167,9 +167,9 @@ namespace DOL.UnitTests.Database
         }
 
         [Test]
-        public void Equals_TwoFreshEmptyWhereExpressions_True()
+        public void Equals_TwoFreshEmptyWhereClauses_True()
         {
-            Assert.IsTrue(WhereExpression.Empty.Equals(WhereExpression.Empty));
+            Assert.IsTrue(WhereClause.Empty.Equals(WhereClause.Empty));
         }
 
         [Test]

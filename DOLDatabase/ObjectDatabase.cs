@@ -714,19 +714,19 @@ namespace DOL.Database
 		#endregion
 
 		#region Public Parameterized Query Abstraction
-		public TObject SelectObject<TObject>(WhereExpression whereExpression)
+		public TObject SelectObject<TObject>(WhereClause whereExpression)
 			where TObject : DataObject
 		{
 			return SelectObjects<TObject>(whereExpression).FirstOrDefault();
 		}
 
-		public IList<TObject> SelectObjects<TObject>(WhereExpression whereExpression)
+		public IList<TObject> SelectObjects<TObject>(WhereClause whereExpression)
 			where TObject : DataObject
 		{
 			return MultipleSelectObjects<TObject>(new[] { whereExpression }).First();
 		}
 
-		public IList<IList<TObject>> MultipleSelectObjects<TObject>(IEnumerable<WhereExpression> whereExpressionBatch)
+		public IList<IList<TObject>> MultipleSelectObjects<TObject>(IEnumerable<WhereClause> whereExpressionBatch)
 			where TObject : DataObject
 		{
 			if (whereExpressionBatch == null) throw new ArgumentNullException("Parameter whereExpressionBatch may not be null.");
@@ -853,7 +853,7 @@ namespace DOL.Database
 			if (tableHandler.UsesPreCaching)
 				return tableHandler.SearchPreCachedObjects(obj => obj != null).OfType<TObject>().ToArray();
 
-			var dataObjects = MultipleSelectObjectsImpl(tableHandler, new[] { WhereExpression.Empty }).Single().OfType<TObject>().ToArray();
+			var dataObjects = MultipleSelectObjectsImpl(tableHandler, new[] { WhereClause.Empty }).Single().OfType<TObject>().ToArray();
 
 			FillObjectRelations(dataObjects, false);
 
@@ -959,7 +959,7 @@ namespace DOL.Database
 		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
 		protected abstract IList<IList<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation);
 
-		protected abstract IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereExpression> whereExpressionBatch);
+		protected abstract IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereClause> whereExpressionBatch);
 
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)

@@ -22,7 +22,7 @@ using System.Linq;
 
 namespace DOL.Database
 {
-    public abstract class WhereExpression
+    public abstract class WhereClause
     {
         private static string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
@@ -40,7 +40,7 @@ namespace DOL.Database
             return prefix + result;
         }
 
-        public virtual string WhereClause
+        public virtual string ParameterizedText
         {
             get
             {
@@ -63,7 +63,7 @@ namespace DOL.Database
             }
         }
 
-        public virtual QueryParameter[] QueryParameters
+        public virtual QueryParameter[] Parameters
         {
             get
             {
@@ -83,12 +83,12 @@ namespace DOL.Database
 
         internal abstract List<TextAtom> IntermediateRepresentation { get; }
 
-        public virtual WhereExpression And(WhereExpression rightExpression)
+        public virtual WhereClause And(WhereClause rightExpression)
             => rightExpression.Equals(Empty) ? this : new ChainingExpression(this, "AND", rightExpression);
-        public virtual WhereExpression Or(WhereExpression rightExpression) 
+        public virtual WhereClause Or(WhereClause rightExpression) 
             => rightExpression.Equals(Empty) ? this : new ChainingExpression(this, "OR", rightExpression);
 
-        public static WhereExpression Empty => new EmptyWhereExpression();
+        public static WhereClause Empty => new EmptyWhereClause();
 
         public override int GetHashCode() => base.GetHashCode();
     }
@@ -109,19 +109,19 @@ namespace DOL.Database
         public override bool IsParameterized => true;
     }
 
-    internal class EmptyWhereExpression : WhereExpression
+    internal class EmptyWhereClause : WhereClause
     {
         internal override List<TextAtom> IntermediateRepresentation => new List<TextAtom>();
 
-        public override WhereExpression And(WhereExpression rightExpression) => rightExpression;
-        public override WhereExpression Or(WhereExpression rightExpression) => rightExpression;
-        public override string WhereClause => string.Empty;
+        public override WhereClause And(WhereClause rightExpression) => rightExpression;
+        public override WhereClause Or(WhereClause rightExpression) => rightExpression;
+        public override string ParameterizedText => string.Empty;
 
-        public override bool Equals(object obj) => obj is EmptyWhereExpression;
+        public override bool Equals(object obj) => obj is EmptyWhereClause;
         public override int GetHashCode() => base.GetHashCode();
     }
 
-    internal class FilterExpression : WhereExpression
+    internal class FilterExpression : WhereClause
     {
         private string columnName;
         private string op;
@@ -168,7 +168,7 @@ namespace DOL.Database
         public override int GetHashCode() => base.GetHashCode();
     }
 
-    internal class PlainTextExpression : WhereExpression
+    internal class PlainTextExpression : WhereClause
     {
         private string columnName;
         private string op;
@@ -195,13 +195,13 @@ namespace DOL.Database
         public override int GetHashCode() => base.GetHashCode();
     }
 
-    internal class ChainingExpression : WhereExpression
+    internal class ChainingExpression : WhereClause
     {
-        private WhereExpression left;
-        private WhereExpression right;
+        private WhereClause left;
+        private WhereClause right;
         private string chainingOperator;
 
-        internal ChainingExpression(WhereExpression left, string chainingOperator, WhereExpression right)
+        internal ChainingExpression(WhereClause left, string chainingOperator, WhereClause right)
         {
             this.left = left;
             this.right = right;
@@ -251,15 +251,15 @@ namespace DOL.Database
             Name = columnName;
         }
 
-        public WhereExpression IsEqualTo(object val) => new FilterExpression(Name, "=", val);
-        public WhereExpression IsNotEqualTo(object val) => new FilterExpression(Name, "!=", val);
-        public WhereExpression IsGreatherThan(object val) => new FilterExpression(Name, ">", val);
-        public WhereExpression IsGreaterOrEqualTo(object val) => new FilterExpression(Name, ">=", val);
-        public WhereExpression IsLessThan(object val) => new FilterExpression(Name, "<", val);
-        public WhereExpression IsLessOrEqualTo(object val) => new FilterExpression(Name, "<=", val);
-        public WhereExpression IsLike(object val) => new FilterExpression(Name, "LIKE", val);
-        public WhereExpression IsNull() => new PlainTextExpression(Name, "IS NULL");
-        public WhereExpression IsNotNull() => new PlainTextExpression(Name, "IS NOT NULL");
-        public WhereExpression IsIn<T>(IEnumerable<T> values) => new FilterExpression(Name, "IN", values.Cast<object>());
+        public WhereClause IsEqualTo(object val) => new FilterExpression(Name, "=", val);
+        public WhereClause IsNotEqualTo(object val) => new FilterExpression(Name, "!=", val);
+        public WhereClause IsGreatherThan(object val) => new FilterExpression(Name, ">", val);
+        public WhereClause IsGreaterOrEqualTo(object val) => new FilterExpression(Name, ">=", val);
+        public WhereClause IsLessThan(object val) => new FilterExpression(Name, "<", val);
+        public WhereClause IsLessOrEqualTo(object val) => new FilterExpression(Name, "<=", val);
+        public WhereClause IsLike(object val) => new FilterExpression(Name, "LIKE", val);
+        public WhereClause IsNull() => new PlainTextExpression(Name, "IS NULL");
+        public WhereClause IsNotNull() => new PlainTextExpression(Name, "IS NOT NULL");
+        public WhereClause IsIn<T>(IEnumerable<T> values) => new FilterExpression(Name, "IN", values.Cast<object>());
     }
 }

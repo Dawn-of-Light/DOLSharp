@@ -98,7 +98,7 @@ namespace DOL.Database
 		/// <typeparam name="TObject"></typeparam>
 		/// <param name="whereExpression">WhereExpression object with implied parameters</param>
 		/// <returns></returns>
-		TObject SelectObject<TObject>(WhereExpression whereExpression)
+		TObject SelectObject<TObject>(WhereClause whereExpression)
 			where TObject : DataObject;
 
 		/// <summary>
@@ -106,7 +106,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="whereExpression">WhereExpression object with implied parameters</param>
 		/// <returns>Collection of matching DataObjects</returns>
-		IList<TObject> SelectObjects<TObject>(WhereExpression whereExpression)
+		IList<TObject> SelectObjects<TObject>(WhereClause whereExpression)
 			where TObject : DataObject;
 
 		/// <summary>
@@ -114,7 +114,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="whereExpressionBatch">Batch of WhereExpressions with implied parameters</param>
 		/// <returns>Collection of matching DataObjects</returns
-		IList<IList<TObject>> MultipleSelectObjects<TObject>(IEnumerable<WhereExpression> whereExpressionBatch)
+		IList<IList<TObject>> MultipleSelectObjects<TObject>(IEnumerable<WhereClause> whereExpressionBatch)
 			where TObject : DataObject;
 
 		/// <summary>

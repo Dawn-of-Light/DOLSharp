@@ -73,7 +73,7 @@ namespace DOL.GS
 			int salvageLevel = CraftingMgr.GetItemCraftLevel(item) / 100;
 			if(salvageLevel > 9) salvageLevel = 9; // max 9
 
-			var whereClause = WhereExpression.Empty;
+			var whereClause = WhereClause.Empty;
 
 			if (item.SalvageYieldID == 0)
 			{
