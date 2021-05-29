@@ -22,7 +22,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using DataTable = System.Data.DataTable;
 
 using DOL.Database.Attributes;
 using DOL.Database.Connection;

@@ -20,17 +20,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Data;
-using DataTable = System.Data.DataTable;
-
-using DOL.Database.Connection;
-using DOL.Database.Transaction;
-using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
+using System.Data.Common;
 
 using MySql.Data.MySqlClient;
 
-using System.Data.Common;
+using DOL.Database.Connection;
+using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
 
 namespace DOL.Database.Handlers
 {
@@ -476,251 +472,6 @@ namespace DOL.Database.Handlers
 		
 		#region SQLObject Implementation
 		/// <summary>
-		/// Raw SQL Select Implementation with Parameters for Prepared Query
-		/// </summary>
-		/// <param name="SQLCommand">Command for reading</param>
-		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
-		/// <param name="Reader">Reader Method</param>
-		/// <param name="Isolation">Transaction Isolation</param>
-		protected override void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, IsolationLevel Isolation)
-		{
-			if (log.IsDebugEnabled)
-				log.DebugFormat("ExecuteSelectImpl: {0}", SQLCommand);
-
-			var repeat = false;
-			var current = 0;
-			do
-			{
-				repeat = false;
-
-				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
-
-				using (var conn = new MySqlConnection(ConnectionString))
-				{
-					using (var cmd = conn.CreateCommand())
-					{
-						try
-						{
-							conn.Open();
-						    long start = (DateTime.UtcNow.Ticks / 10000);
-
-                            foreach (var parameter in parameters.Skip(current))
-							{
-								cmd.CommandText = SQLCommand;
-								FillSQLParameter(parameter, cmd.Parameters);
-								cmd.Prepare();
-
-								using (var reader = cmd.ExecuteReader())
-							    {
-							    	try
-							    	{
-							        	Reader(reader);
-							    	}
-							    	catch (Exception es)
-							    	{
-							    		if(log.IsWarnEnabled)
-							    			log.WarnFormat("ExecuteSelectImpl: Exception in Select Callback : {2}{0}{2}{1}", es, Environment.StackTrace, Environment.NewLine);
-							    	}
-							    	finally
-							    	{
-							    		reader.Close();
-							    	}
-							    }
-					    		current++;
-						    }
-					    
-						    if (log.IsDebugEnabled)
-								log.DebugFormat("ExecuteSelectImpl: SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
-							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
-								log.WarnFormat("ExecuteSelectImpl: SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
-						
-						}
-						catch (Exception e)
-						{
-							if (!HandleException(e))
-							{
-								if (log.IsErrorEnabled)
-									log.ErrorFormat("ExecuteSelectImpl: UnHandled Exception in Select Query \"{0}\"\n{1}", SQLCommand, e);
-								
-								throw;
-							}
-							repeat = true;
-						}
-					}
-				}
-			}
-			while (repeat);
-		}
-
-		protected override void ExecuteSelectImpl(string selectFromExpression, IEnumerable<WhereExpression> whereExpressionBatch, Action<IDataReader> Reader, IsolationLevel Isolation)
-		{
-			if (!whereExpressionBatch.Any()) throw new ArgumentException("No parameter list was given.");
-
-			if (log.IsDebugEnabled)
-				log.DebugFormat("ExecuteSelectImpl: {0}", selectFromExpression);
-
-			bool repeat;
-			var current = 0;
-			do
-			{
-				repeat = false;
-
-				using (var conn = new MySqlConnection(ConnectionString))
-				{
-					using (var cmd = conn.CreateCommand())
-					{
-						try
-						{
-							conn.Open();
-							long start = (DateTime.UtcNow.Ticks / 10000);
-
-							foreach (var whereExpression in whereExpressionBatch.Skip(current))
-							{
-								cmd.CommandText = selectFromExpression + whereExpression.WhereClause;
-								FillSQLParameter(whereExpression.QueryParameters, cmd.Parameters);
-								cmd.Prepare();
-
-								using (var reader = cmd.ExecuteReader())
-								{
-									try
-									{
-										Reader(reader);
-									}
-									catch (Exception es)
-									{
-										if (log.IsWarnEnabled)
-											log.WarnFormat("ExecuteSelectImpl: Exception in Select Callback : {2}{0}{2}{1}", es, Environment.StackTrace, Environment.NewLine);
-									}
-									finally
-									{
-										reader.Close();
-									}
-								}
-								current++;
-							}
-
-							if (log.IsDebugEnabled)
-								log.DebugFormat("ExecuteSelectImpl: SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
-							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
-								log.WarnFormat("ExecuteSelectImpl: SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), selectFromExpression);
-
-						}
-						catch (Exception e)
-						{
-							if (!HandleException(e))
-							{
-								if (log.IsErrorEnabled)
-									log.ErrorFormat("ExecuteSelectImpl: UnHandled Exception in Select Query \"{0}\"\n{1}", selectFromExpression, e);
-
-								throw;
-							}
-							repeat = true;
-						}
-					}
-				}
-			}
-			while (repeat);
-		}
-
-		protected override DbParameter ConvertToDBParameter(QueryParameter queryParameter)
-		{
-			var dbParam = new MySqlParameter();
-			dbParam.ParameterName = queryParameter.Name;
-			dbParam.MySqlDbType = GuessQueryParameterDbType(queryParameter);
-
-			if (queryParameter.Value is char)
-				dbParam.Value = Convert.ToUInt16(queryParameter.Value);
-			else
-				dbParam.Value = queryParameter.Value;
-
-			return dbParam;
-		}
-
-		/// <summary>
-		/// Implementation of Raw Non-Query with Parameters for Prepared Query
-		/// </summary>
-		/// <param name="SQLCommand">Raw Command</param>
-		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
-		/// <returns>True if the Command succeeded</returns>
-		protected override IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters)
-		{
-			if (log.IsDebugEnabled)
-				log.DebugFormat("ExecuteNonQueryImpl: {0}", SQLCommand);
-
-			var affected = new List<int>();
-			var repeat = false;
-			var current = 0;
-			do
-			{
-				repeat = false;
-
-				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
-
-				using (var conn = new MySqlConnection(ConnectionString))
-				{
-					using (var cmd = conn.CreateCommand())
-					{
-						try
-						{
-						    cmd.CommandText = SQLCommand;
-						    conn.Open();
-						    long start = (DateTime.UtcNow.Ticks / 10000);
-						    
-						    foreach(var parameter in parameters.Skip(current))
-						    {
-					    		FillSQLParameter(parameter, cmd.Parameters);
-								cmd.Prepare();
-
-								var result = -1;
-					    		try
-					    		{
-							    	result = cmd.ExecuteNonQuery();
-								    affected.Add(result);
-					    		}
-					    		catch (MySqlException sqle)
-					    		{
-					    			if (HandleSQLException(sqle))
-					    			{
-    									affected.Add(result);
-    									if (log.IsErrorEnabled)
-											log.ErrorFormat("ExecuteNonQueryImpl: Constraint Violation for raw query \"{0}\"\n{1}\n{2}", SQLCommand, sqle, Environment.StackTrace);
-					    			}
-					    			else
-					    			{
-					    				throw;
-					    			}
-					    		}
-							    current++;
-							    
-							    if (log.IsDebugEnabled && result < 1)
-							    	log.DebugFormat("ExecuteNonQueryImpl: No Change for raw query \"{0}\"", SQLCommand);
-						    }
-						    
-						    if (log.IsDebugEnabled)
-								log.DebugFormat("ExecuteNonQueryImpl: SQL NonQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
-							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
-								log.WarnFormat("ExecuteNonQueryImpl: SQL NonQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
-						}
-						catch (Exception e)
-						{
-							if (!HandleException(e))
-							{
-								if(log.IsErrorEnabled)
-									log.ErrorFormat("ExecuteNonQueryImpl: UnHandled Exception for raw query \"{0}\"\n{1}", SQLCommand, e);
-
-								throw;
-							}
-							repeat = true;
-						}
-					}
-				}
-			} 
-			while (repeat);
-
-			return affected;
-		}
-
-		/// <summary>
 		/// Implementation of Scalar Query with Parameters for Prepared Query
 		/// </summary>
 		/// <param name="SQLCommand">Scalar Command</param>
@@ -747,74 +498,77 @@ namespace DOL.Database.Handlers
 					{
 						try
 						{
-						    cmd.CommandText = SQLCommand;
+							cmd.CommandText = SQLCommand;
 							conn.Open();
-						    long start = (DateTime.UtcNow.Ticks / 10000);
-						    
-						    foreach(var parameter in parameters.Skip(current))
-						    {
-					    		FillSQLParameter(parameter, cmd.Parameters);
+							long start = (DateTime.UtcNow.Ticks / 10000);
+
+							foreach (var parameter in parameters.Skip(current))
+							{
+								FillSQLParameter(parameter, cmd.Parameters);
 								cmd.Prepare();
 
 								if (retrieveLastInsertID)
-					    		{
-					    			using (var tran = conn.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
-					    			{
-					    				try
-					    				{
-						    				cmd.Transaction = tran;
-						    				try
-						    				{
-							    				cmd.ExecuteNonQuery();
-							    				obj.Add(cmd.LastInsertedId);
-						    				}
-								    		catch (MySqlException sqle)
-								    		{
-								    			if (HandleSQLException(sqle))
-								    			{
-			    									obj.Add(-1);
-			    									if (log.IsErrorEnabled)
-														log.ErrorFormat("ExecuteScalarImpl: Constraint Violation for command \"{0}\"\n{1}\n{2}", SQLCommand, sqle, Environment.StackTrace);
-								    			}
-								    			else
-								    			{
-								    				throw;
-								    			}
-								    		}
-							    			tran.Commit();
-					    				}
-					    				catch (Exception te)
-					    				{
-					    					tran.Rollback();
-					    					if (log.IsErrorEnabled)
-					    						log.ErrorFormat("ExecuteScalarImpl: Error in Transaction (Rollback) for command : {0}\n{1}", SQLCommand, te);
-					    				}
-					    				
-					    			}
-					    		}
-					    		else
-					    		{
-							    	var result = cmd.ExecuteScalar();
-							    	obj.Add(result);
-					    		}
-						    	current++;
-						    }
-						    
+								{
+									using (var tran = conn.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
+									{
+										try
+										{
+											cmd.Transaction = tran;
+											try
+											{
+												cmd.ExecuteNonQuery();
+												obj.Add(cmd.LastInsertedId);
+											}
+											catch (Exception ex)
+											{
+												if (HandleSQLException(ex))
+												{
+													obj.Add(-1);
+													if (log.IsErrorEnabled)
+														log.ErrorFormat("ExecuteScalarImpl: Constraint Violation for command \"{0}\"\n{1}\n{2}", SQLCommand, ex, Environment.StackTrace);
+												}
+												else
+												{
+													throw;
+												}
+											}
+											tran.Commit();
+										}
+										catch (Exception te)
+										{
+											tran.Rollback();
+											if (log.IsErrorEnabled)
+												log.ErrorFormat("ExecuteScalarImpl: Error in Transaction (Rollback) for command : {0}\n{1}", SQLCommand, te);
+										}
+									}
+								}
+								else
+								{
+									var result = cmd.ExecuteScalar();
+									obj.Add(result);
+								}
+								current++;
+							}
+
 							if (log.IsDebugEnabled)
-								log.DebugFormat("ExecuteScalar: SQL ScalarQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
+								log.DebugFormat("ExecuteScalarImpl: SQL ScalarQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
 							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
-								log.WarnFormat("ExecuteScalar: SQL ScalarQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+								log.WarnFormat("ExecuteScalarImpl: SQL ScalarQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
 						}
 						catch (Exception e)
 						{
 							if (!HandleException(e))
 							{
 								if (log.IsErrorEnabled)
-									log.ErrorFormat("ExecuteScalar: UnHandled Exception for command \"{0}\"\n{1}", SQLCommand, e);
-								
+									log.ErrorFormat("ExecuteScalarImpl: UnHandled Exception for command \"{0}\"\n{1}", SQLCommand, e);
+
 								throw;
 							}
 							repeat = true;
+						}
+						finally
+						{
+							CloseConnection(conn);
 						}
 					}
 				}
@@ -824,6 +578,7 @@ namespace DOL.Database.Handlers
 			return obj.ToArray();
 		}
 		#endregion
+
 		/// <summary>
 		/// Retrieve Query Parameter DB Type from Table Type or Runtime Type
 		/// </summary>
@@ -864,21 +619,50 @@ namespace DOL.Database.Handlers
 			
 			return MySqlDbType.Blob;
 		}
+
+		protected override DbConnection CreateConnection(string connectionsString)
+		{
+			return new MySqlConnection(ConnectionString);
+		}
+
+		protected override void CloseConnection(DbConnection connection)
+		{
+			//Do nothing. Connection is closed on calling connection.Dispose()
+		}
+
+		protected override DbParameter ConvertToDBParameter(QueryParameter queryParameter)
+		{
+			var dbParam = new MySqlParameter();
+			dbParam.ParameterName = queryParameter.Name;
+			dbParam.MySqlDbType = GuessQueryParameterDbType(queryParameter);
+
+			if (queryParameter.Value is char)
+				dbParam.Value = Convert.ToUInt16(queryParameter.Value);
+			else
+				dbParam.Value = queryParameter.Value;
+
+			return dbParam;
+		}
+
 		/// <summary>
 		/// Handle Non Fatal SQL Query Exception
 		/// </summary>
-		/// <param name="sqle">SQL Excepiton</param>
+		/// <param name="e">SQL Excepiton</param>
 		/// <returns>True if handled, False otherwise</returns>
-		protected static bool HandleSQLException(MySqlException sqle)
+		protected override bool HandleSQLException(Exception e)
 		{
-			switch ((MySqlErrorCode)sqle.Number)
+			if (e is MySqlException sqle)
 			{
-				case MySqlErrorCode.DuplicateUnique:
-				case MySqlErrorCode.DuplicateKeyEntry:
-					return true;
-				default:
-					return false;
+				switch ((MySqlErrorCode)sqle.Number)
+				{
+					case MySqlErrorCode.DuplicateUnique:
+					case MySqlErrorCode.DuplicateKeyEntry:
+						return true;
+					default:
+						return false;
+				}
 			}
+			return false;
 		}
 	}
 }

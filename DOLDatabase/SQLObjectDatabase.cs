@@ -32,9 +32,9 @@ namespace DOL.Database
 	/// <summary>
 	/// Abstract Base Class for SQL based Database Connector
 	/// </summary>
-	public abstract class SQLObjectDatabase : ObjectDatabase 
+	public abstract class SQLObjectDatabase : ObjectDatabase
 	{
-        private static readonly object Lock = new object();
+		private static readonly object Lock = new object();
 
 		/// <summary>
 		/// Create a new instance of <see cref="SQLObjectDatabase"/>
@@ -612,9 +612,157 @@ namespace DOL.Database
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <param name="Reader">Reader Method</param>
 		/// <param name="Isolation">Transaction Isolation</param>
-		protected abstract void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation);
+		protected virtual void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+		{
+			if (log.IsDebugEnabled)
+				log.DebugFormat("ExecuteSelectImpl: {0}", SQLCommand);
 
-		protected abstract void ExecuteSelectImpl(string selectFromExpression, IEnumerable<WhereExpression> whereExpressionBatch, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation);
+			var repeat = false;
+			var current = 0;
+			do
+			{
+				repeat = false;
+
+				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
+
+				using (var conn = CreateConnection(ConnectionString))
+				{
+					using (var cmd = conn.CreateCommand())
+					{
+						try
+						{
+							conn.Open();
+							long start = (DateTime.UtcNow.Ticks / 10000);
+
+							foreach (var parameter in parameters.Skip(current))
+							{
+								cmd.CommandText = SQLCommand;
+								FillSQLParameter(parameter, cmd.Parameters);
+								cmd.Prepare();
+
+								using (var reader = cmd.ExecuteReader())
+								{
+									try
+									{
+										Reader(reader);
+									}
+									catch (Exception es)
+									{
+										if (log.IsWarnEnabled)
+											log.WarnFormat("ExecuteSelectImpl: Exception in Select Callback : {2}{0}{2}{1}", es, Environment.StackTrace, Environment.NewLine);
+									}
+									finally
+									{
+										reader.Close();
+									}
+								}
+								current++;
+							}
+
+							if (log.IsDebugEnabled)
+								log.DebugFormat("ExecuteSelectImpl: SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
+								log.WarnFormat("ExecuteSelectImpl: SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+
+						}
+						catch (Exception e)
+						{
+							if (!HandleException(e))
+							{
+								if (log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteSelectImpl: UnHandled Exception for Select Query \"{0}\"\n{1}", SQLCommand, e);
+
+								throw;
+							}
+							repeat = true;
+						}
+						finally
+						{
+							CloseConnection(conn);
+						}
+					}
+				}
+			}
+			while (repeat);
+		}
+
+		protected virtual void ExecuteSelectImpl(string selectFromExpression, IEnumerable<WhereExpression> whereExpressionBatch, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+		{
+			if (!whereExpressionBatch.Any()) throw new ArgumentException("No parameter list was given.");
+
+			if (log.IsDebugEnabled)
+				log.DebugFormat("ExecuteSelectImpl: {0}", selectFromExpression);
+
+			bool repeat;
+			var current = 0;
+			do
+			{
+				repeat = false;
+
+				using (var conn = CreateConnection(ConnectionString))
+				{
+					using (var cmd = conn.CreateCommand())
+					{
+						try
+						{
+							conn.Open();
+							long start = (DateTime.UtcNow.Ticks / 10000);
+
+							foreach (var whereExpression in whereExpressionBatch.Skip(current))
+							{
+								cmd.CommandText = selectFromExpression + whereExpression.WhereClause;
+								FillSQLParameter(whereExpression.QueryParameters, cmd.Parameters);
+								cmd.Prepare();
+
+								using (var reader = cmd.ExecuteReader())
+								{
+									try
+									{
+										Reader(reader);
+									}
+									catch (Exception es)
+									{
+										if (log.IsWarnEnabled)
+											log.WarnFormat("ExecuteSelectImpl: Exception in Select Callback : {2}{0}{2}{1}", es, Environment.StackTrace, Environment.NewLine);
+									}
+									finally
+									{
+										reader.Close();
+									}
+								}
+								current++;
+							}
+
+							if (log.IsDebugEnabled)
+								log.DebugFormat("ExecuteSelectImpl: SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
+								log.WarnFormat("ExecuteSelectImpl: SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), selectFromExpression);
+
+						}
+						catch (Exception e)
+						{
+							if (!HandleException(e))
+							{
+								if (log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteSelectImpl: UnHandled Exception in Select Query \"{0}\"\n{1}", selectFromExpression, e);
+
+								throw;
+							}
+							repeat = true;
+						}
+						finally
+						{
+							CloseConnection(conn);
+						}
+					}
+				}
+			}
+			while (repeat);
+		}
+
+		protected abstract DbConnection CreateConnection(string connectionsString);
+
+		protected abstract void CloseConnection(DbConnection connection);
 		#endregion
 
 		#region Non Query Implementation
@@ -673,9 +821,89 @@ namespace DOL.Database
 		/// <param name="SQLCommand">Raw Command</param>
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Command</param>
 		/// <returns>True foreach Command that succeeded</returns>
-		protected abstract IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters);
+		protected virtual IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters)
+		{
+			if (log.IsDebugEnabled)
+				log.DebugFormat("ExecuteNonQueryImpl: {0}", SQLCommand);
+
+			var affected = new List<int>();
+			bool repeat;
+			var current = 0;
+			do
+			{
+				repeat = false;
+
+				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
+
+				using (var conn = CreateConnection(ConnectionString))
+				{
+					using (var cmd = conn.CreateCommand())
+					{
+						try
+						{
+							cmd.CommandText = SQLCommand;
+							conn.Open();
+							long start = (DateTime.UtcNow.Ticks / 10000);
+
+							foreach (var parameter in parameters.Skip(current))
+							{
+								FillSQLParameter(parameter, cmd.Parameters);
+								cmd.Prepare();
+
+								var result = -1;
+								try
+								{
+									result = cmd.ExecuteNonQuery();
+									affected.Add(result);
+								}
+								catch (Exception ex)
+								{
+									if (HandleSQLException(ex))
+									{
+										affected.Add(result);
+										if (log.IsErrorEnabled)
+											log.ErrorFormat("ExecuteNonQueryImpl: Constraint Violation for raw query \"{0}\"\n{1}\n{2}", SQLCommand, ex, Environment.StackTrace);
+									}
+									else
+									{
+										throw;
+									}
+								}
+								current++;
+
+								if (log.IsDebugEnabled && result < 1)
+									log.DebugFormat("ExecuteNonQueryImpl: No Change for raw query \"{0}\"", SQLCommand);
+							}
+
+							if (log.IsDebugEnabled)
+								log.DebugFormat("ExecuteNonQueryImpl: SQL NonQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
+								log.WarnFormat("ExecuteNonQueryImpl: SQL NonQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+						}
+						catch (Exception e)
+						{
+							if (!HandleException(e))
+							{
+								if (log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteNonQueryImpl: UnHandled Exception for raw query \"{0}\"\n{1}", SQLCommand, e);
+
+								throw;
+							}
+							repeat = true;
+						}
+						finally
+						{
+							CloseConnection(conn);
+						}
+					}
+				}
+			}
+			while (repeat);
+
+			return affected;
+		}
 		#endregion
-		
+
 		#region Scalar Implementation
 		/// <summary>
 		/// Implementation of Scalar Query
@@ -721,8 +949,7 @@ namespace DOL.Database
 		/// <returns>Objects Returned by Scalar</returns>
 		protected abstract object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, bool retrieveLastInsertID);
 		#endregion
-		
-		#region Specific
+				
 		protected virtual bool HandleException(Exception e)
 		{
 			bool ret = false;
@@ -759,6 +986,7 @@ namespace DOL.Database
 
 			return ret;
 		}
-		#endregion
+
+		protected abstract bool HandleSQLException(Exception e);
 	}
 }
