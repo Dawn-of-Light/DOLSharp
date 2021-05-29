@@ -30,18 +30,12 @@ using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
 
 using MySql.Data.MySqlClient;
 
-using log4net;
 using System.Data.Common;
 
 namespace DOL.Database.Handlers
 {
 	public class MySQLObjectDatabase : SQLObjectDatabase
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		/// <summary>
 		/// Create a new instance of <see cref="MySQLObjectDatabase"/>
 		/// </summary>

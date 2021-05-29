@@ -40,7 +40,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Number Format Info to Use for Database
@@ -117,8 +117,8 @@ namespace DOL.Database
 				
 				if (tableHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("AddObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("AddObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
 					success = false;
 					continue;
 				}
@@ -154,10 +154,10 @@ namespace DOL.Database
 							}
 							else
 							{
-								if (Log.IsErrorEnabled)
+								if (log.IsErrorEnabled)
 								{
 									foreach(var obj in resultGrp)
-										Log.ErrorFormat("AddObjects: DataObject ({0}) could not be inserted into database...", obj.DataObject);
+										log.ErrorFormat("AddObjects: DataObject ({0}) could not be inserted into database...", obj.DataObject);
 								}
 								success = false;
 							}
@@ -165,10 +165,10 @@ namespace DOL.Database
 					}
 					else
 					{
-						if (Log.IsWarnEnabled)
+						if (log.IsWarnEnabled)
 						{
 							foreach (var obj in allowed)
-								Log.WarnFormat("AddObject: DataObject ({0}) not allowed to be added to Database", obj);
+								log.WarnFormat("AddObject: DataObject ({0}) not allowed to be added to Database", obj);
 						}
 						success = false;
 					}
@@ -202,8 +202,8 @@ namespace DOL.Database
 				
 				if (tableHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("SaveObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("SaveObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
 					success = false;
 					continue;
 				}
@@ -230,10 +230,10 @@ namespace DOL.Database
 					}
 					else
 					{
-						if (Log.IsErrorEnabled)
+						if (log.IsErrorEnabled)
 						{
 							foreach(var obj in resultGrp)
-								Log.ErrorFormat("SaveObject: DataObject ({0}) could not be saved into database...", obj.DataObject);
+								log.ErrorFormat("SaveObject: DataObject ({0}) could not be saved into database...", obj.DataObject);
 						}
 						success = false;
 					}
@@ -270,8 +270,8 @@ namespace DOL.Database
 				
 				if (tableHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("DeleteObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("DeleteObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
 					success = false;
 					continue;
 				}
@@ -307,10 +307,10 @@ namespace DOL.Database
 							}
 							else
 							{
-								if (Log.IsErrorEnabled)
+								if (log.IsErrorEnabled)
 								{
 									foreach(var obj in resultGrp)
-										Log.ErrorFormat("DeleteObject: DataObject ({0}) could not be deleted from database...", obj.DataObject);
+										log.ErrorFormat("DeleteObject: DataObject ({0}) could not be deleted from database...", obj.DataObject);
 								}
 								success = false;
 							}
@@ -318,10 +318,10 @@ namespace DOL.Database
 					}
 					else
 					{
-						if (Log.IsWarnEnabled)
+						if (log.IsWarnEnabled)
 						{
 							foreach (var obj in allowed)
-								Log.WarnFormat("DeleteObject: DataObject ({0}) not allowed to be deleted from Database", obj);
+								log.WarnFormat("DeleteObject: DataObject ({0}) not allowed to be deleted from Database", obj);
 						}
 						success = false;
 					}
@@ -346,8 +346,8 @@ namespace DOL.Database
 				var remoteHandler = GetTableHandler(relation.ValueType);
 				if (remoteHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("SaveObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("SaveObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
 					success = false;
 					continue;
 				}
@@ -388,10 +388,10 @@ namespace DOL.Database
 								}
 								else
 								{
-									if (Log.IsErrorEnabled)
+									if (log.IsErrorEnabled)
 									{
 										foreach (var result in resultGrp)
-											Log.ErrorFormat("SaveObjectRelations: {0} Relation ({1}) of DataObject ({2}) failed for Object ({3})", grp.Key ? "Saving" : "Adding",
+											log.ErrorFormat("SaveObjectRelations: {0} Relation ({1}) of DataObject ({2}) failed for Object ({3})", grp.Key ? "Saving" : "Adding",
 											                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
 									}
 									success = false;
@@ -403,10 +403,10 @@ namespace DOL.Database
 							// Objects that could not be added can lead to failure
 							if (!grp.Key)
 							{
-								if (Log.IsWarnEnabled)
+								if (log.IsWarnEnabled)
 								{
 									foreach (var obj in allowed)
-										Log.WarnFormat("SaveObjectRelations: DataObject ({0}) not allowed to be added to Database", obj);
+										log.WarnFormat("SaveObjectRelations: DataObject ({0}) not allowed to be added to Database", obj);
 								}
 								success = false;
 							}
@@ -432,8 +432,8 @@ namespace DOL.Database
 				var remoteHandler = GetTableHandler(relation.ValueType);
 				if (remoteHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("DeleteObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("DeleteObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
 					success = false;
 					continue;
 				}
@@ -473,8 +473,8 @@ namespace DOL.Database
 							{
 								foreach (var result in resultGrp)
 								{
-									if (Log.IsErrorEnabled)
-										Log.ErrorFormat("DeleteObjectRelations: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
+									if (log.IsErrorEnabled)
+										log.ErrorFormat("DeleteObjectRelations: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
 										                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
 								}
 								success = false;
@@ -484,10 +484,10 @@ namespace DOL.Database
 					else
 					{
 						// Objects that could not be deleted can lead to failure
-						if (Log.IsWarnEnabled)
+						if (log.IsWarnEnabled)
 						{
 							foreach (var obj in grp)
-								Log.WarnFormat("DeleteObjectRelations: DataObject ({0}) not allowed to be deleted from Database", obj);
+								log.WarnFormat("DeleteObjectRelations: DataObject ({0}) not allowed to be deleted from Database", obj);
 						}
 						success = false;
 					}
@@ -563,16 +563,16 @@ namespace DOL.Database
 						}
 						catch (Exception re)
 						{
-							if (Log.IsErrorEnabled)
-								Log.ErrorFormat("Could not Retrieve Objects from Relation (Table {0}, Local {1}, Remote Table {2}, Remote {3})\n{4}", tableName,
+							if (log.IsErrorEnabled)
+								log.ErrorFormat("Could not Retrieve Objects from Relation (Table {0}, Local {1}, Remote Table {2}, Remote {3})\n{4}", tableName,
 								                relation.Relation.LocalField, AttributesUtils.GetTableOrViewName(relation.ValueType), relation.Relation.RemoteField, re);
 						}
 					}
 				}
 				catch (Exception e)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("Could not Resolve Relations for Table {0}\n{1}", tableName, e);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("Could not Resolve Relations for Table {0}\n{1}", tableName, e);
 				}
 			}
 		}
@@ -693,8 +693,8 @@ namespace DOL.Database
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("FindObjectByKey: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("FindObjectByKey: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
@@ -739,8 +739,8 @@ namespace DOL.Database
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
@@ -811,8 +811,8 @@ namespace DOL.Database
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
@@ -924,8 +924,8 @@ namespace DOL.Database
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("SelectAllObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("SelectAllObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
@@ -1070,8 +1070,8 @@ namespace DOL.Database
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("UpdateInCache: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("UpdateInCache: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}

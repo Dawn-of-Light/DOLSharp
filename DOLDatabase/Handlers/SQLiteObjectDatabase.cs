@@ -31,17 +31,11 @@ using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
 
 using System.Data.SQLite;
 
-using log4net;
 
 namespace DOL.Database.Handlers
 {
 	public class SQLiteObjectDatabase : SQLObjectDatabase
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 		/// <summary>
 		/// Create a new instance of <see cref="SQLiteObjectDatabase"/>
 		/// </summary>
@@ -164,8 +158,8 @@ namespace DOL.Database.Handlers
 			}
 			catch (Exception e)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("{0}: {1} = {2} doesnt fit to {3}\n{4}", obj.TableName, bind.ColumnName, value.GetType().FullName, bind.ValueType, e);
+				if (ObjectDatabase.log.IsErrorEnabled)
+                    ObjectDatabase.log.ErrorFormat("{0}: {1} = {2} doesnt fit to {3}\n{4}", obj.TableName, bind.ColumnName, value.GetType().FullName, bind.ValueType, e);
 			}
 			
 			base.DatabaseSetValue(obj, bind, value);
