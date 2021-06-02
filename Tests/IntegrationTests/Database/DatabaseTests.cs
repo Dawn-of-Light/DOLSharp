@@ -113,6 +113,15 @@ namespace DOL.Integration.Database
 			Assert.IsNotNull(retrieveKeyObj, "Test Table Retrieved Object by Key should not be null.");
 			Assert.AreEqual(retrieveKeyObj.ObjectId, keyObject.ObjectId, "Test Table Key Object and Retrieved Key Object should have same Object Id.");
 			Assert.AreEqual(retrieveKeyObj.TestField, keyObject.TestField, "Test Table Key Object and Retrieved Key Object should have same Values.");
+
+			// Find Objects by Key
+			var keys = retrieve.Take(2).Select(r => r.ObjectId).Append("__bad__id__").ToList();
+			var retrieveKeyObjects = Database.FindObjectsByKey<TestTable>(keys);
+			Assert.IsNotNull(retrieveKeyObjects, "Test Table Retrieved Objects by Key should not be null.");
+			Assert.IsTrue(retrieveKeyObjects.Count == 3, "Test Table Retrieved Objects by Key should contains 3 objects");
+			Assert.IsTrue(keys.Contains(retrieveKeyObjects[0].ObjectId), "Test Table first Key Object and Retrieved first Key Object should have same Object Id.");
+			Assert.IsTrue(keys.Contains(retrieveKeyObjects[1].ObjectId), "Test Table second Key Object and Retrieved second Key Object should have same Object Id.");
+			Assert.IsNull(retrieveKeyObjects[2], "Test Table third object should be null (it's an invalid id)");
 		}
 		
 		/// <summary>
