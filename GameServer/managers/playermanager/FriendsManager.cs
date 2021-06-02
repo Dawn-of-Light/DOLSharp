@@ -102,7 +102,7 @@ namespace DOL.GS.Friends
 			var offlineFriends = new FriendStatus[0];
 			if (friends.Any())
 			{
-				offlineFriends = Database.SelectObjects<DOLCharacters>("`Name` = @Name", friends.Select(name => new[] { new QueryParameter("@Name", name) })).SelectMany(chars => chars)
+				offlineFriends = Database.SelectObjects<DOLCharacters>(DB.Column("Name").IsIn(friends))
 					.Select(chr => new FriendStatus(chr.Name, chr.Level, chr.Class, chr.LastPlayed)).ToArray();
 			}
 
