@@ -20,6 +20,8 @@ using NUnit.Framework;
 
 using DOL.Database;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DOL.UnitTests.Database
 {
@@ -68,6 +70,28 @@ namespace DOL.UnitTests.Database
             var placeHolder2 = expression2.QueryParameters[0].Item1;
             var actual = andExpression.WhereClause;
             var expected = $"(foo = {placeHolder1} AND bar = {placeHolder2})";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void InExpressionWhereClause_WithIntValues()
+        {
+            var expr = DB.Column("foo").IsIn(new [] { 1, 2 });
+            var placeHolder1 = expr.QueryParameters[0].Item1;
+            var placeHolder2 = expr.QueryParameters[1].Item1;
+            var actual = expr.WhereClause;
+            var expected = $"foo IN ({placeHolder1},{placeHolder2})";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void InExpressionWhereClause_WithStringValues()
+        {
+            var expr = DB.Column("foo").IsIn(new [] { "a", "b" });
+            var placeHolder1 = expr.QueryParameters[0].Item1;
+            var placeHolder2 = expr.QueryParameters[1].Item1;
+            var actual = expr.WhereClause;
+            var expected = $"foo IN ({placeHolder1},{placeHolder2})";
             Assert.AreEqual(expected, actual);
         }
 

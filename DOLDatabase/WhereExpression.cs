@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DOL.Database
 {
@@ -40,9 +41,28 @@ namespace DOL.Database
         }
 
         public override string WhereClause
-            => $"{columnName} {op} {GetPlaceHolder(id)}";
+        {
+            get
+            {
+                if (op != "IN")
+                    return $"{columnName} {op} {GetPlaceHolder(id)}";
+                var values = (IEnumerable<object>)val;
+                var prefix = GetPlaceHolder(id);
+                var ids = string.Join(",", values.Select((_, i) => $"{prefix}{i}"));
+                return $"{columnName} IN ({ids})";
+            }
+        }
         public override QueryParameter[] QueryParameters
-            => new QueryParameter[] { new QueryParameter(GetPlaceHolder(id), val) };
+        {
+            get
+            {
+                if (op != "IN")
+                    return new QueryParameter[] { new QueryParameter(GetPlaceHolder(id), val) };
+                var values = (IEnumerable<object>)val;
+                var prefix = GetPlaceHolder(id);
+                return values.Select((v, i) => new QueryParameter($"{prefix}{i}", v)).ToArray();
+            }
+        }
 
         protected static string GetPlaceHolder(uint id)
         {
@@ -137,5 +157,6 @@ namespace DOL.Database
         public WhereExpression IsLike(object val) => new FilterExpression(Name, "LIKE", val);
         public WhereExpression IsNull() => new PlainTextExpression(Name, "IS NULL");
         public WhereExpression IsNotNull() => new PlainTextExpression(Name, "IS NOT NULL");
+        public WhereExpression IsIn<T>(IEnumerable<T> values) => new FilterExpression(Name, "IN", values.Cast<object>());
     }
 }
