@@ -305,10 +305,7 @@ namespace DOL.GS
 			var logConfig = new FileInfo(config.LogConfigFile);
 			if (!logConfig.Exists)
 			{
-			    if (Environment.OSVersion.Platform == PlatformID.Unix)
-				    ResourceUtil.ExtractResource("logconfig_unix.xml", logConfig.FullName);
-			    else
-                    ResourceUtil.ExtractResource("logconfig.xml", logConfig.FullName);
+				ResourceUtil.ExtractResource("logconfig.xml", logConfig.FullName);
 			}
 
 			//Configure and watch the config file
