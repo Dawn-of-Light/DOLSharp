@@ -23,7 +23,7 @@ jobs:
           nuget install NUnit.Console -Version 3.12.0 -OutputDirectory test -ExcludeVersion
       - name: Build
         run: |
-          CONFIGURATION=${{ matrix.build_target }} nuget restore
+          CONFIGURATION=${{ matrix.build_target }} nuget restore -DisableParallelProcessing
           MONO_IOMAP=case msbuild /p:Configuration=${{ matrix.build_target }} "Dawn of Light.sln"
       - name: Test
         run: |
