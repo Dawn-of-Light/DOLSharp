@@ -15,7 +15,9 @@ It does the following:
 Auto Builds
 ----
 
-MS Build: [![Build status](https://ci.appveyor.com/api/projects/status/lwexc16e3h1u2jee?svg=true)](https://ci.appveyor.com/project/dol-leodagan/dolsharp) XBuild: [![Build status](https://api.travis-ci.org/Dawn-of-Light/DOLSharp.svg)](https://travis-ci.org/Dawn-of-Light/DOLSharp)
+Net4.8 on Windows: [![Build status](https://ci.appveyor.com/api/projects/status/lwexc16e3h1u2jee?svg=true)](https://ci.appveyor.com/project/dol-leodagan/dolsharp)  
+Net4.8 on Linux: [![Build status](https://api.travis-ci.org/Dawn-of-Light/DOLSharp.svg)](https://travis-ci.org/Dawn-of-Light/DOLSharp)  
+[![Net4.8 Tests on Linux](https://github.com/Dawn-of-Light/DOLSharp/actions/workflows/test_net48_linux.yml/badge.svg?event=push)](https://github.com/Dawn-of-Light/DOLSharp/actions/workflows/test_net48_linux.yml)
 
 Latest Release : https://github.com/Dawn-of-Light/DOLSharp/releases/latest
 
