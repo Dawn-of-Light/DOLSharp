@@ -78,10 +78,9 @@ namespace DOL.GS.PacketHandler
 					
 					if (charsBySlot.Any())
 					{
-						var ownerIdWhere = DB.Column("OwnerID").IsIn(charsBySlot.Values.Select(c => c.ObjectId));
-						var slotWhere = DB.Column("SlotPosition").IsGreaterOrEqualTo((int)eInventorySlot.MinEquipable)
+						var filterBySlotPosition = DB.Column("SlotPosition").IsGreaterOrEqualTo((int)eInventorySlot.MinEquipable)
 							.And(DB.Column("SlotPosition").IsLessOrEqualTo((int)eInventorySlot.MaxEquipable));
-						var allItems = GameServer.Database.SelectObjects<InventoryItem>(ownerIdWhere.And(slotWhere));
+						var allItems = DOLDB<InventoryItem>.SelectObjects(DB.Column("OwnerID").IsIn(charsBySlot.Values.Select(c => c.ObjectId)).And(filterBySlotPosition));
 						
 						foreach (InventoryItem item in allItems)
 						{
