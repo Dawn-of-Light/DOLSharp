@@ -45,7 +45,7 @@ namespace DOL.GS.Commands
 						speed = Convert.ToUInt32(args[1]);
 						time = Convert.ToUInt32(args[2]);
 	
-						WorldMgr.StartDay(speed, time * (77760000 / 1000));
+						WorldMgr.StartDay( speed, time / 1000.0 );
 						return;
 					}
 					else throw new Exception ();

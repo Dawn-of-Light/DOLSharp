@@ -212,7 +212,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This constant defines the day constant
 		/// </summary>
-		private const int DAY = 77760000;
+		private const int DAY = 86400000;
 
 		/// <summary>
 		/// This holds the tick when the day started
@@ -697,12 +697,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Starts a new day with a certain increment
+		/// Starts a new day with a certain percent of the increment
 		/// </summary>
 		/// <param name="dayInc"></param>
-		/// <param name="dayStart"></param>
-		public static void StartDay(uint dayInc, uint dayStart)
+		/// <param name="percent">0..1</param>
+		public static void StartDay( uint dayInc, double percent )
 		{
+			uint dayStart = (uint)( percent * DAY );
 			m_dayIncrement = dayInc;
 
 			if (m_dayIncrement == 0)
