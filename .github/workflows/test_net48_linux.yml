@@ -1,4 +1,4 @@
-name: Testing NetFramework Linux Build
+name: Net4.8 Tests on Linux
 
 on:
   push:
@@ -28,4 +28,4 @@ jobs:
       - name: Test
         run: |
           LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll --where "namespace =~ 'DOL.UnitTests' and category!='Explicit'"
-          LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll --where "namespace =~ 'DOL.UnitTests' and category!='Explicit'"
+          LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll --where "namespace =~ 'DOL.Integration' and category!='Explicit'"
