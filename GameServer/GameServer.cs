@@ -752,6 +752,9 @@ namespace DOL.GS
 					return false;
 				regionsData = null;
 
+				if (!InitComponent(() => LosCheckMgr.Initialize(), "LosCheckMgr Initialization"))
+					return false;
+
 				//---------------------------------------------------------------
 				//Load the relic manager
 				if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
