@@ -66,19 +66,25 @@ namespace DOL.GS
 			//StressTests();
 		}
 
-
-		public static bool TestCollision(Region region, Vector3 origin, Vector3 target, ref RaycastStats stats)
+		public static float GetCollisionDistance(GameObject origin, GameObject target, ref RaycastStats stats)
 		{
-			return TestCollision(region.ID, origin, target, ref stats);
+			if (origin.CurrentRegion != target.CurrentRegion)
+				return float.PositiveInfinity;
+			var height = new Vector3(0, 0, 64); // maybe we should calculate that from the model id and size -- 64inch seems to be okay-ish for players
+			return GetCollisionDistance(origin.CurrentRegion, origin.ToVector3() + height, target.ToVector3() + height, ref stats);
 		}
-		public static bool TestCollision(int regionId, Vector3 origin, Vector3 target, ref RaycastStats stats)
+		public static float GetCollisionDistance(Region region, Vector3 origin, Vector3 target, ref RaycastStats stats)
+		{
+			return GetCollisionDistance(region.ID, origin, target, ref stats);
+		}
+		public static float GetCollisionDistance(int regionId, Vector3 origin, Vector3 target, ref RaycastStats stats)
 		{
 			if (!_regionTriangles.ContainsKey(regionId))
-				return false;
+				return float.PositiveInfinity;
 			var diff = target - origin;
 			var distance = diff.Length() + 1e-6f;
 			if (distance < 32 || distance > WorldMgr.VISIBILITY_DISTANCE)
-				return false;
+				return float.PositiveInfinity;
 
 			stats.nbTests += 1;
 			diff = Vector3.Normalize(diff);
@@ -87,10 +93,10 @@ namespace DOL.GS
 				if (tree == null)
 					continue;
 				var rayDist = tree.CollideWithRay(origin, diff, distance, ref stats);
-				if (distance < rayDist)
-					return true;
+				if (distance > rayDist)
+					return rayDist;
 			}
-			return false;
+			return float.PositiveInfinity;
 		}
 
 		public static LosTreeType InitializeForTestOnly(string filename)
@@ -140,14 +146,14 @@ namespace DOL.GS
 			var objects = reg.Objects.Where(o => o != null).ToList();
 			foreach (var o1 in objects.Take(1000))
 				foreach (var o2 in objects.Skip(1000).Take(1000))
-					TestCollision(o1.CurrentRegion, o1.ToVector3(), o2.ToVector3(), ref stats);
+					GetCollisionDistance(o1.CurrentRegion, o1.ToVector3(), o2.ToVector3(), ref stats);
 
 			var sw = new Stopwatch();
 			sw.Start();
 			stats = new RaycastStats();
 			foreach (var o1 in objects)
 				foreach (var o2 in objects)
-					TestCollision(o1.CurrentRegion, o1.ToVector3(), o2.ToVector3(), ref stats);
+					GetCollisionDistance(o1.CurrentRegion, o1.ToVector3(), o2.ToVector3(), ref stats);
 			sw.Stop();
 			long count = objects.Count * objects.Count;
 			var raySeconds = stats.nbTests * 1000 / sw.ElapsedMilliseconds;
@@ -160,7 +166,7 @@ namespace DOL.GS
 			stats = new RaycastStats();
 			foreach (var o1 in objects)
 				foreach (var o2 in objects)
-					TestCollision(o1.CurrentRegion, o1.ToVector3(), o2.ToVector3(), ref stats);
+					GetCollisionDistance(o1.CurrentRegion, o1.ToVector3(), o2.ToVector3(), ref stats);
 			sw.Stop();
 			count = objects.Count * objects.Count;
 			raySeconds = stats.nbTests * 1000 / sw.ElapsedMilliseconds;
