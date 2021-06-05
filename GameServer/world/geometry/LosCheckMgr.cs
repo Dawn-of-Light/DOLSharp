@@ -140,14 +140,14 @@ namespace DOL.GS
 			var objects = reg.Objects.Where(o => o != null).ToList();
 			foreach (var o1 in objects.Take(1000))
 				foreach (var o2 in objects.Skip(1000).Take(1000))
-					TestCollision(o1.CurrentRegion, o1.Position, o2.Position, ref stats);
+					TestCollision(o1.CurrentRegion, o1.ToVector3(), o2.ToVector3(), ref stats);
 
 			var sw = new Stopwatch();
 			sw.Start();
 			stats = new RaycastStats();
 			foreach (var o1 in objects)
 				foreach (var o2 in objects)
-					TestCollision(o1.CurrentRegion, o1.Position, o2.Position, ref stats);
+					TestCollision(o1.CurrentRegion, o1.ToVector3(), o2.ToVector3(), ref stats);
 			sw.Stop();
 			long count = objects.Count * objects.Count;
 			var raySeconds = stats.nbTests * 1000 / sw.ElapsedMilliseconds;
@@ -160,7 +160,7 @@ namespace DOL.GS
 			stats = new RaycastStats();
 			foreach (var o1 in objects)
 				foreach (var o2 in objects)
-					TestCollision(o1.CurrentRegion, o1.Position, o2.Position, ref stats);
+					TestCollision(o1.CurrentRegion, o1.ToVector3(), o2.ToVector3(), ref stats);
 			sw.Stop();
 			count = objects.Count * objects.Count;
 			raySeconds = stats.nbTests * 1000 / sw.ElapsedMilliseconds;
