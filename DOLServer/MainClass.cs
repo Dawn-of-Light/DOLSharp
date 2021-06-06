@@ -128,12 +128,14 @@ namespace DOL.DOLServer
 		/// </remarks>
 		private static void RegisterActions()
 		{
+			//Start server in console mode
+			RegisterAction(new ConsoleStart());
+
+#if NETFRAMEWORK
 			//Important action, used on service start internally
 			//!!!DO NOT REMOVE!!!
 			RegisterAction(new ServiceRun());
 			
-			//Start server in console mode
-			RegisterAction(new ConsoleStart());
 			//Install service action
 			RegisterAction(new ServiceInstall());
 			//Uninstall service action
@@ -142,6 +144,7 @@ namespace DOL.DOLServer
 			RegisterAction(new ServiceStart());
 			//Stop service action
 			RegisterAction(new ServiceStop());
+#endif
 		}
 
 		/// <summary>
