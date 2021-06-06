@@ -40,10 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.25" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.2" Condition=" '$(OS)' != 'Unix' " />
-    <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
-      <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
-    </Reference>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.2" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" />
