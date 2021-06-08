@@ -60,15 +60,21 @@
     <ProjectReference Include="..\DOLServer\DOLServer.csproj" Name="DOLServer" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" Private="True" />
   </ItemGroup>
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      xcopy "$(MSBuildProjectDirectory)\..\GameServer\language\*.txt" "$(MSBuildProjectDirectory)\$(OutputPath)\..\languages" /y /s /q /i
-      xcopy "$(MSBuildProjectDirectory)\..\GameServerScripts\*.cs" "$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts" /y /s /q /i
-      xcopy "$(MSBuildProjectDirectory)\..\GameServerScripts\dbupdater\*.xml" "$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\dbupdater" /y /s /q /i
-    </PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-      cd "$(MSBuildProjectDirectory)/../GameServer/language/"; mkdir -p "$(MSBuildProjectDirectory)/$(OutputPath)/../languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(MSBuildProjectDirectory)/$(OutputPath)/../languages/"
-      cd "$(MSBuildProjectDirectory)/../GameServerScripts/"; mkdir -p "$(MSBuildProjectDirectory)/$(OutputPath)/../scripts/"; find ./ -name "*.cs" | xargs -i -t cp --parents -f {} "$(MSBuildProjectDirectory)/$(OutputPath)/../scripts/"; find "./dbupdater" -name "*.xml" | xargs -i -t cp --parents -f {} "$(MSBuildProjectDirectory)/$(OutputPath)/../scripts"</PostBuildEvent>
-  </PropertyGroup>
+  <ItemGroup>
+    <ScriptFiles Include="..\GameServerScripts\**\*.cs" />
+    <DbUpdaterFiles Include="..\GameServerScripts\dbupdater\**\*.xml" />
+    <TranslationFiles Include="..\GameServer\language\**\*.txt" />
+  </ItemGroup>
+  <Target Name="CopyFiles" AfterTargets="AfterBuild">
+    <Copy
+      SourceFiles="@(ScriptFiles)"
+      DestinationFiles="@(ScriptFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy
+      SourceFiles="@(DbUpdaterFiles)"
+      DestinationFiles="@(DbUpdaterFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\dbupdater\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy
+      SourceFiles="@(TranslationFiles)"
+      DestinationFiles="@(TranslationFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\languages\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

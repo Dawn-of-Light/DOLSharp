@@ -81,39 +81,14 @@
     <Compile Update="ExtraPropertiesEditor.cs" />
     <Compile Update="RegExTextBox.cs" />
     <Compile Update="ServerProperties.cs" />
+    <None Include="DOLConfig.exe.config" CopyToOutputDirectory="Always" />
     <None Include="app.config" />
-    <None Include="serverconfig_extraproperties.xml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
     <Content Include="icon.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5" Visible="False" ProductName=".NET Framework 3.5 SP1 Client Profile" Install="false" />
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0" Visible="False" ProductName=".NET Framework 2.0 %28x86%29" Install="false" />
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0" Visible="False" ProductName=".NET Framework 3.0 %28x86%29" Install="false" />
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5" Visible="False" ProductName=".NET Framework 3.5" Install="true" />
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1" Visible="False" ProductName=".NET Framework 3.5 SP1" Install="false" />
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1" Visible="False" ProductName="Windows Installer 3.1" Install="true" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="DOLConfig.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <!-- Graveen: the following is replacing the rev number in the asembly.info file by the SVN rev number of the current project. -->
-  <!-- You must work on project under SVN version control, have msbuild community tasks assemblies installed and subversion client -->
-  <!-- The path of the tools should either be corrected below, or matched. In case you lack one of theses prereqs, rev number 'll not be changed. -->
-  <Target Name="BeforeBuild">
-    <SvnVersion LocalPath="." Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')">
-      <Output TaskParameter="Revision" PropertyName="Revision" />
-    </SvnVersion>
-    <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
+  <Target Name="CopyFiles" AfterTargets="AfterBuild">
+    <Copy
+      SourceFiles="serverconfig_extraproperties.xml"
+      DestinationFolder="$(MSBuildProjectDirectory)\..\$(Configuration)\lib\config\" />
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(MSBuildProjectDirectory)\*.xml" "$(MSBuildProjectDirectory)\..\$(Configuration)\lib\config" /y /s /q /i
-</PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cd "$(MSBuildProjectDirectory)/"; mkdir -p "$(MSBuildProjectDirectory)/../$(Configuration)/lib/config"; find ./ -name "*.xml" | xargs -i -t cp --parents -f {} "$(MSBuildProjectDirectory)/../$(Configuration)/lib/config/"
-</PostBuildEvent>
-  </PropertyGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
