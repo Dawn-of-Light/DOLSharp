@@ -870,7 +870,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				compiled = ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, Configuration.ScriptAssemblies);
+				compiled = ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, Configuration.AdditionalScriptAssemblies);
 			}
 			
 			if (compiled)
