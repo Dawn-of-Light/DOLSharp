@@ -53,8 +53,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.12" />
-    <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.6" Condition=" '$(OS)' != 'Unix' "/>
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.2" Condition=" '$(OS)' != 'Unix' " />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="True" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="True" />
     <ProjectReference Include="..\DOLServer\DOLServer.csproj" Name="DOLServer" />
