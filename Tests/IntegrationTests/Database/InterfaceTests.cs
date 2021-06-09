@@ -921,7 +921,19 @@ namespace DOL.Integration.Database
 
 			Assert.AreEqual(1, resultsWithTestfieldNull.Count);
 		}
-		
+
+		[Test]
+		public void SelectObjects_KeywordAsColumnName_SameAsAddedObjects()
+		{
+			Database.RegisterDataObject(typeof(SqlKeywordTable));
+			var firstEntry = new SqlKeywordTable { Type = "SomeText" };
+			Database.AddObject(firstEntry);
+
+			var result = Database.SelectObjects<SqlKeywordTable>(DB.Column("Type").IsEqualTo(firstEntry.Type));
+
+			CollectionAssert.Contains(result.Select(obj => obj.ObjectId), firstEntry.ObjectId, "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
+		}
+
 		/// <summary>
 		/// Test IObjectDatabase.SelectObjects`TObject(string, IEnumerable`IEnumerable`KeyValuePair`string, object)
 		/// </summary>
@@ -1105,7 +1117,7 @@ namespace DOL.Integration.Database
 			
 			Assert.AreEqual(1, filterCount, "Test Table should return same object count as filtered collection...");
 		}
-		
+
 		/// <summary>
 		/// Test IObjectDatabase.GetObjectCount`TObject
 		/// with null where clause
