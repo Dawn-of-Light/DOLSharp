@@ -633,8 +633,8 @@ namespace DOL.Database
 			}
 			else
 			{
-				var whereExpressions = objects.Select(obj => DB.Column(remoteBind.ColumnName).IsEqualTo(localBind.GetValue(obj)));
-				objsResults = MultipleSelectObjectsImpl(remoteHandler, whereExpressions);
+				var whereClauses = objects.Select(obj => DB.Column(remoteBind.ColumnName).IsEqualTo(localBind.GetValue(obj)));
+				objsResults = MultipleSelectObjectsImpl(remoteHandler, whereClauses);
 			}
 			
 			var resultByObjs = objsResults.Select((obj, index) => new { DataObject = objects[index], Results = obj }).ToArray();
@@ -714,22 +714,22 @@ namespace DOL.Database
 		#endregion
 
 		#region Public Parameterized Query Abstraction
-		public TObject SelectObject<TObject>(WhereClause whereExpression)
+		public TObject SelectObject<TObject>(WhereClause whereClause)
 			where TObject : DataObject
 		{
-			return SelectObjects<TObject>(whereExpression).FirstOrDefault();
+			return SelectObjects<TObject>(whereClause).FirstOrDefault();
 		}
 
-		public IList<TObject> SelectObjects<TObject>(WhereClause whereExpression)
+		public IList<TObject> SelectObjects<TObject>(WhereClause whereClause)
 			where TObject : DataObject
 		{
-			return MultipleSelectObjects<TObject>(new[] { whereExpression }).First();
+			return MultipleSelectObjects<TObject>(new[] { whereClause }).First();
 		}
 
-		public IList<IList<TObject>> MultipleSelectObjects<TObject>(IEnumerable<WhereClause> whereExpressionBatch)
+		public IList<IList<TObject>> MultipleSelectObjects<TObject>(IEnumerable<WhereClause> whereClauseBatch)
 			where TObject : DataObject
 		{
-			if (whereExpressionBatch == null) throw new ArgumentNullException("Parameter whereExpressionBatch may not be null.");
+			if (whereClauseBatch == null) throw new ArgumentNullException("Parameter whereClauseBatch may not be null.");
 
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
@@ -740,7 +740,7 @@ namespace DOL.Database
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
 
-			var objs = MultipleSelectObjectsImpl(tableHandler, whereExpressionBatch).Select(res => res.OfType<TObject>().ToArray()).ToArray();
+			var objs = MultipleSelectObjectsImpl(tableHandler, whereClauseBatch).Select(res => res.OfType<TObject>().ToArray()).ToArray();
 
 			FillObjectRelations(objs.SelectMany(obj => obj), false);
 
@@ -959,7 +959,7 @@ namespace DOL.Database
 		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
 		protected abstract IList<IList<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation);
 
-		protected abstract IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereClause> whereExpressionBatch);
+		protected abstract IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereClause> whereClauseBatch);
 
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
