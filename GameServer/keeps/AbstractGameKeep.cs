@@ -1166,8 +1166,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			//predict Z
-			DBKeepHookPoint hp = GameServer.Database.SelectObjects<DBKeepHookPoint>("`HookPointID` = @HookPointID AND `Height` = @Height",
-			                                                                        new[] { new QueryParameter("@HookPointID", 97), new QueryParameter("@Height", Height) }).FirstOrDefault();
+			DBKeepHookPoint hp = DOLDB<DBKeepHookPoint>.SelectObject(DB.Column("HookPointID").IsEqualTo(97).And(DB.Column("Height").IsEqualTo(Height)));
 			if (hp == null)
 				return;
 			int z = component.Z + hp.Z;

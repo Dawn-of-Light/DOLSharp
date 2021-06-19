@@ -253,8 +253,8 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte) characters[j].Empathy);
 							pak.WriteByte((byte) characters[j].Charisma);
 							
-							var items = GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID AND `SlotPosition` >= @SlotPositionMin AND `SlotPosition` <= @SlotPositionMax",
-								                                                         new[] { new QueryParameter("@OwnerID", characters[j].ObjectId), new QueryParameter("@SlotPositionMin", 10), new QueryParameter("@SlotPositionMax", 29) });
+							var items = DOLDB<InventoryItem>.SelectObjects(DB.Column("OwnerID").IsEqualTo(characters[j].ObjectId)
+								.And(DB.Column("SlotPosition").IsGreaterOrEqualTo(10).And(DB.Column("SlotPosition").IsLessOrEqualTo(29))));
 							int found = 0;
 							//16 bytes: armor model
 							for (int k = 0x15; k < 0x1D; k++)

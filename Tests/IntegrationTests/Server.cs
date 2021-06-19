@@ -18,9 +18,11 @@
  */
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using DOL.Database;
 using DOL.GS;
+using DOL.GS.PacketHandler;
 using NUnit.Framework;
 
 namespace DOL.Integration.Server
@@ -34,22 +36,22 @@ namespace DOL.Integration.Server
 		protected GamePlayer CreateMockGamePlayer()
 		{
 			DOLCharacters character= null;
-			Account account = GameServer.Database.SelectObject<Account>("", new QueryParameter());
+			var account = GameServer.Database.SelectAllObjects<Account>().FirstOrDefault();
 			Assert.IsNotNull(account);
 
-			foreach (DOLCharacters charact in account.Characters)
+			foreach (var charact in account.Characters)
 			{
 				if (charact!=null)
 					character = charact;
 			}
 			Assert.IsNotNull(character);
 			
-			GameClient client = new GameClient(GameServer.Instance);
+			var client = new GameClient(GameServer.Instance);
 			client.Version = GameClient.eClientVersion.Version1105;
 			client.Socket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
 			client.Account = account;
-			client.PacketProcessor = new DOL.GS.PacketHandler.PacketProcessor(client);
-			client.Out = new DOL.GS.PacketHandler.PacketLib1105(client);
+			client.PacketProcessor = new PacketProcessor(client);
+			client.Out = new PacketLib1105(client);
 			client.Player = new GamePlayer(client,character);
 			Assert.IsNotNull(client.Player,"GamePlayer instance created");
 			

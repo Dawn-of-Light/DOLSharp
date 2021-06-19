@@ -87,7 +87,7 @@ namespace DOL.GS
                 Index = (byte)Index
             };
 
-            var hpitem = GameServer.Database.SelectObjects<DBHouseHookpointItem>("`HouseNumber` = @HouseNumber AND `HookpointID` = @HookpointID", new[] { new QueryParameter("@HouseNumber", house.HouseNumber), new QueryParameter("@HookpointID", hookpointID) });
+            var hpitem = DOLDB<DBHouseHookpointItem>.SelectObjects(DB.Column("HouseNumber").IsEqualTo(house.HouseNumber).And(DB.Column("HookpointID").IsEqualTo(hookpointID)));
 
 			// if there isn't anything already on this hookpoint then add it to the DB
 			if (hpitem.Count == 0)

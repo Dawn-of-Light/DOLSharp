@@ -191,7 +191,7 @@ namespace DOL.GS
 
 			// First see if there are any MobXLootTemplates associated with this mob
 
-			IList<MobXLootTemplate> mxlts = GameServer.Database.SelectObjects<MobXLootTemplate>("`MobName` = @MobName", new QueryParameter("@MobName", mob.Name));
+			var mxlts = DOLDB<MobXLootTemplate>.SelectObjects(DB.Column("MobName").IsEqualTo(mob.Name));
 
 			if (mxlts != null)
 			{
@@ -232,7 +232,7 @@ namespace DOL.GS
 				}
 			}
 
-			IList<LootTemplate> lootTemplates = GameServer.Database.SelectObjects<LootTemplate>("`TemplateName` = @TemplateName", new QueryParameter("@TemplateName", templateName));
+			var lootTemplates = DOLDB<LootTemplate>.SelectObjects(DB.Column("TemplateName").IsEqualTo(templateName));
 
 			if (lootTemplates != null)
 			{

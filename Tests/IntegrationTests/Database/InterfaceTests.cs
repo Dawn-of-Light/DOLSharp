@@ -898,14 +898,6 @@ namespace DOL.Integration.Database
 			
 			Assert.IsNotEmpty(allobjects, "Select Objects Test Need some Data to be Accurate...");
 			
-			var nullWhere = Database.SelectObjects<TestTable>("", new QueryParameter[] { });
-			
-			CollectionAssert.AreEqual(allobjects.Select(obj => obj.ObjectId), nullWhere.Select(obj => obj.ObjectId), "Select Objects with Null Where clause should retrieve Objects similar to Select All...");
-			
-			var dumbWhere = Database.SelectObjects<TestTable>("@whClause", new QueryParameter("@whClause", 1));
-			
-			CollectionAssert.AreEqual(allobjects.Select(obj => obj.ObjectId), dumbWhere.Select(obj => obj.ObjectId), "Select Objects with Dumb Where clause should retrieve Objects similar to Select All...");
-			
 			var simpleWhere = Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(objInitial.TestField));
 			
 			CollectionAssert.Contains(simpleWhere.Select(obj => obj.ObjectId), objInitial.ObjectId, "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
@@ -929,7 +921,19 @@ namespace DOL.Integration.Database
 
 			Assert.AreEqual(1, resultsWithTestfieldNull.Count);
 		}
-		
+
+		[Test]
+		public void SelectObjects_KeywordAsColumnName_SameAsAddedObjects()
+		{
+			Database.RegisterDataObject(typeof(SqlKeywordTable));
+			var firstEntry = new SqlKeywordTable { Type = "SomeText" };
+			Database.AddObject(firstEntry);
+
+			var result = Database.SelectObjects<SqlKeywordTable>(DB.Column("Type").IsEqualTo(firstEntry.Type));
+
+			CollectionAssert.Contains(result.Select(obj => obj.ObjectId), firstEntry.ObjectId, "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
+		}
+
 		/// <summary>
 		/// Test IObjectDatabase.SelectObjects`TObject(string, IEnumerable`IEnumerable`KeyValuePair`string, object)
 		/// </summary>
@@ -948,11 +952,10 @@ namespace DOL.Integration.Database
 			var added = Database.AddObject(objs.SelectMany(obj => obj.Value));
 			
 			Assert.IsTrue(added, "TestTable Objects should be added successfully...");
-			
-			var parameters = new []{ "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" }
-			.Select(grp => new [] { new QueryParameter("@TestField", grp) } );
-			
-			var retrieve = Database.SelectObjects<TestTable>("`TestField` = @TestField", parameters);
+
+			var parameters = new[] { "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" };
+			var retrieve = Database.MultipleSelectObjects<TestTable>(parameters.Select(parameter => DB.Column("TestField").IsEqualTo(parameter)));
+
 			var objectByGroup = new []{ "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" }
 			.Select((grp, index) => new { Grp = grp, Objects = retrieve.ElementAt(index) });
 			
@@ -968,10 +971,9 @@ namespace DOL.Integration.Database
 				                              "Retrieve SubSets from Select Objects should return the same ObjectId Sets as Created...");
 				
 			}
-			
+
 			var orderedObjs = objs.SelectMany(obj => obj.Value).ToArray();
-			var parameterMany = orderedObjs.Select(obj => new [] { new QueryParameter("@Testfield", obj.TestField), new QueryParameter("@ObjectId", obj.ObjectId) });
-			var retrieveMany = Database.SelectObjects<TestTable>("`TestField` = @TestField AND `Test_Table_ID` = @ObjectId", parameterMany);
+			var retrieveMany = Database.MultipleSelectObjects<TestTable>(orderedObjs.Select(obj => DB.Column("TestField").IsEqualTo(obj.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(obj.ObjectId))));
 			
 			Assert.IsNotNull(retrieveMany, "Retrieve Sets from Select Objects should not return null value...");
 			Assert.IsNotEmpty(retrieveMany, "Retrieve Set from Select Objects should not be Empty...");
@@ -981,12 +983,11 @@ namespace DOL.Integration.Database
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set ObjectId...");
 			CollectionAssert.AreEqual(orderedObjs.Select(obj => obj.TestField.ToLower()), resultsMany.Select(obj => obj.TestField.ToLower()),
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set Field Value...");
-			
-			var parameterManyWithMissing = new [] { new [] { new QueryParameter("@TestField", "No Known Value"), new QueryParameter("@ObjectId", "Probably Nothing") },
-			new [] { new QueryParameter("@TestField", "Absolutely None"), new QueryParameter("@ObjectId", "Nothing for Sure") } }
-			.Concat(orderedObjs.Select(obj => new [] { new QueryParameter("@Testfield", obj.TestField), new QueryParameter("@ObjectId", obj.ObjectId) }));
-			
-			var retrieveManyWithMissing = Database.SelectObjects<TestTable>("`TestField` = @TestField AND `Test_Table_ID` = @ObjectId", parameterManyWithMissing);
+
+			var parameterManyWithMissing = new [] { ("No Known Value", "Probably Nothing"),("Absolutely None","Nothing for Sure")}
+			.Concat(orderedObjs.Select(obj => (obj.TestField, obj.ObjectId)));
+			var manyQueriesWithMissing = parameterManyWithMissing.Select(tuple => DB.Column("TestField").IsEqualTo(tuple.Item1).And(DB.Column("Test_Table_ID").IsEqualTo(tuple.Item2)));
+			var retrieveManyWithMissing = Database.MultipleSelectObjects<TestTable>(manyQueriesWithMissing);
 			
 			Assert.IsNotNull(retrieveManyWithMissing, "Retrieve Sets from Select Objects should not return null value...");
 			Assert.IsNotEmpty(retrieveManyWithMissing, "Retrieve Set from Select Objects should not be Empty...");
@@ -999,7 +1000,7 @@ namespace DOL.Integration.Database
 			
 			
 		}
-		
+
 		/// <summary>
 		/// Test IObjectDatabase.SelectObject(s)`TObject()
 		/// With Non Registered Table
@@ -1007,14 +1008,11 @@ namespace DOL.Integration.Database
 		[Test]
 		public void TestSelectObjectsNonRegistered()
 		{
-			Assert.Throws(typeof(DatabaseException), () => Database.SelectObject<TableNotRegistered>("1"), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			Assert.Throws(typeof(DatabaseException), () => Database.SelectObject<TableNotRegistered>("1", DOL.Database.Transaction.IsolationLevel.DEFAULT), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1"), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", DOL.Database.Transaction.IsolationLevel.DEFAULT), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", new QueryParameter()), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", new [] { new QueryParameter() }), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", new [] { new [] { new QueryParameter() } }), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			
+			var assertFailMessage = "Trying to Query a Non Registered Table should throw a DatabaseException...";
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectObject<TableNotRegistered>(DB.Column("a").IsEqualTo(null)), assertFailMessage);
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>(DB.Column("a").IsEqualTo(null)), assertFailMessage);
+			Assert.Throws(typeof(DatabaseException), () => Database.MultipleSelectObjects<TableNotRegistered>(new[] { DB.Column("a").IsEqualTo(null) }), assertFailMessage);
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectAllObjects<TableNotRegistered>(), assertFailMessage);
 		}
 		
 		/// <summary>
@@ -1036,50 +1034,10 @@ namespace DOL.Integration.Database
 			var allobjects = Database.SelectAllObjects<TestTable>();
 			
 			Assert.IsNotEmpty(allobjects, "This Test Need some Data to be Accurate...");
-			
-			var retrieveNull = Database.SelectObject<TestTable>((string)null);
-			
-			CollectionAssert.Contains(allobjects.Select(obj => obj.ObjectId), retrieveNull.ObjectId, "");
-			
-			var retrieveNullWithIsolation = Database.SelectObject<TestTable>(null, DOL.Database.Transaction.IsolationLevel.SERIALIZABLE);
-			
-			CollectionAssert.Contains(allobjects.Select(obj => obj.ObjectId), retrieveNullWithIsolation.ObjectId, "");
 
-			var retrieveMultipleNull = Database.SelectObjects<TestTable>((string)null);
-
-			CollectionAssert.AreEquivalent(allobjects.Select(obj => obj.ObjectId), retrieveMultipleNull.Select(obj => obj.ObjectId), "");
-			
-			var retrieveMultipleNullWithIsolation = Database.SelectObjects<TestTable>(null, DOL.Database.Transaction.IsolationLevel.SERIALIZABLE);
-
-			CollectionAssert.AreEquivalent(allobjects.Select(obj => obj.ObjectId), retrieveMultipleNullWithIsolation.Select(obj => obj.ObjectId), "");
-			
-			var retrieveParameter = Database.SelectObjects<TestTable>(null, new QueryParameter());
-			
-			CollectionAssert.AreEquivalent(allobjects.Select(obj => obj.ObjectId), retrieveParameter.Select(obj => obj.ObjectId), "");
-			
-			var retrieveParameters = Database.SelectObjects<TestTable>(null, new QueryParameter[] { });
-			
-			CollectionAssert.AreEquivalent(allobjects.Select(obj => obj.ObjectId), retrieveParameters.Select(obj => obj.ObjectId), "");
-			
-			var retrieveMultipleParameters = Database.SelectObjects<TestTable>(null, new [] { new QueryParameter[] { } });
-			
-			CollectionAssert.AreEquivalent(allobjects.Select(obj => obj.ObjectId), retrieveMultipleParameters.First().Select(obj => obj.ObjectId), "");
-			
-			Assert.Throws(typeof(ArgumentNullException), () => Database.SelectObjects<TestTable>(null, (QueryParameter)null), "");
-			
-			Assert.Throws(typeof(ArgumentNullException), () => Database.SelectObjects<TestTable>(null, (IEnumerable<QueryParameter>)null), "");
-			
-			Assert.Throws(typeof(ArgumentNullException), () => Database.SelectObjects<TestTable>(null, (IEnumerable<IEnumerable<QueryParameter>>)null), "");
-			
-			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[] { null }), "");
-			
-			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>(null, new [] { new QueryParameter[] { null } }), "");
-			
-			Assert.Throws(typeof(ArgumentNullException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] { null }), "");
-
-			Assert.Throws(typeof(InvalidOperationException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] {  }), "");
-
-			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>((WhereExpression)null), "");
+			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObject<TestTable>((WhereClause)null), "");
+			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>((WhereClause)null), "");
+			Assert.Throws(typeof(ArgumentNullException), () => Database.MultipleSelectObjects<TestTable>(null));
 		}
 		
 		#endregion
@@ -1125,7 +1083,6 @@ namespace DOL.Integration.Database
 		public void TestSelectAllNonRegistered()
 		{
 			Assert.Throws(typeof(DatabaseException), () => Database.SelectAllObjects<TableNotRegistered>(), "Trying to Query a Non Registered Table should throw a DatabaseException...");
-			Assert.Throws(typeof(DatabaseException), () => Database.SelectAllObjects<TableNotRegistered>(DOL.Database.Transaction.IsolationLevel.DEFAULT), "Trying to Query a Non Registered Table should throw a DatabaseException...");
 		}
 		#endregion
 		
@@ -1160,7 +1117,7 @@ namespace DOL.Integration.Database
 			
 			Assert.AreEqual(1, filterCount, "Test Table should return same object count as filtered collection...");
 		}
-		
+
 		/// <summary>
 		/// Test IObjectDatabase.GetObjectCount`TObject
 		/// with null where clause

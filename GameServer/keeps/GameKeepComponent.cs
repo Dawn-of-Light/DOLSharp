@@ -247,22 +247,17 @@ namespace DOL.GS.Keeps
 
 			this.Positions.Clear();
 
-			List<QueryParameter> parameters = new List<QueryParameter>(3);
-			parameters.Add(new QueryParameter("@Skin", Skin));
-			string query = "`ComponentSkin` = @Skin";
+			var whereClause = DB.Column("ComponentSkin").IsEqualTo(Skin);
 			if (Skin != (int)eComponentSkin.Keep && Skin != (int)eComponentSkin.Tower && Skin != (int)eComponentSkin.Gate)
 			{
-				parameters.Add(new QueryParameter("@Rotation", ComponentHeading));
-				query += " AND `ComponentRotation` = @Rotation";
+				whereClause = whereClause.And(DB.Column("ComponentRotation").IsEqualTo(ComponentHeading));
 			}
 			if (bg != null && GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvE)
 			{
 				// Battlegrounds, ignore all but GameKeepDoor
-				parameters.Add(new QueryParameter("@ClassType", "'DOL.GS.Keeps.GameKeepDoor'"));
-				query = query + " AND `ClassType` = @ClassType"; 
+				whereClause = whereClause.And(DB.Column("ClassType").IsEqualTo("DOL.GS.Keeps.GameKeepDoor"));
 			}
-
-			var DBPositions = GameServer.Database.SelectObjects<DBKeepPosition>(query, parameters.ToArray());
+			var DBPositions = DOLDB<DBKeepPosition>.SelectObjects(whereClause);
 
 			foreach (DBKeepPosition position in DBPositions)
 			{

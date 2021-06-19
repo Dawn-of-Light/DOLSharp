@@ -32,9 +32,9 @@ namespace DOL.Database
 	/// <summary>
 	/// Abstract Base Class for SQL based Database Connector
 	/// </summary>
-	public abstract class SQLObjectDatabase : ObjectDatabase 
+	public abstract class SQLObjectDatabase : ObjectDatabase
 	{
-        private static readonly object Lock = new object();
+		private static readonly object Lock = new object();
 
 		/// <summary>
 		/// Create a new instance of <see cref="SQLObjectDatabase"/>
@@ -92,16 +92,16 @@ namespace DOL.Database
 				if (dataTableHandler.UsesPreCaching)
 				{
 					var primary = dataTableHandler.PrimaryKeys.Single();
-					var objects = SelectObjectsImpl(dataTableHandler, string.Empty, new [] { new QueryParameter[] { } }, Transaction.IsolationLevel.DEFAULT).First();
-					
+					var objects = MultipleSelectObjectsImpl(dataTableHandler, new [] { WhereClause.Empty }).First();
+
 					foreach (var obj in objects)
 						dataTableHandler.SetPreCachedObject(primary.GetValue(obj), obj);
 				}
 			}
 			catch (Exception e)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("RegisterDataObject: Error While Registering Table \"{0}\"\n{1}", tableName, e);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("RegisterDataObject: Error While Registering Table \"{0}\"\n{1}", tableName, e);
 			}
 		}
 		
@@ -176,8 +176,8 @@ namespace DOL.Database
 						}
 						else
 						{
-							if (Log.IsErrorEnabled)
-								Log.ErrorFormat("Error adding data object into {0} Object = {1}, UsePrimaryAutoInc, Query = {2}", tableHandler.TableName, result.DataObject, command);
+							if (log.IsErrorEnabled)
+								log.ErrorFormat("Error adding data object into {0} Object = {1}, UsePrimaryAutoInc, Query = {2}", tableHandler.TableName, result.DataObject, command);
 							
 							success.Add(false);
 						}
@@ -200,8 +200,8 @@ namespace DOL.Database
 						}
 						else
 						{
-							if (Log.IsErrorEnabled)
-								Log.ErrorFormat("Error adding data object into {0} Object = {1} Query = {2}", tableHandler.TableName, result.DataObject, command);
+							if (log.IsErrorEnabled)
+								log.ErrorFormat("Error adding data object into {0} Object = {1} Query = {2}", tableHandler.TableName, result.DataObject, command);
 							
 							success.Add(false);
 						}
@@ -210,8 +210,8 @@ namespace DOL.Database
 			}
 			catch (Exception e)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("Error while adding data objects in table: {0}\n{1}", tableHandler.TableName, e);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("Error while adding data objects in table: {0}\n{1}", tableHandler.TableName, e);
 			}
 
 			return success;
@@ -261,12 +261,12 @@ namespace DOL.Database
 					}
 					else
 					{
-						if (Log.IsErrorEnabled)
+						if (log.IsErrorEnabled)
 						{
 							if (result.Result < 0)
-								Log.ErrorFormat("Error saving data object in table {0} Object = {1} --- constraint failed? {2}", tableHandler.TableName, result.DataObject, command);
+								log.ErrorFormat("Error saving data object in table {0} Object = {1} --- constraint failed? {2}", tableHandler.TableName, result.DataObject, command);
 							else
-								Log.ErrorFormat("Error saving data object in table {0} Object = {1} --- keyvalue changed? {2}\n{3}", tableHandler.TableName, result.DataObject, command, Environment.StackTrace);
+								log.ErrorFormat("Error saving data object in table {0} Object = {1} --- keyvalue changed? {2}\n{3}", tableHandler.TableName, result.DataObject, command, Environment.StackTrace);
 						}
 						success.Add(false);
 					}
@@ -274,8 +274,8 @@ namespace DOL.Database
 			}
 			catch (Exception e)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("Error while saving data object in table: {0}\n{1}", tableHandler.TableName, e);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("Error while saving data object in table: {0}\n{1}", tableHandler.TableName, e);
 			}
 
 			return success;
@@ -320,16 +320,16 @@ namespace DOL.Database
 					}
 					else
 					{
-						if (Log.IsErrorEnabled)
-							Log.ErrorFormat("Error deleting data object from table {0} Object = {1} --- keyvalue changed? {2}\n{3}", tableHandler.TableName, result.DataObject, command, Environment.StackTrace);
+						if (log.IsErrorEnabled)
+							log.ErrorFormat("Error deleting data object from table {0} Object = {1} --- keyvalue changed? {2}\n{3}", tableHandler.TableName, result.DataObject, command, Environment.StackTrace);
 						success.Add(false);
 					}
 				}
 			}
 			catch (Exception e)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("Error while deleting data object in table: {0}\n{1}", tableHandler.TableName, e);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("Error while deleting data object in table: {0}\n{1}", tableHandler.TableName, e);
 			}
 			
 			return success;
@@ -351,18 +351,21 @@ namespace DOL.Database
 			
 			if (!primary.Any())
 				throw new DatabaseException(string.Format("Table {0} has no primary key for finding by key...", tableHandler.TableName));
+
+			var whereClauses = new List<WhereClause>();
+			foreach (var key in keys)
+			{
+				var whereClause = WhereClause.Empty;
+				foreach (var column in primary)
+				{
+					whereClause = whereClause.And(DB.Column(column.ColumnName).IsEqualTo(key));
+				}
+				whereClauses.Add(whereClause);
+			}
+
+			var resultByKeys = MultipleSelectObjectsImpl(tableHandler, whereClauses).Select(results => results.SingleOrDefault());
 			
-			var whereClause = string.Format("{0}",
-			                                string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
-			
-			var keysArray = keys.ToArray();
-			var parameters = keysArray.Select(key => primary.Select(col => new QueryParameter(col.ParamName, key, col.ParamType)));
-			
-			var objs = SelectObjectsImpl(tableHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
-			
-			var resultByKeys = objs.Select((results, index) => new { Key = keysArray[index], DataObject = results.SingleOrDefault() });
-			
-			return resultByKeys.Select(obj => obj.DataObject).ToArray();
+			return resultByKeys.ToArray();
 		}
 
 		/// <summary>
@@ -414,44 +417,63 @@ namespace DOL.Database
 			
 			var primary = columns.FirstOrDefault(col => col.PrimaryKey != null);
 			var dataObjects = new List<IList<DataObject>>();
-			ExecuteSelectImpl(command, parameters, reader => {
-			                  	var list = new List<DataObject>();
-			                  	
-			                  	var data = new object[reader.FieldCount];
-			                  	while(reader.Read())
-			                  	{
-			                  		reader.GetValues(data);
-			                  		var obj = Activator.CreateInstance(tableHandler.ObjectType) as DataObject;
-			                  		
-			                  		// Fill Object
-			                  		var current = 0;
-			                  		foreach(var column in columns)
-			                  		{
-			                  			DatabaseSetValue(obj, column, data[current]);
-			                  			current++;
-			                  		}
-			                  		
-			                  		// Set Primary Key
-			                  		if (primary != null)
-			                  			obj.ObjectId = primary.GetValue(obj).ToString();
-			                  		
-									list.Add(obj);
-									obj.Dirty = false;
-									obj.IsPersisted = true;
-			                  	}
-			                  	dataObjects.Add(list.ToArray());
-			                  }, isolation);
+			ExecuteSelectImpl(command, parameters, reader => FillQueryResultList(reader, tableHandler, columns, primary, dataObjects));
 			
 			return dataObjects.ToArray();
 		}
-		
-		/// <summary>
-		/// Set Value to DataObject Field according to ElementBinding
-		/// </summary>
-		/// <param name="obj">DataObject to Fill</param>
-		/// <param name="bind">ElementBinding for the targeted Member</param>
-		/// <param name="value">Object Value to Fill</param>
-		protected virtual void DatabaseSetValue(DataObject obj, ElementBinding bind, object value)
+
+		protected override IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereClause> whereClauseBatch)
+		{
+			var columns = tableHandler.FieldElementBindings.ToArray();
+
+			string selectFromExpression = string.Format("SELECT {0} FROM `{1}` ",
+										string.Join(", ", columns.Select(col => string.Format("`{0}`", col.ColumnName))),
+										tableHandler.TableName);
+
+			var primary = columns.FirstOrDefault(col => col.PrimaryKey != null);
+			var dataObjects = new List<IList<DataObject>>();
+
+			ExecuteSelectImpl(selectFromExpression, whereClauseBatch, reader => FillQueryResultList(reader, tableHandler, columns, primary, dataObjects));
+
+			return dataObjects.ToArray();
+		}
+
+        private void FillQueryResultList(IDataReader reader, DataTableHandler tableHandler, ElementBinding[] columns, ElementBinding primary, List<IList<DataObject>> resultList)
+		{
+            var list = new List<DataObject>();
+
+            var data = new object[reader.FieldCount];
+            while (reader.Read())
+            {
+                reader.GetValues(data);
+                var obj = Activator.CreateInstance(tableHandler.ObjectType) as DataObject;
+
+                // Fill Object
+                var current = 0;
+                foreach (var column in columns)
+                {
+                    DatabaseSetValue(obj, column, data[current]);
+                    current++;
+                }
+
+                // Set Primary Key
+                if (primary != null)
+                    obj.ObjectId = primary.GetValue(obj).ToString();
+
+                list.Add(obj);
+                obj.Dirty = false;
+                obj.IsPersisted = true;
+            }
+            resultList.Add(list.ToArray());
+        }
+
+        /// <summary>
+        /// Set Value to DataObject Field according to ElementBinding
+        /// </summary>
+        /// <param name="obj">DataObject to Fill</param>
+        /// <param name="bind">ElementBinding for the targeted Member</param>
+        /// <param name="value">Object Value to Fill</param>
+        protected virtual void DatabaseSetValue(DataObject obj, ElementBinding bind, object value)
 		{
 			if (value == null || value.GetType().IsInstanceOfType(DBNull.Value))
 				return;
@@ -491,8 +513,8 @@ namespace DOL.Database
 			}
 			catch (Exception e)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("{0}: {1} = {2} doesnt fit to {3}\n{4}", obj.TableName, bind.ColumnName, value.GetType().FullName, bind.ValueType, e);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("{0}: {1} = {2} doesnt fit to {3}\n{4}", obj.TableName, bind.ColumnName, value.GetType().FullName, bind.ValueType, e);
 			}
 		}
 		
@@ -503,15 +525,14 @@ namespace DOL.Database
 		/// <param name="dbParams">DbParameter Object to Fill</param>
 		protected virtual void FillSQLParameter(IEnumerable<QueryParameter> parameter, DbParameterCollection dbParams)
 		{
-			// Specififc Handling for Char Cast from DB Integer
-			foreach(var param in parameter.Where(param => param.Name != null))
+			dbParams.Clear();
+			foreach(var param in parameter)
     		{
-    			if (param.Value is char)
-    				dbParams[param.Name].Value = Convert.ToUInt16(param.Value);
-    			else
-    				dbParams[param.Name].Value = param.Value;
+				dbParams.Add(ConvertToDBParameter(param));
     		}
 		}
+
+		protected abstract DbParameter ConvertToDBParameter(QueryParameter queryParameter);
 		#endregion
 		
 		#region Abstract Properties		
@@ -528,53 +549,177 @@ namespace DOL.Database
 		/// <param name="table">Table Handler</param>
 		public abstract void CheckOrCreateTableImpl(DataTableHandler table);
 		#endregion
-		
+
 		#region Select Implementation
-		/// <summary>
-		/// Raw SQL Select Implementation
-		/// </summary>
-		/// <param name="SQLCommand">Command for reading</param>
-		/// <param name="Reader">Reader Method</param>
-		/// <param name="Isolation">Transaction Isolation</param>
+		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
 		protected void ExecuteSelectImpl(string SQLCommand, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+			=> ExecuteSelectImpl(SQLCommand, new [] { new QueryParameter[] { } }, Reader);
+
+		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
+		protected void ExecuteSelectImpl(string SQLCommand, QueryParameter param, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+			=> ExecuteSelectImpl(SQLCommand, new [] { new [] { param } }, Reader);
+
+		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
+		protected void ExecuteSelectImpl(string SQLCommand, IEnumerable<QueryParameter> parameter, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+			=> ExecuteSelectImpl(SQLCommand, new [] { parameter }, Reader);
+
+		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
+		protected virtual void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+			=> ExecuteSelectImpl(SQLCommand, parameters, Reader);
+
+		protected virtual void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader)
 		{
-			ExecuteSelectImpl(SQLCommand, new [] { new QueryParameter[] { } }, Reader, Isolation);
+			if (log.IsDebugEnabled)
+				log.DebugFormat("ExecuteSelectImpl: {0}", SQLCommand);
+
+			bool repeat;
+			var current = 0;
+			do
+			{
+				repeat = false;
+
+				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
+
+				using (var conn = CreateConnection(ConnectionString))
+				{
+					using (var cmd = conn.CreateCommand())
+					{
+						try
+						{
+							conn.Open();
+							long start = (DateTime.UtcNow.Ticks / 10000);
+
+							foreach (var parameter in parameters.Skip(current))
+							{
+								cmd.CommandText = SQLCommand;
+								FillSQLParameter(parameter, cmd.Parameters);
+								cmd.Prepare();
+
+								using (var reader = cmd.ExecuteReader())
+								{
+									try
+									{
+										Reader(reader);
+									}
+									catch (Exception es)
+									{
+										if (log.IsWarnEnabled)
+											log.WarnFormat("ExecuteSelectImpl: Exception in Select Callback : {2}{0}{2}{1}", es, Environment.StackTrace, Environment.NewLine);
+									}
+									finally
+									{
+										reader.Close();
+									}
+								}
+								current++;
+							}
+
+							if (log.IsDebugEnabled)
+								log.DebugFormat("ExecuteSelectImpl: SQL Select exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
+								log.WarnFormat("ExecuteSelectImpl: SQL Select took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+
+						}
+						catch (Exception e)
+						{
+							if (!HandleException(e))
+							{
+								if (log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteSelectImpl: UnHandled Exception for Select Query \"{0}\"\n{1}", SQLCommand, e);
+
+								throw;
+							}
+							repeat = true;
+						}
+						finally
+						{
+							CloseConnection(conn);
+						}
+					}
+				}
+			}
+			while (repeat);
 		}
 
-		/// <summary>
-		/// Raw SQL Select Implementation with Single Parameter for Prepared Query
-		/// </summary>
-		/// <param name="SQLCommand">Command for reading</param>
-		/// <param name="param">Parameter for Single Read</param>
-		/// <param name="Reader">Reader Method</param>
-		/// <param name="Isolation">Transaction Isolation</param>
-		protected void ExecuteSelectImpl(string SQLCommand, QueryParameter param, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+		protected virtual void ExecuteSelectImpl(string selectFromExpression, IEnumerable<WhereClause> whereClauseBatch, Action<IDataReader> Reader)
 		{
-			ExecuteSelectImpl(SQLCommand, new [] { new [] { param } }, Reader, Isolation);
+			if (!whereClauseBatch.Any()) throw new ArgumentException("No parameter list was given.");
+
+			if (log.IsDebugEnabled)
+				log.DebugFormat("ExecuteSelectImpl: {0}", selectFromExpression);
+
+			bool repeat;
+			var current = 0;
+			do
+			{
+				repeat = false;
+
+				using (var conn = CreateConnection(ConnectionString))
+				{
+					using (var cmd = conn.CreateCommand())
+					{
+						try
+						{
+							conn.Open();
+							long start = (DateTime.UtcNow.Ticks / 10000);
+
+							foreach (var whereClause in whereClauseBatch.Skip(current))
+							{
+								cmd.CommandText = selectFromExpression + whereClause.ParameterizedText;
+								FillSQLParameter(whereClause.Parameters, cmd.Parameters);
+								cmd.Prepare();
+
+								using (var reader = cmd.ExecuteReader())
+								{
+									try
+									{
+										Reader(reader);
+									}
+									catch (Exception es)
+									{
+										if (log.IsWarnEnabled)
+											log.WarnFormat("ExecuteSelectImpl: Exception in Select Callback : {2}{0}{2}{1}", es, Environment.StackTrace, Environment.NewLine);
+									}
+									finally
+									{
+										reader.Close();
+									}
+								}
+								current++;
+							}
+
+							if (log.IsDebugEnabled)
+								log.DebugFormat("ExecuteSelectImpl: SQL Select exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
+								log.WarnFormat("ExecuteSelectImpl: SQL Select took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), selectFromExpression);
+
+						}
+						catch (Exception e)
+						{
+							if (!HandleException(e))
+							{
+								if (log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteSelectImpl: UnHandled Exception in Select Query \"{0}\"\n{1}", selectFromExpression, e);
+
+								throw;
+							}
+							repeat = true;
+						}
+						finally
+						{
+							CloseConnection(conn);
+						}
+					}
+				}
+			}
+			while (repeat);
 		}
-		
-		/// <summary>
-		/// Raw SQL Select Implementation with Parameters for Single Prepared Query
-		/// </summary>
-		/// <param name="SQLCommand">Command for reading</param>
-		/// <param name="parameter">Collection of Parameters for Single Read</param>
-		/// <param name="Reader">Reader Method</param>
-		/// <param name="Isolation">Transaction Isolation</param>
-		protected void ExecuteSelectImpl(string SQLCommand, IEnumerable<QueryParameter> parameter, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
-		{
-			ExecuteSelectImpl(SQLCommand, new [] { parameter }, Reader, Isolation);
-		}
-		
-		/// <summary>
-		/// Raw SQL Select Implementation with Parameters for Prepared Query
-		/// </summary>
-		/// <param name="SQLCommand">Command for reading</param>
-		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
-		/// <param name="Reader">Reader Method</param>
-		/// <param name="Isolation">Transaction Isolation</param>
-		protected abstract void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation);
+
+		protected abstract DbConnection CreateConnection(string connectionsString);
+
+		protected abstract void CloseConnection(DbConnection connection);
 		#endregion
-		
+
 		#region Non Query Implementation
 		/// <summary>
 		/// Execute a Raw Non-Query on the Database
@@ -589,8 +734,8 @@ namespace DOL.Database
 			}
 			catch (Exception e)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("Error while executing raw query \"{0}\"\n{1}", rawQuery, e);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("Error while executing raw query \"{0}\"\n{1}", rawQuery, e);
 			}
 			
 			return false;
@@ -631,9 +776,89 @@ namespace DOL.Database
 		/// <param name="SQLCommand">Raw Command</param>
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Command</param>
 		/// <returns>True foreach Command that succeeded</returns>
-		protected abstract IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters);
+		protected virtual IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters)
+		{
+			if (log.IsDebugEnabled)
+				log.DebugFormat("ExecuteNonQueryImpl: {0}", SQLCommand);
+
+			var affected = new List<int>();
+			bool repeat;
+			var current = 0;
+			do
+			{
+				repeat = false;
+
+				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
+
+				using (var conn = CreateConnection(ConnectionString))
+				{
+					using (var cmd = conn.CreateCommand())
+					{
+						try
+						{
+							cmd.CommandText = SQLCommand;
+							conn.Open();
+							long start = (DateTime.UtcNow.Ticks / 10000);
+
+							foreach (var parameter in parameters.Skip(current))
+							{
+								FillSQLParameter(parameter, cmd.Parameters);
+								cmd.Prepare();
+
+								var result = -1;
+								try
+								{
+									result = cmd.ExecuteNonQuery();
+									affected.Add(result);
+								}
+								catch (Exception ex)
+								{
+									if (HandleSQLException(ex))
+									{
+										affected.Add(result);
+										if (log.IsErrorEnabled)
+											log.ErrorFormat("ExecuteNonQueryImpl: Constraint Violation for raw query \"{0}\"\n{1}\n{2}", SQLCommand, ex, Environment.StackTrace);
+									}
+									else
+									{
+										throw;
+									}
+								}
+								current++;
+
+								if (log.IsDebugEnabled && result < 1)
+									log.DebugFormat("ExecuteNonQueryImpl: No Change for raw query \"{0}\"", SQLCommand);
+							}
+
+							if (log.IsDebugEnabled)
+								log.DebugFormat("ExecuteNonQueryImpl: SQL NonQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
+								log.WarnFormat("ExecuteNonQueryImpl: SQL NonQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+						}
+						catch (Exception e)
+						{
+							if (!HandleException(e))
+							{
+								if (log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteNonQueryImpl: UnHandled Exception for raw query \"{0}\"\n{1}", SQLCommand, e);
+
+								throw;
+							}
+							repeat = true;
+						}
+						finally
+						{
+							CloseConnection(conn);
+						}
+					}
+				}
+			}
+			while (repeat);
+
+			return affected;
+		}
 		#endregion
-		
+
 		#region Scalar Implementation
 		/// <summary>
 		/// Implementation of Scalar Query
@@ -679,8 +904,7 @@ namespace DOL.Database
 		/// <returns>Objects Returned by Scalar</returns>
 		protected abstract object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, bool retrieveLastInsertID);
 		#endregion
-		
-		#region Specific
+				
 		protected virtual bool HandleException(Exception e)
 		{
 			bool ret = false;
@@ -711,12 +935,13 @@ namespace DOL.Database
 						break;
 				}
 
-				if (Log.IsWarnEnabled)
-					Log.WarnFormat("Socket exception: ({0}) {1}; repeat: {2}", socketException.ErrorCode, socketException.Message, ret);
+				if (log.IsWarnEnabled)
+					log.WarnFormat("Socket exception: ({0}) {1}; repeat: {2}", socketException.ErrorCode, socketException.Message, ret);
 			}
 
 			return ret;
 		}
-		#endregion
+
+		protected abstract bool HandleSQLException(Exception e);
 	}
 }

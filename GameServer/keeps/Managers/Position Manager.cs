@@ -41,8 +41,11 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObjects<DBKeepPosition>("`ClassType` != @ClassType AND `TemplateID` = @TemplateID AND `ComponentSkin` = @ComponentSkin AND `Height` <= @Height",
-			                                                         new [] { new QueryParameter("@ClassType", "DOL.GS.Keeps.Banner"), new QueryParameter("@TemplateID", guard.TemplateID), new QueryParameter("@ComponentSkin", guard.Component.Skin), new QueryParameter("@Height", guard.Component.Height) })
+			var filterClassType = DB.Column("ClassType").IsNotEqualTo("DOL.GS.Keeps.Banner");
+			var filterTemplateID = DB.Column("TemplateID").IsEqualTo(guard.TemplateID);
+			var filterComponentSkin = DB.Column("ComponentSkin").IsEqualTo(guard.Component.Skin);
+			var filterHeight = DB.Column("Height").IsLessOrEqualTo(guard.Component.Height);
+			return DOLDB<DBKeepPosition>.SelectObjects(filterClassType.And(filterTemplateID).And(filterComponentSkin).And(filterHeight))
 				.OrderByDescending(it => it.Height).FirstOrDefault();
 		}
 
@@ -53,8 +56,11 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepBanner b)
 		{
-			return GameServer.Database.SelectObjects<DBKeepPosition>("`ClassType` = @ClassType AND `TemplateID` = @TemplateID AND `ComponentSkin` = @ComponentSkin AND `Height` <= @Height",
-			                                                         new [] { new QueryParameter("@ClassType", "DOL.GS.Keeps.Banner"), new QueryParameter("@TemplateID", b.TemplateID), new QueryParameter("@ComponentSkin", b.Component.Skin), new QueryParameter("@Height", b.Component.Height) })
+			var filterClassType = DB.Column("ClassType").IsNotEqualTo("DOL.GS.Keeps.Banner");
+			var filterTemplateID = DB.Column("TemplateID").IsEqualTo(b.TemplateID);
+			var filterComponentSkin = DB.Column("ComponentSkin").IsEqualTo(b.Component.Skin);
+			var filterHeight = DB.Column("Height").IsLessOrEqualTo(b.Component.Height);
+			return DOLDB<DBKeepPosition>.SelectObjects(filterClassType.And(filterTemplateID).And(filterComponentSkin).And(filterHeight))
 				.OrderByDescending(it => it.Height).FirstOrDefault();
 		}
 
@@ -65,8 +71,10 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetPosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObjects<DBKeepPosition>("`TemplateID` = @TemplateID AND `ComponentSkin` = @ComponentSkin AND `Height` <= @Height",
-			                                                        new [] { new QueryParameter("@TemplateID", guard.TemplateID), new QueryParameter("@ComponentSkin", guard.Component.Skin), new QueryParameter("@Height", guard.Component.Height) }).FirstOrDefault();
+			var filterTemplateID = DB.Column("TemplateID").IsEqualTo(guard.TemplateID);
+			var filterComponentSkin = DB.Column("ComponentSkin").IsEqualTo(guard.Component.Skin);
+			var filterHeight = DB.Column("Height").IsLessOrEqualTo(guard.Component.Height);
+			return DOLDB<DBKeepPosition>.SelectObject(filterTemplateID.And(filterComponentSkin).And(filterHeight));
 		}
 
 
@@ -314,7 +322,7 @@ namespace DOL.GS.Keeps
 		{
 			SortedList sorted = new SortedList();
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			DBPath dbpath = GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)).FirstOrDefault();
+			var dbpath = DOLDB<DBPath>.SelectObject(DB.Column("PathID").IsEqualTo(pathID));
 			IList<DBPathPoint> pathpoints = null;
 			ePathType pathType = ePathType.Once;
 
@@ -324,7 +332,7 @@ namespace DOL.GS.Keeps
 			}
 			if (pathpoints == null)
 			{
-				pathpoints = GameServer.Database.SelectObjects<DBPathPoint>("`PathID` = @PathID", new QueryParameter("@PathID", pathID));
+				pathpoints = DOLDB<DBPathPoint>.SelectObjects(DB.Column("PathID").IsEqualTo(pathID));
 			}
 
 			foreach (DBPathPoint point in pathpoints)
@@ -372,7 +380,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			GameServer.Database.DeleteObject(GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)));
+			GameServer.Database.DeleteObject(DOLDB<DBPath>.SelectObjects(DB.Column("PathID").IsEqualTo(pathID)));
 			PathPoint root = MovementMgr.FindFirstPathPoint(path);
 
 			//Set the current pathpoint to the rootpoint!

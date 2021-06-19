@@ -260,7 +260,7 @@ namespace DOL.GS.Housing
 
         private static void CheckMerchantItems(string merchantid, ICollection<string> itemids)
         {
-            IList<MerchantItem> merchantitems = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", merchantid));
+            var merchantitems = DOLDB<MerchantItem>.SelectObjects(DB.Column("ItemListID").IsEqualTo(merchantid));
 
             int slot = 0;
             foreach (string itemid in itemids)

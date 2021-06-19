@@ -48,7 +48,7 @@ namespace DOL.GS
 
         static Doppelganger()
         {
-           DBNpcTemplate chthonian = GameServer.Database.SelectObject<DBNpcTemplate>("Name=@Name", new QueryParameter("@Name", "chthonian crawler"));
+           DBNpcTemplate chthonian = DOLDB<DBNpcTemplate>.SelectObject(DB.Column("Name").IsEqualTo("chthonian crawler"));
             if (chthonian != null)
                 m_petTemplate = new NpcTemplate(chthonian);
         }

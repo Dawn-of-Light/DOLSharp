@@ -174,7 +174,7 @@ namespace DOL.GS.Friends
 				Player.Out.SendAddFriends(new[] { Friend });
 				Player.SerializedFriendsList = this[Player];
 
-				var offlineFriend = Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", Friend)).FirstOrDefault();
+				var offlineFriend = Database.SelectObjects<DOLCharacters>(DB.Column("Name").IsEqualTo(Friend)).FirstOrDefault();
 
 				if (offlineFriend != null)
 				{

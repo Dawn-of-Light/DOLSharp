@@ -12680,7 +12680,7 @@ namespace DOL.GS
 			LoadQuests();
 
 			// Load Task object of player ...
-			var tasks = GameServer.Database.SelectObjects<DBTask>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", InternalID));
+			var tasks = DOLDB<DBTask>.SelectObjects(DB.Column("Character_ID").IsEqualTo(InternalID));
 			if (tasks.Count == 1)
 			{
 				m_task = AbstractTask.LoadFromDatabase(this, tasks[0]);
@@ -12692,7 +12692,7 @@ namespace DOL.GS
 			}
 
 			// Load ML steps of player ...
-			var mlsteps = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
+			var mlsteps = DOLDB<DBCharacterXMasterLevel>.SelectObjects(DB.Column("Character_ID").IsEqualTo(QuestPlayerID));
 			if (mlsteps.Count > 0)
 			{
 				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
@@ -13397,7 +13397,7 @@ namespace DOL.GS
 			m_questListFinished.Clear();
 
 			// Scripted quests
-			var quests = GameServer.Database.SelectObjects<DBQuest>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
+			var quests = DOLDB<DBQuest>.SelectObjects(DB.Column("Character_ID").IsEqualTo(QuestPlayerID));
 			foreach (DBQuest dbquest in quests)
 			{
 				AbstractQuest quest = AbstractQuest.LoadFromDatabase(this, dbquest);
@@ -13411,7 +13411,7 @@ namespace DOL.GS
 			}
 
 			// Data driven quests for this player
-			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
+			var dataQuests = DOLDB<CharacterXDataQuest>.SelectObjects(DB.Column("Character_ID").IsEqualTo(QuestPlayerID));
 			foreach (CharacterXDataQuest quest in dataQuests)
 			{
 				DBDataQuest dbDataQuest = GameServer.Database.FindObjectByKey<DBDataQuest>(quest.DataQuestID);

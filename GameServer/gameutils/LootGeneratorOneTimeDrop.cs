@@ -75,7 +75,7 @@ namespace DOL.GS
 
 					foreach (LootOTD l in lootOTDs)
 					{
-						IList<Mob> mobs = GameServer.Database.SelectObjects<Mob>("`Name` = @Name", new QueryParameter("@Name", l.MobName));
+						IList<Mob> mobs = DOLDB<Mob>.SelectObjects(DB.Column("Name").IsEqualTo(l.MobName));
 
 						if (mobs == null || mobs.Count == 0)
 						{
@@ -132,7 +132,7 @@ namespace DOL.GS
 			if (mob == null)
 				return;
 
-			IList<LootOTD> otds = GameServer.Database.SelectObjects<LootOTD>("`MobName` = @MobName", new QueryParameter("@MobName", mob.Name));
+			IList<LootOTD> otds = DOLDB<LootOTD>.SelectObjects(DB.Column("MobName").IsEqualTo(mob.Name));
 
 			lock (m_mobOTDList)
 			{
@@ -196,7 +196,7 @@ namespace DOL.GS
 							{
 								if (drop.MinLevel <= player.Level)
 								{
-									CharacterXOneTimeDrop hasDrop = GameServer.Database.SelectObjects<CharacterXOneTimeDrop>("`CharacterID` = @CharacterID AND `ItemTemplateID` = @ItemTemplateID", new [] { new QueryParameter("@CharacterID", player.QuestPlayerID), new QueryParameter("@ItemTemplateID", drop.ItemTemplateID) } ).FirstOrDefault();
+									var hasDrop = DOLDB<CharacterXOneTimeDrop>.SelectObject(DB.Column("CharacterID").IsEqualTo(player.QuestPlayerID).And(DB.Column("ItemTemplateID").IsEqualTo(drop.ItemTemplateID)));
 
 									if (hasDrop == null)
 									{

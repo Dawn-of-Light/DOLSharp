@@ -100,7 +100,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 			}
 
-			var door = GameServer.Database.SelectObjects<DBDoor>("`InternalID` = @InternalID", new QueryParameter("@InternalID", doorID)).FirstOrDefault();
+			var door = DOLDB<DBDoor>.SelectObject(DB.Column("InternalID").IsEqualTo(doorID));
 			if (door != null)
 			{
 				if (doorType == 7 || doorType == 9)

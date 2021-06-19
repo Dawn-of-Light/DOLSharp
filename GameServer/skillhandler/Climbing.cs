@@ -57,7 +57,7 @@ namespace DOL.GS.SkillHandler
 			if (spellid == -1)
 			{
 				spellid=0;
-				DBSpell climbSpell = GameServer.Database.SelectObjects<DBSpell>("`Name` = @Name", new QueryParameter("@Name", Abilities.ClimbSpikes)).FirstOrDefault();
+				DBSpell climbSpell = DOLDB<DBSpell>.SelectObject(DB.Column("Name").IsEqualTo(Abilities.ClimbSpikes));
 				if (climbSpell != null)
 					spellid = climbSpell.SpellID;
 			}

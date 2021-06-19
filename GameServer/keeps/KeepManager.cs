@@ -144,9 +144,9 @@ namespace DOL.GS.Keeps
 				IList<DBKeepComponent> keepcomponents = null;
 
 				if (ServerProperties.Properties.USE_NEW_KEEPS == 0 || ServerProperties.Properties.USE_NEW_KEEPS == 2)
-					keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("`Skin` < @Skin", new QueryParameter("@Skin", 20));
+					keepcomponents = DOLDB<DBKeepComponent>.SelectObjects(DB.Column("Skin").IsLessThan(20));
 				else if (ServerProperties.Properties.USE_NEW_KEEPS == 1)
-					keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("`Skin` > @Skin", new QueryParameter("@Skin", 20));
+					keepcomponents = DOLDB<DBKeepComponent>.SelectObjects(DB.Column("Skin").IsGreatherThan(20));
 
 				if (keepcomponents != null)
 				{
@@ -838,7 +838,7 @@ namespace DOL.GS.Keeps
 
 			if (location != "")
 			{
-				Teleport t = GameServer.Database.SelectObjects<Teleport>("`TeleportID` = @TeleportID", new QueryParameter("@TeleportID", location)).FirstOrDefault();
+				Teleport t = DOLDB<Teleport>.SelectObject(DB.Column("TeleportID").IsEqualTo(location));
 				if (t != null)
 					player.MoveTo((ushort)t.RegionID, t.X, t.Y, t.Z, (ushort)t.Heading);
 			}

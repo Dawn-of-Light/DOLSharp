@@ -157,7 +157,7 @@ namespace DOL.GS
 				HybridDictionary itemsInPage = new HybridDictionary(MAX_ITEM_IN_TRADEWINDOWS);
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					var itemList = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID AND `PageNumber` = @PageNumber", new[] { new QueryParameter("@ItemListID", m_itemsListID), new QueryParameter("@PageNumber", page) });
+					var itemList = DOLDB<MerchantItem>.SelectObjects(DB.Column("ItemListID").IsEqualTo(m_itemsListID).And(DB.Column("PageNumber").IsEqualTo(page)));
 					foreach (MerchantItem merchantitem in itemList)
 					{
 						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(merchantitem.ItemTemplateID);
@@ -220,8 +220,7 @@ namespace DOL.GS
 
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					var itemToFind = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID AND `PageNumber` = @PageNumber AND `SlotPosition` = @SlotPosition",
-					                                                                 new[] { new QueryParameter("@ItemListID", m_itemsListID), new QueryParameter("@PageNumber", page), new QueryParameter("@SlotPosition", (int)slot) }).FirstOrDefault();
+					var itemToFind = DOLDB<MerchantItem>.SelectObject(DB.Column("ItemListID").IsEqualTo(m_itemsListID).And(DB.Column("PageNumber").IsEqualTo(page)).And(DB.Column("SlotPosition").IsEqualTo((int)slot)));
 					if (itemToFind != null)
 					{
 						item = GameServer.Database.FindObjectByKey<ItemTemplate>(itemToFind.ItemTemplateID);
@@ -248,7 +247,7 @@ namespace DOL.GS
 				Hashtable allItems = new Hashtable();
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					var itemList = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", m_itemsListID));
+					var itemList = DOLDB<MerchantItem>.SelectObjects(DB.Column("ItemListID").IsEqualTo(m_itemsListID));
 					foreach (MerchantItem merchantitem in itemList)
 					{
 						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(merchantitem.ItemTemplateID);

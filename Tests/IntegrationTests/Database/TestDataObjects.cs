@@ -28,12 +28,23 @@ namespace DOL.Integration.Database
 	public class TestTable : DataObject
 	{
 		string m_testField;
+
 		[DataElement]
 		public string TestField { get { return m_testField; } set { Dirty = true; m_testField = value; } }
-		
+
 		public TestTable() { }
 	}
-	
+
+	[DataTable(TableName = "Keyword_Table")]
+	public class SqlKeywordTable : DataObject
+	{
+		string m_type;
+		[DataElement]
+		public string Type { get { return m_type; } set { Dirty = true; m_type = value; } }
+
+		public SqlKeywordTable() { }
+	}
+
 	/// <summary>
 	/// Basic Test Table with Auto Increment Primary Key
 	/// </summary>

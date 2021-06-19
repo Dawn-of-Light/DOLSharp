@@ -22,7 +22,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using DataTable = System.Data.DataTable;
 
 using DOL.Database.Attributes;
 using DOL.Database.Connection;
@@ -40,7 +39,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Number Format Info to Use for Database
@@ -117,8 +116,8 @@ namespace DOL.Database
 				
 				if (tableHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("AddObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("AddObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
 					success = false;
 					continue;
 				}
@@ -154,10 +153,10 @@ namespace DOL.Database
 							}
 							else
 							{
-								if (Log.IsErrorEnabled)
+								if (log.IsErrorEnabled)
 								{
 									foreach(var obj in resultGrp)
-										Log.ErrorFormat("AddObjects: DataObject ({0}) could not be inserted into database...", obj.DataObject);
+										log.ErrorFormat("AddObjects: DataObject ({0}) could not be inserted into database...", obj.DataObject);
 								}
 								success = false;
 							}
@@ -165,10 +164,10 @@ namespace DOL.Database
 					}
 					else
 					{
-						if (Log.IsWarnEnabled)
+						if (log.IsWarnEnabled)
 						{
 							foreach (var obj in allowed)
-								Log.WarnFormat("AddObject: DataObject ({0}) not allowed to be added to Database", obj);
+								log.WarnFormat("AddObject: DataObject ({0}) not allowed to be added to Database", obj);
 						}
 						success = false;
 					}
@@ -202,8 +201,8 @@ namespace DOL.Database
 				
 				if (tableHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("SaveObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("SaveObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
 					success = false;
 					continue;
 				}
@@ -230,10 +229,10 @@ namespace DOL.Database
 					}
 					else
 					{
-						if (Log.IsErrorEnabled)
+						if (log.IsErrorEnabled)
 						{
 							foreach(var obj in resultGrp)
-								Log.ErrorFormat("SaveObject: DataObject ({0}) could not be saved into database...", obj.DataObject);
+								log.ErrorFormat("SaveObject: DataObject ({0}) could not be saved into database...", obj.DataObject);
 						}
 						success = false;
 					}
@@ -270,8 +269,8 @@ namespace DOL.Database
 				
 				if (tableHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("DeleteObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("DeleteObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
 					success = false;
 					continue;
 				}
@@ -307,10 +306,10 @@ namespace DOL.Database
 							}
 							else
 							{
-								if (Log.IsErrorEnabled)
+								if (log.IsErrorEnabled)
 								{
 									foreach(var obj in resultGrp)
-										Log.ErrorFormat("DeleteObject: DataObject ({0}) could not be deleted from database...", obj.DataObject);
+										log.ErrorFormat("DeleteObject: DataObject ({0}) could not be deleted from database...", obj.DataObject);
 								}
 								success = false;
 							}
@@ -318,10 +317,10 @@ namespace DOL.Database
 					}
 					else
 					{
-						if (Log.IsWarnEnabled)
+						if (log.IsWarnEnabled)
 						{
 							foreach (var obj in allowed)
-								Log.WarnFormat("DeleteObject: DataObject ({0}) not allowed to be deleted from Database", obj);
+								log.WarnFormat("DeleteObject: DataObject ({0}) not allowed to be deleted from Database", obj);
 						}
 						success = false;
 					}
@@ -346,8 +345,8 @@ namespace DOL.Database
 				var remoteHandler = GetTableHandler(relation.ValueType);
 				if (remoteHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("SaveObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("SaveObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
 					success = false;
 					continue;
 				}
@@ -388,10 +387,10 @@ namespace DOL.Database
 								}
 								else
 								{
-									if (Log.IsErrorEnabled)
+									if (log.IsErrorEnabled)
 									{
 										foreach (var result in resultGrp)
-											Log.ErrorFormat("SaveObjectRelations: {0} Relation ({1}) of DataObject ({2}) failed for Object ({3})", grp.Key ? "Saving" : "Adding",
+											log.ErrorFormat("SaveObjectRelations: {0} Relation ({1}) of DataObject ({2}) failed for Object ({3})", grp.Key ? "Saving" : "Adding",
 											                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
 									}
 									success = false;
@@ -403,10 +402,10 @@ namespace DOL.Database
 							// Objects that could not be added can lead to failure
 							if (!grp.Key)
 							{
-								if (Log.IsWarnEnabled)
+								if (log.IsWarnEnabled)
 								{
 									foreach (var obj in allowed)
-										Log.WarnFormat("SaveObjectRelations: DataObject ({0}) not allowed to be added to Database", obj);
+										log.WarnFormat("SaveObjectRelations: DataObject ({0}) not allowed to be added to Database", obj);
 								}
 								success = false;
 							}
@@ -432,8 +431,8 @@ namespace DOL.Database
 				var remoteHandler = GetTableHandler(relation.ValueType);
 				if (remoteHandler == null)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("DeleteObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("DeleteObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
 					success = false;
 					continue;
 				}
@@ -473,8 +472,8 @@ namespace DOL.Database
 							{
 								foreach (var result in resultGrp)
 								{
-									if (Log.IsErrorEnabled)
-										Log.ErrorFormat("DeleteObjectRelations: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
+									if (log.IsErrorEnabled)
+										log.ErrorFormat("DeleteObjectRelations: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
 										                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
 								}
 								success = false;
@@ -484,10 +483,10 @@ namespace DOL.Database
 					else
 					{
 						// Objects that could not be deleted can lead to failure
-						if (Log.IsWarnEnabled)
+						if (log.IsWarnEnabled)
 						{
 							foreach (var obj in grp)
-								Log.WarnFormat("DeleteObjectRelations: DataObject ({0}) not allowed to be deleted from Database", obj);
+								log.WarnFormat("DeleteObjectRelations: DataObject ({0}) not allowed to be deleted from Database", obj);
 						}
 						success = false;
 					}
@@ -563,16 +562,16 @@ namespace DOL.Database
 						}
 						catch (Exception re)
 						{
-							if (Log.IsErrorEnabled)
-								Log.ErrorFormat("Could not Retrieve Objects from Relation (Table {0}, Local {1}, Remote Table {2}, Remote {3})\n{4}", tableName,
+							if (log.IsErrorEnabled)
+								log.ErrorFormat("Could not Retrieve Objects from Relation (Table {0}, Local {1}, Remote Table {2}, Remote {3})\n{4}", tableName,
 								                relation.Relation.LocalField, AttributesUtils.GetTableOrViewName(relation.ValueType), relation.Relation.RemoteField, re);
 						}
 					}
 				}
 				catch (Exception e)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("Could not Resolve Relations for Table {0}\n{1}", tableName, e);
+					if (log.IsErrorEnabled)
+						log.ErrorFormat("Could not Resolve Relations for Table {0}\n{1}", tableName, e);
 				}
 			}
 		}
@@ -634,12 +633,8 @@ namespace DOL.Database
 			}
 			else
 			{
-				
-				var whereClause = string.Format("`{0}` = @{0}", remoteBind.ColumnName);
-				
-				var parameters = objects.Select(obj => new [] { new QueryParameter(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj), localBind.ValueType) });
-				
-				objsResults = SelectObjectsImpl(remoteHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
+				var whereClauses = objects.Select(obj => DB.Column(remoteBind.ColumnName).IsEqualTo(localBind.GetValue(obj)));
+				objsResults = MultipleSelectObjectsImpl(remoteHandler, whereClauses);
 			}
 			
 			var resultByObjs = objsResults.Select((obj, index) => new { DataObject = objects[index], Results = obj }).ToArray();
@@ -693,8 +688,8 @@ namespace DOL.Database
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("FindObjectByKey: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("FindObjectByKey: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
@@ -719,31 +714,41 @@ namespace DOL.Database
 		#endregion
 
 		#region Public Parameterized Query Abstraction
-		public TObject SelectObject<TObject>(WhereExpression whereExpression)
+		public TObject SelectObject<TObject>(WhereClause whereClause)
 			where TObject : DataObject
 		{
-			var whereClause = whereExpression.WhereClause;
-			var parameters = whereExpression.QueryParameters;
-			return SelectObject<TObject>(whereClause, parameters);
+			return SelectObjects<TObject>(whereClause).FirstOrDefault();
 		}
 
-		public IList<TObject> SelectObjects<TObject>(WhereExpression whereExpression)
+		public IList<TObject> SelectObjects<TObject>(WhereClause whereClause)
 			where TObject : DataObject
 		{
-			var whereClause = whereExpression.WhereClause;
-			var parameters = whereExpression.QueryParameters;
-			return SelectObjects<TObject>(whereClause, parameters);
+			return MultipleSelectObjects<TObject>(new[] { whereClause }).First();
+		}
+
+		public IList<IList<TObject>> MultipleSelectObjects<TObject>(IEnumerable<WhereClause> whereClauseBatch)
+			where TObject : DataObject
+		{
+			if (whereClauseBatch == null) throw new ArgumentNullException("Parameter whereClauseBatch may not be null.");
+
+			var tableHandler = GetTableOrViewHandler(typeof(TObject));
+			if (tableHandler == null)
+			{
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+
+				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
+			}
+
+			var objs = MultipleSelectObjectsImpl(tableHandler, whereClauseBatch).Select(res => res.OfType<TObject>().ToArray()).ToArray();
+
+			FillObjectRelations(objs.SelectMany(obj => obj), false);
+
+			return objs;
 		}
 		#endregion
 
 		#region Public Object Select API With Parameters
-		/// <summary>
-		/// Retrieve a Single DataObject from the database based on the Where Expression and Parameters Collection
-		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereExpression"></param>
-		/// <param name="parameters"></param>
-		/// <returns>DataObject or null</returns>
 		public TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
 			where TObject : DataObject
 		{
@@ -753,38 +758,18 @@ namespace DOL.Database
 			return null;
 		}
 
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression and Parameters
-		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereExpression"></param>
-		/// <param name="parameter"></param>
-		/// <returns></returns>
 		public TObject SelectObject<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
 			where TObject : DataObject
 		{
 			return SelectObjects<TObject>(whereExpression, parameter).FirstOrDefault();
 		}
 
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression and Parameter
-		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereExpression"></param>
-		/// <param name="param"></param>
-		/// <returns></returns>
 		public TObject SelectObject<TObject>(string whereExpression, QueryParameter param)
 			where TObject : DataObject
 		{
 			return SelectObjects<TObject>(whereExpression, param).FirstOrDefault();
 		}
 
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameters Collection
-		/// </summary>
-		/// <param name="whereExpression">Parametrized Where Expression</param>
-		/// <param name="parameters">Collection of Parameters</param>
-		/// <returns>Collection of Objects Sets for each matching Parametrized Query</returns>
 		public IList<IList<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
 			where TObject : DataObject
 		{
@@ -794,8 +779,8 @@ namespace DOL.Database
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
@@ -806,12 +791,7 @@ namespace DOL.Database
 			
 			return objs;
 		}
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter Collection
-		/// </summary>
-		/// <param name="whereExpression">Parametrized Where Expression</param>
-		/// <param name="parameter">Collection of Parameter</param>
-		/// <returns>Collection of Objects matching Parametrized Query</returns>
+		
 		public IList<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
 			where TObject : DataObject
 		{
@@ -820,12 +800,7 @@ namespace DOL.Database
 			
 			return SelectObjects<TObject>(whereExpression, new [] { parameter }).First();
 		}
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter
-		/// </summary>
-		/// <param name="whereExpression">Parametrized Where Expression</param>
-		/// <param name="param">Single Parameter</param>
-		/// <returns>Collection of Objects matching Parametrized Query</returns>
+
 		public IList<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param)
 			where TObject : DataObject
 		{
@@ -837,46 +812,24 @@ namespace DOL.Database
 		#endregion
 		
 		#region Public Object Select API Without Parameters
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <returns>Single Object or First Object if multiple matches</returns>
 		public TObject SelectObject<TObject>(string whereExpression)
 			where TObject : DataObject
 		{
 			return SelectObject<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
 		}
 
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Single Object or First Object if multiple matches</returns>
 		public TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
 			return SelectObjects<TObject>(whereExpression, isolation).FirstOrDefault();
 		}
 
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <returns>Collection of DataObjects matching filter</returns>
 		public IList<TObject> SelectObjects<TObject>(string whereExpression)
 			where TObject : DataObject
 		{
 			return SelectObjects<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
 		}
 
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Collection of DataObjects matching filter</returns>
 		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
@@ -885,42 +838,32 @@ namespace DOL.Database
 		#endregion
 		
 		#region Public Object Select All API
-		/// <summary>
-		/// Select all Objects From Table holding TObject Type
-		/// </summary>
-		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
-		/// <returns>Collection of all DataObject for this Type</returns>
 		public IList<TObject> SelectAllObjects<TObject>()
-			where TObject : DataObject
-		{
-			return SelectAllObjects<TObject>(Transaction.IsolationLevel.DEFAULT);
-		}
-		/// <summary>
-		/// Select all Objects From Table holding TObject Type
-		/// </summary>
-		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Collection of all DataObject for this Type</returns>
-		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("SelectAllObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
-				
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("SelectAllObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
-			
+
 			if (tableHandler.UsesPreCaching)
 				return tableHandler.SearchPreCachedObjects(obj => obj != null).OfType<TObject>().ToArray();
-			
-			var dataObjects = SelectObjectsImpl(tableHandler, null, new [] { new QueryParameter[] { } }, isolation).Single().OfType<TObject>().ToArray();
-			
+
+			var dataObjects = MultipleSelectObjectsImpl(tableHandler, new[] { WhereClause.Empty }).Single().OfType<TObject>().ToArray();
+
 			FillObjectRelations(dataObjects, false);
-			
+
 			return dataObjects;
+		}
+
+		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
+			where TObject : DataObject
+		{
+			return SelectAllObjects<TObject>();
 		}
 		#endregion
 		
@@ -1016,6 +959,8 @@ namespace DOL.Database
 		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
 		protected abstract IList<IList<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation);
 
+		protected abstract IList<IList<DataObject>> MultipleSelectObjectsImpl(DataTableHandler tableHandler, IEnumerable<WhereClause> whereClauseBatch);
+
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
 		/// </summary>
@@ -1051,8 +996,8 @@ namespace DOL.Database
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
-				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("UpdateInCache: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("UpdateInCache: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
