@@ -45,11 +45,6 @@ namespace DOL.Database.Handlers
 				this.ConnectionString += ";Treat Tiny As Boolean=False";
 			}
 
-			if (!this.ConnectionString.Contains("Ignore Prepare") && !this.ConnectionString.Contains("Ignore Prepare"))
-			{
-				this.ConnectionString += ";Ignore Prepare=False";
-			}
-
 			if (!this.ConnectionString.Contains("Allow User Variables") && !this.ConnectionString.Contains("AllowUserVariables"))
 			{
 				this.ConnectionString += ";Allow User Variables=True";
