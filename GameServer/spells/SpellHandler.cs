@@ -4021,14 +4021,14 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="dw"></param>
 		/// <param name="id"></param>
-		public virtual void TooltipDelve(ref MiniDelveWriter dw, int id)
+		public virtual void TooltipDelve(ref MiniDelveWriter dw)
 		{
 			if (dw == null)
 				return;
 			
 			dw.AddKeyValuePair("Function", "light"); // Function of type "light" allows custom description to show with no hardcoded text.  Temporary Fix - tolakram
 			//.Value("Function", spellHandler.FunctionName ?? "0")
-			dw.AddKeyValuePair("Index", unchecked((short)id));
+			dw.AddKeyValuePair("Index", unchecked((ushort)Spell.InternalID));
 			dw.AddKeyValuePair("Name", Spell.Name);
 			
 			if (Spell.CastTime > 2000)
@@ -4043,7 +4043,11 @@ namespace DOL.GS.Spells
 				dw.AddKeyValuePair("damage_type", (int) Spell.DamageType + 1); // Damagetype not the same as dol
 			//.Value("type1", spellHandler.GetDelveValueType1, spellHandler.GetDelveValueType1 > 0)
 			if (Spell.Level > 0)
+			{
 				dw.AddKeyValuePair("level", Spell.Level);
+				dw.AddKeyValuePair("power_level", Spell.Level);
+			}
+
 			if (Spell.CostPower)
 				dw.AddKeyValuePair("power_cost", Spell.Power);
 			//.Value("round_cost",spellHandler.GetDelveValueRoundCost,spellHandler.GetDelveValueRoundCost!=0)

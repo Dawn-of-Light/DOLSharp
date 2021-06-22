@@ -87,7 +87,7 @@ namespace DOL.GS
 		protected static readonly Dictionary<int, Spell> m_spellIndex = new Dictionary<int, Spell>();
 		// Spells Tooltip Dict ToolTipID => SpellID
 		protected static readonly Dictionary<ushort, int> m_spellToolTipIndex = new Dictionary<ushort, int>();
-		
+
 		
 		// lookup table for styles, faster access when invoking a char styleID with classID
 		protected static readonly Dictionary<KeyValuePair<int, int>, Style> m_styleIndex = new Dictionary<KeyValuePair<int, int>, Style>();
