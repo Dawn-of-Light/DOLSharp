@@ -1486,20 +1486,6 @@
   </DBRegions>
   <DBRegions>
     <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
-    <RegionID>230</RegionID>
-    <Name>Region230</Name>
-    <Description />
-    <IP>127.0.0.1</IP>
-    <Port>10400</Port>
-    <Expansion>3</Expansion>
-    <HousingEnabled>false</HousingEnabled>
-    <DivingEnabled>false</DivingEnabled>
-    <WaterLevel>0</WaterLevel>
-    <ClassType />
-    <IsFrontier>false</IsFrontier>
-  </DBRegions>
-  <DBRegions>
-    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
     <RegionID>231</RegionID>
     <Name>Region231</Name>
     <Description>Art Test Zone</Description>
@@ -1704,20 +1690,6 @@
     <Expansion>0</Expansion>
     <HousingEnabled>false</HousingEnabled>
     <DivingEnabled>true</DivingEnabled>
-    <WaterLevel>0</WaterLevel>
-    <ClassType />
-    <IsFrontier>false</IsFrontier>
-  </DBRegions>
-  <DBRegions>
-    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
-    <RegionID>247</RegionID>
-    <Name>Region247</Name>
-    <Description />
-    <IP>127.0.0.1</IP>
-    <Port>10400</Port>
-    <Expansion>0</Expansion>
-    <HousingEnabled>false</HousingEnabled>
-    <DivingEnabled>false</DivingEnabled>
     <WaterLevel>0</WaterLevel>
     <ClassType />
     <IsFrontier>false</IsFrontier>
