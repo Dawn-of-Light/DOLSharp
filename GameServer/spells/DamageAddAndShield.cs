@@ -141,6 +141,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public DamageAddSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "dmg_add");
+			dw.AddKeyValuePair("damage", Spell.Damage * 10);
+		}
 	}
 
 	/// <summary>
@@ -240,6 +247,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public DamageShieldSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "dmg_shield");
+			dw.AddKeyValuePair("damage", Spell.Damage * 10);
+		}
 	}
 
 	/// <summary>

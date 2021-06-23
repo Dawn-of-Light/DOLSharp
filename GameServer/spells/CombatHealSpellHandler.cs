@@ -44,5 +44,11 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public CombatHealSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("parm", "1");
+		}
 	}
 }

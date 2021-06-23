@@ -600,6 +600,27 @@ namespace DOL.GS.Spells
             }
         }
 
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "charm");
+			dw.AddKeyValuePair("power_level", Spell.Value);
+			var detail = string.IsNullOrWhiteSpace(Spell.Description) ? "Attempts to bring the target monster under the caster's control." : Spell.Description;
+			switch ((eCharmType)Spell.AmnesiaChance)
+			{
+				case eCharmType.All: break;
+				case eCharmType.Animal: detail += "\nSpell works on animals."; break;
+				case eCharmType.Humanoid: detail += "\nSpell works on humanoids."; break;
+				case eCharmType.Insect: detail += "\nSpell works on insects."; break;
+				case eCharmType.Reptile: detail += "\nSpell works on reptiles."; break;
+				case eCharmType.HumanoidAnimal: detail += "\nSpell works on humanoids and animals."; break;
+				case eCharmType.HumanoidAnimalInsect: detail += "\nSpell works on humanoids, insects, and animals."; break;
+				case eCharmType.HumanoidAnimalInsectMagical: detail += "\nSpell works on humanoids, insects, magical, and animals."; break;
+				case eCharmType.HumanoidAnimalInsectMagicalUndead: detail += "\nSpell works on humanoids, insects, magical, undead, and animals."; break;
+			}
+			dw.AddKeyValuePair("delve_string", detail);
+		}
+
         // Constructs new Charm spell handler
         public CharmSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
@@ -612,7 +633,7 @@ namespace DOL.GS.Spells
 
         ... Can you please explain what the max level pet a hunter can charm if they are fully Beastcraft specd? The community feels its no higher then 41, but the builder says max level 50.
 
-        A: Sayeth the Oracle: ”It's 82% of the caster's level for the highest charm in beastcraft; or level 41 if the caster is 50. Spec doesn't determine the level of the pet - it's purely based on the spell.”
+        A: Sayeth the Oracle: ï¿½It's 82% of the caster's level for the highest charm in beastcraft; or level 41 if the caster is 50. Spec doesn't determine the level of the pet - it's purely based on the spell.ï¿½
 
 
 

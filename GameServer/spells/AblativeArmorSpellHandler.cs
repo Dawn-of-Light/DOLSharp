@@ -236,6 +236,14 @@ namespace DOL.GS.Spells
 			#endregion
 		}
 
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "hit_buffer");
+			dw.AddKeyValuePair("bonus", Spell.Damage > 0 ? Spell.Damage : 25);
+			dw.AddKeyValuePair("damage", Spell.Value);
+		}
+
 		// for delve info
 		protected virtual string GetAblativeType()
 		{
@@ -267,7 +275,16 @@ namespace DOL.GS.Spells
 		{
 			return "Type: Magic Absorption";
 		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "hit_buffer");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("damage", Spell.Damage);
+		}
 	}
+
     //Both Magic/melee ablative 1.101 druids mite have a buff like this...
     [SpellHandlerAttribute("BothAblativeArmor")]
     public class BothAblativeArmorSpellHandler : AblativeArmorSpellHandler
@@ -285,5 +302,13 @@ namespace DOL.GS.Spells
         {
             return "Type: Melee/Magic Absorption";
         }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "hit_buffer");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("damage", Spell.Damage);
+		}
     }
 }

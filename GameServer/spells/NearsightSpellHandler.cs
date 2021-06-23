@@ -147,7 +147,17 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public NearsightSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "combat");
+			dw.AddKeyValuePair("power_level", Spell.Value);
+			dw.AddKeyValuePair("parm", "12");
+		}
 	}
+
+
 	/// <summary>
 	/// Reduce efficacity of nearsight effect
 	/// </summary>
@@ -164,5 +174,11 @@ namespace DOL.GS.Spells
 		}	
 		// constructor
 		public NearsightReductionSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 }

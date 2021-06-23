@@ -61,5 +61,12 @@ namespace DOL.GS.Spells
       }
       return base.GetPetBrain(owner);
     }
+
+    public override void TooltipDelve(ref MiniDelveWriter dw)
+    {
+      base.TooltipDelve(ref dw);
+      dw.AddKeyValuePair("Function", "summon");
+      dw.AddKeyValuePair("power_level", -100);
+    }
   }
 }

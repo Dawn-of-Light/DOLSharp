@@ -181,5 +181,11 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public DiseaseSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "disease");
+		}
 	}
 }

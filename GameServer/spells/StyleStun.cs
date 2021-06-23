@@ -76,5 +76,12 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public StyleStun(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "add_effect");
+			dw.AddKeyValuePair("type1", "22");
+		}
 	}
 }

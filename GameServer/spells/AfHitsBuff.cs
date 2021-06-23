@@ -107,5 +107,10 @@ namespace DOL.GS.Spells
 
         public AfHitsBuffSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 }
