@@ -890,6 +890,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Player.LastPositionUpdatePoint.X = (int)newPlayerX;
 			client.Player.LastPositionUpdatePoint.Y = (int)newPlayerY;
 			client.Player.LastPositionUpdatePoint.Z = (int)newPlayerZ;
+			client.Player.X = (int)newPlayerX;
+			client.Player.Y = (int)newPlayerY;
+			client.Player.Z = (int)newPlayerZ;
 
 			int tolerance = ServerProperties.Properties.CPS_TOLERANCE;
 
