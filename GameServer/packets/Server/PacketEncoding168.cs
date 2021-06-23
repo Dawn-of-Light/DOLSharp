@@ -66,7 +66,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="content">the content to be decrypted</param>
 		/// <param name="udpPacket">true if the packet an udp packet</param>
 		/// <returns>the decrypted packet</returns>
-		public byte[] DecryptPacket(byte[] buf, bool udpPacket)
+		public byte[] DecryptPacket(byte[] buf, int offset, bool udpPacket)
 		{
 			if (buf == null)
 				return null;
@@ -76,9 +76,10 @@ namespace DOL.GS.PacketHandler
 			Array.Copy(_sbox, 0, tmpsbox, 0, _sbox.Length);
 			byte i = 0;
 			byte j = 0;
-			ushort len = (ushort)((buf[0] << 8) | buf[1] + 10); //+10 byte for packet#,session,param,code,checksum
+			ushort len = (ushort)((buf[offset] << 8) | buf[offset + 1] + 10); //+10 byte for packet#,session,param,code,checksum
+			offset += 2; // packet length
 			int k;
-			for (k = (len / 2) + 2; k < len + 2; k++)
+			for (k = (len / 2) + offset; k < len + offset; k++)
 			{
 				i++;
 				byte tmp = tmpsbox[i];
@@ -89,7 +90,7 @@ namespace DOL.GS.PacketHandler
 				buf[k] ^= xorKey;
 				j += buf[k];
 			}
-			for (k = 2; k < (len / 2) + 2; k++)
+			for (k = offset; k < (len / 2) + offset; k++)
 			{
 				i++;
 				byte tmp = tmpsbox[i];
@@ -110,7 +111,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="content">the content to encrypt</param>
 		/// <param name="udpPacket">true if the packet is an udp packet</param>
 		/// <returns>the encrypted packet</returns>
-		public byte[] EncryptPacket(byte[] buf, bool udpPacket)
+		public byte[] EncryptPacket(byte[] buf, int offset, bool udpPacket)
 		{
 			if (buf == null)
 				return null;
@@ -120,13 +121,14 @@ namespace DOL.GS.PacketHandler
 			Array.Copy(_sbox, 0, tmpsbox, 0, _sbox.Length);
 			byte i = 0;
 			byte j = 0;
-			ushort len = (ushort)((buf[0] << 8) | buf[1]);
+			ushort len = (ushort)((buf[offset] << 8) | buf[offset + 1]);
+			offset += 2; // packet length
 			len += 1; // +1 byte for packet code
 			if (udpPacket)
 				len += 2; //+2 byte for packet-count
 
 			int k;
-			for (k = (len / 2) + 2; k < len + 2; k++)
+			for (k = (len / 2) + offset; k < len + offset; k++)
 			{
 				i++;
 				byte tmp = tmpsbox[i];
@@ -137,7 +139,7 @@ namespace DOL.GS.PacketHandler
 				j += buf[k];
 				buf[k] ^= xorKey;
 			}
-			for (k = 2; k < (len / 2) + 2; k++)
+			for (k = offset; k < (len / 2) + offset; k++)
 			{
 				i++;
 				byte tmp = tmpsbox[i];
