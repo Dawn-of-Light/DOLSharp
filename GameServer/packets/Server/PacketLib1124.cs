@@ -39,6 +39,7 @@ using DOL.GS.Spells;
 using DOL.GS.Styles;
 
 using log4net;
+using DOL.GS.PacketHandler.Client.v168;
 
 
 namespace DOL.GS.PacketHandler
@@ -3865,28 +3866,28 @@ namespace DOL.GS.PacketHandler
 				if (t is RealmAbility)
 				{
 					if (m_gameClient.CanSendTooltip(27, t.InternalID))
-						SendDelveInfo(DOL.GS.PacketHandler.Client.v168.DetailDisplayHandler.DelveRealmAbility(m_gameClient, t.InternalID));
+						SendDelveInfo(DetailDisplayHandler.DelveRealmAbility(m_gameClient, t.InternalID));
 				}
 				else if (t is Ability)
 				{
 					if (m_gameClient.CanSendTooltip(28, t.InternalID))
-						SendDelveInfo(DOL.GS.PacketHandler.Client.v168.DetailDisplayHandler.DelveAbility(m_gameClient, t.InternalID));
+						SendDelveInfo(DetailDisplayHandler.DelveAbility(m_gameClient, t.InternalID));
 				}
 				else if (t is Style)
 				{
 					if (m_gameClient.CanSendTooltip(25, t.InternalID))
-						SendDelveInfo(DOL.GS.PacketHandler.Client.v168.DetailDisplayHandler.DelveStyle(m_gameClient, t.InternalID));
+						SendDelveInfo(DetailDisplayHandler.DelveStyle(m_gameClient, t.InternalID));
 				}
-				else if (t is Spell)
+				else if (t is Spell spell)
 				{
-					if (t is Song || (t is Spell && ((Spell)t).NeedInstrument))
+					if (spell is Song || spell.NeedInstrument)
 					{
-						if (m_gameClient.CanSendTooltip(26, ((Spell)t).InternalID))
-							SendDelveInfo(DOL.GS.PacketHandler.Client.v168.DetailDisplayHandler.DelveSong(m_gameClient, ((Spell)t).InternalID));
+						if (m_gameClient.CanSendTooltip(26, spell.InternalID))
+							SendDelveInfo(DetailDisplayHandler.DelveSong(m_gameClient, spell.InternalID));
 					}
 
-					if (m_gameClient.CanSendTooltip(24, ((Spell)t).InternalID))
-						SendDelveInfo(DOL.GS.PacketHandler.Client.v168.DetailDisplayHandler.DelveSpell(m_gameClient, ((Spell)t).InternalID));
+					if (m_gameClient.CanSendTooltip(24, spell.InternalID))
+						SendDelveInfo(DetailDisplayHandler.DelveSpell(m_gameClient, spell));
 				}
 			}
 		}
@@ -3898,7 +3899,7 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
-			IList<int> tooltipids = new List<int>();
+			var tooltipSpellHandlers = new List<ISpellHandler>();
 
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons)))
 			{
@@ -3923,10 +3924,9 @@ namespace DOL.GS.PacketHandler
 						}
 
 						// store tooltip update for gamespelleffect.
-						if (ForceTooltipUpdate && (effect is GameSpellEffect))
+						if (ForceTooltipUpdate && effect is GameSpellEffect gameEffect)
 						{
-							Spell spell = ((GameSpellEffect)effect).Spell;
-							tooltipids.Add(spell.InternalID);
+							tooltipSpellHandlers.Add(gameEffect.SpellHandler);
 						}
 
 						//						log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
@@ -3999,10 +3999,10 @@ namespace DOL.GS.PacketHandler
 			}
 
 			// force tooltips update
-			foreach (int entry in tooltipids)
+			foreach (var spellHandler in tooltipSpellHandlers)
 			{
-				if (m_gameClient.CanSendTooltip(24, entry))
-					SendDelveInfo(DOL.GS.PacketHandler.Client.v168.DetailDisplayHandler.DelveSpell(m_gameClient, entry));
+				if (m_gameClient.CanSendTooltip(24, spellHandler.Spell.InternalID))
+					SendDelveInfo(DetailDisplayHandler.DelveSpell(spellHandler));
 			}
 		}
 

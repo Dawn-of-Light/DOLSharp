@@ -843,11 +843,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 						
 						if (sk == null) return;
 						
-						if (sk is Spell)
+						if (sk is Spell spell)
 						{
-							Spell spell = (Spell)sk;
 							caption = spell.Name;
-
 							WriteSpellInfo(objectInfo, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells), client);
 						}
 						else if (sk is Ability)
@@ -921,16 +919,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 				#region v1.110+
 				case 24://SpellsNew
 					if (client.CanSendTooltip(24, objectId))
-				        client.Out.SendDelveInfo(DelveSpell(client, objectId));
+					{
+						var spell = SkillBase.GetSpellByTooltipID(objectId);
+						client.Out.SendDelveInfo(DelveSpell(client, spell));
+					}
 					break;
 				case 25://StylesNew
 					if (client.CanSendTooltip(25, objectId))
 	                    client.Out.SendDelveInfo(DelveStyle(client, objectId));
                     break;
 				case 26://SongsNew
-                    if (client.CanSendTooltip(26, objectId))
-						client.Out.SendDelveInfo(DelveSong(client, objectId));
-						client.Out.SendDelveInfo(DelveSpell(client, objectId));
+					{
+						if (client.CanSendTooltip(26, objectId))
+							client.Out.SendDelveInfo(DelveSong(client, objectId));
+						var spell = SkillBase.GetSpellByTooltipID(objectId);
+						client.Out.SendDelveInfo(DelveSpell(client, spell));
+					}
 					break;
 				case 27://RANew
 					if (client.CanSendTooltip(27, objectId))
@@ -2032,26 +2036,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <param name="clt">Client</param>
 		/// <param name="id">SpellID</param>
 		/// <returns></returns>
-        public static string DelveSpell(GameClient clt, int id)
-        {
-            MiniDelveWriter dw = new MiniDelveWriter("Spell");
-			
-            Spell spell = SkillBase.GetSpellByTooltipID((ushort)id);
-        	// Spell object are mostly "DB" Object, we can't subclass this object easily, but Spellhandler create subclass using "SpellType"
-        	// We better rely on the handler to delve it correctly ! using reserved spellline as we can't guess it ! player can delve other object effect !
-			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-			
-			if (spellHandler != null)
+		public static string DelveSpell(GameClient clt, Spell spell, SpellLine spellLine = null)
+		{
+			// We better rely on the handler to delve it correctly ! using reserved spellline as we can't guess it ! player can delve other object effect !
+			if (spellLine == null)
+				spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
+			// Spell object are mostly "DB" Object, we can't subclass this object easily, but Spellhandler create subclass using "SpellType"
+			var spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, spellLine);
+			if (spellHandler == null)
 			{
-				spellHandler.TooltipDelve(ref dw, id);
+				// not found
+				MiniDelveWriter dw = new MiniDelveWriter("Spell");
+				dw.AddKeyValuePair("Index", (ushort) spell.InternalID);
+				dw.AddKeyValuePair("Name", "(not found)");
 				return dw.ToString();
 			}
+			return DelveSpell(spellHandler);
+		}
 
-        	// not found
-        	dw.AddKeyValuePair("Index", unchecked((short)id));
-        	dw.AddKeyValuePair("Name", "(not found)");
-            return dw.ToString();
-        }
+		public static string DelveSpell(ISpellHandler spellHandler)
+		{
+			MiniDelveWriter dw = new MiniDelveWriter("Spell");
+			spellHandler.TooltipDelve(ref dw);
+			return dw.ToString();
+		}
 
 		public static string DelveStyle(GameClient clt, int id)
         {
