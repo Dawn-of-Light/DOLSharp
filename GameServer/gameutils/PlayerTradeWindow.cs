@@ -616,13 +616,24 @@ namespace DOL.GS
 
 						bool tradeSuccess = false;
 
+                        InventoryItem itemtoadd = item;
+
+                        // If PLayer is not Infiltrator (9), Shadowblade (23), Nightshade (49), remove Envenom bonus before add the item in the inventory
+                        if (item.PoisonSpellID > 0 && !(partner.CharacterClass.ID == 9 || partner.CharacterClass.ID == 23 || partner.CharacterClass.ID == 49))
+                        {
+                            itemtoadd = GameInventoryItem.Create(itemtoadd);
+                            itemtoadd.PoisonCharges = 0;
+                            itemtoadd.PoisonMaxCharges = 0;
+                            itemtoadd.PoisonSpellID = 0;
+                        }
+
 						if (item.IsDeleted)
 						{
-							tradeSuccess = partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item);
+                            tradeSuccess = partner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, itemtoadd);
 						}
 						else
 						{
-							tradeSuccess = partner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item);
+                            tradeSuccess = partner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, itemtoadd);
 						}
 
 						if (!tradeSuccess)
@@ -648,13 +659,24 @@ namespace DOL.GS
 
 						bool tradeSuccess = false;
 
+                        InventoryItem itemtoadd = item;
+
+                        // If PLayer is not Infiltrator (9), Shadowblade (23), Nightshade (49), remove Envenom bonus before add the item in the inventory
+                        if (item.PoisonSpellID > 0 && !(m_owner.CharacterClass.ID == 9 || m_owner.CharacterClass.ID == 23 || m_owner.CharacterClass.ID == 49))
+                        {
+                            itemtoadd = GameInventoryItem.Create(itemtoadd);
+                            itemtoadd.PoisonCharges = 0;
+                            itemtoadd.PoisonMaxCharges = 0;
+                            itemtoadd.PoisonSpellID = 0;
+                        }
+
 						if (item.IsDeleted)
 						{
-							tradeSuccess = m_owner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item);
+                            tradeSuccess = m_owner.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, itemtoadd);
 						}
 						else
 						{
-							tradeSuccess = m_owner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, item);
+                            tradeSuccess = m_owner.Inventory.AddTradeItem(eInventorySlot.FirstEmptyBackpack, itemtoadd);
 						}
 
 						if (!tradeSuccess)

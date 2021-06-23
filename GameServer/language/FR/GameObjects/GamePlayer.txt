@@ -10,6 +10,7 @@ GamePlayer.ApplyPoison.CantPoisonWeapon:		Vous ne pouvez pas utiliser du poison 
 GamePlayer.ApplyPoison.CantUsePoison:			Vous ne pouvez pas utiliser ce poison.
 GamePlayer.ApplyPoison.CantUsePoisons:			Vous ne pouvez pas utiliser ces poisons.
 GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	Les poisons ne peuvent être appliqués que sur des armes.
+GamePlayer.ApplyPoison.CantReapplyPoison:	Vous ne pouvez pas réappliquer du poison sur cette arme.
 GamePlayer.Attack.AlreadyDead:				{0} est déjà mort(e).
 GamePlayer.Attack.Blocked:					{0} bloque votre attaque.
 GamePlayer.Attack.CantBeAttacked:			Ceci ne peut pas être attaqué.

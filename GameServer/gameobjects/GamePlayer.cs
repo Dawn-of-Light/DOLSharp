@@ -9495,6 +9495,11 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.ApplyPoison.CantApplyRecentCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
+            if (toItem.PoisonCharges > 0)
+            {
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GameObjects.GamePlayer.ApplyPoison.CantReapplyPoison"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return false;
+            }
 
 			if (toItem.PoisonSpellID != 0)
 			{
@@ -11779,6 +11784,7 @@ namespace DOL.GS
 		#endregion
 
 		#region ReceiveItem/DropItem/PickupObject
+
 		/// <summary>
 		/// Receive an item from another living
 		/// </summary>
@@ -11787,9 +11793,10 @@ namespace DOL.GS
 		/// <returns>true if player took the item</returns>
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
-			if (item == null) return false;
+            GamePlayer sourcePlayer = source as GamePlayer;
+            if (item == null) return false;
 
-			if (!Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+            if (!Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 				return false;
 			InventoryLogging.LogInventoryAction(source, this, eInventoryActionType.Trade, item.Template, item.Count);
 
@@ -11805,22 +11812,18 @@ namespace DOL.GS
                     Out.SendMessage(String.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.ReceiveItem.ReceiveFrom", item.GetName(0, false), source.GetName(0, false))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 			}
 
-			if (source is GamePlayer)
-			{
-				GamePlayer sourcePlayer = source as GamePlayer;
-				if (sourcePlayer != null)
-				{
-					uint privLevel1 = Client.Account.PrivLevel;
-					uint privLevel2 = sourcePlayer.Client.Account.PrivLevel;
-					if (privLevel1 != privLevel2
-					    && (privLevel1 > 1 || privLevel2 > 1)
-					    && (privLevel1 == 1 || privLevel2 == 1))
-					{
-						GameServer.Instance.LogGMAction("   Item: " + source.Name + "(" + sourcePlayer.Client.Account.Name + ") -> " + Name + "(" + Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
-					}
-				}
-			}
-			return true;
+            if (sourcePlayer != null)
+            {
+                uint privLevel1 = Client.Account.PrivLevel;
+                uint privLevel2 = sourcePlayer.Client.Account.PrivLevel;
+                if (privLevel1 != privLevel2
+                    && (privLevel1 > 1 || privLevel2 > 1)
+                    && (privLevel1 == 1 || privLevel2 == 1))
+                {
+                    GameServer.Instance.LogGMAction("   Item: " + source.Name + "(" + sourcePlayer.Client.Account.Name + ") -> " + Name + "(" + Client.Account.Name + ") : " + item.Name + "(" + item.Id_nb + ")");
+                }
+            }
+            return true;
 		}
 
 		/// <summary>
