@@ -81,13 +81,13 @@ namespace DOL.GS.RealmAbilities
 				w.AddKeyValuePair("icon", Icon);
 
             string description = "";
-            DelveInfo.Foreach((str) => 
+			foreach (var str in DelveInfo)
 			{
-                if (!string.IsNullOrEmpty(str))
-                    description += str + "\n";
-            });
-            // use the DelveInfo to display information in place of the 1.110+ method
-            if(!string.IsNullOrEmpty(description))
+				if (!string.IsNullOrEmpty(str))
+					description += str + "\n";
+			}
+			// use the DelveInfo to display information in place of the 1.110+ method
+			if (!string.IsNullOrEmpty(description))
                 w.AddKeyValuePair("description_string", description);
             else
             {
