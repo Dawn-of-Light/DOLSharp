@@ -61,6 +61,17 @@ RAStatEnhancer.DelveInfo.Info1:			Level {0}: Amount: {1}
 # /SecondWindAbility
 SecondWindAbility.AddEffectsInfo.Info1:			
 SecondWindAbility.AddEffectsInfo.Info4:			
-SecondWindAbility.AddEffectsInfo.Info5:			
+SecondWindAbility.AddEffectsInfo.Info5:	
+
+# /ShadowStrikeAbility		
+ShadowStrikeAbility.Moving:				You move and interrupt your shadow strike!
+ShadowStrikeAbility.Attacked:			You're attacked and interrupt your shadow strike!
+ShadowStrikeAbility.Target:				You need to target a living object to use this ability.
+
+# /Assassinate		
+AssassinateAbility.Moving:				You move and interrupt your action!
+AssassinateAbility.Attacked:			You're attacked and interrupt your action!
+AssassinateAbility.Target:				You need to target a living object to use this ability.
+AssassinateAbility.Preparing:			You're preparing to assassinate		
 
 
