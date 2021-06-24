@@ -4409,7 +4409,7 @@ namespace DOL.GS
                 // If GM use viewloot, need remove the attacker from the xpGainers, else if he deco/reco
                 // and redo the action, he apears twice in the list and the bug is happen
                 lock (m_xpGainers)
-                    if (m_xpGainers.ContainsKey(attacker) && Health == MaxHealth)
+                    if (m_xpGainers.Contains(attacker) && Health == MaxHealth)
                         m_xpGainers.Remove(attacker);
             }
 		}
