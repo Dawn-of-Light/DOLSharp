@@ -54,12 +54,6 @@ namespace DOL.GS.PacketHandler
 		{
 			Position = 0;
 			WriteShort((ushort)(Length-5));
-
-			//IMPORTANT!!!
-			//Set the capacity of the internal buffer or
-			//the byte-array of GetBuffer will be TOO big!
-			Capacity = (int)Length;
-
 			return (ushort)(Length-5);
 		}
 
