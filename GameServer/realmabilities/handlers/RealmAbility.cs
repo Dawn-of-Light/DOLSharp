@@ -50,10 +50,25 @@ namespace DOL.GS.RealmAbilities
 		/// <summary>
 		/// max level this RA can reach
 		/// </summary>
-		public virtual int MaxLevel
-		{
-			get { return 0; }
-		}
+        public virtual int MaxLevel => 0;
+        public virtual int GetValueDelve(int level)
+        {
+            return level;
+        }
+        /// <summary>
+        /// used for 1.110 RA delves
+        /// </summary>        
+        public virtual int AmountPerLevel(int level)
+        {
+            return 0;
+        }
+        /// <summary>
+        /// used for 1.110 RA delves
+        /// </summary>
+        public virtual int GetDurationDelve(int level)
+        {
+            return 0;
+        }
 
 		/// <summary>
 		/// Delve for this RA
@@ -65,12 +80,34 @@ namespace DOL.GS.RealmAbilities
 			if (Icon > 0)
 				w.AddKeyValuePair("icon", Icon);
 
-			for (int i = 0; i <= MaxLevel - 1; i++)
+            string description = "";
+			foreach (var str in DelveInfo)
 			{
-				if (CostForUpgrade(i) > 0)
-					w.AddKeyValuePair(string.Format("TrainingCost_{0}", (i + 1)), CostForUpgrade(i));
+				if (!string.IsNullOrEmpty(str))
+					description += str + "\n";
+			}
+			// use the DelveInfo to display information in place of the 1.110+ method
+			if (!string.IsNullOrEmpty(description))
+                w.AddKeyValuePair("description_string", description);
+            else
+            {
+                for (int i = 0; i < MaxLevel; i++)
+                {
+                    if (CostForUpgrade(i) > 0)
+                        w.AddKeyValuePair($"TrainingCost_{i + 1}", CostForUpgrade(i));
+                    if (AmountPerLevel(i + 1) > 0)
+                        w.AddKeyValuePair(string.Format("AmountLvl_{0}", i + 1), AmountPerLevel(i + 1));
+                }
 			}
 		}
+
+        /// <summary>
+		/// Delve for this RA 1.110+ with gameclient param for multiple delves with one RA. TODO review
+		/// </summary>
+		public virtual void AddDelve(ref MiniDelveWriter w, int level, GameClient clt)
+        {
+            AddDelve(ref w);
+        }
 
 		public override string Name
 		{

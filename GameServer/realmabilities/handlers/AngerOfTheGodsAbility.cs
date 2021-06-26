@@ -11,13 +11,49 @@ namespace DOL.GS.RealmAbilities
 	public class AngerOfTheGodsAbility : TimedRealmAbility
 	{
         private DBSpell m_dbspell;
-        private Spell m_spell = null;
+        private Spell m_spell;
         private SpellLine m_spellline;
-        private double m_damage = 0;
+        private double m_damage;
         private GamePlayer m_player;
 
-        public AngerOfTheGodsAbility(DBAbility dba, int level) : base(dba, level) {}
-        public virtual void CreateSpell(double damage)
+        public AngerOfTheGodsAbility(DBAbility dba, int level, DBSpell dbspell) : base(dba, level)
+        {
+            m_dbspell = dbspell;
+        }
+        public AngerOfTheGodsAbility(DBAbility dba, int level) : base(dba, level)
+        {
+            CreateSpell(CalculDomage(level));
+        }
+
+        private double CalculDomage(int level)
+        {
+            double damage = 0;
+            if (ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+            {
+                switch (level)
+                {
+                    case 1: damage = 10.0; break;
+                    case 2: damage = 15.0; break;
+                    case 3: damage = 20.0; break;
+                    case 4: damage = 25.0; break;
+                    case 5: damage = 30.0; break;
+                    default: break;
+                }
+            }
+            else
+            {
+                switch (level)
+                {
+                    case 1: damage = 10.0; break;
+                    case 2: damage = 20.0; break;
+                    case 3: damage = 30.0; break;
+                    default: break;
+                }
+            }
+            return damage;
+        }
+
+        private void CreateSpell(double damage)
         {
             m_dbspell = new DBSpell();
             m_dbspell.Name = "Anger of the Gods";

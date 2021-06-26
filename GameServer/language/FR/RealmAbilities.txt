@@ -104,4 +104,13 @@ SecondWindAbility.AddEffectsInfo.Info1:
 SecondWindAbility.AddEffectsInfo.Info4:			
 SecondWindAbility.AddEffectsInfo.Info5:			
 
+# /ShadowStrikeAbility		
+ShadowStrikeAbility.Moving:				Vous bougez et interrompez shadow strike!
+ShadowStrikeAbility.Attacked:			Vous êtes attaqués et interrompez shadow strike!
+ShadowStrikeAbility.Target:				Vous devez cibler un objet vivant pour utiliser cette abilité.
 
+# /Assassinate		
+AssassinateAbility.Moving:				Vous bougez et interrompez votre action !
+AssassinateAbility.Attacked:			Vous êtes attaqués et interrompez votre action!
+AssassinateAbility.Target:				Vous devez cibler un objet vivant pour utiliser cette abilité.
+AssassinateAbility.Preparing:			Vous vous préparez à assassiner
