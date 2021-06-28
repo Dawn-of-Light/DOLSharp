@@ -158,6 +158,7 @@ namespace DOL.GS.Spells
 		{
 			base.TooltipDelve(ref dw);
 			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "1");
 		}
 	}
 
@@ -237,5 +238,11 @@ namespace DOL.GS.Spells
 		}
 
 		public MagicConversionSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("parm", "0");
+		}
 	}
 }

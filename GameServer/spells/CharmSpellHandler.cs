@@ -608,15 +608,15 @@ namespace DOL.GS.Spells
 			var detail = string.IsNullOrWhiteSpace(Spell.Description) ? "Attempts to bring the target monster under the caster's control." : Spell.Description;
 			switch ((eCharmType)Spell.AmnesiaChance)
 			{
-				case eCharmType.All: break;
-				case eCharmType.Animal: detail += "\nSpell works on animals."; break;
-				case eCharmType.Humanoid: detail += "\nSpell works on humanoids."; break;
-				case eCharmType.Insect: detail += "\nSpell works on insects."; break;
-				case eCharmType.Reptile: detail += "\nSpell works on reptiles."; break;
-				case eCharmType.HumanoidAnimal: detail += "\nSpell works on humanoids and animals."; break;
-				case eCharmType.HumanoidAnimalInsect: detail += "\nSpell works on humanoids, insects, and animals."; break;
-				case eCharmType.HumanoidAnimalInsectMagical: detail += "\nSpell works on humanoids, insects, magical, and animals."; break;
-				case eCharmType.HumanoidAnimalInsectMagicalUndead: detail += "\nSpell works on humanoids, insects, magical, undead, and animals."; break;
+				case eCharmType.Humanoid: dw.AddKeyValuePair("parm", "3"); break;
+				case eCharmType.Animal: dw.AddKeyValuePair("parm", "5"); break;
+				case eCharmType.Insect: dw.AddKeyValuePair("parm", "13"); break;
+				case eCharmType.HumanoidAnimal: dw.AddKeyValuePair("parm", "50"); break;
+				case eCharmType.HumanoidAnimalInsect: dw.AddKeyValuePair("parm", "51"); break;
+				case eCharmType.HumanoidAnimalInsectMagical: dw.AddKeyValuePair("parm", "52"); break;
+				case eCharmType.HumanoidAnimalInsectMagicalUndead: dw.AddKeyValuePair("parm", "53"); break;
+				case eCharmType.Reptile: dw.AddKeyValuePair("parm", "6"); break;
+				case eCharmType.All: dw.AddKeyValuePair("parm", "0"); break;
 			}
 			dw.AddKeyValuePair("delve_string", detail);
 		}

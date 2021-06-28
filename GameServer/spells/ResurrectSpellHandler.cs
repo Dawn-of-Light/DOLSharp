@@ -330,9 +330,6 @@ namespace DOL.GS.Spells
 			dw.AddKeyValuePair("Function", "raise_dead");
 			dw.AddKeyValuePair("damage", Spell.ResurrectHealth);
 			dw.AddKeyValuePair("bonus", Spell.ResurrectMana);
-			dw.AddKeyValuePair("amount_increase", Spell.ResurrectMana);
-			dw.AddKeyValuePair("type1", "65");
-			dw.AddKeyValuePair("target", "8");
 		}
 	}
 }

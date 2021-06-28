@@ -240,6 +240,7 @@ namespace DOL.GS.Spells
 		{
 			base.TooltipDelve(ref dw);
 			dw.AddKeyValuePair("Function", "hit_buffer");
+			dw.AddKeyValuePair("parm", 1);
 			dw.AddKeyValuePair("bonus", Spell.Damage > 0 ? Spell.Damage : 25);
 			dw.AddKeyValuePair("damage", Spell.Value);
 		}
@@ -280,6 +281,7 @@ namespace DOL.GS.Spells
 		{
 			base.TooltipDelve(ref dw);
 			dw.AddKeyValuePair("Function", "hit_buffer");
+			dw.AddKeyValuePair("parm", 2);
 			dw.AddKeyValuePair("bonus", Spell.Value);
 			dw.AddKeyValuePair("damage", Spell.Damage);
 		}
@@ -307,6 +309,7 @@ namespace DOL.GS.Spells
 		{
 			base.TooltipDelve(ref dw);
 			dw.AddKeyValuePair("Function", "hit_buffer");
+			dw.AddKeyValuePair("parm", 3);
 			dw.AddKeyValuePair("bonus", Spell.Value);
 			dw.AddKeyValuePair("damage", Spell.Damage);
 		}
