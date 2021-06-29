@@ -52,6 +52,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				case eMerchantWindowType.HousingCraftingHookpoint:
 				case eMerchantWindowType.HousingNPCHookpoint:
 				case eMerchantWindowType.HousingVaultHookpoint:
+				case eMerchantWindowType.HousingDeedMenu:
 					{
 						HouseMgr.BuyHousingItem(client.Player, item_slot, item_count, (eMerchantWindowType)menu_id);
 						break;
