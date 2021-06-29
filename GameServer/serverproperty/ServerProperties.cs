@@ -122,6 +122,12 @@ namespace DOL.GS.ServerProperties
 		public static int CLIENT_VERSION_MAX;
 
 		/// <summary>
+		/// Enable RC4 encryption for communication between the client and the server
+		/// </summary>
+		[ServerProperty("system", "client_enable_encryption_rc4", "Enable client RC4 encryption - Advanced user only, you need a special launcher to enable encryption", false)]
+		public static bool CLIENT_ENABLE_ENCRYPTION_RC4;
+
+		/// <summary>
 		/// Should the server load quests
 		/// </summary>
 		[ServerProperty("system", "load_quests", "Should the server load quests, values True,False", true)]

@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-#define  NOENCRYPTION
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,6 +37,7 @@ using DOL.GS.Spells;
 using DOL.GS.Styles;
 
 using log4net;
+using DOL.GS.ServerProperties;
 
 namespace DOL.GS.PacketHandler
 {
@@ -69,11 +70,7 @@ namespace DOL.GS.PacketHandler
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CryptKey)))
 			{
 				//Enable encryption
-				#if !NOENCRYPTION
-				pak.WriteByte(0x01);
-				#else
-				pak.WriteByte(0x00);
-				#endif
+				pak.WriteByte((byte)(Properties.CLIENT_ENABLE_ENCRYPTION_RC4 ? 0x01 : 0x00));
 
 				//if(is_si)
 				pak.WriteByte(0x32);
@@ -84,7 +81,8 @@ namespace DOL.GS.PacketHandler
 				//pak.WriteByte(build);
 				pak.WriteByte(0x00);
 
-				#if !NOENCRYPTION
+				#if RSA_ENCRYPTION
+				// This part can't work as is, for newer client the RSA public key is embedded
 				byte[] publicKey = new byte[500];
 				UInt32 keyLen = CryptLib168.ExportRSAKey(publicKey, (UInt32) 500, false);
 				pak.WriteShort((ushort) keyLen);
@@ -455,7 +453,7 @@ namespace DOL.GS.PacketHandler
 			return;
 		}
 
-		public virtual void SendRegions()
+		public virtual void SendRegions(ushort region)
 		{
 			RegionEntry[] entries = WorldMgr.GetRegionList();
 

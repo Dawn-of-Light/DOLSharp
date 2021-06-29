@@ -171,7 +171,7 @@ namespace DOL.Tests
 			if (SendCharResistsUpdateMethod != null) SendCharResistsUpdateMethod(this);
 		}
 		public Action<TestPacketLib> SendRegionsMethod { get; set; }
-		public void SendRegions()
+		public void SendRegions(ushort regionId)
 		{
 			if (SendRegionsMethod != null) SendRegionsMethod(this);
 		}

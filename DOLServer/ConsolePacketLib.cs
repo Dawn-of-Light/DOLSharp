@@ -90,7 +90,7 @@ namespace DOLGameServerConsole
 		public void SendCharCreateReply(string name) { }
 		public void SendCharStatsUpdate() { }
 		public void SendCharResistsUpdate() { }
-		public void SendRegions() { }
+		public void SendRegions(ushort regionId) { }
 		public void SendGameOpenReply() { }
 		public void SendPlayerPositionAndObjectID() { }
 		public void SendPlayerJump(bool headingOnly) { }

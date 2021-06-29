@@ -32,12 +32,28 @@ namespace DOL.GS.PacketHandler
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Constructs a new PacketLib for Client Version 1.125
+		/// Constructs a new PacketLib for Client Version 1.126
 		/// </summary>
 		/// <param name="client">the gameclient this lib is associated with</param>
 		public PacketLib1126(GameClient client)
 			: base(client)
 		{
+		}
+
+		/// <summary>
+		/// 1126 update - less info / shorter packet sent back
+		/// </summary>
+		public override void SendDupNameCheckReply(string name, byte result)
+		{
+			if (m_gameClient?.Account == null)
+				return;
+
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DupNameCheckReply)))
+			{
+				pak.FillString(name, 24);
+				pak.WriteByte(result);
+				SendTCP(pak);
+			}
 		}
 
 		/// <summary>
@@ -286,12 +302,12 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public override void SendRegions()
+		public override void SendRegions(ushort regionId)
 		{
-			if (!m_gameClient.Socket.Connected || m_gameClient.Player == null)
+			if (!m_gameClient.Socket.Connected)
 				return;
 
-			Region region = WorldMgr.GetRegion(m_gameClient.Player.CurrentRegionID);
+			Region region = WorldMgr.GetRegion(regionId);
 			if (region == null)
 				return;
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ClientRegion)))
@@ -346,3 +362,4 @@ namespace DOL.GS.PacketHandler
 		}
 	}
 }
+

@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-#define NOENCRYPTION
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -199,7 +198,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public override void SendRegions()
+		public override void SendRegions(ushort regionId)
 		{
 			if (m_gameClient.Player != null)
 			{
@@ -606,7 +605,7 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			SendRegions();
+			SendRegions(m_gameClient.Player.CurrentRegion.Skin);
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RegionChanged)))
 			{
 
