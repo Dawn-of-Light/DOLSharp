@@ -778,6 +778,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			var newPlayerSpeed = packet.ReadFloatLowEndian();
 			var newPlayerZSpeed = packet.ReadFloatLowEndian();
 			ushort sessionID = packet.ReadShort();
+			if (client.Version >= GameClient.eClientVersion.Version1127)
+				packet.ReadShort(); // object ID
 			ushort currentZoneID = packet.ReadShort();
 			ushort playerState = packet.ReadShort();
 			ushort fallingDMG = packet.ReadShort();
@@ -785,7 +787,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			byte playerAction = (byte)packet.ReadByte();
 			packet.Skip(2); // unknown bytes x2
 			byte playerHealth = (byte)packet.ReadByte();
-			// two trailing bytes, no data
+			// two trailing bytes, no data + 2 more for 1.127+
 
 			//int speed = (newPlayerSpeed & 0x1FF);
 			//Flags1 = (eFlags1)playerState;
@@ -1166,7 +1168,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			else if ((playerState >> 10) == 4) // patch 0062 fix bug on release preventing players from receiving res sickness
 				client.Player.IsSitting = true;
 
-			GSUDPPacketOut outpak = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
+			GSUDPPacketOut outpak1124 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
 			//patch 0069 test to fix player swim out byte flag
 			byte playerOutAction = 0x00;
 			if (client.Player.IsDiving)
@@ -1180,23 +1182,39 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.IsStealthed)
 				playerOutAction |= 0x02;
 
-			outpak.WriteFloatLowEndian(newPlayerX);
-			outpak.WriteFloatLowEndian(newPlayerY);
-			outpak.WriteFloatLowEndian(newPlayerZ);
-			outpak.WriteFloatLowEndian(newPlayerSpeed);
-			outpak.WriteFloatLowEndian(newPlayerZSpeed);
-			outpak.WriteShort(sessionID);
-			outpak.WriteShort(currentZoneID);
-			outpak.WriteShort(playerState);
-			outpak.WriteShort(steedSeatPosition); // fall damage flag coming in, steed seat position going out
-			outpak.WriteShort(newHeading);
-			outpak.WriteByte(playerOutAction);
-			outpak.WriteByte((byte)(client.Player.RPFlag ? 1 : 0));
-			outpak.WriteByte(0);
-			outpak.WriteByte((byte)(client.Player.HealthPercent + (client.Player.AttackState ? 0x80 : 0)));
-			outpak.WriteByte(client.Player.ManaPercent);
-			outpak.WriteByte(client.Player.EndurancePercent);
-			outpak.WritePacketLength();
+			outpak1124.WriteFloatLowEndian(newPlayerX);
+			outpak1124.WriteFloatLowEndian(newPlayerY);
+			outpak1124.WriteFloatLowEndian(newPlayerZ);
+			outpak1124.WriteFloatLowEndian(newPlayerSpeed);
+			outpak1124.WriteFloatLowEndian(newPlayerZSpeed);
+			outpak1124.WriteShort(sessionID);
+			var outpak1127 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
+
+			outpak1124.WriteShort(currentZoneID);
+			outpak1124.WriteShort(playerState);
+			outpak1124.WriteShort(steedSeatPosition); // fall damage flag coming in, steed seat position going out
+			outpak1124.WriteShort(newHeading);
+			outpak1124.WriteByte(playerOutAction);
+			outpak1124.WriteByte((byte)(client.Player.RPFlag ? 1 : 0));
+			outpak1124.WriteByte(0);
+			outpak1124.WriteByte((byte)(client.Player.HealthPercent + (client.Player.AttackState ? 0x80 : 0)));
+			outpak1124.WriteByte(client.Player.ManaPercent);
+			outpak1124.WriteByte(client.Player.EndurancePercent);
+			outpak1124.WritePacketLength();
+
+			outpak1127.WriteShort((ushort)client.Player.ObjectID);
+			outpak1127.WriteShort(currentZoneID);
+			outpak1127.WriteShort(playerState);
+			outpak1127.WriteShort(steedSeatPosition); // fall damage flag coming in, steed seat position going out
+			outpak1127.WriteShort(newHeading);
+			outpak1127.WriteByte(playerOutAction);
+			outpak1127.WriteByte((byte)(client.Player.RPFlag ? 1 : 0));
+			outpak1127.WriteByte(0);
+			outpak1127.WriteByte((byte)(client.Player.HealthPercent + (client.Player.AttackState ? 0x80 : 0)));
+			outpak1127.WriteByte(client.Player.ManaPercent);
+			outpak1127.WriteByte(client.Player.EndurancePercent);
+			outpak1127.WriteShort(0);
+			outpak1127.WritePacketLength();
 
 			var outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
 			outpak190.WriteShort((ushort)client.SessionID);
@@ -1245,8 +1263,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// Update Player Cache
 					player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(client.Player.CurrentRegionID, (ushort)client.Player.ObjectID)] = GameTimer.GetTickCount();
 
+					if (player.Client.Version >= GameClient.eClientVersion.Version1127)
+						player.Out.SendUDP(outpak1127);
 					if (player.Client.Version >= GameClient.eClientVersion.Version1124)
-						player.Out.SendUDP(outpak);
+						player.Out.SendUDP(outpak1124);
 					else if (player.Client.Version >= GameClient.eClientVersion.Version1112)
 						player.Out.SendUDP(outpak1112);
 					else

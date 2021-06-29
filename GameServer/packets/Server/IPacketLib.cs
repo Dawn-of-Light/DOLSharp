@@ -641,7 +641,7 @@ namespace DOL.GS.PacketHandler
 		void SendCharCreateReply(string name);
 		void SendCharStatsUpdate();
 		void SendCharResistsUpdate();
-		void SendRegions();
+		void SendRegions(ushort region);
 		void SendGameOpenReply();
 		void SendPlayerPositionAndObjectID();
 		void SendPlayerJump(bool headingOnly);

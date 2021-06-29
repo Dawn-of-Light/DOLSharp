@@ -30,7 +30,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			string name = packet.ReadString(30);
+			string name;
+			if (client.Version >= GameClient.eClientVersion.Version1126)
+				name = packet.ReadString(24);
+			else
+				name = packet.ReadString(30);
 
 			var character = DOLDB<DOLCharacters>.SelectObject(DB.Column("Name").IsEqualTo(name));
 			byte result = 0;

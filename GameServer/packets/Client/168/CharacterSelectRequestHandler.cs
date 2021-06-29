@@ -19,7 +19,7 @@
 using System;
 
 using DOL.Events;
- 
+
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CharacterSelectRequest, "Handles setting SessionID and the active character", eClientStatus.LoggedIn)]
@@ -29,7 +29,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			if (client.Version >= GameClient.eClientVersion.Version1126)
 			{
-				client.Out.SendSessionID();
+				_HandlePacket1126(client, packet);
 				return;
 			}
 			// 1125d support TODO this needs to be changed when a version greater than 1125d comes out
@@ -63,7 +63,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			string charName = packet.ReadString(28);
 
-			//TODO Character handling 
+			//TODO Character handling
 			if (charName.Equals("noname"))
 			{
 				client.Out.SendSessionID();
@@ -117,7 +117,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			string charName = packet.ReadString(24); // down from 28, both need checking
 
-			//TODO Character handling 
+			//TODO Character handling
 			if (charName.Equals("noname"))
 			{
 				client.Out.SendLoginGranted();
@@ -157,6 +157,45 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Out.SendLoginGranted();
 				client.Out.SendSessionID();
 			}
+		}
+
+		/// <summary>
+		/// 1126 support. Packet changed again from version 1125d
+		/// Alot of test code i slapped together to get it to work, likely can be changed
+		/// </summary>
+		private void _HandlePacket1126(GameClient client, GSPacketIn packet)
+		{
+			byte charIndex = (byte)packet.ReadByte(); // character account location
+
+			// some funkyness going on below here. Could use some safeguards to ensure a character is loaded correctly
+			if (client.Player == null && client.Account.Characters != null && client.ClientState == GameClient.eClientState.CharScreen)
+			{
+				bool charFound = false;
+				int realmOffset = charIndex - (client.Account.Realm * 10 - 10);
+				int charSlot = (client.Account.Realm * 100) + realmOffset;
+				for (int i = 0; i < client.Account.Characters.Length; i++)
+				{
+					if (client.Account.Characters[i] != null && client.Account.Characters[i].AccountSlot == charSlot)
+					{
+						charFound = true;
+						client.LoadPlayer(i);
+						break;
+					}
+				}
+
+				if (!charFound)
+				{
+					client.Player = null;
+					client.ActiveCharIndex = -1;
+				}
+				else
+				{
+					// Log character play
+					AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterLogin, "", client.Player.Name);
+				}
+			}
+
+			client.Out.SendSessionID();
 		}
 	}
 }

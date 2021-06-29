@@ -26,7 +26,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			packet.Skip(8);
+			packet.Skip(1);
+			if (client.Version < GameClient.eClientVersion.Version1127)
+				packet.Skip(7);
 			string cmdLine = packet.ReadString(255);
 			if(!ScriptMgr.HandleCommand(client, cmdLine))
 			{

@@ -16,7 +16,6 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 *
 */
-#define NOENCRYPTION
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1568,7 +1567,7 @@ namespace DOL.GS.PacketHandler
 						else if ((texture & 0xFF) != 0)
 							pak.WriteByte((byte)texture);
 						if (item.Effect != 0)
-							pak.WriteShort((byte)item.Effect); // effect changed to short
+							pak.WriteShort((ushort)item.Effect); // effect changed to short
 					}
 				}
 				else
@@ -3134,80 +3133,34 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 		}
-		public virtual void SendRegions()
+		public virtual void SendRegions(ushort regionId)
 		{
-			if (m_gameClient.Player != null)
+			if (!m_gameClient.Socket.Connected)
+				return;
+			Region region = WorldMgr.GetRegion(regionId);
+			if (region == null)
+				return;
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ClientRegion)))
 			{
-				if (!m_gameClient.Socket.Connected)
-					return;
-				Region region = WorldMgr.GetRegion(m_gameClient.Player.CurrentRegionID);
-				if (region == null)
-					return;
-				using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ClientRegion)))
-				{
-					//				pak.WriteByte((byte)((region.Expansion + 1) << 4)); // Must be expansion
-					pak.WriteByte(0); // but this packet sended when client in old region. but this field must show expanstion for jump destanation region
-									  //Dinberg - trying to get instances to work.
-					pak.WriteByte((byte)region.Skin); // This was pak.WriteByte((byte)region.ID);
-					pak.Fill(0, 20);
-					pak.FillString(region.ServerPort.ToString(), 5);
-					pak.FillString(region.ServerPort.ToString(), 5);
-					string ip = region.ServerIP;
-					if (ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.") || ip.StartsWith("192.168."))
-						ip = ((IPEndPoint)m_gameClient.Socket.LocalEndPoint).Address.ToString();
-					pak.FillString(ip, 20);
-					SendTCP(pak);
-				}
-			}
-			else
-			{
-				RegionEntry[] entries = WorldMgr.GetRegionList();
-
-				if (entries == null) return;
-				int index = 0;
-				int num = 0;
-				int count = entries.Length;
-				while (entries != null && count > index)
-				{
-					using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ClientRegions)))
-					{
-						for (int i = 0; i < 4; i++)
-						{
-							while (index < count && (int)m_gameClient.ClientType <= entries[index].expansion)
-							{
-								index++;
-							}
-
-							if (index >= count)
-							{   //If we have no more entries
-								pak.Fill(0x0, 52);
-							}
-							else
-							{
-								pak.WriteByte((byte)(++num));
-								pak.WriteByte((byte)entries[index].id);
-								pak.FillString(entries[index].name, 20);
-								pak.FillString(entries[index].fromPort, 5);
-								pak.FillString(entries[index].toPort, 5);
-								//Try to fix the region ip so UDP is enabled!
-								string ip = entries[index].ip;
-								if (ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.13.") || ip.StartsWith("192.168."))
-									ip = ((IPEndPoint)m_gameClient.Socket.LocalEndPoint).Address.ToString();
-								pak.FillString(ip, 20);
-
-								index++;
-							}
-						}
-						SendTCP(pak);
-					}
-				}
+				//				pak.WriteByte((byte)((region.Expansion + 1) << 4)); // Must be expansion
+				pak.WriteByte(0); // but this packet sended when client in old region. but this field must show expanstion for jump destanation region
+								  //Dinberg - trying to get instances to work.
+				pak.WriteByte((byte)region.Skin); // This was pak.WriteByte((byte)region.ID);
+				pak.Fill(0, 20);
+				pak.FillString(region.ServerPort.ToString(), 5);
+				pak.FillString(region.ServerPort.ToString(), 5);
+				string ip = region.ServerIP;
+				if (ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.") || ip.StartsWith("192.168."))
+					ip = ((IPEndPoint)m_gameClient.Socket.LocalEndPoint).Address.ToString();
+				pak.FillString(ip, 20);
+				SendTCP(pak);
 			}
 		}
 		public virtual void SendRegionChanged()
 		{
 			if (m_gameClient.Player == null)
 				return;
-			SendRegions();
+			SendRegions(m_gameClient.Player.CurrentRegion.Skin);
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RegionChanged)))
 			{
 				//Dinberg - Changing to allow instances...
