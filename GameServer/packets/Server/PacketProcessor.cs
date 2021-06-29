@@ -518,7 +518,7 @@ namespace DOL.GS.PacketHandler
 			var pak = packetQueue.Dequeue();
 			var packetLength = (pak[0] << 8) + pak[1] + headerSize;
 
-			if (packetLength >= buffer.Length)
+			if (packetLength > buffer.Length)
 				return (pak, packetLength);
 			Buffer.BlockCopy(pak, 0, buffer, 0, packetLength);
 
