@@ -46,6 +46,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return; // client hack
 			}
 
+			if (client.Version >= GameClient.eClientVersion.Version1127)
+				packet.ReadShort(); // target
+
 			ushort head = packet.ReadShort();
 			var unk1 = (byte)packet.ReadByte(); // unknown
 			var flags = (byte)packet.ReadByte();
@@ -102,25 +105,41 @@ namespace DOL.GS.PacketHandler.Client.v168
 			outpak190.WriteByte(client.Player.EndurancePercent);
 			outpak190.WritePacketLength();
 
-			GSUDPPacketOut outpak = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerHeading));
-			outpak.WriteShort((ushort)client.SessionID);
-			outpak.WriteShort(head);
-			outpak.WriteByte(steedSlot);
-			outpak.WriteByte(flagcontent);
-			outpak.WriteByte(0);
-			outpak.WriteByte(ridingFlag);
-			outpak.WriteByte((byte)(client.Player.HealthPercent + (client.Player.AttackState ? 0x80 : 0)));
-			outpak.WriteByte(client.Player.ManaPercent);
-			outpak.WriteByte(client.Player.EndurancePercent);
-			outpak.WriteByte(0); // unknown
-			outpak.WritePacketLength();
+			GSUDPPacketOut outpak1124 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerHeading));
+			outpak1124.WriteShort((ushort)client.SessionID);
+			outpak1124.WriteShort(head);
+			outpak1124.WriteByte(steedSlot);
+			outpak1124.WriteByte(flagcontent);
+			outpak1124.WriteByte(0);
+			outpak1124.WriteByte(ridingFlag);
+			outpak1124.WriteByte((byte)(client.Player.HealthPercent + (client.Player.AttackState ? 0x80 : 0)));
+			outpak1124.WriteByte(client.Player.ManaPercent);
+			outpak1124.WriteByte(client.Player.EndurancePercent);
+			outpak1124.WriteByte(0); // unknown
+			outpak1124.WritePacketLength();
+
+			GSUDPPacketOut outpak1127 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerHeading));
+			outpak1127.WriteShort((ushort)client.SessionID);
+			outpak1127.WriteShort(0); // current target
+			outpak1127.WriteShort(head);
+			outpak1127.WriteByte(steedSlot);
+			outpak1127.WriteByte(flagcontent);
+			outpak1127.WriteByte(0);
+			outpak1127.WriteByte(ridingFlag);
+			outpak1127.WriteByte((byte)(client.Player.HealthPercent + (client.Player.AttackState ? 0x80 : 0)));
+			outpak1127.WriteByte(client.Player.ManaPercent);
+			outpak1127.WriteByte(client.Player.EndurancePercent);
+			outpak1127.WriteByte(0); // unknown
+			outpak1127.WritePacketLength();
 
 			foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if(player != null && player != client.Player)
 				{
-					if (player.Client.Version >= GameClient.eClientVersion.Version1124)
-						player.Out.SendUDP(outpak);
+					if (player.Client.Version >= GameClient.eClientVersion.Version1127)
+						player.Out.SendUDP(outpak1127);
+					else if (player.Client.Version >= GameClient.eClientVersion.Version1124)
+						player.Out.SendUDP(outpak1124);
 					else
 						player.Out.SendUDP(outpak190);
 				}

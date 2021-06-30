@@ -2129,22 +2129,27 @@ namespace DOL.GS.ServerRules
 			switch (merchantType)
 			{
 				case eMerchantWindowType.HousingInsideShop:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorShopItems, eMerchantWindowType.HousingInsideShop);
+				case eMerchantWindowType.HousingInsideMenu:
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorShopItems, merchantType);
 					break;
 				case eMerchantWindowType.HousingOutsideShop:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorShopItems, eMerchantWindowType.HousingOutsideShop);
+				case eMerchantWindowType.HousingOutsideMenu:
+					player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorShopItems, merchantType);
 					break;
 				case eMerchantWindowType.HousingBindstoneHookpoint:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorBindstoneShopItems, eMerchantWindowType.HousingBindstoneHookpoint);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorBindstoneShopItems, merchantType);
 					break;
 				case eMerchantWindowType.HousingCraftingHookpoint:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorCraftShopItems, eMerchantWindowType.HousingCraftingHookpoint);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorCraftShopItems, merchantType);
 					break;
 				case eMerchantWindowType.HousingNPCHookpoint:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.GetNpcShopItems(player), eMerchantWindowType.HousingNPCHookpoint);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.GetNpcShopItems(player), merchantType);
 					break;
 				case eMerchantWindowType.HousingVaultHookpoint:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorVaultShopItems, eMerchantWindowType.HousingVaultHookpoint);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorVaultShopItems, merchantType);
+					break;
+				case eMerchantWindowType.HousingDeedMenu:
+					player.Out.SendMerchantWindow(/* TODO */HouseTemplateMgr.OutdoorMenuItems, eMerchantWindowType.HousingDeedMenu);
 					break;
 				default:
 					player.Out.SendMessage("Unknown merchant type!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
