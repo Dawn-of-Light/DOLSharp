@@ -80,10 +80,11 @@ namespace DOL.GS.Spells
 			(m_pet.Brain as TurretBrain).IsMainPet = false;
 
 			(m_pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
-			(m_pet.Brain as TurretBrain).Think();
+			// (m_pet.Brain as TurretBrain).Think(); clait: Moving after the PetCount increase to fix Turrent count TODO Review
 			//[Ganrod] Nidel: Set only one spell.
 			(m_pet as TurretPet).TurretSpell = m_pet.Spells[0] as Spell;
 			Caster.PetCount++;
+			(m_pet.Brain as TurretBrain).Think(); // clait: remove this line to revert
 		}
 
 		protected override void SetBrainToOwner(IControlledBrain brain)

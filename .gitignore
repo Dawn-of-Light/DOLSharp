@@ -29,3 +29,4 @@
 /[pP]ackages
 /[bB]uild
 /*.user
+/nuget.exe
