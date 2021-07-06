@@ -38,7 +38,7 @@ namespace DOL.GS.SkillHandler
 		/// <summary>
 		/// The reuse time in milliseconds for berserk ability
 		/// </summary>
-		protected const int REUSE_TIMER = 60000 * 7; // 7 minutes
+		protected const int REUSE_TIMER = 60000 * 10; // clait: 10 minutes [og: 7]
 
 		/// <summary>
 		/// The effect duration in milliseconds
