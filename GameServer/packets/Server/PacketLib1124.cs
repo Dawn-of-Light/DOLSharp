@@ -3828,9 +3828,19 @@ namespace DOL.GS.PacketHandler
 				}
 				else if (t is Style)
 				{
-					if (m_gameClient.CanSendTooltip(25, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveStyle(m_gameClient, t.InternalID));
-				}
+                    Style s = (Style)t;
+                    if (m_gameClient.CanSendTooltip(25, t.InternalID))
+                    {
+                        if (s.Procs != null && s.Procs.Count > 0)
+                        {
+                            foreach (Tuple<Spell, int, int> proc in s.Procs)
+                            {
+                                SendDelveInfo(DetailDisplayHandler.DelveSpell(m_gameClient, proc.Item1));
+                            }
+                        }
+                        SendDelveInfo(DetailDisplayHandler.DelveStyle(m_gameClient, t.InternalID));
+                    }
+                }
 				else if (t is Spell spell)
 				{
 					if (spell is Song || spell.NeedInstrument)

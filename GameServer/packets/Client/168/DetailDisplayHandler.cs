@@ -2129,8 +2129,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 				//.Value("Skill",43)
 				if (style.GrowthRate>0)
 					dw.AddKeyValuePair("OpeningDamage",style.GrowthRate*100);
-				//.Value("SpecialValue", GetSpecialValue(style),GetSpecialValue(style)!=0)
-				//.Value("FollowupStyle",style.DelveFollowUpStyles,!string.IsNullOrEmpty(style.DelveFollowUpStyles))
+                //.Value("SpecialValue", GetSpecialValue(style),GetSpecialValue(style)!=0)
+                //.Value("FollowupStyle",style.DelveFollowUpStyles,!string.IsNullOrEmpty(style.DelveFollowUpStyles))
+                if (style.Procs != null && style.Procs.Count > 0)
+                {
+                    foreach (Tuple<Spell, int, int> proc in style.Procs)
+                    {
+                        dw.AddKeyValuePair("SpecialNumber", proc.Item1.InternalID);
+                        dw.AddKeyValuePair("SpecialType", 1);
+                    }
+                }
             }
             else
             {
