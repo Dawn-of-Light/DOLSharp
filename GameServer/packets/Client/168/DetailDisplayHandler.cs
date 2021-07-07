@@ -2117,6 +2117,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (style.BonusToHit != 0)
 					dw.AddKeyValuePair("AttackMod", style.BonusToHit);
 				dw.AddKeyValuePair("OpeningType", (int)style.OpeningRequirementType);
+                if (style.AttackResultRequirement != 0)
+                    dw.AddKeyValuePair("OpeningResult", (int)style.AttackResultRequirement);
 				if (style.OpeningRequirementType == Style.eOpening.Positional)
 					dw.AddKeyValuePair("OpeningNumber", style.OpeningRequirementValue);				
 				//.Value("OpeningResult",GetOpeningResult(style,clt),GetOpeningResult(style,clt)>0)
