@@ -874,23 +874,6 @@ namespace DOL.GS.PacketHandler
 						var thread = (Thread) entry.Key;
 						var client = (GameClient) entry.Value;
 
-						// The use of the deprecated Suspend and Resume methods is necessary to get the StackTrace.
-						// Suspend/Resume are not being used for thread synchronization (very bad).
-						// It may be possible to get the StackTrace some other way, but this works for now
-						// So, the related warning is disabled
-						#pragma warning disable 0618
-						thread.Suspend();
-						StackTrace trace;
-						try
-						{
-							trace = new StackTrace(true);
-						}
-						finally
-						{
-							thread.Resume();
-						}
-						#pragma warning restore 0618
-						
 						builder.Append("Stack for thread from account: ");
 						if (client != null && client.Account != null)
 						{
@@ -907,7 +890,7 @@ namespace DOL.GS.PacketHandler
 							builder.Append("null");
 						}
 						builder.Append("\n");
-						builder.Append(Util.FormatStackTrace(trace));
+						builder.Append(Util.GetFormattedStackTraceFrom(Thread.CurrentThread));
 						builder.Append("\n\n");
 					}
 					catch (Exception e)

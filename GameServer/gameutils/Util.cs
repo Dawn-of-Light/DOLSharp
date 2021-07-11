@@ -411,7 +411,7 @@ namespace DOL.GS
 
 			try
 			{
-				trace = new StackTrace(true);
+				trace = new StackTrace(thread, true);
 			}
 			catch(Exception e)
 			{
@@ -457,6 +457,11 @@ namespace DOL.GS
 
 			return str.ToString();
 		}
+
+		public static string GetFormattedStackTraceFrom(Thread thread)
+        {
+			return FormatStackTrace(GetThreadStack(thread));
+        }
 
 		public static string FormatTime(long seconds)
 		{

@@ -628,14 +628,16 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Gets the RelocateRegions() thread stacktrace
-		/// </summary>
-		/// <returns></returns>
+		[Obsolete("Please use GetFormattedRelocateRegionsStackTrace() instead.")]
 		public static StackTrace GetRelocateRegionsStacktrace()
 		{
 			return Util.GetThreadStack(m_relocationThread);
 		}
+
+		public static string GetFormattedRelocateRegionsStackTrace()
+        {
+			return Util.GetFormattedStackTraceFrom(m_relocationThread);
+        }
 
 		private static void RelocateRegions()
 		{
@@ -773,14 +775,16 @@ namespace DOL.GS
 			return m_dayIncrement;
 		}
 
-		/// <summary>
-		/// Gets the world update thread stacktrace
-		/// </summary>
-		/// <returns></returns>
+		[Obsolete("Use GetFormattedWorldUpdateStackTrace() instead.")]
 		public static StackTrace GetWorldUpdateStacktrace()
 		{
 			return Util.GetThreadStack(m_WorldUpdateThread);
 		}
+
+		public static string GetFormattedWorldUpdateStackTrace()
+        {
+			return Util.GetFormattedStackTraceFrom(m_WorldUpdateThread);
+        }
 
 		private static uint m_lastWorldObjectUpdateTick = 0;
 		
