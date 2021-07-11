@@ -619,7 +619,7 @@ namespace DOL.GS
                         InventoryItem itemtoadd = item;
 
                         // If PLayer is not Infiltrator (9), Shadowblade (23), Nightshade (49), remove Envenom bonus before add the item in the inventory
-                        if (item.PoisonSpellID > 0 && !(partner.CharacterClass.ID == 9 || partner.CharacterClass.ID == 23 || partner.CharacterClass.ID == 49))
+                        if (item.PoisonSpellID > 0)
                         {
                             itemtoadd = GameInventoryItem.Create(itemtoadd);
                             itemtoadd.PoisonCharges = 0;
