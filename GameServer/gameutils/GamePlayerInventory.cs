@@ -554,6 +554,7 @@ namespace DOL.GS
 			    || (slot >= eInventorySlot.HouseVault_First && slot <= eInventorySlot.HouseVault_Last)
 			    || (slot >= eInventorySlot.Consignment_First && slot <= eInventorySlot.Consignment_Last)
 			    || (slot == eInventorySlot.PlayerPaperDoll)
+			    || (slot == eInventorySlot.NewPlayerPaperDoll)
 			    || (slot == eInventorySlot.Mythical)
 			    // INVENTAIRE DES CHEVAUX
 			    || (slot >= eInventorySlot.FirstBagHorse && slot <= eInventorySlot.LastBagHorse))
