@@ -3,21 +3,20 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using DOL.Language;
 
-
 namespace DOL.GS.RealmAbilities
 {
     /// <summary>
-    /// Shadow Strike Ability inherit of RR5RealmAbility (RealmLevel >= 40 and free)
+    /// Assassinate inherit of RR5RealmAbility (RealmLevel >= 40 and free)
     /// </summary>
-    public class ShadowStrikeAbility : RR5RealmAbility
+    public class AssassinateAbility : TimedRealmAbility
     {
         private DBSpell m_dbspell;
         private Spell m_spell;
         private SpellLine m_spellline;
-        private ShadowStrikeSpellHandler dd;
+        private AssassinateHandler dd;
         private GamePlayer m_player;
 
-        public ShadowStrikeAbility(DBAbility dba, int level) : base(dba, level)
+        public AssassinateAbility(DBAbility dba, int level) : base(dba, level)
         {
             CreateSpell();
         }
@@ -26,15 +25,11 @@ namespace DOL.GS.RealmAbilities
         {
             m_dbspell = new DBSpell
             {
-                Name = "Shadow Strike",
-                Icon = 7073,
-                ClientEffect = 12011,
-                IsFocus = true,
+                Name = "Assassinate",
                 Target = "Enemy",
-                Type = "ShadowStrike",
-                CastTime = 10,
-                MoveCast = false,
-                Range = 1000
+                Type = "Assassinate",
+                CastTime = 15,
+                Range = 750
             };
 
             m_spell = new Spell(m_dbspell, 0); // make spell level 0 so it bypasses the spec level adjustment code
@@ -45,7 +40,7 @@ namespace DOL.GS.RealmAbilities
         {
             if (target.IsAlive && m_spell != null)
             {
-                dd = ScriptMgr.CreateSpellHandler(m_player, m_spell, m_spellline) as ShadowStrikeSpellHandler;
+                dd = ScriptMgr.CreateSpellHandler(m_player, m_spell, m_spellline) as AssassinateHandler;
                 dd.IgnoreDamageCap = true;
                 return dd.CastSpell(target);
             }
@@ -67,7 +62,7 @@ namespace DOL.GS.RealmAbilities
             }
             else
             {
-                m_player.Out.SendMessage(LanguageMgr.GetTranslation(m_player.Client.Account.Language, "ShadowStrikeAbility.Target"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                m_player.Out.SendMessage(LanguageMgr.GetTranslation(m_player.Client.Account.Language, "AssassinateAbility.Target"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
         }

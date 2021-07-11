@@ -50,22 +50,15 @@ namespace DOL.GS.RealmAbilities
 		/// <summary>
 		/// max level this RA can reach
 		/// </summary>
-        public virtual int MaxLevel => 0;
-        public virtual int GetValueDelve(int level)
-        {
-            return level;
-        }
-        /// <summary>
-        /// used for 1.110 RA delves
-        /// </summary>        
-        public virtual int AmountPerLevel(int level)
-        {
-            return 0;
-        }
-        /// <summary>
-        /// used for 1.110 RA delves
-        /// </summary>
-        public virtual int GetDurationDelve(int level)
+		public virtual int MaxLevel
+		{
+			get { return 0; }
+		}
+
+		/// <summary>
+		/// used for 1.110 RA delves
+		/// </summary>        
+		public virtual int AmountPerLevel(int level)
         {
             return 0;
         }

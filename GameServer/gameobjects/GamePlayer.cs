@@ -57,8 +57,6 @@ namespace DOL.GS
 
 		private readonly object m_LockObject = new object();
 
-        private bool stayStealth = false;
-
 		#region Client/Character/VariousFlags
 
 		/// <summary>
@@ -15959,7 +15957,7 @@ namespace DOL.GS
         /// <summary>
         /// This property is use for the assassinate RA
         /// </summary>
-        public bool StayStealth { get => stayStealth; set => stayStealth = value; }
+        public bool StayStealth { get; set; }
         #endregion
 	}
 }
