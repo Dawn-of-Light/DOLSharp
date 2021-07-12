@@ -102,8 +102,7 @@ namespace DOL.GS.PacketHandler
 
 			m_asyncUdpCallback = new AsyncCallback(AsyncUdpSendCallback);
 			m_tcpSendBuffer = client.Server.AcquirePacketBuffer();
-			m_udpSendBuffer = client.Server.AcquirePacketBuffer();
-            
+			m_udpSendBuffer = new byte[512]; // we want a smaller maximum size packet for UDP
 		}
 
 		#region Last Packets
@@ -286,10 +285,9 @@ namespace DOL.GS.PacketHandler
 		public virtual void OnDisconnect()
 		{
 			byte[] tcp = m_tcpSendBuffer;
-			byte[] udp = m_udpSendBuffer;
-			m_tcpSendBuffer = m_udpSendBuffer = null;
+			m_tcpSendBuffer = null;
+			m_udpSendBuffer = null;
 			m_client.Server.ReleasePacketBuffer(tcp);
-			m_client.Server.ReleasePacketBuffer(udp);
 		}
 
 		#region TCP
@@ -449,7 +447,7 @@ namespace DOL.GS.PacketHandler
 					if (q.Count > 0)
 					{
 						// log.WarnFormat("async sent {0} bytes, sending queued packets count: {1}", sent, q.Count);
-						dataLength = CombinePackets(data, q, data.Length, client);
+						dataLength = CombineTCPPackets(data, q);
 					}
 					if (dataLength <= 0)
 					{
@@ -487,39 +485,57 @@ namespace DOL.GS.PacketHandler
 		}
 
 		/// <summary>
-		/// Combines queued packets in one stream.
+		/// Combines queued TCP packets in one stream.
 		/// </summary>
 		/// <param name="buf">The target buffer.</param>
-		/// <param name="q">The queued packets.</param>
-		/// <param name="length">The max stream len.</param>
-		/// <param name="client">The client.</param>
-		/// <returns>The count of bytes writen.</returns>
-		private static int CombinePackets(byte[] buf, Queue<byte[]> q, int length, GameClient client)
+		/// <param name="queue">The queued packets.</param>
+		/// <returns>The count of bytes written.</returns>
+		private static int CombineTCPPackets(byte[] buf, Queue<byte[]> queue)
 		{
-			int i = 0;
-			do
+			var (buffer, length) = CombinePacket(3, buf, queue);
+			// should never happen, the TCP buffer is way bigger than a single Daoc packet (~2kb max)
+			if (buffer != buf)
+				throw new Exception($"packet size {length} > buffer size {buf.Length}");
+			return length;
+		}
+
+		/// <summary>
+		/// Combines queued UDP packets in one stream.
+		/// </summary>
+		/// <param name="buf">The target buffer.</param>
+		/// <param name="queue">The queued packets.</param>
+		/// <returns>The buffer and count of bytes written.</returns>
+		private static (byte[] buffer, int bufferLength) CombineUDPPackets(byte[] buf, Queue<byte[]> queue)
+		{
+			return CombinePacket(5, buf, queue);
+		}
+
+		private static (byte[] buffer, int bufferLength) CombinePacket(int headerSize, byte[] buffer, Queue<byte[]> packetQueue)
+		{
+			if (packetQueue.Count == 0)
+				return (buffer, 0);
+
+			var pak = packetQueue.Dequeue();
+			var packetLength = (pak[0] << 8) + pak[1] + headerSize;
+
+			if (packetLength > buffer.Length)
+				return (pak, packetLength);
+			Buffer.BlockCopy(pak, 0, buffer, 0, packetLength);
+
+			int i = packetLength;
+			while (packetQueue.Count > 0 && i + headerSize < buffer.Length)
 			{
-				var pak = q.Peek();
-				var packetLength = (pak[0] << 8) + pak[1] + 3;
-				if (i + packetLength > buf.Length)
-				{
-					if (i == 0)
-					{
-						log.WarnFormat("packet size {0} > buf size {1}, ignored; client: {2}\n{3}", packetLength, buf.Length, client,
-						               Marshal.ToHexDump("packet data:", pak));
-						q.Dequeue();
-						continue;
-					}
+				pak = packetQueue.Peek();
+				packetLength = (pak[0] << 8) + pak[1] + headerSize;
+
+				if (i + packetLength > buffer.Length)
 					break;
-				}
 
-				Buffer.BlockCopy(pak, 0, buf, i, packetLength);
+				Buffer.BlockCopy(pak, 0, buffer, i, packetLength);
 				i += packetLength;
-
-				q.Dequeue();
-			} while (q.Count > 0);
-
-			return i;
+				packetQueue.Dequeue();
+			}
+			return (buffer, i);
 		}
 
 		/// <summary>
@@ -586,14 +602,15 @@ namespace DOL.GS.PacketHandler
 
 			//No udp available, send via TCP instead!
 			//bool flagLostUDP = false;
+			var packetSize = (buf[0] << 8 | buf[1]) + 5; // udp packet size
 			if (m_client.UdpEndPoint == null || !(isForced || m_client.UdpConfirm))
 			{
 				// log.WarnFormat("UDP sent over TCP");
-				var newbuf = new byte[buf.Length - 2];
+				var newbuf = new byte[packetSize - 2];
 				newbuf[0] = buf[0];
 				newbuf[1] = buf[1];
 
-				Buffer.BlockCopy(buf, 4, newbuf, 2, buf.Length - 4);
+				Buffer.BlockCopy(buf, 4, newbuf, 2, packetSize - 4);
 				SendTCP(newbuf);
 				return;
 			}
@@ -607,9 +624,6 @@ namespace DOL.GS.PacketHandler
 				}
 			}
 
-			if (m_udpSendBuffer == null)
-				return;
-
 			//increase our UDP counter when it reaches 0xFFFF
 			//and increases, it will automaticallys switch back to 0x00
 			m_udpCounter++;
@@ -619,7 +633,7 @@ namespace DOL.GS.PacketHandler
 			buf[3] = (byte) m_udpCounter;
 			m_encoding.EncryptPacket(buf, 0, true);
 
-			Statistics.BytesOut += buf.Length;
+			Statistics.BytesOut += packetSize;
 			Statistics.PacketsOut++;
 
 			lock (((ICollection)m_udpQueue).SyncRoot)
@@ -633,11 +647,9 @@ namespace DOL.GS.PacketHandler
 				m_sendingUdp = true;
 			}
 
-			Buffer.BlockCopy(buf, 0, m_udpSendBuffer, 0, buf.Length);
-
 			try
 			{
-				GameServer.Instance.SendUDP(m_udpSendBuffer, buf.Length, m_client.UdpEndPoint, m_asyncUdpCallback);
+				GameServer.Instance.SendUDP(buf, packetSize, m_client.UdpEndPoint, m_asyncUdpCallback);
 			}
 			catch (Exception e)
 			{
@@ -663,32 +675,24 @@ namespace DOL.GS.PacketHandler
 			try
 			{
 				var s = (Socket) ar.AsyncState;
-				int sent = s.EndSendTo(ar);
+				s.EndSendTo(ar);
 
-				int count = 0;
 				byte[] data = m_udpSendBuffer;
-
-				if (data == null)
-					return;
-
-				lock (((ICollection)m_udpQueue).SyncRoot)
+				int packetSize;
+				lock (((ICollection) m_udpQueue).SyncRoot)
 				{
-					if (m_udpQueue.Count > 0)
+					var (buf, len) = CombineUDPPackets(data, m_udpQueue);
+					data = buf;
+					packetSize = len;
+					if (packetSize == 0)
 					{
-//						Log.WarnFormat("async UDP sent {0} bytes, sending queued packets count: {1}", sent, m_udpQueue.Count);
-						count = CombinePackets(data, m_udpQueue, data.Length, m_client);
-					}
-					if (count <= 0)
-					{
-//						Log.WarnFormat("async UDP sent {0} bytes", sent);
 						m_sendingUdp = false;
 						return;
 					}
 				}
 
 				int start = Environment.TickCount;
-
-				GameServer.Instance.SendUDP(data, count, m_client.UdpEndPoint, m_asyncUdpCallback);
+				GameServer.Instance.SendUDP(data, packetSize, m_client.UdpEndPoint, m_asyncUdpCallback);
 
 				int took = Environment.TickCount - start;
 				if (took > 100 && log.IsWarnEnabled)
