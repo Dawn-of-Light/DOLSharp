@@ -59,7 +59,12 @@ namespace DOL.GS.Styles
 			//several different threads at the same time!
 			lock (living)
 			{
-				GameLiving target = living.TargetObject as GameLiving;
+                if (style.StealthRequirement && living is GamePlayer && ((GamePlayer)living).StayStealth)
+                {
+                    return true;
+                }
+
+                GameLiving target = living.TargetObject as GameLiving;
 				if (target == null) return false;
 
 				//Required attack result

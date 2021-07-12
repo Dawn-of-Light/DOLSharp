@@ -15953,6 +15953,11 @@ namespace DOL.GS
 					: null;
 			}
 		}
-		#endregion
+
+        /// <summary>
+        /// This property is use for the assassinate RA
+        /// </summary>
+        public bool StayStealth { get; set; }
+        #endregion
 	}
 }

@@ -2934,7 +2934,15 @@ namespace DOL.GS
 
 				// unstealth before attack animation
 				if (owner is GamePlayer)
-					((GamePlayer)owner).Stealth(false);
+                    if(((GamePlayer)owner).StayStealth)
+                    {
+                        ((GamePlayer)owner).StayStealth = false;
+                    }
+                    else
+                    {
+                        ((GamePlayer)owner).Stealth(false);
+                    }
+
 
 				//Show the animation
 				if (mainHandAD.AttackResult != eAttackResult.HitUnstyled && mainHandAD.AttackResult != eAttackResult.HitStyle && leftHandAD != null)
@@ -3318,13 +3326,13 @@ namespace DOL.GS
 			AttackData lastAD = TempProperties.getProperty<AttackData>(LAST_ATTACK_DATA, null);
 			bool defenseDisabled = ad.Target.IsMezzed | ad.Target.IsStunned | ad.Target.IsSitting;
 
-			// If berserk is on, no defensive skills may be used: evade, parry, ...
-			// unfortunately this as to be check for every action itself to kepp oder of actions the same.
-			// Intercept and guard can still be used on berserked
-			//			BerserkEffect berserk = null;
+            // If berserk is on, no defensive skills may be used: evade, parry, ...
+            // unfortunately this as to be check for every action itself to kepp oder of actions the same.
+            // Intercept and guard can still be used on berserked
+            //			BerserkEffect berserk = null;
 
-			// get all needed effects in one loop
-			lock (EffectList)
+            // get all needed effects in one loop
+            lock (EffectList)
 			{
 				foreach (IGameEffect effect in EffectList)
 				{

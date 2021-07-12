@@ -13,7 +13,15 @@ namespace DOL.GS.RealmAbilities
 	{
 		public LongWindAbility(DBAbility dba, int level) : base(dba, level, eProperty.Undefined) { }
 
-        protected override string ValueUnit { get { return "%"; } }
+        protected override string ValueUnit => "%";
+
+        public override int MaxLevel
+        {
+            get
+            {
+                return 5;
+            }
+        }
 
 		public override int GetAmountForLevel(int level)
 		{

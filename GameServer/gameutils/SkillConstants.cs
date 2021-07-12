@@ -367,7 +367,17 @@ namespace DOL.GS
         // [StephenxPimentel] Added as a level 50 ability as of patch 1.108
         public const string Remedy = "Remedy";
 
-		public const string DefensiveCombatPowerRegeneration = "Defensive Combat Power Regeneration";
+        /// <summary>
+        /// Shadow Strike Ability
+        /// </summary>
+        public const string ShadowStrike = "Shadow Strike";
+
+        /// <summary>
+        /// Assassinate Ability
+        /// </summary>
+        public const string Assassinate = "Assassinate";
+
+        public const string DefensiveCombatPowerRegeneration = "Defensive Combat Power Regeneration";
 		//NPC only abilities
 		/// <summary>
 		/// Crowd Control Immunity - NPC Only ability
