@@ -288,5 +288,14 @@ namespace DOL.GS.Spells
 				return list;
 			}
 		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "summon");
+			dw.AddKeyValuePair("power_level", -Spell.Damage);
+			if (Spell.Value != 0)
+				dw.AddKeyValuePair("damage", Spell.Value);
+		}
 	}
 }

@@ -496,5 +496,12 @@ namespace DOL.GS.Spells
             max = upperLimit;
             return;
         }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "heal");
+			dw.AddKeyValuePair("damage", Spell.Value);
+		}
     }
 }

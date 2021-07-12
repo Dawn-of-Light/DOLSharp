@@ -159,7 +159,7 @@ namespace DOL.GS.Spells
             {
                 GamePlayer joueur_a_considerer = (m_caster is NecromancerPet ? ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() : m_caster as GamePlayer);
 
-                int POURCENTAGE_SOIN_RP = ServerProperties.Properties.HEAL_PVP_DAMAGE_VALUE_RP; // ...% de bonus RP pour les soins effectués
+                int POURCENTAGE_SOIN_RP = ServerProperties.Properties.HEAL_PVP_DAMAGE_VALUE_RP; // ...% de bonus RP pour les soins effectuï¿½s
                 long Bonus_RP_Soin = Convert.ToInt64((double)healedrp * POURCENTAGE_SOIN_RP / 100);
 
                 if (Bonus_RP_Soin >= 1)
@@ -173,7 +173,7 @@ namespace DOL.GS.Spells
                     }
 
                     joueur_a_considerer.GainRealmPoints(Bonus_RP_Soin, false);
-                    joueur_a_considerer.Out.SendMessage("Vous gagnez " + Bonus_RP_Soin.ToString() + " points de royaume pour avoir soigné un membre de votre royaume.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                    joueur_a_considerer.Out.SendMessage("Vous gagnez " + Bonus_RP_Soin.ToString() + " points de royaume pour avoir soignï¿½ un membre de votre royaume.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                 }
             }
 
@@ -196,6 +196,13 @@ namespace DOL.GS.Spells
 					MessageToCaster(target.GetName(0, true)+" is fully healed.", eChatType.CT_Spell);
 
 			return true;
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "transfer");
+			dw.AddKeyValuePair("damage", Spell.Value);
 		}
 	}
 }

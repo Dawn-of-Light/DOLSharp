@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
@@ -120,7 +121,13 @@ namespace DOL.GS.Spells
 			return OnEffectExpires(effect, false);
 		}		
 
-		public PveResurrectionIllness(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}	
+		public PveResurrectionIllness(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>

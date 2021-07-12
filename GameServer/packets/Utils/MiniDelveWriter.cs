@@ -111,6 +111,48 @@ namespace DOL.GS.PacketHandler
 			m_values[name] = val;
 		}
 
+		public void AddKeyValuePair(string name, eDamageType val)
+		{
+			switch (val)
+			{
+				case eDamageType.Natural:
+					break;
+				case eDamageType.Crush:
+					AddKeyValuePair(name, 1);
+					break;
+				case eDamageType.Slash:
+					AddKeyValuePair(name, 2);
+					break;
+				case eDamageType.Thrust:
+					AddKeyValuePair(name, 3);
+					break;
+
+				case eDamageType.Body:
+					AddKeyValuePair(name,  16);
+					break;
+				case eDamageType.Cold:
+					AddKeyValuePair(name, 12);
+					break;
+				case eDamageType.Heat:
+					AddKeyValuePair(name, 10);
+					break;
+
+				case eDamageType.Matter:
+					AddKeyValuePair(name, 13);
+					break;
+				case eDamageType.Energy:
+					AddKeyValuePair(name,  20);
+					break;
+				case eDamageType.Spirit:
+					AddKeyValuePair(name,  11);
+					break;
+
+				default:
+					AddKeyValuePair(name, (int)val + 1);
+					break;
+			}
+		}
+
 		/// <summary>
 		/// Add a Key / Value pair
 		/// </summary>
@@ -153,6 +195,5 @@ namespace DOL.GS.PacketHandler
 			
 			return res.ToString();
 		}
-
 	}
 }

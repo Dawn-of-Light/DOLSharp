@@ -107,6 +107,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public StrengthDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "nstat");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -119,6 +126,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public DexterityDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "nstat");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "2");
+		}
 	}
 
 	/// <summary>
@@ -131,6 +146,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public ConstitutionDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "nstat");
+			dw.AddKeyValuePair("parm", "3");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -143,6 +166,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public ArmorFactorDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "nshield");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -163,6 +193,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public ArmorAbsorptionDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "nabsorb");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -183,6 +220,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public CombatSpeedDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "combat");
+			dw.AddKeyValuePair("parm", "2");
+			dw.AddKeyValuePair("power_level", -Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -203,6 +248,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public MeleeDamageDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "ndamage");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -243,6 +295,12 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public FumbleChanceDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 	
 	/// <summary>
@@ -266,7 +324,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SkillsDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
+
 	/// <summary>
 	/// Acuity stat baseline debuff
 	/// </summary>
@@ -277,7 +342,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public AcuityDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
+
 	/// <summary>
 	/// Quickness stat baseline debuff
 	/// </summary>
@@ -288,7 +360,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public QuicknessDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
+
 	/// <summary>
 	/// ToHit Skill debuff
 	/// </summary>
@@ -299,5 +378,11 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public ToHitSkillDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
  }

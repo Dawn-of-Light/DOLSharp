@@ -19,6 +19,7 @@
 
 using DOL.GS.Effects;
 using DOL.Database;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
@@ -71,5 +72,13 @@ namespace DOL.GS.Spells
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
 		public SpeedOfTheRealmHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "combat");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "35");
+		}
 	}
 }

@@ -123,6 +123,13 @@ namespace DOL.GS.Spells
 
         // constructor
         public StrengthBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("Function", "stat");
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 
     /// <summary>
@@ -144,6 +151,14 @@ namespace DOL.GS.Spells
 
         // constructor
         public DexterityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "stat");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "2");
+		}
     }
 
     /// <summary>
@@ -165,6 +180,14 @@ namespace DOL.GS.Spells
 
         // constructor
         public ConstitutionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("Function", "stat");
+            dw.AddKeyValuePair("parm", "3");
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 
     /// <summary>
@@ -186,6 +209,13 @@ namespace DOL.GS.Spells
 
         // constructor
         public ArmorFactorBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("Function", "shield");
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 
     /// <summary>
@@ -206,6 +236,13 @@ namespace DOL.GS.Spells
 
         // constructor
         public ArmorAbsorptionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("Function", "absorb");
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 
     /// <summary>
@@ -226,6 +263,15 @@ namespace DOL.GS.Spells
 
         // constructor
         public CombatSpeedBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("Function", "combat");
+            dw.AddKeyValuePair("parm", "36");
+            dw.AddKeyValuePair("power_level", Spell.Value * 2);
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
     
     /// <summary>
@@ -286,6 +332,12 @@ namespace DOL.GS.Spells
 
         // constructor
         public MeleeDamageBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 
     /// <summary>
@@ -306,6 +358,16 @@ namespace DOL.GS.Spells
 
         // constructor
         public MesmerizeDurationBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("Function", "mez_dampen");
+            dw.AddKeyValuePair("bonus", Spell.Value);
+            dw.AddKeyValuePair("damage_type", eDamageType.Energy);
+            dw.AddKeyValuePair("dur_type", "2");
+            dw.AddKeyValuePair("power_level", "29");
+        }
     }
 
 
@@ -319,6 +381,14 @@ namespace DOL.GS.Spells
 
         // constructor
         public AcuityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("Function", "twostat");
+            dw.AddKeyValuePair("parm", "3");
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 
     /// <summary>
@@ -355,7 +425,14 @@ namespace DOL.GS.Spells
 
         // constructor
         public EvadeChanceBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
+
     /// <summary>
     /// Parry chance buff
     /// </summary>
@@ -366,7 +443,14 @@ namespace DOL.GS.Spells
 
         // constructor
         public ParryChanceBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
+
     /// <summary>
     /// WeaponSkill buff
     /// </summary>
@@ -377,7 +461,14 @@ namespace DOL.GS.Spells
 
         // constructor
         public WeaponSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
+
     /// <summary>
     /// Stealth Skill buff
     /// </summary>
@@ -388,7 +479,14 @@ namespace DOL.GS.Spells
 
         // constructor
         public StealthSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
+
     /// <summary>
     /// To Hit buff
     /// </summary>
@@ -399,7 +497,14 @@ namespace DOL.GS.Spells
 
         // constructor
         public ToHitSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
+
     /// <summary>
     /// Magic Resists Buff
     /// </summary>
@@ -417,6 +522,13 @@ namespace DOL.GS.Spells
     {
         public override eProperty Property1 { get { return eProperty.StyleAbsorb; } }
         public StyleAbsorbBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("Function", "absorb");
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 
     [SpellHandlerAttribute("ExtraHP")]
@@ -445,6 +557,13 @@ namespace DOL.GS.Spells
 
         // constructor
         public PaladinArmorFactorBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("Function", "shield");
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 
     [Obsolete("This class will be removed. Please use FlexibleSkillBuff instead!")]
@@ -459,6 +578,12 @@ namespace DOL.GS.Spells
     {
         public override eProperty Property1 { get { return eProperty.Skill_Flexible_Weapon; } }
         public FlexibleSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override void TooltipDelve(ref MiniDelveWriter dw)
+        {
+            base.TooltipDelve(ref dw);
+            dw.AddKeyValuePair("bonus", Spell.Value);
+        }
     }
 
     [SpellHandler("ResiPierceBuff")]

@@ -228,5 +228,11 @@ namespace DOL.GS.Spells
 				return delve;
 			}
 		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "gsummon");
+		}
 	}
 }

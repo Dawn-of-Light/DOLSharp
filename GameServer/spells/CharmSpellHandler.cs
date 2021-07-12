@@ -600,6 +600,27 @@ namespace DOL.GS.Spells
             }
         }
 
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "charm");
+			dw.AddKeyValuePair("power_level", Spell.Value);
+			var detail = string.IsNullOrWhiteSpace(Spell.Description) ? "Attempts to bring the target monster under the caster's control." : Spell.Description;
+			switch ((eCharmType)Spell.AmnesiaChance)
+			{
+				case eCharmType.Humanoid: dw.AddKeyValuePair("parm", "3"); break;
+				case eCharmType.Animal: dw.AddKeyValuePair("parm", "5"); break;
+				case eCharmType.Insect: dw.AddKeyValuePair("parm", "13"); break;
+				case eCharmType.HumanoidAnimal: dw.AddKeyValuePair("parm", "50"); break;
+				case eCharmType.HumanoidAnimalInsect: dw.AddKeyValuePair("parm", "51"); break;
+				case eCharmType.HumanoidAnimalInsectMagical: dw.AddKeyValuePair("parm", "52"); break;
+				case eCharmType.HumanoidAnimalInsectMagicalUndead: dw.AddKeyValuePair("parm", "53"); break;
+				case eCharmType.Reptile: dw.AddKeyValuePair("parm", "6"); break;
+				case eCharmType.All: dw.AddKeyValuePair("parm", "0"); break;
+			}
+			dw.AddKeyValuePair("delve_string", detail);
+		}
+
         // Constructs new Charm spell handler
         public CharmSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
@@ -612,7 +633,7 @@ namespace DOL.GS.Spells
 
         ... Can you please explain what the max level pet a hunter can charm if they are fully Beastcraft specd? The community feels its no higher then 41, but the builder says max level 50.
 
-        A: Sayeth the Oracle: ”It's 82% of the caster's level for the highest charm in beastcraft; or level 41 if the caster is 50. Spec doesn't determine the level of the pet - it's purely based on the spell.”
+        A: Sayeth the Oracle: ï¿½It's 82% of the caster's level for the highest charm in beastcraft; or level 41 if the caster is 50. Spec doesn't determine the level of the pet - it's purely based on the spell.ï¿½
 
 
 

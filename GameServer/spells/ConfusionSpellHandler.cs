@@ -58,7 +58,7 @@ namespace DOL.GS.Spells
 			{
 				/*
 				 *Q: What does the confusion spell do against players?
-				 *A: According to the magic man, “Confusion against a player interrupts their current action, whether it's a bow shot or spellcast.
+				 *A: According to the magic man, ï¿½Confusion against a player interrupts their current action, whether it's a bow shot or spellcast.
 				 */
 				if (Spell.Value < 0 || Util.Chance(Convert.ToInt32(Math.Abs(Spell.Value))))
 				{
@@ -180,6 +180,14 @@ namespace DOL.GS.Spells
 				npc.IsConfused = false;
 			}
 			return base.OnEffectExpires(effect, noMessages);
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "combat");
+			dw.AddKeyValuePair("parm", "5");
+			dw.AddKeyValuePair("power_level", Spell.Value);
 		}
 	}
 }

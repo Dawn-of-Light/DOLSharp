@@ -61,5 +61,12 @@ namespace DOL.GS.Spells
 
 			return true;
 		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "reclaim");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 }

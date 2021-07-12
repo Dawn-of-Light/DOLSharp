@@ -457,7 +457,16 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public MesmerizeSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "combat");
+			dw.AddKeyValuePair("parm", "6");
+		}
 	}
+
+
 	/// <summary>
 	/// Stun
 	/// </summary>
@@ -581,5 +590,11 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public StunSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "paralyze");
+		}
 	}
 }

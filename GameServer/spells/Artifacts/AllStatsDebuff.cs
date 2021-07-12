@@ -18,6 +18,7 @@
  */
 using DOL.AI.Brain;
 using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells.Atlantis
 {
@@ -106,5 +107,11 @@ namespace DOL.GS.Spells.Atlantis
 			}
 		}
 		public AllStatsDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 }

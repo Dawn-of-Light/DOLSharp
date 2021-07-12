@@ -143,5 +143,17 @@ namespace DOL.GS.Spells
 			: base(caster, spell, spellLine)
 		{
 		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "petcast");
+			if (Spell.SubSpellID != 0)
+			{
+				var spell = SkillBase.GetSpellByID(Spell.SubSpellID);
+				if (spell != null)
+					dw.AddKeyValuePair("parm", unchecked((ushort)spell.InternalID));
+			}
+		}
 	}
 }

@@ -145,5 +145,12 @@ namespace DOL.GS.Spells
 		{
 			return new NecromancerPet(template, m_summonConBonus, m_summonHitsBonus);
 		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "ssummon");
+			dw.AddKeyValuePair("power_level", -100);
+		}
 	}
 }

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
@@ -35,6 +36,13 @@ namespace DOL.GS.Spells
 			m_spellTypesToRemove = new List<string>();
 			m_spellTypesToRemove.Add("DamageOverTime");
             m_spellTypesToRemove.Add("StyleBleeding");
-		} 
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "rem_eff_ty");
+			dw.AddKeyValuePair("parm", "12");
+		}
 	}
 }

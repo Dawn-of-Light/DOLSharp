@@ -39,5 +39,11 @@ namespace DOL.GS.Spells
 			m_spellTypesToRemove = new List<string>();
 			m_spellTypesToRemove.Add("Disease");
 		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "rem_eff_ty");
+		}
 	}
 }

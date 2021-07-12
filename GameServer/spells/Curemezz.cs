@@ -39,6 +39,14 @@ namespace DOL.GS.Spells
 			// RR4: now it's a list
 			m_spellTypesToRemove = new List<string>();
 			m_spellTypesToRemove.Add("Mesmerize");
-		} 
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "remove_eff");
+			dw.AddKeyValuePair("parm", "6");
+			dw.AddKeyValuePair("type1", "8");
+		}
 	}
 }

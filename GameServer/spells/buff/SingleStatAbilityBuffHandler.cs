@@ -20,6 +20,7 @@
 using System;
 
 using DOL.GS;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
@@ -76,10 +77,16 @@ namespace DOL.GS.Spells
 		public StrengthAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
-		}		
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
-	
-    [SpellHandlerAttribute("DexterityAbilityBuff")]
+
+	[SpellHandlerAttribute("DexterityAbilityBuff")]
 	public class DexterityAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Dexterity; } }
@@ -87,9 +94,15 @@ namespace DOL.GS.Spells
 		public DexterityAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
-		}		
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
-	
+
     [SpellHandlerAttribute("ConstitutionAbilityBuff")]
 	public class ConstitutionAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
@@ -98,9 +111,15 @@ namespace DOL.GS.Spells
 		public ConstitutionAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
-		}		
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
-	
+
     [SpellHandlerAttribute("QuicknessAbilityBuff")]
 	public class QuicknessAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
@@ -109,10 +128,16 @@ namespace DOL.GS.Spells
 		public QuicknessAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
-		}		
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
-	
-    [SpellHandlerAttribute("AcuityAbilityBuff")]
+
+	[SpellHandlerAttribute("AcuityAbilityBuff")]
 	public class AcuityAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Acuity; } }
@@ -120,9 +145,15 @@ namespace DOL.GS.Spells
 		public AcuityAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
-		}		
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
-	
+
     [SpellHandlerAttribute("MaxHealthAbilityBuff")]
 	public class MaxHealthAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
@@ -131,6 +162,12 @@ namespace DOL.GS.Spells
 		public MaxHealthAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
-		}		
+		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 }

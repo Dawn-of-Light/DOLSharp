@@ -56,5 +56,13 @@ namespace DOL.GS.Spells
 			}
 			return base.CheckBeginCast(Caster);
 		}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "fat_heal");
+			dw.AddKeyValuePair("cost_type", "2");
+			dw.AddKeyValuePair("damage", Spell.Value);
+		}
 	}
 }

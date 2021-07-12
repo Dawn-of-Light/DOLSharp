@@ -69,5 +69,13 @@ namespace DOL.GS.Spells
 
         // constructor
         public LifedrainSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "lifedrain");
+			dw.AddKeyValuePair("bonus", Spell.LifeDrainReturn / 10);
+			dw.AddKeyValuePair("damage", Spell.Damage * 10);
+		}
     }
 }
