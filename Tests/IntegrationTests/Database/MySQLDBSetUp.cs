@@ -40,7 +40,7 @@ namespace DOL.Integration.Database.MySQL
 		[OneTimeSetUp]
 		public void SetUp()
 		{
-			var CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory;
+			var CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().Location).LocalPath).Directory;
 			ConnectionString = "Server=localhost;Port=3306;Database=test_dol_database;User ID=root;Password=;Treat Tiny As Boolean=False";
 			                                     
 			Database = (SQLObjectDatabase)ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_MYSQL, ConnectionString);

@@ -660,7 +660,7 @@ namespace DOL.GS
 					// relaunch update thread every 100 ms to check if any player need updates.
 					Thread.Sleep((int)Math.Max(1, 100 - took));
 				}
-				catch (ThreadAbortException)
+				catch (ThreadInterruptedException)
 				{
 					if (log.IsInfoEnabled)
 						log.Info("World Update Thread stopping...");

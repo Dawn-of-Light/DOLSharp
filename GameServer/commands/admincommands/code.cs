@@ -17,12 +17,10 @@
  *
  */
 using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
-using Microsoft.CSharp;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -35,70 +33,31 @@ namespace DOL.GS.Commands
 		"AdminCommands.Code.Usage")]
 	public class DynCodeCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public static void ExecuteCode(GameClient client, string code)
+		public static void ExecuteCode(GameClient client, string methodBody)
 		{
-			CodeDomProvider provider = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v4.0" } });
-			CompilerParameters cp = new CompilerParameters();
-			StringBuilder text = new StringBuilder();
-			text.Append("using System;\n");
-			text.Append("using System.Reflection;\n");
-			text.Append("using System.Collections;\n");
-			text.Append("using System.Threading;\n");
-			text.Append("using DOL;\n");
-			text.Append("using DOL.AI;\n");
-			text.Append("using DOL.AI.Brain;\n");
-			text.Append("using DOL.Database;\n");
-			text.Append("using DOL.GS;\n");
-			text.Append("using DOL.GS.Movement;\n");
-			text.Append("using DOL.GS.Housing;\n");
-			text.Append("using DOL.GS.Keeps;\n");
-			text.Append("using DOL.GS.Quests;\n");
-			text.Append("using DOL.GS.Commands;\n");
-			text.Append("using DOL.GS.Scripts;\n");
-			text.Append("using DOL.GS.PacketHandler;\n");
-			text.Append("using DOL.Events;\n");
-			text.Append("using log4net;\n");
-			text.Append("public class DynCode {\n");
-			text.Append("private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);\n");
-			text.Append("public static GameClient Client = null;\n");
-			text.Append("public static void print(object obj) {\n");
-			text.Append("	string str = (obj==null)?\"(null)\":obj.ToString();\n");
-			text.Append("	if (Client==null || Client.Player==null) Log.Debug(str);\n	else Client.Out.SendMessage(str, eChatType.CT_System, eChatLoc.CL_SystemWindow);\n}\n");
-			text.Append("public static void DynMethod(GameObject target, GamePlayer player) {\nif (player!=null) Client = player.Client;\n");
-			text.Append("GameNPC targetNpc = target as GameNPC;");
-			text.Append(code);
-			text.Append("\n}\n}\n");
+			var compiler = new DOLScriptCompiler();
+			var compiledAssembly = compiler.CompileFromSource(GetCode(methodBody));
 
-			string[] parameters = GameServer.Instance.Configuration.ScriptAssemblies;
-			foreach (string param in parameters)
-				cp.ReferencedAssemblies.Add(param); //includes
-			cp.ReferencedAssemblies.Add("System.Core.dll");
-			cp.ReferencedAssemblies.Add(GameServer.Instance.Configuration.ScriptCompilationTarget);
-			cp.CompilerOptions = @"/lib:." + Path.DirectorySeparatorChar + "lib";
-			CompilerResults cr = provider.CompileAssemblyFromSource(cp, text.ToString());
-
-			if (cr.Errors.HasErrors)
-			{
+			var errorMessages = compiler.GetErrorMessages();
+			if(errorMessages.Any())
+            {
 				if (client.Player != null)
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 
-					foreach (CompilerError err in cr.Errors)
-						client.Out.SendMessage(err.ErrorText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					foreach (var errorMessage in errorMessages)
+						client.Out.SendMessage(errorMessage, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
 				else
 				{
 					log.Debug("Error compiling code.");
 				}
-
-
 				return;
 			}
 
-			Assembly a = cr.CompiledAssembly;
-			MethodInfo methodinf = a.GetType("DynCode").GetMethod("DynMethod");
+			var methodinf = compiledAssembly.GetType("DynCode").GetMethod("DynMethod");
 
 			try
 			{
@@ -129,6 +88,39 @@ namespace DOL.GS.Commands
 			}
 		}
 
+		private static string GetCode(string methodBody)
+        {
+			StringBuilder text = new StringBuilder();
+			text.Append("using System;\n");
+			text.Append("using System.Reflection;\n");
+			text.Append("using System.Collections;\n");
+			text.Append("using System.Threading;\n");
+			text.Append("using DOL;\n");
+			text.Append("using DOL.AI;\n");
+			text.Append("using DOL.AI.Brain;\n");
+			text.Append("using DOL.Database;\n");
+			text.Append("using DOL.GS;\n");
+			text.Append("using DOL.GS.Movement;\n");
+			text.Append("using DOL.GS.Housing;\n");
+			text.Append("using DOL.GS.Keeps;\n");
+			text.Append("using DOL.GS.Quests;\n");
+			text.Append("using DOL.GS.Commands;\n");
+			text.Append("using DOL.GS.Scripts;\n");
+			text.Append("using DOL.GS.PacketHandler;\n");
+			text.Append("using DOL.Events;\n");
+			text.Append("using log4net;\n");
+			text.Append("public class DynCode {\n");
+			text.Append("private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);\n");
+			text.Append("public static GameClient Client = null;\n");
+			text.Append("public static void print(object obj) {\n");
+			text.Append("	string str = (obj==null)?\"(null)\":obj.ToString();\n");
+			text.Append("	if (Client==null || Client.Player==null) Log.Debug(str);\n	else Client.Out.SendMessage(str, eChatType.CT_System, eChatLoc.CL_SystemWindow);\n}\n");
+			text.Append("public static void DynMethod(GameObject target, GamePlayer player) {\nif (player!=null) Client = player.Client;\n");
+			text.Append("GameNPC targetNpc = target as GameNPC;");
+			text.Append(methodBody);
+			text.Append("\n}\n}\n");
+			return text.ToString();
+		}
 
 		public void OnCommand(GameClient client, string[] args)
 		{
