@@ -381,21 +381,10 @@ namespace DOL.GS
 			
 			return new List<string>();
 		}
-		
+
 		#endregion
 
-		/// <summary>
-		/// Gets the stacktrace of a thread
-		/// </summary>
-		/// <remarks>
-		/// The use of the deprecated Suspend and Resume methods is necessary to get the StackTrace.
-		/// Suspend/Resume are not being used for thread synchronization (very bad).
-		/// It may be possible to get the StackTrace some other way, but this works for now
-		/// So, the related warning is disabled
-		/// --- This can cause a lot of trouble for Mono Users.
-		/// </remarks>
-		/// <param name="thread">Thread</param>
-		/// <returns>The thread's stacktrace</returns>
+#if NETFRAMEWORK
 		[Obsolete("Use GetFormattedStackTraceFrom(Thread) instead.")]
 		public static StackTrace GetThreadStack(Thread thread)
 		{
@@ -413,7 +402,7 @@ namespace DOL.GS
 
 			try
 			{
-				throw new NotImplementedException("Use GetFormattedStackTraceFrom(Thread) for debugging instead.");
+				trace = new StackTrace(thread, true);
 			}
 			catch(Exception e)
 			{
@@ -455,6 +444,7 @@ namespace DOL.GS
 
 			return str.ToString();
 		}
+#endif
 
 		public static string GetFormattedStackTraceFrom(Thread targetThread)
         {

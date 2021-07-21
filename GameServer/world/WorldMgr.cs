@@ -628,11 +628,13 @@ namespace DOL.GS
 			}
 		}
 
+#if NETFRAMEWORK
 		[Obsolete("Please use GetFormattedRelocateRegionsStackTrace() instead.")]
 		public static StackTrace GetRelocateRegionsStacktrace()
 		{
 			return Util.GetThreadStack(m_relocationThread);
 		}
+#endif
 
 		public static string GetFormattedRelocateRegionsStackTrace()
         {
@@ -775,11 +777,13 @@ namespace DOL.GS
 			return m_dayIncrement;
 		}
 
+#if NETFRAMEWORK
 		[Obsolete("Use GetFormattedWorldUpdateStackTrace() instead.")]
 		public static StackTrace GetWorldUpdateStacktrace()
 		{
 			return Util.GetThreadStack(m_WorldUpdateThread);
 		}
+#endif
 
 		public static string GetFormattedWorldUpdateStackTrace()
         {

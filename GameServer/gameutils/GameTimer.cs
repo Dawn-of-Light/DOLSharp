@@ -469,7 +469,7 @@ namespace DOL.GS
 				}
 				return res;
 			}
-			
+
 #if MonitorCallbacks
 			
 			private StreamWriter m_delayLog;
@@ -519,8 +519,6 @@ namespace DOL.GS
 				}
 			}
 			
-#endif
-
 			[Obsolete("Use GetFormattedStackTrace() instead.")]
 			public StackTrace GetStacktrace()
 			{
@@ -532,7 +530,7 @@ namespace DOL.GS
 					return Util.GetThreadStack(m_timeThread);
 				}
 			}
-
+#endif
 			public string GetFormattedStackTrace()
 			{
 				if (m_timeThread == null)
