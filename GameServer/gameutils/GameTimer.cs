@@ -469,7 +469,7 @@ namespace DOL.GS
 				}
 				return res;
 			}
-			
+
 #if MonitorCallbacks
 			
 			private StreamWriter m_delayLog;
@@ -519,12 +519,7 @@ namespace DOL.GS
 				}
 			}
 			
-#endif
-
-			/// <summary>
-			/// Gets the time thread stacktrace
-			/// </summary>
-			/// <returns>stacktrace</returns>
+			[Obsolete("Use GetFormattedStackTrace() instead.")]
 			public StackTrace GetStacktrace()
 			{
 				if (m_timeThread == null)
@@ -533,6 +528,17 @@ namespace DOL.GS
 				lock (m_lockObject)
 				{
 					return Util.GetThreadStack(m_timeThread);
+				}
+			}
+#endif
+			public string GetFormattedStackTrace()
+			{
+				if (m_timeThread == null)
+					return Util.GetFormattedStackTraceFrom(null);
+
+				lock (m_lockObject)
+				{
+					return Util.GetFormattedStackTraceFrom(m_timeThread);
 				}
 			}
 			
@@ -579,15 +585,14 @@ namespace DOL.GS
 							if (log.IsErrorEnabled)
 							{
 								ThreadState state = m_timeThread.ThreadState;
-								StackTrace trace = Util.GetThreadStack(m_timeThread);
 								log.ErrorFormat("failed to stop the time thread \"{0}\" in 10 seconds (thread state={1}); thread stacktrace:\n", m_name, state);
-								log.ErrorFormat(Util.FormatStackTrace(trace));
+								log.ErrorFormat(Util.GetFormattedStackTraceFrom(m_timeThread));
 								log.ErrorFormat("aborting the thread.\n");
 							}
 						}
 						finally
 						{
-							m_timeThread.Abort();
+							m_timeThread.Interrupt();
 							try
 							{
 								while(!m_timeThread.Join(2000))
@@ -596,7 +601,7 @@ namespace DOL.GS
 								
 									try
 									{
-										m_timeThread.Abort();
+										m_timeThread.Interrupt();
 									}
 									catch
 									{
@@ -1071,7 +1076,7 @@ namespace DOL.GS
 							workStart = workEnd;
 						}
 					}
-					catch (ThreadAbortException e)
+					catch (ThreadInterruptedException e)
 					{
 						if (log.IsWarnEnabled)
 							log.Warn("Time manager thread \"" + m_name + "\" was aborted", e);

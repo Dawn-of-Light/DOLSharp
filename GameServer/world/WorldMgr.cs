@@ -628,14 +628,18 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Gets the RelocateRegions() thread stacktrace
-		/// </summary>
-		/// <returns></returns>
+#if NETFRAMEWORK
+		[Obsolete("Please use GetFormattedRelocateRegionsStackTrace() instead.")]
 		public static StackTrace GetRelocateRegionsStacktrace()
 		{
 			return Util.GetThreadStack(m_relocationThread);
 		}
+#endif
+
+		public static string GetFormattedRelocateRegionsStackTrace()
+        {
+			return Util.GetFormattedStackTraceFrom(m_relocationThread);
+        }
 
 		private static void RelocateRegions()
 		{
@@ -663,14 +667,10 @@ namespace DOL.GS
 							log.WarnFormat("RelocateRegions() took {0}ms", took);
 					}
 				}
-				catch (ThreadAbortException)
-				{
-					//On Threadabort exit!
-					return;
-				}
 				catch (ThreadInterruptedException)
 				{
-					//On sleep interrupt do nothing
+					//On Thread interrupt exit!
+					return;
 				}
 				catch (Exception e)
 				{
@@ -777,14 +777,18 @@ namespace DOL.GS
 			return m_dayIncrement;
 		}
 
-		/// <summary>
-		/// Gets the world update thread stacktrace
-		/// </summary>
-		/// <returns></returns>
+#if NETFRAMEWORK
+		[Obsolete("Use GetFormattedWorldUpdateStackTrace() instead.")]
 		public static StackTrace GetWorldUpdateStacktrace()
 		{
 			return Util.GetThreadStack(m_WorldUpdateThread);
 		}
+#endif
+
+		public static string GetFormattedWorldUpdateStackTrace()
+        {
+			return Util.GetFormattedStackTraceFrom(m_WorldUpdateThread);
+        }
 
 		private static uint m_lastWorldObjectUpdateTick = 0;
 		
@@ -813,12 +817,12 @@ namespace DOL.GS
 				}
 				if (m_WorldUpdateThread != null)
 				{
-					m_WorldUpdateThread.Abort();
+					m_WorldUpdateThread.Interrupt();
 					m_WorldUpdateThread = null;
 				}
 				if (m_relocationThread != null)
 				{
-					m_relocationThread.Abort();
+					m_relocationThread.Interrupt();
 					m_relocationThread = null;
 				}
 

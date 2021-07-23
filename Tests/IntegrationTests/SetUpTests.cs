@@ -45,7 +45,7 @@ namespace DOL.Integration.Server
 		public static void CreateGameServerInstance()
 		{
 			Console.WriteLine("Create Game Server Instance");
-			DirectoryInfo CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory;
+			DirectoryInfo CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().Location).LocalPath).Directory;
 			Console.WriteLine("Code Base: " + CodeBase.FullName);
 			DirectoryInfo FakeRoot = CodeBase.Parent;
 			Console.WriteLine("Fake Root: " + FakeRoot.FullName);

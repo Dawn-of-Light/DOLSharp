@@ -1,0 +1,6 @@
+/build
+/Debug
+/obj
+/release
+/.vs
+**/*.csproj.user

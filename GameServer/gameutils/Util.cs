@@ -27,6 +27,7 @@ using log4net;
 using System.Reflection;
 
 using DOL.GS.Utils;
+using Microsoft.Diagnostics.Runtime;
 
 namespace DOL.GS
 {
@@ -380,21 +381,11 @@ namespace DOL.GS
 			
 			return new List<string>();
 		}
-		
+
 		#endregion
 
-		/// <summary>
-		/// Gets the stacktrace of a thread
-		/// </summary>
-		/// <remarks>
-		/// The use of the deprecated Suspend and Resume methods is necessary to get the StackTrace.
-		/// Suspend/Resume are not being used for thread synchronization (very bad).
-		/// It may be possible to get the StackTrace some other way, but this works for now
-		/// So, the related warning is disabled
-		/// --- This can cause a lot of trouble for Mono Users.
-		/// </remarks>
-		/// <param name="thread">Thread</param>
-		/// <returns>The thread's stacktrace</returns>
+#if NETFRAMEWORK
+		[Obsolete("Use GetFormattedStackTraceFrom(Thread) instead.")]
 		public static StackTrace GetThreadStack(Thread thread)
 		{
 			#pragma warning disable 0618
@@ -426,11 +417,7 @@ namespace DOL.GS
 			return trace;
 		}
 
-		/// <summary>
-		/// Formats the stacktrace
-		/// </summary>
-		/// <param name="trace">The stacktrace to format</param>
-		/// <returns>The fromatted string of stacktrace object</returns>
+		[Obsolete("Use GetFormattedStackTraceFrom(Thread) instead.")]
 		public static string FormatStackTrace(StackTrace trace)
 		{
 			var str = new StringBuilder(128);
@@ -456,6 +443,39 @@ namespace DOL.GS
 			}
 
 			return str.ToString();
+		}
+#endif
+
+		public static string GetFormattedStackTraceFrom(Thread targetThread)
+        {
+			var sb = new StringBuilder();
+			try
+			{
+				var dt = DataTarget.AttachToProcess(Process.GetCurrentProcess().Id, false);
+				var rt = dt.ClrVersions.Single().CreateRuntime();
+				ClrThread clrThread = null;
+				foreach (var t in rt.Threads)
+				{
+					if (t.ManagedThreadId == targetThread.ManagedThreadId)
+					{
+						clrThread = t;
+						break;
+					}
+				}
+				foreach (var frame in clrThread.EnumerateStackTrace())
+				{
+					var method = frame.Method;
+					if (method != null)
+					{
+						sb.AppendLine($"   at {method.Signature}");
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				return e.StackTrace;
+			}
+			return sb.ToString();
 		}
 
 		public static string FormatTime(long seconds)

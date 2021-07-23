@@ -28,7 +28,7 @@ namespace DOL.Integration
     public partial class Create
     {
         private static string SQLiteDBPath
-               => Path.Combine(new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory.FullName, "temporary.sqlite3.db");
+               => Path.Combine(new FileInfo(new Uri(Assembly.GetExecutingAssembly().Location).LocalPath).Directory.FullName, "temporary.sqlite3.db");
 
         public static IObjectDatabase TemporarySQLiteDB()
         {

@@ -201,9 +201,9 @@ namespace DOL.GS.GameEvents
 							long curTick = mgr.CurrentTime;
 							if (ts.Time == curTick)
 							{
-								log.FatalFormat("{0} stopped ticking; timer stacktrace:\n{1}\n", mgr.Name, Util.FormatStackTrace(mgr.GetStacktrace()));
-								log.FatalFormat("NPC update stacktrace:\n{0}\n", Util.FormatStackTrace(WorldMgr.GetWorldUpdateStacktrace()));
-								log.FatalFormat("Relocate() stacktrace:\n{0}\n", Util.FormatStackTrace(WorldMgr.GetRelocateRegionsStacktrace()));
+								log.FatalFormat("{0} stopped ticking; timer stacktrace:\n{1}\n", mgr.Name, mgr.GetFormattedStackTrace());
+								log.FatalFormat("NPC update stacktrace:\n{0}\n", WorldMgr.GetFormattedWorldUpdateStackTrace());
+								log.FatalFormat("Relocate() stacktrace:\n{0}\n", WorldMgr.GetFormattedRelocateRegionsStackTrace());
 								log.FatalFormat("Packethandlers stacktraces:\n{0}\n", PacketProcessor.GetConnectionThreadpoolStacks());
 							}
 

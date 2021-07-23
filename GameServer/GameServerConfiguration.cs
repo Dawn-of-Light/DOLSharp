@@ -348,7 +348,7 @@ namespace DOL.GS
 			m_logConfigFile = Path.Combine(Path.Combine(".", "config"), "logconfig.xml");
 
 			m_scriptCompilationTarget = Path.Combine(Path.Combine(".", "lib"), "GameServerScripts.dll");
-			m_scriptAssemblies = "System.dll,System.Xml.dll";
+			m_scriptAssemblies = " ";
 			m_enableCompilation = true;
 			m_autoAccountCreation = true;
 			m_serverType = eGameServerType.GST_Normal;
@@ -422,17 +422,22 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the script assemblies to be included in the script compilation
 		/// </summary>
+		[Obsolete("ScriptAssemblies is going to be removed.")]
 		public string[] ScriptAssemblies
 		{
 			get
 			{
-				return m_scriptAssemblies.Split(',')
+				return new string[] { "System.dll", "System.Xml.dll" }
 					.Union(new DirectoryInfo(Path.Combine(RootDirectory, "lib"))
-					       .EnumerateFiles("*.dll", SearchOption.TopDirectoryOnly).Select(f => f.Name).Where(f => !f.Equals(new FileInfo(ScriptCompilationTarget).Name, StringComparison.OrdinalIgnoreCase)))
+					.EnumerateFiles("*.dll", SearchOption.TopDirectoryOnly)
+					.Select(f => f.Name).Where(f => !f.Equals(new FileInfo(ScriptCompilationTarget).Name, StringComparison.OrdinalIgnoreCase)))
+					.Union(AdditionalScriptAssemblies)
 					.ToArray();
 			}
 		}
-		
+
+		public string[] AdditionalScriptAssemblies => string.IsNullOrEmpty(m_scriptAssemblies.Trim()) ? new string[] { } : m_scriptAssemblies.Split(',');
+
 		/// <summary>
 		/// Get or Set the Compilation Flag
 		/// </summary>
