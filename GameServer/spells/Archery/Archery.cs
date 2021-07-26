@@ -17,15 +17,11 @@
  *
  */
 using System;
-using DOL.GS;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 using DOL.AI.Brain;
-
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace DOL.GS.Spells
 {
@@ -180,13 +176,6 @@ namespace DOL.GS.Spells
 			return hitchance;
 		}
 
-
-		/// <summary>
-		/// Adjust damage based on chance to hit.
-		/// </summary>
-		/// <param name="damage"></param>
-		/// <param name="hitChance"></param>
-		/// <returns></returns>
 		public override int AdjustDamageForHitChance(int damage, int hitChance)
 		{
 			int adjustedDamage = damage;
@@ -199,11 +188,6 @@ namespace DOL.GS.Spells
 			return adjustedDamage;
 		}
 
-
-		/// <summary>
-		/// Level mod for effect between target and caster if there is any
-		/// </summary>
-		/// <returns></returns>
 		public override double GetLevelModFactor()
 		{
 			return 0.025;
@@ -281,10 +265,6 @@ namespace DOL.GS.Spells
 			return ad;
 		}
 
-		/// <summary>
-		/// Determines what damage type to use.  For archery the player can choose.
-		/// </summary>
-		/// <returns></returns>
 		public override eDamageType DetermineSpellDamageType()
 		{
 			GameSpellEffect ef = FindEffectOnTarget(Caster, "ArrowDamageTypes");
@@ -298,10 +278,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// Calculates the base 100% spell damage which is then modified by damage variance factors
-		/// </summary>
-		/// <returns></returns>
 		public override double CalculateDamageBase(GameLiving target)
 		{
 			double spellDamage = Spell.Damage;
@@ -318,8 +294,6 @@ namespace DOL.GS.Spells
 
 			return spellDamage;
 		}
-
-
 
 		public override void FinishSpellCast(GameLiving target)
 		{
@@ -362,10 +336,6 @@ namespace DOL.GS.Spells
 			base.FinishSpellCast(target);
 		}
 
-		/// <summary>
-		/// Calculates the effective casting time
-		/// </summary>
-		/// <returns>effective casting time in milliseconds</returns>
 		public override int CalculateCastingTime()
 		{
 			if (Spell.LifeDrainReturn == (int)eShotType.Power) return 6000;
@@ -449,10 +419,8 @@ namespace DOL.GS.Spells
 			get
 			{
 				var list = new List<string>();
-				//list.Add("Function: " + (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType));
-				//list.Add(" "); //empty line
 				list.Add(Spell.Description);
-				list.Add(" "); //empty line
+				list.Add(" ");
 				if (Spell.InstrumentRequirement != 0)
 					list.Add("Instrument require: " + GlobalConstants.InstrumentTypeToName(Spell.InstrumentRequirement));
 				if (Spell.Damage != 0)
@@ -485,13 +453,7 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// Do not trigger Subspells
-		/// </summary>
-		/// <param name="target"></param>
-		public override void CastSubSpells(GameLiving target)
-		{
-		}
+		public override void CastSubSpells(GameLiving target) { }
 		
 		public Archery(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}

@@ -25,27 +25,15 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("Amnesia")]
+	[SpellHandler("Amnesia")]
 	public class AmnesiaSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Execute direct damage spell
-		/// </summary>
-		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
-		/// <summary>
-		/// execute non duration spell effect on target
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="effectiveness"></param>
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			base.OnDirectEffect(target, effectiveness);
@@ -91,10 +79,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// When spell was resisted
-		/// </summary>
-		/// <param name="target">the target that resisted the spell</param>
 		protected override void OnSpellResisted(GameLiving target)
 		{
 			base.OnSpellResisted(target);

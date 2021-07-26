@@ -16,26 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("CureNearsight")]
+	[SpellHandler("CureNearsight")]
 	public class CureNearsightSpellHandler : RemoveSpellEffectHandler
 	{
-		// constructor
 		public CureNearsightSpellHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
-			// RR4: now it's a list
 			m_spellTypesToRemove = new List<string>();
 			m_spellTypesToRemove.Add("Nearsight");
             m_spellTypesToRemove.Add("Silence");

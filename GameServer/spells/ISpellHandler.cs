@@ -241,10 +241,10 @@ namespace DOL.GS.Spells
 		/// </summary>
 		byte DelveInfoDepth { get; set; }
 
-		/// <summary>
-		/// Event raised when casting sequence is completed and execution of spell can start
-		/// </summary>
-		event CastingCompleteCallback CastingCompleteEvent;
+        /// <summary>
+        /// Event raised when casting sequence is completed and execution of spell can start
+        /// </summary>
+        event CastingCompleteCallback CastingCompleteEvent;
 
 		PlayerXEffect GetSavedEffect(GameSpellEffect e);
 		void OnEffectRestored(GameSpellEffect effect, int[] RestoreVars);

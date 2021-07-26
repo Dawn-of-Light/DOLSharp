@@ -26,9 +26,6 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summon a fnf animist pet.
-	/// </summary>
 	[SpellHandler("SummonAnimistFnF")]
 	public class SummonAnimistFnF : SummonAnimistPet
 	{
@@ -90,12 +87,6 @@ namespace DOL.GS.Spells
 		{
 		}
 
-		/// <summary>
-		/// [Ganrod] Nidel: Can remove TurretFNF
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
 		{
 			m_pet = sender as GamePet;
@@ -117,13 +108,6 @@ namespace DOL.GS.Spells
 				effect.Cancel(false);
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			Caster.PetCount--;
@@ -135,11 +119,7 @@ namespace DOL.GS.Spells
 		{
 			return new TurretFNFBrain(owner);
 		}
-		
-		/// <summary>
-		/// Do not trigger SubSpells
-		/// </summary>
-		/// <param name="target"></param>
+
 		public override void CastSubSpells(GameLiving target)
 		{
 		}

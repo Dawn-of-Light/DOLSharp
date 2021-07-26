@@ -16,19 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
 using System.Collections.Specialized;
 using DOL.GS.Effects;
 using DOL.GS.PropertyCalc;
-using System.Reflection;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Health regeneration rate buff
-	/// </summary>
 	[SpellHandler("HealthRegenBuff")]
 	public class HealthRegenSpellHandler : PropertyChangingSpell
 	{
@@ -40,9 +35,6 @@ namespace DOL.GS.Spells
 		public override string ShortDescription => $"Target regenerates {Spell.Value} extra health.";
 	}
 
-	/// <summary>
-	/// Power regeneration rate buff
-	/// </summary>
 	[SpellHandler("PowerRegenBuff")]
 	public class PowerRegenSpellHandler : PropertyChangingSpell
 	{
@@ -63,34 +55,18 @@ namespace DOL.GS.Spells
 
 	}
 
-	/// <summary>
-	/// Endurance regeneration rate buff
-	/// </summary>
 	[SpellHandler("EnduranceRegenBuff")]
 	public class EnduranceRegenSpellHandler : PropertyChangingSpell
 	{
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.EnduranceRegenerationRate; } }
 
-		/// <summary>
-		/// The max range from caster to owner for all conc buffs
-		/// </summary>
 		private const int CONC_MAX_RANGE = 1500;
 
-		/// <summary>
-		/// The interval for range checks, in milliseconds
-		/// </summary>
 		private const int RANGE_CHECK_INTERVAL = 5000;
 
-		/// <summary>
-		/// Holds all owners of conc buffs
-		/// </summary>
 		private ListDictionary m_concEffects;
 
-		/// <summary>
-		/// Execute property changing spell
-		/// </summary>
-		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			if (Spell.Concentration > 0)
@@ -103,10 +79,6 @@ namespace DOL.GS.Spells
 			base.FinishSpellCast(target);
 		}
 
-		/// <summary>
-		/// called when spell effect has to be started and applied to targets
-		/// </summary>
-		/// <param name="target">The current target object</param>
 		public override bool StartSpell(GameLiving target)
 		{
 			// paladin chants seem special
@@ -116,10 +88,6 @@ namespace DOL.GS.Spells
 			return base.StartSpell(target);
 		}
 
-		/// <summary>
-		/// start changing effect on target
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
@@ -130,13 +98,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			if (Spell.Concentration > 0) {
@@ -148,10 +109,6 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect, noMessages);
 		}
 
-		/// <summary>
-		/// Disables spell effect
-		/// </summary>
-		/// <param name="effect"></param>
 		private void EnableEffect(GameSpellEffect effect)
 		{
 			if (m_concEffects[effect] != null) return; // already enabled
@@ -160,10 +117,6 @@ namespace DOL.GS.Spells
 			bonuscat[(int)Property1] += (int)(Spell.Value * effect.Effectiveness);
 		}
 
-		/// <summary>
-		/// Enables spell effect
-		/// </summary>
-		/// <param name="effect"></param>
 		private void DisableEffect(GameSpellEffect effect)
 		{
 			if (m_concEffects[effect] == null) return; // already disabled
@@ -172,29 +125,15 @@ namespace DOL.GS.Spells
 			bonuscat[(int)Property1] -= (int)(Spell.Value * effect.Effectiveness);
 		}
 
-		/// <summary>
-		/// Checks effect owner distance and cancels the effect if too far
-		/// </summary>
 		private sealed class RangeCheckAction : RegionAction
 		{
-			/// <summary>
-			/// The list of effects
-			/// </summary>
 			private readonly EnduranceRegenSpellHandler m_handler;
 
-			/// <summary>
-			/// Constructs a new RangeCheckAction
-			/// </summary>
-			/// <param name="actionSource">The action source</param>
-			/// <param name="handler">The spell handler</param>
 			public RangeCheckAction(GameLiving actionSource, EnduranceRegenSpellHandler handler) : base(actionSource)
 			{
 				m_handler = handler;
 			}
 
-			/// <summary>
-			/// Called on every timer tick
-			/// </summary>
 			protected override void OnTick()
 			{
 				IDictionary effects = m_handler.m_concEffects;
@@ -246,12 +185,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// Constructs a new EnduranceRegenSpellHandler
-		/// </summary>
-		/// <param name="caster">The spell caster</param>
-		/// <param name="spell">The spell used</param>
-		/// <param name="line">The spell line used</param>
 		public EnduranceRegenSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
 		public override string ShortDescription => $"Target regenerates {Spell.Value} extra fatigue.";

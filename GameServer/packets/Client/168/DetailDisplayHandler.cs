@@ -2033,9 +2033,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Delve Info for Spells (V1.110+)
 		/// </summary>
-		/// <param name="clt">Client</param>
-		/// <param name="id">SpellID</param>
-		/// <returns></returns>
 		public static string DelveSpell(GameClient clt, Spell spell, SpellLine spellLine = null)
 		{
 			// We better rely on the handler to delve it correctly ! using reserved spellline as we can't guess it ! player can delve other object effect !

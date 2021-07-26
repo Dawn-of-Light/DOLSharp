@@ -23,28 +23,14 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Style taunt effect spell handler
-	/// </summary>
 	[SpellHandler("StyleTaunt")]
 	public class StyleTaunt : SpellHandler 
 	{
 		public override int CalculateSpellResistChance(GameLiving target)
-		{
-			return 0;
-		}
+			=> 0;
 
-		/// <summary>
-		/// Determines wether this spell is compatible with given spell
-		/// and therefore overwritable by better versions
-		/// spells that are overwritable cannot stack
-		/// </summary>
-		/// <param name="compare"></param>
-		/// <returns></returns>
 		public override bool IsOverwritable(GameSpellEffect compare)
-		{
-            return false;
-		}
+			=> false;
 
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {

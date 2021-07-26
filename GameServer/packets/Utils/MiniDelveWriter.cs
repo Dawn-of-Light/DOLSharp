@@ -16,160 +16,45 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DOL.GS.PacketHandler
 {
-	/// <summary>
-	/// MiniDelveWriter is used to build v1.110+ hovering tool tip
-	/// format is : (Subject (Key "Value")(Key2 "Value2")[...](Expires "Timestamp"))
-	/// Sent to Client when hovering an icon that need some attached tool tip.
-	/// </summary>
 	public class MiniDelveWriter
 	{
-		/// <summary>
-		/// Max Length of resulting Delve String
-		/// </summary>
-		public const ushort MAX_DELVE_STR_LENGTH = 2048;
+		private static ushort MAX_DELVE_STR_LENGTH = 2048;
 		
-		/// <summary>
-		/// Subject's Name
-		/// </summary>
-		private string m_name;
+		public string Name { get; }
+		public Dictionary<string, string> Values { get; }
+		public ulong Expires { get; }
 		
-		/// <summary>
-		/// Subject's Name
-		/// </summary>
-		public string Name {
-			get { return m_name; }
-		}
-		
-		/// <summary>
-		/// Key / Value Collection
-		/// </summary>
-		private Dictionary<string, string> m_values;
-		
-		/// <summary>
-		/// Key / Value Collection
-		/// </summary>
-		public Dictionary<string, string> Values {
-			get { return m_values; }
-		}
-		
-		/// <summary>
-		/// Times of Cache Expires
-		/// </summary>
-		private ulong m_expires;
-		
-		/// <summary>
-		/// Times of Cache Expires, if 0 not sent to client.
-		/// </summary>
-		public ulong Expires {
-			get { return m_expires; }
-		}
-		
-		/// <summary>
-		/// Build a MiniDelveWriter with Implicit Expires.
-		/// </summary>
-		/// <param name="name"></param>
 		public MiniDelveWriter(string name)
-			: this(name, 0)
 		{
-		}
-		
-		/// <summary>
-		/// Build a MiniDelveWriter with Expires Explicitely Set
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="expires"></param>
-		public MiniDelveWriter(string name, ulong expires)
-		{
-			m_name = name;
-			m_expires = expires;
-			m_values = new Dictionary<string, string>();
+			Name = name;
+			Expires = 0;
+			Values = new Dictionary<string, string>();
 		}
 
-		/// <summary>
-		/// Add a Key / Value pair
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="val"></param>
 		public void AddKeyValuePair(string name, object val)
 		{
+			if (name != "cast_timer" && val.ToString() == "0") return;
 			AddKeyValuePair(name, val.ToString());
 		}
 		
-		/// <summary>
-		/// Add a Key / Value pair
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="val"></param>
 		public void AddKeyValuePair(string name, string val)
 		{
-			m_values[name] = val;
+			Values[name] = val;
 		}
 
-		public void AddKeyValuePair(string name, eDamageType val)
-		{
-			switch (val)
-			{
-				case eDamageType.Natural:
-					break;
-				case eDamageType.Crush:
-					AddKeyValuePair(name, 1);
-					break;
-				case eDamageType.Slash:
-					AddKeyValuePair(name, 2);
-					break;
-				case eDamageType.Thrust:
-					AddKeyValuePair(name, 3);
-					break;
-
-				case eDamageType.Body:
-					AddKeyValuePair(name,  16);
-					break;
-				case eDamageType.Cold:
-					AddKeyValuePair(name, 12);
-					break;
-				case eDamageType.Heat:
-					AddKeyValuePair(name, 10);
-					break;
-
-				case eDamageType.Matter:
-					AddKeyValuePair(name, 13);
-					break;
-				case eDamageType.Energy:
-					AddKeyValuePair(name,  20);
-					break;
-				case eDamageType.Spirit:
-					AddKeyValuePair(name,  11);
-					break;
-
-				default:
-					AddKeyValuePair(name, (int)val + 1);
-					break;
-			}
-		}
-
-		/// <summary>
-		/// Add a Key / Value pair
-		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="val"></param>
 		public void AppendKeyValuePair(string name, string val, string sep = ", ")
 		{
-			if (m_values.ContainsKey(name))
-				m_values[name] += sep + val;
+			if (Values.ContainsKey(name))
+				Values[name] += sep + val;
 			else
-				m_values[name] = val;
+				Values[name] = val;
 		}
-		
-		/// <summary>
-		/// Build the Formatted String object and return it as a String.
-		/// </summary>
-		/// <returns></returns>
+
 		public override string ToString()
 		{
 			StringBuilder res = new StringBuilder();
@@ -192,7 +77,6 @@ namespace DOL.GS.PacketHandler
 			}
 			
 			res.Append(")");
-			
 			return res.ToString();
 		}
 	}

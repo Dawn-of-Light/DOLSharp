@@ -16,58 +16,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
-
-using DOL.GS;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Buffs a single stat,
-	/// Considered as an Ability buff (regarding the bonuscategories on statproperties)
-	/// Base abstract Class for Ability Stats Buff Attached to Passive Spell-Based (Realm)Abilities
-	/// </summary>
 	[Obsolete("This is going to be removed without replacement.")]
 	public abstract class SingleStatAbilityBuffHandler : PropertyChangingSpell
 	{
-		/// <summary>
-		/// Bonus Category Enforced to Ability Buff Bonus Category
-		/// </summary>
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.AbilityBuff; } }
 
-		/// <summary>
-		/// Send updates about the changes
-		/// </summary>
-		/// <param name="target"></param>
 		protected override void SendUpdates(GameLiving target)
 		{
 			target.UpdateHealthManaEndu();
 		}
 		
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			// Ability Bonus are not modified by any effectiveness modifier
 			base.ApplyEffectOnTarget(target, 1.0);
 		}
 
-
-		/// <summary>
-		/// Default Constructor
-		/// </summary>
-		/// <param name="caster"></param>
-		/// <param name="spell"></param>
-		/// <param name="line"></param>
 		protected SingleStatAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-		}
+			: base(caster, spell, line) { }
 	}
 
 	[Obsolete("This is going to be removed without replacement.")]

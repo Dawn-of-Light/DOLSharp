@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DOL.Database;
 using DOL.AI.Brain;
 using DOL.Events;
@@ -30,22 +29,10 @@ using log4net;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Base class for proc spell handler
-	/// </summary>
 	public abstract class BaseProcSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// Constructs new proc spell handler
-		/// </summary>
-		/// <param name="caster"></param>
-		/// <param name="spell"></param>
-		/// <param name="spellLine"></param>
 		protected BaseProcSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine)
 			: base(caster, spell, spellLine)
 		{
@@ -53,46 +40,18 @@ namespace DOL.GS.Spells
 			m_procSpell = SkillBase.GetSpellByID((int)spell.Value);
 		}
 
-		/// <summary>
-		/// The event type to hook on
-		/// </summary>
 		protected abstract DOLEvent EventType { get; }
-
-		/// <summary>
-		/// The spell line name of the proc spell
-		/// </summary>
 		protected abstract string SubSpellLineName { get; }
-
-		/// <summary>
-		/// The event handler of given event type
-		/// </summary>
 		protected abstract void EventHandler(DOLEvent e, object sender, EventArgs arguments);
-
-		/// <summary>
-		/// Holds the proc spell
-		/// </summary>
 		protected Spell m_procSpell;
-
-		/// <summary>
-		/// Holds the proc spell line
-		/// </summary>
 		protected SpellLine m_procSpellLine;
 
-		/// <summary>
-		/// called after normal spell cast is completed and effect has to be started
-		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = Spell.Duration;
@@ -100,11 +59,6 @@ namespace DOL.GS.Spells
 			return (int)duration;
 		}
 
-		/// <summary>
-		/// When an applied effect starts
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
@@ -120,13 +74,6 @@ namespace DOL.GS.Spells
 			GameEventMgr.AddHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			if (!noMessages)
@@ -138,10 +85,6 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-		/// <summary>
-		/// Determines wether this spell is better than given one
-		/// </summary>
-		/// <returns>true if this spell is better version than compare spell</returns>
 		public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{
 			Spell oldProcSpell = SkillBase.GetSpellByID((int)oldeffect.Spell.Value);
@@ -184,11 +127,6 @@ namespace DOL.GS.Spells
 			return true;
 		}
 
-        /// <summary>
-        /// Saves the effect on player exit
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
         public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
         {
             PlayerXEffect eff = new PlayerXEffect();
@@ -199,18 +137,12 @@ namespace DOL.GS.Spells
             eff.SpellLine = SpellLine.KeyName;
             return eff;
         }
-
-        /// <summary>
-        /// Adds the handler when a proc effect is restored
-        /// </summary>        
+   
         public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
         {
             GameEventMgr.AddHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
         }
-
-        /// <summary>
-        /// Send messages when effect expires and remove associated effect handler
-        /// </summary>        
+     
         public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
         {
             GameEventMgr.RemoveHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
@@ -222,30 +154,18 @@ namespace DOL.GS.Spells
             return 0;
         }
 
-        /// <summary>
-        /// Delve Info
-        /// </summary>
         public override IList<string> DelveInfo
 		{
 			get
 			{
 				var list = new List<string>();
 
-//                list.Add("Function: " + (string)(Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType));
 				list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "ProcSpellHandler.DelveInfo.Function", (string)(Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType)));
-
-//                list.Add("Target: " + Spell.Target);
 				list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Target", Spell.Target));
-
-//                if (Spell.Range != 0) list.Add("Range: " + Spell.Range);
 				if (Spell.Range != 0)
 					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Range", Spell.Range));
-
-//                if (Spell.Duration >= ushort.MaxValue * 1000) list.Add("Duration: Permanent.");
 				if (Spell.Duration >= ushort.MaxValue * 1000)
 					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Duration") + " Permanent.");
-
-//                else if (Spell.Duration > 60000) list.Add(string.Format("Duration: {0}:{1} min", Spell.Duration / 60000, (Spell.Duration % 60000 / 1000).ToString("00")));
 				else if (Spell.Duration > 60000)
 					list.Add(string.Format(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Duration") + Spell.Duration / 60000 + ":" + (Spell.Duration % 60000 / 1000).ToString("00") + "min"));
 
@@ -257,7 +177,6 @@ namespace DOL.GS.Spells
 				if (Spell.Concentration != 0) list.Add("Concentration cost: " + Spell.Concentration);
 				if (Spell.Radius != 0) list.Add("Radius: " + Spell.Radius);
 
-				// Recursion check
 				byte nextDelveDepth = (byte)(DelveInfoDepth + 1);
 				if (nextDelveDepth > MAX_DELVE_RECURSION)
 				{
@@ -267,9 +186,9 @@ namespace DOL.GS.Spells
 				else
 				{
 					// add subspell specific informations
-					list.Add(" "); //empty line
+					list.Add(" ");
 					list.Add("Sub-spell informations: ");
-					list.Add(" "); //empty line
+					list.Add(" ");
 					ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(Caster, m_procSpell, m_procSpellLine);
 					if (subSpellHandler == null)
 					{
@@ -277,7 +196,7 @@ namespace DOL.GS.Spells
 						return list;
 					}
 					subSpellHandler.DelveInfoDepth = nextDelveDepth;
-					// Get delve info of sub-spell
+
 					IList<string> subSpellDelve = subSpellHandler.DelveInfo;
 					if (subSpellDelve.Count > 0)
 					{
@@ -291,36 +210,12 @@ namespace DOL.GS.Spells
         }
 	}
 
-	/// <summary>
-	/// This class contains data for OffensiveProc spells
-	/// </summary>
 	[SpellHandler("OffensiveProc")]
 	public class OffensiveProcSpellHandler : BaseProcSpellHandler
 	{
-		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		protected override DOLEvent EventType => GameLivingEvent.AttackFinished;
+		protected override string SubSpellLineName => "OffensiveProc";
 
-		/// <summary>
-		/// The event type to hook on
-		/// </summary>
-		protected override DOLEvent EventType
-		{
-			get { return GameLivingEvent.AttackFinished; }
-		}
-
-		/// <summary>
-		/// The spell line name of the proc spell
-		/// </summary>
-		protected override string SubSpellLineName
-		{
-			get { return "OffensiveProc"; }
-		}
-
-		/// <summary>
-		/// Handler fired whenever effect target attacks
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		protected override void EventHandler(DOLEvent e, object sender, EventArgs arguments)
 		{
 			AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
@@ -340,7 +235,7 @@ namespace DOL.GS.Spells
 			if (baseChance < 1)
 				baseChance = 1;
 			
-			if (ad.Attacker == ad.Attacker as GameNPC) // Add support for multiple procs - Unty
+			if (ad.Attacker == ad.Attacker as GameNPC)
 			{
 				Spell baseSpell = null;
 							
@@ -391,34 +286,12 @@ namespace DOL.GS.Spells
 		}
 	}
 
-	/// <summary>
-	/// This class contains data for DefensiveProc spells
-	/// </summary>
 	[SpellHandler("DefensiveProc")]
 	public class DefensiveProcSpellHandler : BaseProcSpellHandler
 	{
-		/// <summary>
-		/// The event type to hook on
-		/// </summary>
-		protected override DOLEvent EventType
-		{
-			get { return GameLivingEvent.AttackedByEnemy; }
-		}
+		protected override DOLEvent EventType => GameLivingEvent.AttackedByEnemy;
+		protected override string SubSpellLineName => "DefensiveProc";
 
-		/// <summary>
-		/// The spell line name of the proc spell
-		/// </summary>
-		protected override string SubSpellLineName
-		{
-			get { return "DefensiveProc"; }
-		}
-
-		/// <summary>
-		/// Handler fired whenever effect target is attacked
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		protected override void EventHandler(DOLEvent e, object sender, EventArgs arguments)
 		{
 			AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
@@ -471,12 +344,6 @@ namespace DOL.GS.Spells
 	[SpellHandler( "OffensiveProcPvE" )]
 	public class OffensiveProcPvESpellHandler : OffensiveProcSpellHandler
 	{
-		/// <summary>
-		/// Handler fired whenever effect target is attacked
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		protected override void EventHandler( DOLEvent e, object sender, EventArgs arguments )
 		{
 			AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;

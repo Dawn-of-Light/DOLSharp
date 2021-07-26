@@ -18,18 +18,12 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using DOL.Database;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS.Spells
 {
@@ -59,11 +53,6 @@ namespace DOL.GS.Spells
 		public SummonMinionHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line) { }
 
-		/// <summary>
-		/// All checks before any casting begins
-		/// </summary>
-		/// <param name="selectedTarget"></param>
-		/// <returns></returns>
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain == null)
@@ -81,11 +70,6 @@ namespace DOL.GS.Spells
 			return base.CheckBeginCast(selectedTarget);
 		}
 
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			if (Caster == null || Caster.ControlledBrain == null)
@@ -133,12 +117,6 @@ namespace DOL.GS.Spells
 				}
 		}
 
-		/// <summary>
-		/// Called when owner release NPC
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
 		{
 			GameNPC pet = sender as GameNPC;
@@ -171,31 +149,24 @@ namespace DOL.GS.Spells
 
 			switch (type)
 			{
-				//Melee
 				case BDSubPet.SubPetType.Melee:
 					controlledBrain = new BDMeleeBrain(owner);
 					break;
-				//Healer
 				case BDSubPet.SubPetType.Healer:
 					controlledBrain = new BDHealerBrain(owner);
 					break;
-				//Mage
 				case BDSubPet.SubPetType.Caster:
 					controlledBrain = new BDCasterBrain(owner);
 					break;
-				//Debuffer
 				case BDSubPet.SubPetType.Debuffer:
 					controlledBrain = new BDDebufferBrain(owner);
 					break;
-				//Buffer
 				case BDSubPet.SubPetType.Buffer:
 					controlledBrain = new BDBufferBrain(owner);
 					break;
-				//Range
 				case BDSubPet.SubPetType.Archer:
 					controlledBrain = new BDArcherBrain(owner);
 					break;
-				//Other
 				default:
 					controlledBrain = new ControlledNpcBrain(owner);
 					break;
@@ -214,9 +185,6 @@ namespace DOL.GS.Spells
 			Caster.ControlledBrain.Body.AddControlledNpc(brain);
 		}
 
-		/// <summary>
-		/// Delve Info
-		/// </summary>
 		public override IList<string> DelveInfo
 		{
 			get

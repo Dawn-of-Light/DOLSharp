@@ -17,49 +17,28 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using log4net;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Language;
-using log4net;
-
 
 namespace DOL.GS.Spells
 {
-    /// <summary>
-    /// Charms target NPC for the spell duration.
-    /// 
-    /// Spell.Value is used for hard NPC level cap
-    /// Spell.Damage is used for percent of caster level cap
-    /// </summary>
-    [SpellHandlerAttribute("Charm")]
+    [SpellHandler("Charm")]
     public class CharmSpellHandler : SpellHandler
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// Holds the charmed Npc for pulsing spells
-        /// </summary>
         protected GameNPC m_charmedNpc;
 
-        /// <summary>
-        /// The property that stores the new npc brain
-        /// </summary>
         protected ControlledNpcBrain m_controlledBrain;
 
-        /// <summary>
-        /// Tells pulsing spells to not add brain if it was not removed by expire effect
-        /// </summary>
         protected bool m_isBrainSet;
-        
-        /// <summary>
-        /// What type of mobs this spell can charm. based on amnesia chance value.
-        /// </summary>        
+                
         public enum eCharmType : ushort
         {
         	All = 0,
@@ -73,18 +52,12 @@ namespace DOL.GS.Spells
         	Reptile = 8,	
         }
 
-        /// <summary>
-        /// called after normal spell cast is completed and effect has to be started
-        /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
             Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
-        /// <summary>
-        /// called when spell effect has to be started and applied to targets
-        /// </summary>
         public override bool StartSpell(GameLiving target)
         {
         	
@@ -114,21 +87,11 @@ namespace DOL.GS.Spells
             return true;
         }
 
-        /// <summary>
-        /// Calculates chance of spell getting resisted
-        /// </summary>
-        /// <param name="target">the target of the spell</param>
-        /// <returns>chance that spell will be resisted for specific target</returns>
         public override int CalculateSpellResistChance(GameLiving target)
         {
             return 0;
         }
 
-        /// <summary>
-        /// All checks before any casting begins
-        /// </summary>
-        /// <param name="selectedTarget"></param>
-        /// <returns></returns>
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
         	// check cast target
@@ -163,11 +126,6 @@ namespace DOL.GS.Spells
             return true;
         }
 
-        /// <summary>
-        /// Apply effect on target or do spell action if non duration spell
-        /// </summary>
-        /// <param name="target">target that gets the effect</param>
-        /// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
         	
@@ -298,7 +256,7 @@ namespace DOL.GS.Spells
             	// base resists for all charm spells
                 int resistChance = 100 - (85 + ((Caster.Level - target.Level) / 2));
 
-                if (this.Spell.Pulse != 0) // not permanent
+                if (Spell.Pulse != 0) // not permanent
                 {
                 	
                     /*
@@ -339,11 +297,6 @@ namespace DOL.GS.Spells
             base.ApplyEffectOnTarget(target, effectiveness);
         }
 
-        /// <summary>
-        /// When an applied effect starts
-        /// duration spells only
-        /// </summary>
-        /// <param name="effect"></param>
         public override void OnEffectStart(GameSpellEffect effect)
         {
             base.OnEffectStart(effect);
@@ -394,12 +347,6 @@ namespace DOL.GS.Spells
             }
         }
 
-        /// <summary>
-        /// Handles release commands
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="sender"></param>
-        /// <param name="arguments"></param>
         private void ReleaseEventHandler(DOLEvent e, object sender, EventArgs arguments)
         {
             IControlledBrain npc = null;
@@ -427,13 +374,6 @@ namespace DOL.GS.Spells
             charm.Cancel(false);
         }
 
-        /// <summary>
-        /// When an applied effect expires.
-        /// Duration spells only.
-        /// </summary>
-        /// <param name="effect">The expired effect</param>
-        /// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-        /// <returns>immunity duration in milliseconds</returns>
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
             base.OnEffectExpires(effect, noMessages);
@@ -524,12 +464,6 @@ namespace DOL.GS.Spells
             return 0;
         }
 
-        /// <summary>
-        /// Determines wether this spell is better than given one
-        /// </summary>
-        /// <param name="oldeffect"></param>
-        /// <param name="neweffect"></param>
-        /// <returns>true if this spell is better version than compare spell</returns>
         public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
         {
 
@@ -544,21 +478,11 @@ namespace DOL.GS.Spells
             return neweffect.SpellHandler == this;
         }
 
-        /// <summary>
-        /// Send the Effect Animation
-        /// </summary>
-        /// <param name="target">The target object</param>
-        /// <param name="boltDuration">The duration of a bolt</param>
-        /// <param name="noSound">sound?</param>
-        /// <param name="success">spell success?</param>
         public override void SendEffectAnimation(GameObject target, ushort boltDuration, bool noSound, byte success)
         {
             base.SendEffectAnimation(m_charmedNpc, boltDuration, noSound, success);
         }
 
-        /// <summary>
-        /// Delve Info
-        /// </summary>
         public override IList<string> DelveInfo
         {
             get

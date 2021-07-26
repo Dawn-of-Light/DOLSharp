@@ -16,30 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Style bleeding effect spell handler
-	/// </summary>
 	[SpellHandler("StyleBleeding")]
 	public class StyleBleeding : SpellHandler
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// The property name for bleed value
-		/// </summary>
 		protected const string BLEED_VALUE_PROPERTY = "BleedValue";
 
-		/// <summary>
-		/// When an applied effect starts
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
@@ -47,13 +33,6 @@ namespace DOL.GS.Spells
 			effect.Owner.TempProperties.setProperty(BLEED_VALUE_PROPERTY, (int)Spell.Damage + (int)Spell.Damage * Util.Random(25) / 100);  // + random max 25%
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			base.OnEffectExpires(effect, noMessages);
@@ -61,11 +40,6 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-		/// <summary>
-		/// When an applied effect pulses
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectPulse(GameSpellEffect effect)
 		{
 			base.OnEffectPulse(effect);
@@ -93,12 +67,6 @@ namespace DOL.GS.Spells
 			else effect.Owner.TempProperties.setProperty(BLEED_VALUE_PROPERTY, bleedValue);
 		}
 
-		/// <summary>
-		/// Creates the corresponding spell effect for the spell
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="effectiveness"></param>
-		/// <returns></returns>
 		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
 		{
 			return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), Spell.Frequency, effectiveness);
@@ -122,39 +90,21 @@ namespace DOL.GS.Spells
 			return ad;
 		}
 
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			return Spell.Duration;
 		}
 
-		/// <summary>
-		/// Calculates chance of spell getting resisted
-		/// </summary>
-		/// <param name="target">the target of the spell</param>
-		/// <returns>chance that spell will be resisted for specific target</returns>
 		public override int CalculateSpellResistChance(GameLiving target)
 		{
 			return 0;
 		}
 
-		/// <summary>
-		/// Determines wether this spell is better than given one
-		/// </summary>
-		/// <param name="oldeffect"></param>
-		/// <param name="neweffect"></param>
-		/// <returns>true if this spell is better version than compare spell</returns>
 		public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{
 			return oldeffect.Spell.SpellType == neweffect.Spell.SpellType;
 		}
 
-		// constructor
 		public StyleBleeding(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
 		public override string ShortDescription => $"Target takes {Spell.Damage} {Spell.DamageType} damage every {Spell.Frequency / 1000.0} seconds.";

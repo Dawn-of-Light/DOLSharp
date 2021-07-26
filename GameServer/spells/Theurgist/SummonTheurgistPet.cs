@@ -16,31 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
-using log4net;
-using System.Reflection;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summon a theurgist pet.
-	/// </summary>
 	[SpellHandler("SummonTheurgistPet")]
 	public class SummonTheurgistPet : SummonSpellHandler
 	{
 		public SummonTheurgistPet(GameLiving caster, Spell spell, SpellLine line) 
 			: base(caster, spell, line) { }
 
-		/// <summary>
-		/// Check whether it's possible to summon a pet.
-		/// </summary>
-		/// <param name="selectedTarget"></param>
-		/// <returns></returns>
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (Caster.PetCount >= ServerProperties.Properties.THEURGIST_PET_CAP)
@@ -52,12 +39,6 @@ namespace DOL.GS.Spells
 			return base.CheckBeginCast(selectedTarget);
 		}
 
-
-		/// <summary>
-		/// Summon the pet.
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="effectiveness"></param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
@@ -69,12 +50,6 @@ namespace DOL.GS.Spells
 			Caster.PetCount++;
 		}
 
-		/// <summary>
-		/// Despawn pet.
-		/// </summary>
-		/// <param name="effect"></param>
-		/// <param name="noMessages"></param>
-		/// <returns>Immunity timer (in milliseconds).</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			if (Caster.PetCount > 0)
@@ -97,9 +72,7 @@ namespace DOL.GS.Spells
 			return new TheurgistPetBrain(owner);
 		}
 
-		protected override void SetBrainToOwner(IControlledBrain brain)
-		{
-		}
+		protected override void SetBrainToOwner(IControlledBrain brain) { }
 
 		protected override void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
 		{

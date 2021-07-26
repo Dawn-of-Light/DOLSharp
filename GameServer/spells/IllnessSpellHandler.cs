@@ -24,17 +24,9 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Pve Resurrection Illness
-	/// </summary>
 	[SpellHandler("PveResurrectionIllness")]
 	public class PveResurrectionIllness : AbstractIllnessSpellHandler
 	{
-		/// <summary>
-		/// When an applied effect starts
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			GamePlayer player = effect.Owner as GamePlayer;
@@ -46,13 +38,6 @@ namespace DOL.GS.Spells
 			}
 		}
 		
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			GamePlayer player = effect.Owner as GamePlayer;
@@ -65,9 +50,6 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-		/// <summary>
-		/// Delve Info
-		/// </summary>
 		public override IList<string> DelveInfo 
 		{
 			get 
@@ -91,10 +73,7 @@ namespace DOL.GS.Spells
 				return list;
 			}
 		}
-
-        /// <summary>
-        /// Saves the effect when player quits
-        /// </summary>        
+     
         public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
         {
             PlayerXEffect eff = new PlayerXEffect();
@@ -104,18 +83,12 @@ namespace DOL.GS.Spells
             eff.SpellLine = SpellLine.KeyName;
             return eff;
         }
-
-        /// <summary>
-        /// Restart the effects of resurrection illness
-        /// </summary>        
+       
         public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
 		{
 			OnEffectStart(effect);
 		}
-
-        /// <summary>
-        /// Remove the effects of resurrection illness 
-        /// </summary>        
+      
 		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
 		{
 			return OnEffectExpires(effect, false);
@@ -126,9 +99,6 @@ namespace DOL.GS.Spells
         public override string ShortDescription => "";
     }
 
-	/// <summary>
-	/// Contains all common code for illness spell handlers (and negative spell effects without animation) 
-	/// </summary>
 	public class AbstractIllnessSpellHandler : SpellHandler
 	{
 		public override bool HasPositiveEffect 
@@ -144,12 +114,6 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double modifier = 1.0;

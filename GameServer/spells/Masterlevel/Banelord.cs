@@ -348,24 +348,15 @@ namespace DOL.GS.Spells
 
     //shared timer 5
     #region Banelord-9
-    [SpellHandlerAttribute("EffectivenessDebuff")]
+    [SpellHandler("EffectivenessDebuff")]
     public class EffectivenessDeBuff : MasterlevelHandling
     {
-        /// <summary>
-        /// called after normal spell cast is completed and effect has to be started
-        /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
             m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
-
-        /// <summary>
-        /// When an applied effect starts
-        /// duration spells only
-        /// </summary>
-        /// <param name="effect"></param>
         public override void OnEffectStart(GameSpellEffect effect)
         {
             GamePlayer player = effect.Owner as GamePlayer;
@@ -377,13 +368,6 @@ namespace DOL.GS.Spells
             }
         }
 
-        /// <summary>
-        /// When an applied effect expires.
-        /// Duration spells only.
-        /// </summary>
-        /// <param name="effect">The expired effect</param>
-        /// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-        /// <returns>immunity duration in milliseconds</returns>
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
             GamePlayer player = effect.Owner as GamePlayer;

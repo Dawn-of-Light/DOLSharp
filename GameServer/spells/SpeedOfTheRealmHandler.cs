@@ -16,23 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using DOL.GS.Effects;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Increases the target's movement speed.
-	/// </summary>
-	[SpellHandlerAttribute("SpeedOfTheRealm")]
+	[SpellHandler("SpeedOfTheRealm")]
 	public class SpeedOfTheRealmHandler : SpeedEnhancementSpellHandler
 	{
 		private const ushort SECONDEFFECT = 2086;
-		/// <summary>
-		/// called after normal spell cast is completed and effect has to be started
-		/// </summary>
+
 		public override void FinishSpellCast(GameLiving target)
 		{
 			base.FinishSpellCast(target);
@@ -65,12 +58,6 @@ namespace DOL.GS.Spells
 			return OnEffectExpires(effect, false);
 		}		
 
-		/// <summary>
-		/// The spell handler constructor
-		/// </summary>
-		/// <param name="caster"></param>
-		/// <param name="spell"></param>
-		/// <param name="line"></param>
 		public SpeedOfTheRealmHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }

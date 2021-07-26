@@ -16,33 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-/*
- * [Ganrod] Nidel 2008-07-08
- * - Useless using removed
- * - Get Spell
- * - Add GetGamePet override for use TurretPet class
- */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summon an animist pet.
-	/// </summary>
 	public abstract class SummonAnimistPet : SummonSpellHandler
 	{
 		protected SummonAnimistPet(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-		}
+			: base(caster, spell, line) { }
 
-		/// <summary>
-		/// Check whether it's possible to summon a pet.
-		/// </summary>
-		/// <param name="selectedTarget"></param>
-		/// <returns></returns>
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (Caster.GroundTarget == null)
@@ -117,7 +101,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		//[Ganrod] Nidel: use TurretPet
 		protected override GamePet GetGamePet(INpcTemplate template)
 		{
 			return new TurretPet(template);
@@ -136,13 +119,7 @@ namespace DOL.GS.Spells
 			heading = Caster.Heading;
 			region = Caster.CurrentRegion;
 		}
-		
-		/// <summary>
-		/// Do not trigger SubSpells
-		/// </summary>
-		/// <param name="target"></param>
-		public override void CastSubSpells(GameLiving target)
-		{
-		}
+
+		public override void CastSubSpells(GameLiving target) { }
 	}
 }

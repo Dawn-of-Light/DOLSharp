@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database;
-using DOL.AI.Brain;
-using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using System.Collections.Generic;
+using System;
 
 namespace DOL.GS.Spells
 {
 
-    [SpellHandlerAttribute("AfHitsBuff")]
+    [SpellHandler("AfHitsBuff")]
     public class AfHitsBuffSpellHandler : SpellHandler
     {
         public override void OnEffectStart(GameSpellEffect effect)
@@ -80,7 +77,7 @@ namespace DOL.GS.Spells
         {
             base.OnEffectExpires(effect, noMessages);
 
-            GameLiving living = effect.Owner as GameLiving;
+            var living = effect.Owner;
             double bonusAF = living.TempProperties.getProperty<double>("BONUS_AF");
             double bonusHP = living.TempProperties.getProperty<double>("BONUS_HP");
 

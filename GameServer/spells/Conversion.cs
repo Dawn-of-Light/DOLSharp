@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.Events;
 using DOL.GS.Effects;
@@ -26,7 +25,7 @@ using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("Conversion")]
+	[SpellHandler("Conversion")]
 	public class ConversionSpellHandler : SpellHandler
 	{
 		public const string ConvertDamage = "Conversion";
@@ -155,7 +154,7 @@ namespace DOL.GS.Spells
 		public ConversionSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 
-	[SpellHandlerAttribute("MagicConversion")]
+	[SpellHandler("MagicConversion")]
 	public class MagicConversionSpellHandler : ConversionSpellHandler
 	{
 		//public const string ConvertDamage = "Conversion";

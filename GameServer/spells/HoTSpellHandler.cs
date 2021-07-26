@@ -25,16 +25,9 @@ using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Heal Over Time spell handler
-	/// </summary>
 	[SpellHandlerAttribute("HealOverTime")]
 	public class HoTSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Execute heal over time spell
-		/// </summary>
-		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
@@ -106,13 +99,6 @@ namespace DOL.GS.Spells
 			MessageToLiving(target, Spell.Message1, eChatType.CT_Spell);
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			base.OnEffectExpires(effect, noMessages);

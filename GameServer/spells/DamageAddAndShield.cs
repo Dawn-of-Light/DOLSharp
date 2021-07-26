@@ -29,16 +29,9 @@ using log4net;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Effect that stays on target and does additional
-	/// damage after each melee attack
-	/// </summary>
 	[SpellHandler("DamageAdd")]
 	public class DamageAddSpellHandler : AbstractDamageAddSpellHandler
 	{
-		/// <summary>
-		/// The event type to hook on
-		/// </summary>
 		protected override DOLEvent EventType { get { return GameLivingEvent.AttackFinished; } }
 
 		public virtual double DPSCap(int Level)
@@ -46,12 +39,6 @@ namespace DOL.GS.Spells
 			return (1.2 + 0.3 * Level) * 0.7;
 		}
 		
-		/// <summary>
-		/// Handler fired on every melee attack by effect target
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		protected override void EventHandler(DOLEvent e, object sender, EventArgs arguments)
 		{
 			AttackFinishedEventArgs atkArgs = arguments as AttackFinishedEventArgs;
@@ -139,30 +126,16 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
 		public DamageAddSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 
         public override string ShortDescription => $"{TargetPronoun} melee attacks do additional {Spell.Damage} {Spell.DamageType} damage.";
     }
 
-	/// <summary>
-	/// Effect that stays on target and does addition
-	/// damage on every attack against this target
-	/// </summary>
 	[SpellHandler("DamageShield")]
 	public class DamageShieldSpellHandler : AbstractDamageAddSpellHandler
 	{
-		/// <summary>
-		/// The event type to hook on
-		/// </summary>
 		protected override DOLEvent EventType { get { return GameLivingEvent.AttackedByEnemy; } }
 
-		/// <summary>
-		/// Handler fired whenever effect target is attacked
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		protected override void EventHandler(DOLEvent e, object sender, EventArgs arguments)
 		{
 			AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
@@ -240,49 +213,25 @@ namespace DOL.GS.Spells
 			//			Log.Debug(String.Format("dmg {0}; spread: {4}; resDmg: {1}; atkSpeed: {2}; resist: {3}.", damage, damageResisted, target.AttackSpeed(null), ad.Target.GetResist(Spell.DamageType), spread));
 		}
 
-		// constructor
 		public DamageShieldSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 
         public override string ShortDescription => $"The target deals {Spell.Damage} {Spell.DamageType} damage to enemies that hit them with a melee attack.";
     }
 
-	/// <summary>
-	/// Contains all common code for damage add and shield spell handlers
-	/// </summary>
 	public abstract class AbstractDamageAddSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// The event type to hook on
-		/// </summary>
 		protected abstract DOLEvent EventType { get; }
 
-		/// <summary>
-		/// The event handler of given event type
-		/// </summary>
 		protected abstract void EventHandler(DOLEvent e, object sender, EventArgs arguments);
 
-		/// <summary>
-		/// Holds min damage spread based on spec level caster
-		/// had the moment spell was casted
-		/// </summary>
 		protected int m_minDamageSpread = 50;
 		
-		/// <summary>
-		/// called when spell effect has to be started and applied to targets
-		/// </summary>
-		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = Spell.Duration;
@@ -290,9 +239,6 @@ namespace DOL.GS.Spells
 			return (int)duration;
 		}
 		
-		/// <summary>
-		/// called when spell effect has to be started and applied to targets
-		/// </summary>
 		public override bool StartSpell(GameLiving target)
 		{
 			// set min spread based on spec
@@ -317,11 +263,6 @@ namespace DOL.GS.Spells
 			return base.StartSpell(target);
 		}
 
-		/// <summary>
-		/// When an applied effect starts
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
@@ -339,13 +280,6 @@ namespace DOL.GS.Spells
 			GameEventMgr.AddHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			if (!noMessages && Spell.Pulse == 0)
@@ -381,7 +315,6 @@ namespace DOL.GS.Spells
 			return eff;
 		}
 
-		// constructor
 		public AbstractDamageAddSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 	}
 }

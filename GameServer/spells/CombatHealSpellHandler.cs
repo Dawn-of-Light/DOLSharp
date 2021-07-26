@@ -16,21 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Palading heal chant works only in combat
-	/// </summary>
-	[SpellHandlerAttribute("CombatHeal")]
+	[SpellHandler("CombatHeal")]
 	public class CombatHealSpellHandler : HealSpellHandler
 	{
-		/// <summary>
-		/// Execute heal spell
-		/// </summary>
-		/// <param name="target"></param>
 		public override bool StartSpell(GameLiving target)
 		{
 			m_startReuseTimer = true;

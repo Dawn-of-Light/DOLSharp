@@ -23,9 +23,6 @@ namespace DOL.spells
     using GS.PacketHandler;
     using GS.Spells;
 
-    /// <summary>
-    /// Return life to Player Owner
-    /// </summary>
     [SpellHandler("PetLifedrain")]
     public class PetLifedrainSpellHandler : LifedrainSpellHandler
     {
