@@ -42,13 +42,8 @@ namespace DOL.GS.Spells
 			return base.StartSpell(target);
 		}
 
-		// constructor
 		public CombatHealSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("parm", "1");
-		}
-	}
+        public override string ShortDescription => $"Target is healed {Spell.Value} of damage every {Spell.Frequency/10.0} seconds.";
+    }
 }

@@ -2045,20 +2045,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			var spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, spellLine);
 			if (spellHandler == null)
 			{
-				// not found
-				MiniDelveWriter dw = new MiniDelveWriter("Spell");
-				dw.AddKeyValuePair("Index", (ushort) spell.InternalID);
-				dw.AddKeyValuePair("Name", "(not found)");
-				return dw.ToString();
+				return $"(Spell (Index \"{(ushort)spell.InternalID}\") (Name \"(not found)\"))";
 			}
 			return DelveSpell(spellHandler);
 		}
 
 		public static string DelveSpell(ISpellHandler spellHandler)
 		{
-			MiniDelveWriter dw = new MiniDelveWriter("Spell");
-			spellHandler.TooltipDelve(ref dw);
-			return dw.ToString();
+			return new SpellDelve(spellHandler).GetClientMessage();
 		}
 
 		public static string DelveStyle(GameClient clt, int id)

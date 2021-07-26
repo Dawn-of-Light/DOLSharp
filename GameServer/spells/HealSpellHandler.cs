@@ -497,11 +497,6 @@ namespace DOL.GS.Spells
             return;
         }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "heal");
-			dw.AddKeyValuePair("damage", Spell.Value);
-		}
+        public override string ShortDescription => $"The target regains {Spell.Value} hit points.";
     }
 }

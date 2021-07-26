@@ -101,14 +101,9 @@ namespace DOL.GS.Spells
 			m_lastAttackData = ad;
 		}
 
-
 		public TauntSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "taunt");
-			dw.AddKeyValuePair("damage", Spell.Damage);
-		}
+		public override string ShortDescription
+			=> $"Taunts target, increasing your threat against it by {Spell.Value}.";
 	}
 }

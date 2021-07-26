@@ -257,16 +257,9 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresist_dam");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", Spell.DamageType);
-			dw.AddKeyValuePair("damage", Spell.Damage * 10);
-		}
+		public override string ShortDescription 
+			=> $"Does {Spell.Damage * 10} {ConvertPropertyToText(Property1)} damage and decreases the target's resistances to {ConvertPropertyToText(Property1)} by {Spell.Value}%.";
 
-		// constructor
 		public DirectDamageDebuffSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 }

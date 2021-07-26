@@ -102,10 +102,6 @@ namespace DOL.GS.Spells
 		}		
         public AllStatsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+        public override string ShortDescription => $"Increases {TargetPronoun} all stats by {Spell.Value}.";
     }
  }

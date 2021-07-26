@@ -272,14 +272,8 @@ namespace DOL.GS.Spells
 			return spellDamage;
 		}
 
-		// constructor
 		public DoTSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "dot");
-			dw.AddKeyValuePair("damage", Spell.Damage);
-		}
-	}
+        public override string ShortDescription => $"Target takes {Spell.Damage} {Spell.DamageType} damage every {Spell.Frequency/1000.0} seconds.";
+    }
 }

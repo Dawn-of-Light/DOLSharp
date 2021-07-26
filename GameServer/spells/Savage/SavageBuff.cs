@@ -31,7 +31,8 @@ namespace DOL.GS.Spells
     // Main class for savage buffs
 	public abstract class AbstractSavageBuff : PropertyChangingSpell
 	{
-		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override string CostType => "Health";
+		public override eBuffBonusCategory BonusCategory1 => eBuffBonusCategory.BaseBuff;
 	
 		/// <summary>
 		/// When an applied effect starts
@@ -154,9 +155,11 @@ namespace DOL.GS.Spells
 				player.UpdatePlayerStatus();
 			}
 		}
-		// constructor
-		public AbstractSavageResistBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}				
-	}
+
+		public AbstractSavageResistBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
+
+        public override string ShortDescription => $"Increases the target's resistance to {ConvertPropertyToText(Property1).ToLower()} damage by {Spell.Value}%.";
+    }
 	
 	[SpellHandlerAttribute("SavageParryBuff")]
 	public class SavageParryBuff : AbstractSavageStatBuff
@@ -166,15 +169,8 @@ namespace DOL.GS.Spells
 		// constructor
 		public SavageParryBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("cost_type", "2");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "15");
-		}
-	}
+        public override string ShortDescription => $"Your chance to parry is increased by {Spell.Value}%.";
+    }
 
 	[SpellHandlerAttribute("SavageEvadeBuff")]
 	public class SavageEvadeBuff : AbstractSavageStatBuff
@@ -184,14 +180,7 @@ namespace DOL.GS.Spells
 		// constructor
 		public SavageEvadeBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("cost_type", "2");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "16");
-		}
+		public override string ShortDescription => $"Your chance to evade is increased by {Spell.Value}%.";
 	}
 
 	[SpellHandlerAttribute("SavageCombatSpeedBuff")]
@@ -202,15 +191,7 @@ namespace DOL.GS.Spells
 		// constructor
 		public SavageCombatSpeedBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("cost_type", "2");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "36");
-			dw.AddKeyValuePair("power_level", Spell.Value * 2);
-		}
+		public override string ShortDescription => $"Increases your combat speed by {Spell.Value}%.";
 	}
 	[SpellHandlerAttribute("SavageDPSBuff")]
 	public class SavageDPSBuff : AbstractSavageStatBuff
@@ -220,12 +201,7 @@ namespace DOL.GS.Spells
 		// constructor
 		public SavageDPSBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("cost_type", "2");
-			dw.AddKeyValuePair("damage", Spell.Value);
-		}
+		public override string ShortDescription => $"You do {Spell.Value} additional damage with melee attacks.";
 	}
 
 	[SpellHandlerAttribute("SavageSlashResistanceBuff")]
@@ -235,15 +211,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageSlashResistanceBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("cost_type", "2");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", eDamageType.Slash);
-		}
 	}
 
 	[SpellHandlerAttribute("SavageThrustResistanceBuff")]
@@ -253,15 +220,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageThrustResistanceBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("cost_type", "2");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", eDamageType.Thrust);
-		}
 	}
 
 	[SpellHandlerAttribute("SavageCrushResistanceBuff")]
@@ -271,15 +229,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageCrushResistanceBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("cost_type", "2");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", eDamageType.Crush);
-		}
 	}
 }
 

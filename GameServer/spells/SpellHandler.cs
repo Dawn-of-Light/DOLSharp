@@ -3212,6 +3212,7 @@ namespace DOL.GS.Spells
 			get { return m_caster; }
 		}
 
+		public virtual string CostType => "Power";
 		/// <summary>
 		/// Is the spell being cast?
 		/// </summary>
@@ -4016,111 +4017,17 @@ namespace DOL.GS.Spells
 		#endregion
 		
 		#region tooltip handling
-		/// <summary>
-		/// Return the given Delve Writer with added keyvalue pairs.
-		/// </summary>
-		/// <param name="dw"></param>
-		/// <param name="id"></param>
-		public virtual void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			if (dw == null)
-				return;
-
-			dw.AddKeyValuePair("Index", unchecked((ushort)Spell.InternalID));
-			dw.AddKeyValuePair("Name", Spell.Name);
-
-			if (Spell.CastTime > 2000)
-				dw.AddKeyValuePair("cast_timer", Spell.CastTime - 2000); //minus 2 seconds (why mythic?)
-			else if (!Spell.IsInstantCast)
-				dw.AddKeyValuePair("cast_timer", 0); //minus 2 seconds (why mythic?)
-			if (Spell.IsInstantCast)
-				dw.AddKeyValuePair("instant","1");
-
-			dw.AddKeyValuePair("damage_type", Spell.DamageType);
-
-			if (Spell.Level > 0)
+		protected string TargetPronoun
+        {
+			get
 			{
-				dw.AddKeyValuePair("level", Spell.Level);
-				dw.AddKeyValuePair("power_level", Spell.Level);
+				if (Spell.Target == "Self") return "your";
+				return "the target's";
 			}
-			if (Spell.CostPower)
-				dw.AddKeyValuePair("power_cost", Spell.Power);
-			if (Spell.Range > 0)
-				dw.AddKeyValuePair("range", Spell.Range);
-			if (Spell.Duration > 0)
-				dw.AddKeyValuePair("duration", Spell.Duration / 1000); //seconds
-			if (GetDurationType() > 0)
-				dw.AddKeyValuePair("dur_type", GetDurationType());
-			if (Spell.HasRecastDelay)
-				dw.AddKeyValuePair("timer_value", Spell.RecastDelay / 1000);
-			if (GetSpellTargetType() > 0)
-				dw.AddKeyValuePair("target", GetSpellTargetType());
-			if (Spell.IsAoE)
-				dw.AddKeyValuePair("radius", Spell.Radius);
-			if (Spell.IsConcentration)
-				dw.AddKeyValuePair("concentration_points", Spell.Concentration);
-			if (Spell.Frequency > 0)
-				dw.AddKeyValuePair("frequency", Spell.Frequency);
+        }
 
-			if (Spell.HasSubSpell)
-			{
-				var spell = Spell.SubSpellID > 0 ? SkillBase.GetSpellByID(Spell.SubSpellID) : null;
-				if (spell == null)
-					spell = Spell.MultipleSubSpells.Select(SkillBase.GetSpellByID).FirstOrDefault();
-				if (spell != null)
-					dw.AddKeyValuePair("link", spell.InternalID);
-			}
-
-			// default values, remove them if Function changes in a specific SpellHandler
-			dw.AddKeyValuePair("Function", "light"); // Function of type "light" allows custom description to show with no hardcoded text.
-			if (!string.IsNullOrEmpty(Spell.Description))
-				dw.AddKeyValuePair("delve_string", Spell.Description);
-		}
-		
-		/// <summary>
-		/// Returns delve code for target
-		/// </summary>
-		/// <param name="target"></param>
-		/// <returns></returns>
-		protected virtual int GetSpellTargetType()
-		{
-			switch (Spell.Target)
-			{
-				case "Realm":
-					return 7;
-				case "Self":
-					return 0;
-				case "Enemy":
-					return 1;
-				case "Pet":
-					return 6;
-				case "Group":
-					return 3;
-				case "Area":
-					return 0; // TODO
-				case "Corpse":
-					return 8;
-				default:
-					return 0;
-			}
-		}
-
-		protected virtual int GetDurationType()
-		{
-			//2-seconds,4-conc,5-focus
-			if (Spell.Duration>0)
-			{
-				return 2;
-			}
-			if (Spell.IsConcentration)
-			{
-				return 4;
-			}
-
-
-			return 0;
-		}
+		public virtual string ShortDescription 
+			=> $"<description missing>\ntype: {GetType().ToString().Split('.').Last()}\nvalue: {Spell.Value}\ndamage: {Spell.Damage}";
 		#endregion
-
 	}
 }

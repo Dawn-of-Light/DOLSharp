@@ -233,14 +233,8 @@ namespace DOL.GS.Spells
 			base.OnSpellResisted(target);
 		}
 
-		// constructor
 		public DirectDamageSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "direct");
-			dw.AddKeyValuePair("damage", Spell.Damage * 10);
-		}
-	}
+        public override string ShortDescription => $"Does {Spell.Damage} {Spell.DamageType} damage to the target.";
+    }
 }

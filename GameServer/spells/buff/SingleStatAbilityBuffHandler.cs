@@ -29,6 +29,7 @@ namespace DOL.GS.Spells
 	/// Considered as an Ability buff (regarding the bonuscategories on statproperties)
 	/// Base abstract Class for Ability Stats Buff Attached to Passive Spell-Based (Realm)Abilities
 	/// </summary>
+	[Obsolete("This is going to be removed without replacement.")]
 	public abstract class SingleStatAbilityBuffHandler : PropertyChangingSpell
 	{
 		/// <summary>
@@ -68,106 +69,64 @@ namespace DOL.GS.Spells
 		{
 		}
 	}
-	
-    [SpellHandlerAttribute("StrengthAbilityBuff")]
+
+	[Obsolete("This is going to be removed without replacement.")]
+	[SpellHandler("StrengthAbilityBuff")]
 	public class StrengthAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Strength; } }
-		
-		public StrengthAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+		public StrengthAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line) { }
 	}
 
-	[SpellHandlerAttribute("DexterityAbilityBuff")]
+	[Obsolete("This is going to be removed without replacement.")]
+	[SpellHandler("DexterityAbilityBuff")]
 	public class DexterityAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Dexterity; } }
-		
-		public DexterityAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+		public DexterityAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line) { }
 	}
 
-    [SpellHandlerAttribute("ConstitutionAbilityBuff")]
+	[Obsolete("This is going to be removed without replacement.")]
+	[SpellHandler("ConstitutionAbilityBuff")]
 	public class ConstitutionAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Constitution; } }
-		
-		public ConstitutionAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+		public ConstitutionAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line) { }
 	}
 
-    [SpellHandlerAttribute("QuicknessAbilityBuff")]
+	[Obsolete("This is going to be removed without replacement.")]
+	[SpellHandler("QuicknessAbilityBuff")]
 	public class QuicknessAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Quickness; } }
-		
-		public QuicknessAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+		public QuicknessAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line) { }
 	}
 
-	[SpellHandlerAttribute("AcuityAbilityBuff")]
+	[Obsolete("This is going to be removed without replacement.")]
+	[SpellHandler("AcuityAbilityBuff")]
 	public class AcuityAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Acuity; } }
-		
-		public AcuityAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+		public AcuityAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line) { }
 	}
 
-    [SpellHandlerAttribute("MaxHealthAbilityBuff")]
+	[Obsolete("This is going to be removed without replacement.")]
+    [SpellHandler("MaxHealthAbilityBuff")]
 	public class MaxHealthAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.MaxHealth; } }
-		
-		public MaxHealthAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+		public MaxHealthAbilityBuffHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line) { }
 	}
 }

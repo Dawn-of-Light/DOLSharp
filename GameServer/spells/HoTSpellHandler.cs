@@ -125,16 +125,9 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-
-		// constructor
 		public HoTSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "regen");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("damage", Spell.Value);
-		}
-	}
+        public override string ShortDescription 
+			=> $"The target regenerates {Spell.Value} health every {Spell.Frequency/10.0} sec.";
+    }
 }

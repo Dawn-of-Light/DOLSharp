@@ -106,11 +106,5 @@ namespace DOL.GS.Spells
 			base.GetPetLocation(out x, out y, out z, out heading, out region);
 			heading = Caster.Heading;
 		}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "dsummon");
-		}
 	}
 }

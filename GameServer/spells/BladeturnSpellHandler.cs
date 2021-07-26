@@ -91,14 +91,8 @@ namespace DOL.GS.Spells
             return 0;
         }
 
-        // constructor
         public BladeturnSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("parm", "9");
-		}
-	}
+        public override string ShortDescription => "Creates a 'bubble' that absorbs the damage of a single melee hit.";
+    }
 }

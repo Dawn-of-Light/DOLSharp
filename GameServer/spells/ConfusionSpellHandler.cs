@@ -182,12 +182,13 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect, noMessages);
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
+        public override string ShortDescription
 		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("parm", "5");
-			dw.AddKeyValuePair("power_level", Spell.Value);
+			get
+			{
+				if (Spell.Value >= 0) return $"Monster target has a {Math.Abs(Spell.Value)}% chance to switch which target they are fighting.";
+				else return $"Monster target has a 100% chance to switch which target they are fighting and a 75% chance to attack an ally.";
+			}
 		}
-	}
+    }
 }

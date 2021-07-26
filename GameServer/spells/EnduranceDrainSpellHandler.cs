@@ -99,10 +99,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+        public override string ShortDescription => $"{Spell.Damage}% endurance is stolen from the target and given to the caster.";
+    }
 }

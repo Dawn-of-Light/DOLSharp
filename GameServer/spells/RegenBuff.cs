@@ -37,12 +37,7 @@ namespace DOL.GS.Spells
 
 		public HealthRegenSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "enhancement");
-			dw.AddKeyValuePair("damage", Spell.Value);
-		}
+		public override string ShortDescription => $"Target regenerates {Spell.Value} extra health.";
 	}
 
 	/// <summary>
@@ -64,13 +59,8 @@ namespace DOL.GS.Spells
 
 		public PowerRegenSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "enhancement");
-			dw.AddKeyValuePair("damage", Spell.Value);
-			dw.AddKeyValuePair("parm", "2");
-		}
+		public override string ShortDescription => $"Target regenerates {Spell.Value} extra power.";
+
 	}
 
 	/// <summary>
@@ -264,12 +254,6 @@ namespace DOL.GS.Spells
 		/// <param name="line">The spell line used</param>
 		public EnduranceRegenSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "enhancement");
-			dw.AddKeyValuePair("parm", "3");
-			dw.AddKeyValuePair("damage", Spell.Value);
-		}
+		public override string ShortDescription => $"Target regenerates {Spell.Value} extra fatigue.";
 	}
 }

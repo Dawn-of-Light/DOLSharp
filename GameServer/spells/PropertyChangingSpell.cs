@@ -24,6 +24,7 @@ using DOL.GS.PropertyCalc;
 using log4net;
 using DOL.AI.Brain;
 using System;
+using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -515,9 +516,40 @@ namespace DOL.GS.Spells
 
 		}
 
-		// constructor
 		public PropertyChangingSpell(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
 		{
+		}
+
+		private static Dictionary<eProperty, string> propertyToTextLookup = new Dictionary<eProperty, string>()
+		{
+			{eProperty.Strength, "Strength" },
+			{eProperty.Constitution, "Constitution" },
+			{eProperty.Dexterity, "Dexterity" },
+			{eProperty.Quickness, "Quickness" },
+			{eProperty.Acuity, "Acuity" },
+			{eProperty.ArmorFactor, "Armor Factor (AF)" },
+			{eProperty.ArmorAbsorption, "Absorption (ABS)" },
+			{eProperty.WeaponSkill, "Weaponskill" },
+
+			{eProperty.Resist_Slash, "Slash" },
+			{eProperty.Resist_Crush, "Crush" },
+			{eProperty.Resist_Thrust, "Thrust" },
+			{eProperty.Resist_Heat, "Heat" },
+			{eProperty.Resist_Cold, "Cold" },
+			{eProperty.Resist_Matter, "Matter" },
+			{eProperty.Resist_Body, "Body" },
+			{eProperty.Resist_Spirit, "Spirit" },
+			{eProperty.Resist_Energy, "Energy" },
+			{eProperty.Resist_Natural, "Essence" },
+		};
+
+		protected string ConvertPropertyToText(eProperty propertyID)
+		{
+			if (propertyToTextLookup.TryGetValue(propertyID, out string resistText))
+			{
+				return resistText;
+			}
+			return $"<{propertyID}>";
 		}
 	}
 

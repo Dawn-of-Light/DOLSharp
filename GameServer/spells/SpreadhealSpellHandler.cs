@@ -141,11 +141,6 @@ namespace DOL.GS.Spells
 			return true;
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "spreadheal");
-			dw.AddKeyValuePair("damage", Spell.Value);
-		}
-	}
+        public override string ShortDescription => $"Spreadheal for {Spell.Value}";
+    }
 }

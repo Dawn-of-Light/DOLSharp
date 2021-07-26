@@ -398,11 +398,7 @@ namespace DOL.GS.Spells
 
         public EffectivenessDeBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
+        public override string ShortDescription => $"Point blank area effect shout that reduces effective spec of enemies by {Spell.Value}% for determining variance for spell and melee damage.";
     }
     #endregion
 

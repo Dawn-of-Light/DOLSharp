@@ -185,13 +185,7 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "snare");
-			dw.AddKeyValuePair("damage", Spell.Damage * 10);
-			dw.AddKeyValuePair("bonus", 100 - Spell.Value);
-		}
+        public override string ShortDescription => $"The target is slowed by {Spell.Value}%. Does {Spell.Damage} Cold damage to the target.";
 
 		// counstructor
 		public DamageSpeedDecreaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}

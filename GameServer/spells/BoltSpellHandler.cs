@@ -306,14 +306,9 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
 		public BoltSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "bolt");
-			dw.AddKeyValuePair("damage", Spell.Damage * 10);
-		}
-	}
+        public override string ShortDescription 
+			=> $"A magical bolt shoots toward the target, exploding on impact for {Spell.Damage} {Spell.DamageType} damage. Can be blocked.";
+    }
 }

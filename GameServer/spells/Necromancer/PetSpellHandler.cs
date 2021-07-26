@@ -144,16 +144,16 @@ namespace DOL.GS.Spells
 		{
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
+		public override string ShortDescription
 		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "petcast");
-			if (Spell.SubSpellID != 0)
+			get
 			{
-				var spell = SkillBase.GetSpellByID(Spell.SubSpellID);
-				if (spell != null)
-					dw.AddKeyValuePair("parm", unchecked((ushort)spell.InternalID));
+				var subSpell = ScriptMgr.CreateSpellHandler(m_caster, SkillBase.GetSpellByID(Spell.SubSpellID), null);
+				var subSpellDelveInfo = "";
+				foreach (var line in subSpell.DelveInfo) subSpellDelveInfo += line + "\n";
+				return "Pet Spell: \n"
+				+ subSpellDelveInfo;
 			}
 		}
-	}
+    }
 }

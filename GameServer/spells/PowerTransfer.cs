@@ -116,11 +116,6 @@ namespace DOL.GS.Spells
 		public PowerTransfer(GameLiving caster, Spell spell, SpellLine line) 
             : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "power_xfer");
-			dw.AddKeyValuePair("damage", Spell.Value * 10);
-		}
-	}
+        public override string ShortDescription => $"Transfers {Spell.Value} power from the caster to the target.";
+    }
 }

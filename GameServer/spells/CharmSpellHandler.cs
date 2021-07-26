@@ -600,32 +600,32 @@ namespace DOL.GS.Spells
             }
         }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "charm");
-			dw.AddKeyValuePair("power_level", Spell.Value);
-			var detail = string.IsNullOrWhiteSpace(Spell.Description) ? "Attempts to bring the target monster under the caster's control." : Spell.Description;
-			switch ((eCharmType)Spell.AmnesiaChance)
-			{
-				case eCharmType.Humanoid: dw.AddKeyValuePair("parm", "3"); break;
-				case eCharmType.Animal: dw.AddKeyValuePair("parm", "5"); break;
-				case eCharmType.Insect: dw.AddKeyValuePair("parm", "13"); break;
-				case eCharmType.HumanoidAnimal: dw.AddKeyValuePair("parm", "50"); break;
-				case eCharmType.HumanoidAnimalInsect: dw.AddKeyValuePair("parm", "51"); break;
-				case eCharmType.HumanoidAnimalInsectMagical: dw.AddKeyValuePair("parm", "52"); break;
-				case eCharmType.HumanoidAnimalInsectMagicalUndead: dw.AddKeyValuePair("parm", "53"); break;
-				case eCharmType.Reptile: dw.AddKeyValuePair("parm", "6"); break;
-				case eCharmType.All: dw.AddKeyValuePair("parm", "0"); break;
-			}
-			dw.AddKeyValuePair("delve_string", detail);
-		}
-
-        // Constructs new Charm spell handler
-        public CharmSpellHandler(GameLiving caster, Spell spell, SpellLine line)
-            : base(caster, spell, line)
+        public override string ShortDescription
         {
+            get
+            {
+                charmTypeToTextLookup.TryGetValue((eCharmType)Spell.AmnesiaChance, out string charmableSpecies);
+                var description = $"Attempt to bring the target {charmableSpecies}monster under the caster's control.";
+                if (Spell.Pulse == 0) description += $" Affects monsters up to {(Spell.Damage == 100 ? "" : Spell.Damage + "% of")} of your level, to a maximum of level 15.";
+                return description;
+            }
         }
+
+        private static Dictionary<eCharmType, string> charmTypeToTextLookup = new Dictionary<eCharmType, string>()
+        {
+            {eCharmType.Humanoid, "humanoid "},
+            {eCharmType.Animal, "animal "},
+            {eCharmType.Insect, "insect "},
+            {eCharmType.Reptile, "reptile "},
+            {eCharmType.HumanoidAnimal, "humanoid and animal "},
+            {eCharmType.HumanoidAnimalInsect, "humanoid, animal and insect "},
+            {eCharmType.HumanoidAnimalInsectMagical, "humanoid, animal, insect and magical "},
+            {eCharmType.HumanoidAnimalInsectMagicalUndead, "humanoid, animal, insect, magical and undead "},
+            {eCharmType.All, ""},
+        };
+
+        public CharmSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+            : base(caster, spell, line) { }
 
         /*
 

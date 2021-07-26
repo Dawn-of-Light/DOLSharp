@@ -236,16 +236,9 @@ namespace DOL.GS.Spells
 			#endregion
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "hit_buffer");
-			dw.AddKeyValuePair("parm", 1);
-			dw.AddKeyValuePair("bonus", Spell.Damage > 0 ? Spell.Damage : 25);
-			dw.AddKeyValuePair("damage", Spell.Value);
-		}
+		public override string ShortDescription 
+			=> $"Target gains a temporary health buffer that absorbs {(Spell.Damage > 0 ? Spell.Damage : 25)}% of the physical damage dealt, up to a maximum of {Spell.Value} damage.";
 
-		// for delve info
 		protected virtual string GetAblativeType()
 		{
 			return "Type: Melee Absorption";
@@ -277,14 +270,8 @@ namespace DOL.GS.Spells
 			return "Type: Magic Absorption";
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "hit_buffer");
-			dw.AddKeyValuePair("parm", 2);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("damage", Spell.Damage);
-		}
+		public override string ShortDescription 
+			=> $"Target gains a temporary health buffer that absorbs {(Spell.Damage > 0 ? Spell.Damage : 25)}% of the magical damage dealt, up to a maximum of {Spell.Value} damage.";
 	}
 
     //Both Magic/melee ablative 1.101 druids mite have a buff like this...
@@ -305,13 +292,7 @@ namespace DOL.GS.Spells
             return "Type: Melee/Magic Absorption";
         }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "hit_buffer");
-			dw.AddKeyValuePair("parm", 3);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("damage", Spell.Damage);
-		}
-    }
+		public override string ShortDescription
+			=> $"Target gains a temporary health buffer that absorbs {(Spell.Damage > 0 ? Spell.Damage : 25)}% of all damage dealt, up to a maximum of {Spell.Value} damage.";
+	}
 }

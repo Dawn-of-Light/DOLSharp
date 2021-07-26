@@ -229,6 +229,8 @@ namespace DOL.GS.Spells
 		/// </summary>
 		SpellLine SpellLine { get; }
 
+		string CostType { get; }
+
 		/// <summary>
 		/// The DelveInfo
 		/// </summary>
@@ -254,7 +256,8 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <returns>Modified Spell Range</returns>
 		int CalculateSpellRange();
-		void TooltipDelve(ref DOL.GS.PacketHandler.MiniDelveWriter dw);
+
+		string ShortDescription { get; }
 	}
 
 	/// <summary>

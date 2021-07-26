@@ -195,10 +195,7 @@ namespace DOL.GS.Spells
 		{
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", 100 - Spell.Value);
-		}
+		public override string ShortDescription
+			=> Spell.Value >= 99 ? "Target is rooted in place" : $"The target is slowed by {Spell.Value}%.";
 	}
 }

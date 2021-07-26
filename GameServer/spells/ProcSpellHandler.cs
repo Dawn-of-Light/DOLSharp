@@ -378,16 +378,16 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
 		public OffensiveProcSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
+		public override string ShortDescription
 		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "off_proc");
-			dw.AddKeyValuePair("bonus", Spell.Frequency);
-			if (m_procSpell != null)
-				dw.AddKeyValuePair("parm", unchecked((ushort)m_procSpell.InternalID));
+			get
+			{
+				var subSpell = ScriptMgr.CreateSpellHandler(m_caster, SkillBase.GetSpellByID((int)Spell.Value), null);
+				return $"Triggers the following spell with a {Spell.Frequency / 100}% chance on own melee attacks.: \n\n"
+				+ (subSpell != null ? subSpell.ShortDescription : $"Spell with ID {Spell.Value} not found");
+			}
 		}
 	}
 
@@ -455,16 +455,16 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
 		public DefensiveProcSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
+		public override string ShortDescription
 		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "def_proc");
-			dw.AddKeyValuePair("bonus", Spell.Frequency);
-			if(m_procSpell != null)
-				dw.AddKeyValuePair("parm", unchecked((ushort)m_procSpell.InternalID));
+			get
+			{
+				var subSpell = ScriptMgr.CreateSpellHandler(m_caster, SkillBase.GetSpellByID((int)Spell.Value), null);
+				return $"Triggers the following spell with a {Spell.Frequency / 100}% chance when being hit by melee attacks.: \n\n"
+				+ (subSpell != null ? subSpell.ShortDescription : $"Spell with ID {Spell.Value} not found");
+			}
 		}
 	}
 	

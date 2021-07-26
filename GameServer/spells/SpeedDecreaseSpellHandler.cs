@@ -105,16 +105,7 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
-		public SpeedDecreaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
-		{
-		}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "snare");
-			dw.AddKeyValuePair("bonus", 100 - Spell.Value);
-		}
-	}
+		public SpeedDecreaseSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line) { }
+    }
 }

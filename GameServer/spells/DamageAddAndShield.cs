@@ -142,13 +142,8 @@ namespace DOL.GS.Spells
 		// constructor
 		public DamageAddSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "dmg_add");
-			dw.AddKeyValuePair("damage", Spell.Damage * 10);
-		}
-	}
+        public override string ShortDescription => $"{TargetPronoun} melee attacks do additional {Spell.Damage} {Spell.DamageType} damage.";
+    }
 
 	/// <summary>
 	/// Effect that stays on target and does addition
@@ -248,13 +243,8 @@ namespace DOL.GS.Spells
 		// constructor
 		public DamageShieldSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "dmg_shield");
-			dw.AddKeyValuePair("damage", Spell.Damage * 10);
-		}
-	}
+        public override string ShortDescription => $"The target deals {Spell.Damage} {Spell.DamageType} damage to enemies that hit them with a melee attack.";
+    }
 
 	/// <summary>
 	/// Contains all common code for damage add and shield spell handlers

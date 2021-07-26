@@ -455,17 +455,10 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
 		public MesmerizeSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("parm", "6");
-		}
-	}
-
+        public override string ShortDescription => "The target is mesmerized and cannot take any actions.";
+    }
 
 	/// <summary>
 	/// Stun
@@ -588,13 +581,8 @@ namespace DOL.GS.Spells
 			return base.IsOverwritable(compare);
 		}
 
-		// constructor
 		public StunSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "paralyze");
-		}
-	}
+        public override string ShortDescription => "The target is stunned and cannot take any actions.";
+    }
 }

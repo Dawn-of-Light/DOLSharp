@@ -40,10 +40,6 @@ namespace DOL.GS.Spells
 			m_spellTypesToRemove.Add("Disease");
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "rem_eff_ty");
-		}
-	}
+        public override string ShortDescription => "All disease effects are removed from the target.";
+    }
 }

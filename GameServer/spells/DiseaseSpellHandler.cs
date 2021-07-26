@@ -179,13 +179,10 @@ namespace DOL.GS.Spells
 			return this.OnEffectExpires(effect, noMessages);
 		}
 
-		// constructor
 		public DiseaseSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "disease");
-		}
-	}
+		//TODO: Adjust strength reduction
+        public override string ShortDescription 
+			=> $"Inflicts a wasting disease on the target that slows target by 15%, reduces its strength by 7.5% and inhibits healing by 50%";
+    }
 }

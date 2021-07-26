@@ -145,18 +145,10 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
 		public NearsightSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("power_level", Spell.Value);
-			dw.AddKeyValuePair("parm", "12");
-		}
-	}
-
+        public override string ShortDescription => $"Target's effective range is reduced by {Spell.Value}% for ranged attacks.";
+    }
 
 	/// <summary>
 	/// Reduce efficacity of nearsight effect
@@ -175,10 +167,7 @@ namespace DOL.GS.Spells
 		// constructor
 		public NearsightReductionSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+		public override string ShortDescription
+			=> $"Nearsight spells cast upon the caster's group are reduced in effectiveness by {Spell.Value}%, or outright resisted.";
+    }
 }

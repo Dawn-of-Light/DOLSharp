@@ -93,7 +93,6 @@ namespace DOL.Integration.Gameserver
 
             var actual = DetailDisplayHandler.DelveSpell(new SpellHandler(null, new Spell(dbSpell, 0), null));
 
-            Assert.That(actual, Does.Contain("(cast_timer \"0\")"));
             Assert.That(actual, Does.Not.Contain("instant"));
         }
     }

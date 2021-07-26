@@ -297,12 +297,6 @@ namespace DOL.GS.Spells
 		/// <param name="line"></param>
 		public SpeedEnhancementSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "10");
-		}
-	}
+		public override string ShortDescription => $"The target's speed is increased to {Spell.Value}% of normal.";
+    }
 }

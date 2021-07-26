@@ -53,14 +53,9 @@ namespace DOL.GS.Spells
             }
         }
 
-        // constructor
         public DamageToPowerSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
+        public override string ShortDescription => $"{Spell.Value}% of any spell damage done to the target is converted to power instead.";
     }
 }
 

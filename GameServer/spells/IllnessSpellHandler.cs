@@ -123,12 +123,8 @@ namespace DOL.GS.Spells
 
 		public PveResurrectionIllness(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+        public override string ShortDescription => "";
+    }
 
 	/// <summary>
 	/// Contains all common code for illness spell handlers (and negative spell effects without animation) 

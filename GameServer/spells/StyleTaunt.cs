@@ -65,22 +65,11 @@ namespace DOL.GS.Spells
             }
         }
 
-		// constructor
         public StyleTaunt(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			if (Spell.Value < 0)
-			{
-				dw.AddKeyValuePair("Function", "detaunt");
-				dw.AddKeyValuePair("damage", -Spell.Value);
-			}
-			else
-			{
-				dw.AddKeyValuePair("Function", "taunt");
-				dw.AddKeyValuePair("damage", Spell.Value);
-			}
-		}
+		public override string ShortDescription 
+			=> Spell.Value > 0 
+			? $"Taunts target, increasing your threat against it by {Spell.Value}."
+			: $"Detaunts target, decreases your threat against it by {-Spell.Value}";
 	}
 }

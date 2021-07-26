@@ -41,11 +41,6 @@ namespace DOL.GS.Spells
             m_spellTypesToRemove.Add("Silence");
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "rem_eff_ty");
-			dw.AddKeyValuePair("parm", "12");
-		}
+		public override string ShortDescription => "All nearsight effects are removed from the target.";
 	}
 }

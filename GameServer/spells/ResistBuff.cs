@@ -48,12 +48,11 @@ namespace DOL.GS.Spells
 		}
 
 		public AbstractResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-	}
 
-	/// <summary>
-	/// Body resistance buff
-	/// </summary>
-	[SpellHandlerAttribute("BodyResistBuff")]
+        public override string ShortDescription => $"Increases the target's resistance to {ConvertPropertyToText(Property1).ToLower()} damage by {Spell.Value}%.";
+    }
+
+	[SpellHandler("BodyResistBuff")]
 	public class BodyResistBuff : AbstractResistBuff
 	{
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
@@ -61,14 +60,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public BodyResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("parm", "16");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
 	/// <summary>
@@ -82,14 +73,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public ColdResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("parm", "12");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
 	/// <summary>
@@ -103,14 +86,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public EnergyResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "22");
-		}
 	}
 
 	/// <summary>
@@ -124,14 +99,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public HeatResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "10");
-		}
 	}
 
 	/// <summary>
@@ -145,14 +112,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public MatterResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "15");
-		}
 	}
 
 	/// <summary>
@@ -166,14 +125,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SpiritResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("parm", "98");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
 	/// <summary>
@@ -190,8 +141,9 @@ namespace DOL.GS.Spells
 		public override eProperty Property2 { get { return eProperty.Resist_Spirit; } }
 		public override eProperty Property3 { get { return eProperty.Resist_Energy; } }
 
-		// constructor
 		public BodySpiritEnergyBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override string ShortDescription => $"Increases the target's resistance to body, spirit and energy damage by {Spell.Value}%.";
 	}
 
 	/// <summary>
@@ -208,16 +160,9 @@ namespace DOL.GS.Spells
 		public override eProperty Property2 { get { return eProperty.Resist_Cold; } }
 		public override eProperty Property3 { get { return eProperty.Resist_Matter; } }
 
-		// constructor
 		public HeatColdMatterBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "97");
-		}
+		public override string ShortDescription => $"Increases the target's resistance to heat, cold and matter damage by {Spell.Value}%.";
 	}
 
 	/// <summary>
@@ -240,15 +185,10 @@ namespace DOL.GS.Spells
 		public override eProperty Property5 { get { return eProperty.Resist_Spirit; } }
 		public override eProperty Property6 { get { return eProperty.Resist_Energy; } }
 
-		// constructor
 		public AllMagicResistsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+        public override string ShortDescription => $"Increases the target's resistance to all magic damage by {Spell.Value}%.";
+    }
 
 	/// <summary>
 	/// Crush/Slash/Thrust resistance buff
@@ -268,12 +208,7 @@ namespace DOL.GS.Spells
 		// constructor
 		public CrushSlashThrustBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+		public override string ShortDescription => $"Increases the target's resistance to all melee damage by {Spell.Value}%.";
 	}
 
 	[SpellHandlerAttribute("CrushResistBuff")]
@@ -284,13 +219,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public CrushResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
 	/// <summary>
@@ -304,13 +232,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SlashResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "resistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
 	/// <summary>
@@ -324,12 +245,6 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public ThrustResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
 	/// <summary>
@@ -358,14 +273,9 @@ namespace DOL.GS.Spells
 		public override eProperty Property8 { get { return eProperty.Resist_Slash; } }
 		public override eProperty Property9 { get { return eProperty.Resist_Thrust; } }
 
-		// constructor
 		public AllResistsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+        public override string ShortDescription => $"Increases the target's resistance to all damage by {Spell.Value}%.";
+    }
 
 }

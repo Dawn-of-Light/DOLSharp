@@ -127,10 +127,6 @@ namespace DOL.GS.Spells
 		}
         public AllStatsPercentDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+		public override string ShortDescription => $"Decreases all stats of the target by {Spell.Value}%.";
 	}
 }

@@ -129,10 +129,7 @@ namespace DOL.GS.Spells
 		{
 		}
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "dsummon");
-        }
+        public override string ShortDescription
+            => "Summons an elemental spirit to attack the target.";
     }
 }

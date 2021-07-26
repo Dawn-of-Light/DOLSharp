@@ -41,10 +41,9 @@ namespace DOL.GS.Spells
 			Rapid = 4
 		}
 
-		/// <summary>
-		/// Does this spell break stealth on start?
-		/// </summary>
-		public override bool UnstealthCasterOnStart
+        public override string CostType => "Endurance";
+
+        public override bool UnstealthCasterOnStart
 		{
 			get { return false; }
 		}

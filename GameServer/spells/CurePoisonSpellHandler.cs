@@ -38,11 +38,6 @@ namespace DOL.GS.Spells
             m_spellTypesToRemove.Add("StyleBleeding");
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "rem_eff_ty");
-			dw.AddKeyValuePair("parm", "12");
-		}
+		public override string ShortDescription => "All damage over time effects (such as poisons) are removed from the target.";
 	}
 }

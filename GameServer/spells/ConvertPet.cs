@@ -62,11 +62,7 @@ namespace DOL.GS.Spells
 			return true;
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "reclaim");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+        public override string ShortDescription 
+			=> $"Releases the target and all other turrets you have summoned from the area. {Spell.Value}% of the power used in summoning the pet is returned to the caster.";
+    }
 }
