@@ -2002,32 +2002,15 @@ namespace DOL.GS.PacketHandler.Client.v168
             return dw.ToString();
         }
 
-
-		/// <summary>
-		/// Delve Info for Songs (V1.110+)
-		/// </summary>
-		/// <param name="clt">Client</param>
-		/// <param name="id">SpellID</param>
-		/// <returns></returns>
 		public static string DelveSong(GameClient clt, int id)
 		{
-			MiniDelveWriter dw = new MiniDelveWriter("Song");
-			dw.AddKeyValuePair("Index", unchecked((short)id));
-			
 			Spell spell = SkillBase.GetSpellByTooltipID((ushort)id);
-		
-			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-			
-			if (spellHandler != null)
-			{
-				dw.AddKeyValuePair("effect", spellHandler.Spell.InternalID);
-				dw.AddKeyValuePair("Name", spellHandler.Spell.Name);
-				return dw.ToString();
-			}
+			var spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 
-			// not found
-			dw.AddKeyValuePair("Name", "(not found)");
-			return dw.ToString();
+			var songDelve = new SongDelve(spellHandler);
+			if (spellHandler == null) return songDelve.GetNotFoundClientMessage((ushort)id);
+			
+			return songDelve.GetClientMessage();
 		}
 
 		/// <summary>
@@ -2054,7 +2037,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public static string DelveStyle(GameClient clt, int id)
         {
-			Tuple<Skill,Skill> sk = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id && e.Item1 is Style).FirstOrDefault();
+			var sk = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id && e.Item1 is Style).FirstOrDefault();
         	
 			Style style = null;
         	if(sk == null || sk.Item1 == null)
