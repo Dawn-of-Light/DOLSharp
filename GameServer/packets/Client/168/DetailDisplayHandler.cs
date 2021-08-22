@@ -2037,81 +2037,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public static string DelveStyle(GameClient clt, int id)
         {
-			var sk = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id && e.Item1 is Style).FirstOrDefault();
-        	
-			Style style = null;
-        	if(sk == null || sk.Item1 == null)
-        	{
-            	style = SkillBase.GetStyleByInternalID(id);
-        	}
-        	else if (sk.Item1 is Style)
-        	{
-        		style = (Style)sk.Item1;
-        	}
-
-            MiniDelveWriter dw = new MiniDelveWriter("Style");
-            dw.AddKeyValuePair("Index",  unchecked((short)id));
-
-            if (style != null)
-            {
-                // Not implemented:
-                // (Style (FollowupStyle "Sapphire Slash")(LevelBonus "2")(OpeningDamage "16")(Skill "1")(Expires "1343375647"))
-                // (Style (Fingerprint "1746652963")(FollowupStyle "Thigh Cut")(Hidden "1")OpeningDamage "55")(Skill "118")(SpecialNumber "1511")(SpecialType "1")(Expires "1342381240"))
-				// Skill = GetSpecToInternalIndex
-				// find opening style, and follow up !!
-				
-				IEnumerable<Style> styles = clt.Player.GetSpecList().SelectMany(e => e.PretendStylesForLiving(clt.Player, clt.Player.MaxLevel));
-				
-				// Is a followup
-				if (style.OpeningRequirementType == Style.eOpening.Offensive && style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
-				{
-					Style st = styles.Where(s => s.ID == style.OpeningRequirementValue).FirstOrDefault();
-					if (st != null)
-					{
-						// opening style should be only one.
-						dw.AddKeyValuePair("OpeningStyle", st.Name);
-					}
-				}
-				
-				// Has Followup ?
-				foreach (Style stl in styles.Where(s => (s.OpeningRequirementType == Style.eOpening.Offensive && s.AttackResultRequirement == Style.eAttackResultRequirement.Style && s.OpeningRequirementValue == style.ID)))
-				{
-					// we found the style that needs this one for opening.
-					dw.AppendKeyValuePair("FollowupStyle", stl.Name);
-				}
-				
-				dw.AddKeyValuePair("Name", style.Name);
-				dw.AddKeyValuePair("Icon", style.Icon);
-				dw.AddKeyValuePair("Level", style.Level);
-				dw.AddKeyValuePair("Fatigue", style.EnduranceCost);
-				//.Value("SpecialType", (int)style.SpecialType, style.SpecialType != 0)
-				//.Value("SpecialNumber", GetSpecialNumber(style), GetSpecialNumber(style)!=0)
-				if (style.BonusToDefense != 0)
-					dw.AddKeyValuePair("DefensiveMod", style.BonusToDefense);
-				if (style.BonusToHit != 0)
-					dw.AddKeyValuePair("AttackMod", style.BonusToHit);
-				dw.AddKeyValuePair("OpeningType", (int)style.OpeningRequirementType);
-				if (style.OpeningRequirementType == Style.eOpening.Positional)
-					dw.AddKeyValuePair("OpeningNumber", style.OpeningRequirementValue);				
-				//.Value("OpeningResult",GetOpeningResult(style,clt),GetOpeningResult(style,clt)>0)
-				//.Value("OpeningStyle",GetOpeningStyle(style),(Style.eAttackResult)GetOpeningResult(style,clt) == Style.eAttackResult.Style)
-				if (style.WeaponTypeRequirement > 0)
-					dw.AddKeyValuePair("Weapon", style.GetRequiredWeaponName());
-				if (style.StealthRequirement)
-					dw.AddKeyValuePair("Hidden", "1");
-				//.Value("TwoHandedIcon", 10, style.TwoHandAnimation > 0)
-				//.Value("Skill",43)
-				if (style.GrowthRate>0)
-					dw.AddKeyValuePair("OpeningDamage",style.GrowthRate*100);
-				//.Value("SpecialValue", GetSpecialValue(style),GetSpecialValue(style)!=0)
-				//.Value("FollowupStyle",style.DelveFollowUpStyles,!string.IsNullOrEmpty(style.DelveFollowUpStyles))
-            }
-            else
-            {
-                dw.AddKeyValuePair("Name", "(not found)");
-            }
-            
-            return dw.ToString();
+			var styleDelve = new StyleDelve(clt, id);
+			return styleDelve.GetClientMessage();
         }
 
 		#region style v1.110 methods
