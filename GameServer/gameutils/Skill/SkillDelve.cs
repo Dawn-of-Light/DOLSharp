@@ -18,30 +18,24 @@
  */
 using DOL.GS.PacketHandler;
 
-namespace DOL.GS.Spells
+namespace DOL.GS
 {
-	public class SongDelve : SkillDelve
-	{
-		private ISpellHandler spellHandler;
-		private Spell Spell => spellHandler.Spell;
+    public abstract class SkillDelve
+    {
+        protected string DelveType { get; set; }
+        protected short Index { get; set; }
 
-		public SongDelve(int id)
-		{
-			Spell spell = SkillBase.GetSpellByTooltipID((ushort)id);
-			spellHandler = ScriptMgr.CreateSpellHandler(null, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-			DelveType = "Song";
-			Index = unchecked((short)spellHandler.Spell.InternalID);
-		}
+        public abstract ClientDelve GetClientDelve();
 
-        public override ClientDelve GetClientDelve()
+        protected ClientDelve NotFoundClientDelve
         {
-			if (spellHandler == null) return NotFoundClientDelve;
-
-			var clientDelve = new ClientDelve(DelveType);
-			clientDelve.AddElement("Index", Index);
-			clientDelve.AddElement("effect", Index);
-			clientDelve.AddElement("Name", Spell.Name);
-			return clientDelve;
-		}
-	}
+            get
+            {
+                var clientDelve = new ClientDelve(DelveType);
+                clientDelve.AddElement("Index", Index);
+                clientDelve.AddElement("Name", "(not found)");
+                return clientDelve;
+            }
+        }
+    }
 }

@@ -22,20 +22,17 @@ using System.Linq;
 
 namespace DOL.GS.Styles
 {
-	public class StyleDelve
+	public class StyleDelve : SkillDelve
 	{
 		private GameClient clt;
-		private int id;
 		private Style style;
 
-		private short TooltipId => unchecked((short)id);
 		private int LevelZeroDamage => (int)Math.Round(style.GrowthOffset / 0.295);
 		private int DamageIncreasePerLevel => (int)Math.Round(style.GrowthRate / 0.295);
 
 		public StyleDelve(GameClient clt, int id)
 		{
 			this.clt = clt;
-			this.id = id;
 			var sk = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id && e.Item1 is Style).FirstOrDefault();
 
 			if (sk == null || sk.Item1 == null)
@@ -46,22 +43,19 @@ namespace DOL.GS.Styles
 			{
 				style = (Style)sk.Item1;
 			}
+
+			DelveType = "Style";
+			Index = unchecked((short)id);
 		}
 
-		public string GetClientMessage()
+		public override ClientDelve GetClientDelve()
 		{
-			if (style == null)
-			{
-				var clientDelveNotFound = new ClientDelve("Style");
-				clientDelveNotFound.AddElement("Index", TooltipId);
-				clientDelveNotFound.AddElement("Name", "(not found)");
-				return clientDelveNotFound.ClientMessage;
-			}
+			if (style == null) return NotFoundClientDelve;
 
 			var styles = clt.Player.GetSpecList().SelectMany(e => e.PretendStylesForLiving(clt.Player, clt.Player.MaxLevel));
 
 			var clientDelve = new ClientDelve("Style");
-			clientDelve.AddElement("Index", TooltipId);
+			clientDelve.AddElement("Index", Index);
 
 			if (style.OpeningRequirementType == Style.eOpening.Offensive && style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
 			{
@@ -100,7 +94,7 @@ namespace DOL.GS.Styles
 				}
 			}
 
-			return clientDelve.ClientMessage;
+			return clientDelve;
 		}
-	}
+    }
 }

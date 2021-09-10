@@ -2004,38 +2004,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public static string DelveSong(GameClient clt, int id)
 		{
-			Spell spell = SkillBase.GetSpellByTooltipID((ushort)id);
-			var spellHandler = ScriptMgr.CreateSpellHandler(null, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-
-			var songDelve = new SongDelve(spellHandler);
-			if (spellHandler == null) return songDelve.GetNotFoundClientMessage((ushort)id);
-			
-			return songDelve.GetClientMessage();
+			var songDelve = new SongDelve(id);
+			return songDelve.GetClientDelve().ClientMessage;
 		}
 
-		/// <summary>
-		/// Delve Info for Spells (V1.110+)
-		/// </summary>
 		public static string DelveSpell(GameClient clt, Spell spell)
 		{
-			// Spell object are mostly "DB" Object, we can't subclass this object easily, but Spellhandler create subclass using "SpellType"
-			var spellHandler = ScriptMgr.CreateSpellHandler(null, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-			if (spellHandler == null)
-			{
-				return $"(Spell (Index \"{(ushort)spell.InternalID}\") (Name \"(not found)\"))";
-			}
-			return DelveSpell(spellHandler);
+			return new SpellDelve(spell).GetClientDelve().ClientMessage;
 		}
 
 		public static string DelveSpell(ISpellHandler spellHandler)
 		{
-			return new SpellDelve(spellHandler).GetClientMessage();
+			return new SpellDelve(spellHandler.Spell).GetClientDelve().ClientMessage;
 		}
 
 		public static string DelveStyle(GameClient clt, int id)
         {
 			var styleDelve = new StyleDelve(clt, id);
-			return styleDelve.GetClientMessage();
+			return styleDelve.GetClientDelve().ClientMessage;
         }
 
 		#region style v1.110 methods

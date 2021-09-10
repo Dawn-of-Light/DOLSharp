@@ -21,7 +21,7 @@ using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
-	public class SpellDelve
+	public class SpellDelve : SkillDelve
 	{
 		private ISpellHandler spellHandler;
 		private Spell Spell => spellHandler.Spell;
@@ -29,13 +29,17 @@ namespace DOL.GS.Spells
 		private int CastTime => Spell.CastTime;
 		private eDamageType MagicType => Spell.DamageType;
 
-		public SpellDelve(ISpellHandler spellHandler)
+		public SpellDelve(Spell spell)
 		{
-			this.spellHandler = spellHandler;
+			spellHandler = ScriptMgr.CreateSpellHandler(null, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+			DelveType = "Spell";
+			Index = unchecked((short)spellHandler.Spell.InternalID);
 		}
 
-		public string GetClientMessage()
-		{
+		public override ClientDelve GetClientDelve()
+        {
+			if (spellHandler == null) return NotFoundClientDelve;
+
 			var clientDelve = new ClientDelve("Spell");
 			clientDelve.AddElement("Function", "light");
 			clientDelve.AddElement("Index", unchecked((ushort)Spell.InternalID));
@@ -58,7 +62,7 @@ namespace DOL.GS.Spells
 			clientDelve.AddElement("frequency", Spell.Frequency);
 
 			clientDelve.AddElement("delve_string", spellHandler.ShortDescription);
-			return clientDelve.ClientMessage;
+			return clientDelve;
 		}
 
 		private int GetSpellTargetType()
