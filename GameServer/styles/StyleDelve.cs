@@ -93,8 +93,11 @@ namespace DOL.GS.Styles
 			clientDelve.AddElement("Hidden", style.StealthRequirement);
 			foreach (var proc in style.Procs)
 			{
-				clientDelve.AddElement("SpecialNumber", proc.Item1.InternalID);
-				clientDelve.AddElement("SpecialType", "1");
+				if (proc.Item2 == 0 || proc.Item2 == style.ClassID)
+				{
+					clientDelve.AddElement("SpecialNumber", proc.Item1.InternalID);
+					clientDelve.AddElement("SpecialType", "1");
+				}
 			}
 
 			return clientDelve.ClientMessage;
