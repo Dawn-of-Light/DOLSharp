@@ -2005,7 +2005,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public static string DelveSong(GameClient clt, int id)
 		{
 			Spell spell = SkillBase.GetSpellByTooltipID((ushort)id);
-			var spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+			var spellHandler = ScriptMgr.CreateSpellHandler(null, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 
 			var songDelve = new SongDelve(spellHandler);
 			if (spellHandler == null) return songDelve.GetNotFoundClientMessage((ushort)id);
@@ -2016,13 +2016,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Delve Info for Spells (V1.110+)
 		/// </summary>
-		public static string DelveSpell(GameClient clt, Spell spell, SpellLine spellLine = null)
+		public static string DelveSpell(GameClient clt, Spell spell)
 		{
-			// We better rely on the handler to delve it correctly ! using reserved spellline as we can't guess it ! player can delve other object effect !
-			if (spellLine == null)
-				spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
 			// Spell object are mostly "DB" Object, we can't subclass this object easily, but Spellhandler create subclass using "SpellType"
-			var spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, spellLine);
+			var spellHandler = ScriptMgr.CreateSpellHandler(null, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 			if (spellHandler == null)
 			{
 				return $"(Spell (Index \"{(ushort)spell.InternalID}\") (Name \"(not found)\"))";
