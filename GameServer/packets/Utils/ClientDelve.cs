@@ -52,6 +52,23 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
+		public int TypeID
+        {
+			get
+            {
+				var type = delveType.ToLower();
+				switch(type)
+				{
+					case "spell": return 24;
+					case "style": return 25;
+					case "song": return 26;
+					case "realmability": return 27;
+					case "ability": return 28;
+					default: throw new System.ArgumentException($"{delveType} has no client packet ID yet.");
+                }
+            }
+        }
+
 		public void AddElement(string name, object value)
 		{
 			var ignoredValues = new List<string>() { "", "0" };
