@@ -50,51 +50,54 @@ namespace DOL.GS.Styles
 
 		public string GetClientMessage()
 		{
-			if (style != null)
+			if (style == null)
 			{
-				var styles = clt.Player.GetSpecList().SelectMany(e => e.PretendStylesForLiving(clt.Player, clt.Player.MaxLevel));
+				var clientDelveNotFound = new ClientDelve("Style");
+				clientDelveNotFound.AddElement("Index", TooltipId);
+				clientDelveNotFound.AddElement("Name", "(not found)");
+				return clientDelveNotFound.ClientMessage;
+			}
 
-				var clientDelve = new ClientDelve("Style");
-				clientDelve.AddElement("Index", TooltipId);
+			var styles = clt.Player.GetSpecList().SelectMany(e => e.PretendStylesForLiving(clt.Player, clt.Player.MaxLevel));
 
-				if (style.OpeningRequirementType == Style.eOpening.Offensive && style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
+			var clientDelve = new ClientDelve("Style");
+			clientDelve.AddElement("Index", TooltipId);
+
+			if (style.OpeningRequirementType == Style.eOpening.Offensive && style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
+			{
+				Style st = styles.Where(s => s.ID == style.OpeningRequirementValue).FirstOrDefault();
+				if (st != null)
 				{
-					Style st = styles.Where(s => s.ID == style.OpeningRequirementValue).FirstOrDefault();
-					if (st != null)
-					{
-						clientDelve.AddElement("OpeningStyle", st.Name);
-					}
+					clientDelve.AddElement("OpeningStyle", st.Name);
 				}
-
-				var followupStyles = styles
-					.Where(s => (s.OpeningRequirementType == Style.eOpening.Offensive && s.AttackResultRequirement == Style.eAttackResultRequirement.Style && s.OpeningRequirementValue == style.ID))
-					.Select(s => s.Name);
-				clientDelve.AddElement("FollowupStyle", followupStyles);
-				clientDelve.AddElement("Name", style.Name);
-				clientDelve.AddElement("Icon", style.Icon);
-				clientDelve.AddElement("Level", style.Level);
-				clientDelve.AddElement("Fatigue", style.EnduranceCost);
-				clientDelve.AddElement("DefensiveMod", style.BonusToDefense);
-				clientDelve.AddElement("AttackMod", style.BonusToHit);
-				clientDelve.AddElement("OpeningDamage", LevelZeroDamage + style.Level * DamageIncreasePerLevel);
-				clientDelve.AddElement("LevelBonus", DamageIncreasePerLevel);
-				clientDelve.AddElement("OpeningType", (int)style.OpeningRequirementType);
-				if (style.OpeningRequirementType == Style.eOpening.Positional)
-					clientDelve.AddElement("OpeningNumber", style.OpeningRequirementValue);
-				if (style.WeaponTypeRequirement > 0)
-					clientDelve.AddElement("Weapon", style.GetRequiredWeaponName());
-				clientDelve.AddElement("OpeningResult", (int)style.AttackResultRequirement);
-				clientDelve.AddElement("Hidden", style.StealthRequirement);
-
-				return clientDelve.ClientMessage;
 			}
-			else
+
+			var followupStyles = styles
+				.Where(s => (s.OpeningRequirementType == Style.eOpening.Offensive && s.AttackResultRequirement == Style.eAttackResultRequirement.Style && s.OpeningRequirementValue == style.ID))
+				.Select(s => s.Name);
+			clientDelve.AddElement("FollowupStyle", followupStyles);
+			clientDelve.AddElement("Name", style.Name);
+			clientDelve.AddElement("Icon", style.Icon);
+			clientDelve.AddElement("Level", style.Level);
+			clientDelve.AddElement("Fatigue", style.EnduranceCost);
+			clientDelve.AddElement("DefensiveMod", style.BonusToDefense);
+			clientDelve.AddElement("AttackMod", style.BonusToHit);
+			clientDelve.AddElement("OpeningDamage", LevelZeroDamage + style.Level * DamageIncreasePerLevel);
+			clientDelve.AddElement("LevelBonus", DamageIncreasePerLevel);
+			clientDelve.AddElement("OpeningType", (int)style.OpeningRequirementType);
+			if (style.OpeningRequirementType == Style.eOpening.Positional)
+				clientDelve.AddElement("OpeningNumber", style.OpeningRequirementValue);
+			if (style.WeaponTypeRequirement > 0)
+				clientDelve.AddElement("Weapon", style.GetRequiredWeaponName());
+			clientDelve.AddElement("OpeningResult", (int)style.AttackResultRequirement);
+			clientDelve.AddElement("Hidden", style.StealthRequirement);
+			foreach (var proc in style.Procs)
 			{
-				var clientDelve = new ClientDelve("Style");
-				clientDelve.AddElement("Index", TooltipId);
-				clientDelve.AddElement("Name", "(not found)");
-				return clientDelve.ClientMessage;
+				clientDelve.AddElement("SpecialNumber", proc.Item1.InternalID);
+				clientDelve.AddElement("SpecialType", "1");
 			}
+
+			return clientDelve.ClientMessage;
 		}
 	}
 }

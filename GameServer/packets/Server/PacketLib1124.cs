@@ -3826,11 +3826,18 @@ namespace DOL.GS.PacketHandler
 					if (m_gameClient.CanSendTooltip(28, t.InternalID))
 						SendDelveInfo(DetailDisplayHandler.DelveAbility(m_gameClient, t.InternalID));
 				}
-				else if (t is Style)
+				else if (t is Style style)
 				{
 					if (m_gameClient.CanSendTooltip(25, t.InternalID))
 						SendDelveInfo(DetailDisplayHandler.DelveStyle(m_gameClient, t.InternalID));
-				}
+					foreach (var proc in style.Procs)
+					{
+						if (m_gameClient.CanSendTooltip(24, proc.Item1.InternalID))
+						{
+							SendDelveInfo(DetailDisplayHandler.DelveSpell(m_gameClient, proc.Item1));
+						}
+					}
+                }
 				else if (t is Spell spell)
 				{
 					if (spell is Song || spell.NeedInstrument)
