@@ -1971,12 +1971,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 		}
 
 		 #region v1.110+
-        /** General info @ v1.110:
-         *  - Examples can be found at http://dl.dropbox.com/u/48908369/delve.txt
-         *  - 'Expires' can be left out
-         *  - No idea what 'Fingerprint' does
-         **/
-
         public static string DelveAbility(GameClient clt, int id)
         { /* or skill */
 
@@ -2004,76 +1998,6 @@ namespace DOL.GS.PacketHandler.Client.v168
             return dw.ToString();
         }
 
-		#region style v1.110 methods
-		/*
-		public static int GetSpecialNumber(Style style)
-		{
-			if (style.SpecialType == Style.eSpecialType.Effect)
-			{
-				Spell spell = SkillBase.GetSpellById(style.SpecialValue);
-				if (spell != null)
-					return spell.ClientEffect;
-			}
-			return 0;
-		}
-
-		public static int GetSpecialValue(Style style)
-		{
-			switch(style.SpecialType)
-			{
-				case Style.eSpecialType.ExtendedRange:
-					return 128; // Extended Range für Reaver style
-				case Style.eSpecialType.Taunt:
-					return style.SpecialValue;
-			}
-			return 0;
-		}*/
-
-		
-		/*public static int GetOpeningResult(Style style,GameClient clt)
-		{
-			switch(StyleProcessor.ResolveAttackResult(style,clt.Player.PlayerCharacter.Class))
-			{
-				case GameLiving.eAttackResult.Any:
-					return (int)Style.eAttackResult.Any;
-				case GameLiving.eAttackResult.Missed:
-					return (int) Style.eAttackResult.Miss;
-				case GameLiving.eAttackResult.Parried:
-					return (int)Style.eAttackResult.Parry;
-				case GameLiving.eAttackResult.Evaded:
-					return (int)Style.eAttackResult.Evade;
-				case GameLiving.eAttackResult.Blocked:
-					return (int)Style.eAttackResult.Block;
-				case GameLiving.eAttackResult.Fumbled:
-					return (int)Style.eAttackResult.Fumble;
-				case GameLiving.eAttackResult.HitStyle:
-					return (int)Style.eAttackResult.Style;
-				case GameLiving.eAttackResult.HitUnstyled:
-					return (int)Style.eAttackResult.Hit;
-			}
-			return 0;
-		}*/
-		/*
-		public static string GetOpeningStyle(Style style)
-		{
-			if (style.OpeningRequirementValue > 0)
-			{
-				Style style2 = SkillBase.GetStyleByID(style.OpeningRequirementValue);
-				if (style2!=null)
-					return style2.Name;
-				return "";
-			}
-			return "";
-		}*/
-
-		#endregion
-
-		/// <summary>
-		/// Delve the realm abilities for v1.110+ clients
-		/// </summary>
-		/// <param name="clt"></param>
-		/// <param name="id"></param>
-		/// <returns></returns>
         public static string DelveRealmAbility(GameClient clt, int id)
         {
 			Skill ra = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id && e.Item1 is Ability).Select(e => e.Item1).FirstOrDefault();
