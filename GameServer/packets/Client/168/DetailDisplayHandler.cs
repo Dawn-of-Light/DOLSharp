@@ -929,13 +929,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	                    client.Out.SendDelveInfo(new StyleDelve(client, objectId).GetClientDelve().ClientMessage);
                     break;
 				case 26://SongsNew
+					if (client.CanSendTooltip(26, objectId))
 					{
-						if (client.CanSendTooltip(26, objectId))
-						{
-							client.Out.SendDelveInfo(new SongDelve(objectId).GetClientDelve().ClientMessage);
-							var spell = SkillBase.GetSpellByTooltipID(objectId);
-							client.Out.SendDelveInfo(new SpellDelve(spell).GetClientDelve().ClientMessage);
-						}
+						client.Out.SendDelveInfo(new SongDelve(objectId).GetClientDelve().ClientMessage);
+						var spell = SkillBase.GetSpellByTooltipID(objectId);
+						client.Out.SendDelveInfo(new SpellDelve(spell).GetClientDelve().ClientMessage);
 					}
 					break;
 				case 27://RANew

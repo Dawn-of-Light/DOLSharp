@@ -45,7 +45,11 @@ namespace DOL.GS.Spells
 			return clientDelve;
 		}
 
-		public override IEnumerable<ClientDelve> GetAssociatedClientDelves()
-			=> new List<ClientDelve>() { new SpellDelve(Spell).GetClientDelve() };
+		public override IEnumerable<ClientDelve> GetClientDelves()
+		{
+			var result = new List<ClientDelve>() { GetClientDelve() };
+			result.Add(new SpellDelve(Spell).GetClientDelve());
+			return result;
+		}
 	}
 }

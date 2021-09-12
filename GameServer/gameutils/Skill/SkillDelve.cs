@@ -29,15 +29,6 @@ namespace DOL.GS
         protected string DelveType { get; set; }
         protected short Index { get; set; }
 
-        public abstract ClientDelve GetClientDelve();
-        public abstract IEnumerable<ClientDelve> GetAssociatedClientDelves();
-        public IEnumerable<ClientDelve> GetClientDelves()
-        {
-            var result = new List<ClientDelve>(GetAssociatedClientDelves());
-            result.Add(GetClientDelve());
-            return result;
-        }
-
         public static SkillDelve Create(GameClient client, Skill skill)
         {
             if (skill is Style) return new StyleDelve(client, skill.InternalID);
@@ -45,6 +36,9 @@ namespace DOL.GS
             if (skill is Spell spell) return new SpellDelve(spell);
             throw new ArgumentException($"{skill.GetType()} has no Delve class.");
         }
+
+        public abstract ClientDelve GetClientDelve();
+        public abstract IEnumerable<ClientDelve> GetClientDelves();
 
         protected ClientDelve NotFoundClientDelve
         {

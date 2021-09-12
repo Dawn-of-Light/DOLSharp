@@ -37,7 +37,7 @@ namespace DOL.GS.Spells
 		}
 
 		public override ClientDelve GetClientDelve()
-        {
+		{
 			if (spellHandler == null) return NotFoundClientDelve;
 
 			var clientDelve = new ClientDelve("Spell");
@@ -65,8 +65,9 @@ namespace DOL.GS.Spells
 			return clientDelve;
 		}
 
-		public override IEnumerable<ClientDelve> GetAssociatedClientDelves()
-			=> new List<ClientDelve>() { };
+		public override IEnumerable<ClientDelve> GetClientDelves()
+			=> new List<ClientDelve>() { GetClientDelve() };
+
 
 		private int GetSpellTargetType()
 		{
@@ -107,12 +108,12 @@ namespace DOL.GS.Spells
 
 		private int GetCostTypeID()
 		{
-			switch(spellHandler.CostType.ToLower())
-            {
+			switch (spellHandler.CostType.ToLower())
+			{
 				case "health": return 2;
 				case "endurance": return 3;
 				default: return 0;
-            }
+			}
 		}
 
 		private static Dictionary<eDamageType, int> damageTypeToIdLookup = new Dictionary<eDamageType, int>()
