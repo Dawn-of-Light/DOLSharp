@@ -18,17 +18,16 @@
  */
 using DOL.Database;
 using DOL.GS;
-using DOL.GS.PacketHandler.Client.v168;
 using DOL.GS.Spells;
 using NUnit.Framework;
 
 namespace DOL.Integration.Gameserver
 {
     [TestFixture]
-    class Test_DetailDisplayHandler
+    class Test_SpellDelve
     {
         [Test]
-        public void DelveSpell_DeflectPunctures_CompareContent()
+        public void GetClientDelve_DeflectPunctures_CompareContent()
         {
             var dbSpell = new DBSpell();
             dbSpell.Name = "Deflect Punctures";
@@ -42,7 +41,7 @@ namespace DOL.Integration.Gameserver
             dbSpell.Value = 5;
             dbSpell.TooltipId = 3838;
 
-            var actual = DetailDisplayHandler.DelveSpell(new SavageThrustResistanceBuff(null, new Spell(dbSpell, 0), null));
+            var actual = new SpellDelve(new Spell(dbSpell, 0)).GetClientDelve().ClientMessage;
 
             Assert.That(actual, Does.StartWith("(Spell "));
             Assert.That(actual, Does.Contain("(Index \"3838\")"));
@@ -58,7 +57,7 @@ namespace DOL.Integration.Gameserver
         }
 
         [Test]
-        public void DelveSpell_MajorSmite_CompareContent()
+        public void GetClientDelve_MajorSmite_CompareContent()
         {
             var dbSpell = new DBSpell();
             dbSpell.Name = "Major Smite";
@@ -72,7 +71,7 @@ namespace DOL.Integration.Gameserver
             dbSpell.DamageType = 15;
             dbSpell.TooltipId = 1422;
 
-            var actual = DetailDisplayHandler.DelveSpell(new DirectDamageSpellHandler(null, new Spell(dbSpell, 0), null));
+            var actual = new SpellDelve(new Spell(dbSpell, 0)).GetClientDelve().ClientMessage;
 
             Assert.That(actual, Does.StartWith("(Spell "));
             Assert.That(actual, Does.Contain("(Index \"1422\")"));
@@ -84,14 +83,14 @@ namespace DOL.Integration.Gameserver
         }
 
         [Test]
-        public void DelveSpell_GenericSpellWith2SecondsCastTime_CastTimerIsZeroAndNotInstant()
+        public void GetClientDelve_GenericSpellWith2SecondsCastTime_CastTimerIsZeroAndNotInstant()
         {
             var dbSpell = new DBSpell();
             dbSpell.Name = "GenericSpell";
             dbSpell.Type = "Heal";
             dbSpell.CastTime = 2.0;
 
-            var actual = DetailDisplayHandler.DelveSpell(new SpellHandler(null, new Spell(dbSpell, 0), null));
+            var actual = new SpellDelve(new Spell(dbSpell, 0)).GetClientDelve().ClientMessage;
 
             Assert.That(actual, Does.Not.Contain("instant"));
         }

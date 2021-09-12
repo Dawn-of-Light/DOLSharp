@@ -17,7 +17,9 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.GS.Spells;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DOL.GS.Styles
@@ -55,7 +57,7 @@ namespace DOL.GS.Styles
 			var styles = clt.Player.GetSpecList().SelectMany(e => e.PretendStylesForLiving(clt.Player, clt.Player.MaxLevel));
 
 			var clientDelve = new ClientDelve("Style");
-			clientDelve.AddElement("Index", Index);
+			clientDelve.Index = Index;
 
 			if (style.OpeningRequirementType == Style.eOpening.Offensive && style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
 			{
@@ -95,6 +97,20 @@ namespace DOL.GS.Styles
 			}
 
 			return clientDelve;
+		}
+
+		public override IEnumerable<ClientDelve> GetAssociatedClientDelves()
+        {
+			var resultDelves = new List<ClientDelve>();
+			foreach (var proc in style.Procs)
+			{
+				if (proc.Item2 == 0 || proc.Item2 == style.ClassID)
+				{
+					var procDelve = new SpellDelve(proc.Item1).GetClientDelve();
+					resultDelves.Add(procDelve);
+				}
+			}
+			return resultDelves;
 		}
     }
 }

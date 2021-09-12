@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -38,10 +39,13 @@ namespace DOL.GS.Spells
 			if (spellHandler == null) return NotFoundClientDelve;
 
 			var clientDelve = new ClientDelve(DelveType);
-			clientDelve.AddElement("Index", Index);
+			clientDelve.Index = Index;
 			clientDelve.AddElement("effect", Index);
 			clientDelve.AddElement("Name", Spell.Name);
 			return clientDelve;
 		}
+
+		public override IEnumerable<ClientDelve> GetAssociatedClientDelves()
+			=> new List<ClientDelve>() { new SpellDelve(Spell).GetClientDelve() };
 	}
 }

@@ -17,6 +17,10 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.GS.Spells;
+using DOL.GS.Styles;
+using System;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -26,6 +30,21 @@ namespace DOL.GS
         protected short Index { get; set; }
 
         public abstract ClientDelve GetClientDelve();
+        public abstract IEnumerable<ClientDelve> GetAssociatedClientDelves();
+        public IEnumerable<ClientDelve> GetClientDelves()
+        {
+            var result = new List<ClientDelve>(GetAssociatedClientDelves());
+            result.Add(GetClientDelve());
+            return result;
+        }
+
+        public static SkillDelve Create(GameClient client, Skill skill)
+        {
+            if (skill is Style) return new StyleDelve(client, skill.InternalID);
+            if (skill is Song) return new SongDelve(skill.InternalID);
+            if (skill is Spell spell) return new SpellDelve(spell);
+            throw new ArgumentException($"{skill.GetType()} has no Delve class.");
+        }
 
         protected ClientDelve NotFoundClientDelve
         {

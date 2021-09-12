@@ -3826,31 +3826,22 @@ namespace DOL.GS.PacketHandler
 					if (m_gameClient.CanSendTooltip(28, t.InternalID))
 						SendDelveInfo(DetailDisplayHandler.DelveAbility(m_gameClient, t.InternalID));
 				}
-				else if (t is Style style)
+				else if (t is Style || t is Spell)
 				{
-					if (m_gameClient.CanSendTooltip(25, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveStyle(m_gameClient, t.InternalID));
-					foreach (var proc in style.Procs)
-					{
-						if (m_gameClient.CanSendTooltip(24, proc.Item1.InternalID))
-						{
-							SendDelveInfo(DetailDisplayHandler.DelveSpell(m_gameClient, proc.Item1));
-						}
-					}
+					var skillDelve = SkillDelve.Create(m_gameClient, t);
+					TrySendDelveInfos(skillDelve);
                 }
-				else if (t is Spell spell)
-				{
-					if (spell is Song || spell.NeedInstrument)
-					{
-						if (m_gameClient.CanSendTooltip(26, spell.InternalID))
-							SendDelveInfo(DetailDisplayHandler.DelveSong(m_gameClient, spell.InternalID));
-					}
-
-					if (m_gameClient.CanSendTooltip(24, spell.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveSpell(m_gameClient, spell));
-				}
 			}
 		}
+
+		public void TrySendDelveInfos(SkillDelve delveObj)
+        {
+			foreach(var clientDelve in delveObj.GetClientDelves())
+            {
+				if (m_gameClient.CanSendTooltip(clientDelve.TypeID, clientDelve.Index)) 
+					SendDelveInfo(clientDelve.ClientMessage);
+			}
+        }
 
 		public virtual void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
 		{
@@ -3961,8 +3952,8 @@ namespace DOL.GS.PacketHandler
 			// force tooltips update
 			foreach (var spellHandler in tooltipSpellHandlers)
 			{
-				if (m_gameClient.CanSendTooltip(24, spellHandler.Spell.InternalID))
-					SendDelveInfo(DetailDisplayHandler.DelveSpell(spellHandler));
+				var skillDelve = SkillDelve.Create(m_gameClient, spellHandler.Spell);
+				TrySendDelveInfos(skillDelve);
 			}
 		}
 

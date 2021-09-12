@@ -179,8 +179,8 @@ namespace DOL.GS.PacketHandler
 			// force tooltips update
 			foreach (var spellhandler in tooltipSpellhandlers)
 			{
-				if (m_gameClient.CanSendTooltip(24, spellhandler.Spell.InternalID))
-					SendDelveInfo(DetailDisplayHandler.DelveSpell(spellhandler));
+				var skillDelve = SkillDelve.Create(null, spellhandler.Spell);
+				TrySendDelveInfos(skillDelve);
 			}
 		}
 		
@@ -217,25 +217,23 @@ namespace DOL.GS.PacketHandler
 					if (m_gameClient.CanSendTooltip(28, t.InternalID))
 						SendDelveInfo(DetailDisplayHandler.DelveAbility(m_gameClient, t.InternalID));
 				}
-				else if (t is Style)
+				else if (t is Style || t is Spell)
 				{
-					if (m_gameClient.CanSendTooltip(25, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveStyle(m_gameClient, t.InternalID));
-				}
-				else if (t is Spell spell)
-				{
-					if (t is Song || spell.NeedInstrument)
-					{
-						if (m_gameClient.CanSendTooltip(26, spell.InternalID))
-							SendDelveInfo(DetailDisplayHandler.DelveSong(m_gameClient, spell.InternalID));
-					}
-
-					if (m_gameClient.CanSendTooltip(24, spell.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveSpell(m_gameClient, spell));
+					var skillDelve = SkillDelve.Create(m_gameClient, t);
+					TrySendDelveInfos(skillDelve);
 				}
 			}
 		}
-		
+
+		public void TrySendDelveInfos(SkillDelve delveObj)
+		{
+			foreach (var clientDelve in delveObj.GetClientDelves())
+			{
+				if (m_gameClient.CanSendTooltip(clientDelve.TypeID, clientDelve.Index))
+					SendDelveInfo(clientDelve.ClientMessage);
+			}
+		}
+
 		/// <summary>
 		/// new siege weapon animation packet 1.110
 		/// </summary>

@@ -42,7 +42,7 @@ namespace DOL.GS.Spells
 
 			var clientDelve = new ClientDelve("Spell");
 			clientDelve.AddElement("Function", "light");
-			clientDelve.AddElement("Index", unchecked((ushort)Spell.InternalID));
+			clientDelve.Index = Index;
 			clientDelve.AddElement("Name", Spell.Name);
 			if (CastTime >= 2000)
 				clientDelve.AddElement("cast_timer", CastTime - 2000);
@@ -64,6 +64,9 @@ namespace DOL.GS.Spells
 			clientDelve.AddElement("delve_string", spellHandler.ShortDescription);
 			return clientDelve;
 		}
+
+		public override IEnumerable<ClientDelve> GetAssociatedClientDelves()
+			=> new List<ClientDelve>() { };
 
 		private int GetSpellTargetType()
 		{

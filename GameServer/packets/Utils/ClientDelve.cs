@@ -26,11 +26,22 @@ namespace DOL.GS.PacketHandler
 	{
 		private string delveType;
 		private List<(string, string)> delveElements = new List<(string, string)>();
+		private int index = 0;
 
 		public ClientDelve(string delveType)
 		{
 			this.delveType = delveType;
 		}
+
+		public int Index 
+		{ 
+			get => index;
+			set 
+			{ 
+				index = value;
+				AddElement("Index", value);
+			}
+		} 
 
 		public string ClientMessage
 		{

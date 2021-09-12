@@ -921,19 +921,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (client.CanSendTooltip(24, objectId))
 					{
 						var spell = SkillBase.GetSpellByTooltipID(objectId);
-						client.Out.SendDelveInfo(DelveSpell(client, spell));
+						client.Out.SendDelveInfo(new SpellDelve(spell).GetClientDelve().ClientMessage);
 					}
 					break;
 				case 25://StylesNew
 					if (client.CanSendTooltip(25, objectId))
-	                    client.Out.SendDelveInfo(DelveStyle(client, objectId));
+	                    client.Out.SendDelveInfo(new StyleDelve(client, objectId).GetClientDelve().ClientMessage);
                     break;
 				case 26://SongsNew
 					{
 						if (client.CanSendTooltip(26, objectId))
-							client.Out.SendDelveInfo(DelveSong(client, objectId));
-						var spell = SkillBase.GetSpellByTooltipID(objectId);
-						client.Out.SendDelveInfo(DelveSpell(client, spell));
+						{
+							client.Out.SendDelveInfo(new SongDelve(objectId).GetClientDelve().ClientMessage);
+							var spell = SkillBase.GetSpellByTooltipID(objectId);
+							client.Out.SendDelveInfo(new SpellDelve(spell).GetClientDelve().ClientMessage);
+						}
 					}
 					break;
 				case 27://RANew
@@ -2000,28 +2002,6 @@ namespace DOL.GS.PacketHandler.Client.v168
             }
             
             return dw.ToString();
-        }
-
-		public static string DelveSong(GameClient clt, int id)
-		{
-			var songDelve = new SongDelve(id);
-			return songDelve.GetClientDelve().ClientMessage;
-		}
-
-		public static string DelveSpell(GameClient clt, Spell spell)
-		{
-			return new SpellDelve(spell).GetClientDelve().ClientMessage;
-		}
-
-		public static string DelveSpell(ISpellHandler spellHandler)
-		{
-			return new SpellDelve(spellHandler.Spell).GetClientDelve().ClientMessage;
-		}
-
-		public static string DelveStyle(GameClient clt, int id)
-        {
-			var styleDelve = new StyleDelve(clt, id);
-			return styleDelve.GetClientDelve().ClientMessage;
         }
 
 		#region style v1.110 methods
