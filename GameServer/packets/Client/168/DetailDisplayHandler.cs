@@ -938,11 +938,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 					break;
 				case 27://RANew
 					if (client.CanSendTooltip(27, objectId))
-	                   client.Out.SendDelveInfo(DelveRealmAbility(client, objectId));
+	                   client.Out.SendDelveInfo(new RealmAbilityDelve(client, objectId).GetClientDelve().ClientMessage);
                     break;
 				case 28://AbilityNew
-                    if (client.CanSendTooltip(28, objectId))
-				        client.Out.SendDelveInfo(DelveAbility(client, objectId));
+					if (client.CanSendTooltip(28, objectId))
+					{
+						client.Out.SendDelveInfo(new AbilityDelve(client, objectId).GetClientDelve().ClientMessage);
+					}
 			        break;
 				#endregion
 				#region ChampionAbilities delve from trainer window
@@ -1967,17 +1969,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 		}
-
-		 #region v1.110+
-        public static string DelveAbility(GameClient clt, int id)
-        { /* or skill */
-			return new AbilityDelve(clt, id).GetClientDelve().ClientMessage;
-        }
-
-        public static string DelveRealmAbility(GameClient clt, int id)
-        {
-			return new RealmAbilityDelve(clt, id).GetClientDelve().ClientMessage;
-        }
-        #endregion
     }
 }

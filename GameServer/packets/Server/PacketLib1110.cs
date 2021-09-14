@@ -210,12 +210,12 @@ namespace DOL.GS.PacketHandler
 				if (t is RealmAbility)
 				{
 					if (m_gameClient.CanSendTooltip(27, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveRealmAbility(m_gameClient, t.InternalID));
+						SendDelveInfo(new RealmAbilityDelve(m_gameClient, t.InternalID).GetClientDelve().ClientMessage);
 				}
 				else if (t is Ability)
 				{
 					if (m_gameClient.CanSendTooltip(28, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveAbility(m_gameClient, t.InternalID));
+						SendDelveInfo(new AbilityDelve(m_gameClient, t.InternalID).GetClientDelve().ClientMessage);
 				}
 				else if (t is Style || t is Spell)
 				{

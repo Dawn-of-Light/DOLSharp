@@ -18,22 +18,21 @@
  */
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DOL.GS
 {
     public class RealmAbilityDelve : SkillDelve
     {
-		private Skill ra;
+		private Skill skill;
 
 		public RealmAbilityDelve(GameClient client, int skillIndex)
         {
-			var ra = client.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == skillIndex && e.Item1 is Ability).Select(e => e.Item1).FirstOrDefault();
+			skill = client.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == skillIndex && e.Item1 is Ability).Select(e => e.Item1).FirstOrDefault();
 
-			if (ra == null)
+			if (skill == null)
 			{
-				ra = SkillBase.GetAbilityByInternalID(skillIndex);
+				skill = SkillBase.GetAbilityByInternalID(skillIndex);
 			}
 
 			DelveType = "RealmAbility";
@@ -45,29 +44,30 @@ namespace DOL.GS
 			var delve = new ClientDelve(DelveType);
 			delve.AddElement("Index", Index);
 
-			if (ra is RealmAbility realmAbility)
+			if (skill is RealmAbility realmAbility)
 			{
 				delve.AddElement("Name", realmAbility.Name);
-				if (ra.Icon > 0)
+				if (skill.Icon > 0)
+				{
 					delve.AddElement("icon", realmAbility.Icon);
+				}
 
 				for (int i = 0; i <= realmAbility.MaxLevel - 1; i++)
 				{
-					if (realmAbility.CostForUpgrade(i) > 0)
-						delve.AddElement(string.Format("TrainingCost_{0}", (i + 1)), realmAbility.CostForUpgrade(i));
+					delve.AddElement($"TrainingCost_{i + 1}", realmAbility.CostForUpgrade(i));
 				}
 
-				if (ra is TimedRealmAbility timedRealmAbility)
-				{
-					for (int i = 1; i <= timedRealmAbility.MaxLevel; i++)
-					{
-						delve.AddElement(string.Format("ReuseTimer_{0}", i), timedRealmAbility.GetReUseDelay(i));
-					}
-				}
-			}
-			else if (ra != null)
+				if (skill is TimedRealmAbility timedRealmAbility)
+                {
+                    for (int i = 1; i <= timedRealmAbility.MaxLevel; i++)
+                    {
+                        delve.AddElement(string.Format("ReuseTimer_{0}", i), timedRealmAbility.GetReUseDelay(i));
+                    }
+                }
+            }
+			else if (skill != null)
 			{
-				delve.AddElement("Name", ra.Name);
+				delve.AddElement("Name", skill.Name);
 			}
 			else
 			{

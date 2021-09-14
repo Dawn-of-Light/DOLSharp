@@ -3816,17 +3816,7 @@ namespace DOL.GS.PacketHandler
 				if (t is Specialization)
 					continue;
 
-				if (t is RealmAbility)
-				{
-					if (m_gameClient.CanSendTooltip(27, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveRealmAbility(m_gameClient, t.InternalID));
-				}
-				else if (t is Ability)
-				{
-					if (m_gameClient.CanSendTooltip(28, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveAbility(m_gameClient, t.InternalID));
-				}
-				else if (t is Style || t is Spell)
+				if (t is Style || t is Spell || t is RealmAbility || t is Ability)
 				{
 					var skillDelve = SkillDelve.Create(m_gameClient, t);
 					TrySendDelveInfos(skillDelve);

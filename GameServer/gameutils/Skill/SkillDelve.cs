@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using System;
@@ -34,6 +35,8 @@ namespace DOL.GS
             if (skill is Style) return new StyleDelve(client, skill.InternalID);
             if (skill is Song) return new SongDelve(skill.InternalID);
             if (skill is Spell spell) return new SpellDelve(spell);
+            if (skill is RealmAbility) return new RealmAbilityDelve(client, skill.InternalID);
+            if (skill is Ability) return new AbilityDelve(client, skill.InternalID);
             throw new ArgumentException($"{skill.GetType()} has no Delve class.");
         }
 

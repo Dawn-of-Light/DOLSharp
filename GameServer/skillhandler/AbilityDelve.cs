@@ -42,8 +42,7 @@ namespace DOL.GS
 
         public override ClientDelve GetClientDelve()
         {
-            var delveType = skill is Ability ? "Ability" : "Skill";
-            var delve = new ClientDelve(delveType);
+            var delve = new ClientDelve(DelveType);
 
             delve.AddElement("Index", Index);
 
