@@ -1971,73 +1971,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 		 #region v1.110+
         public static string DelveAbility(GameClient clt, int id)
         { /* or skill */
-
-        	Skill sk = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id).OrderBy(e => e.Item1 is Ability ? 0 : 1).Select(e => e.Item1).FirstOrDefault();
-        	
-        	if(sk == null)
-        		sk = SkillBase.GetAbilityByInternalID(id);
-        	
-        	if(sk == null)
-        		sk = SkillBase.GetSpecializationByInternalID(id);
-        	
-        	MiniDelveWriter dw = new MiniDelveWriter(sk is Ability ? "Ability" : "Skill");
-
-        	dw.AddKeyValuePair("Index", unchecked((short)id));
-
-            if (sk != null) 
-            {
-                dw.AddKeyValuePair("Name", sk.Name);
-            }
-            else
-            {
-            	dw.AddKeyValuePair("Name", "(not found)");
-            }
-            
-            return dw.ToString();
+			return new AbilityDelve(clt, id).GetClientDelve().ClientMessage;
         }
 
         public static string DelveRealmAbility(GameClient clt, int id)
         {
-			Skill ra = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id && e.Item1 is Ability).Select(e => e.Item1).FirstOrDefault();
-			
-			if (ra == null)
-			{
-				ra = SkillBase.GetAbilityByInternalID(id);
-			}
-			
-			var dw = new MiniDelveWriter("RealmAbility");
-			dw.AddKeyValuePair("Index",  unchecked((short)id));
-			
-			if (ra is RealmAbility realmAbility)
-			{
-				dw.AddKeyValuePair("Name", realmAbility.Name);
-				if (ra.Icon > 0)
-					dw.AddKeyValuePair("icon", realmAbility.Icon);
-
-				for (int i = 0; i <= realmAbility.MaxLevel - 1; i++)
-				{
-					if (realmAbility.CostForUpgrade(i) > 0)
-						dw.AddKeyValuePair(string.Format("TrainingCost_{0}", (i + 1)), realmAbility.CostForUpgrade(i));
-				}
-
-				if (ra is TimedRealmAbility timedRealmAbility)
-				{
-					for (int i = 1; i <= timedRealmAbility.MaxLevel; i++)
-					{
-						dw.AddKeyValuePair(string.Format("ReuseTimer_{0}", i), timedRealmAbility.GetReUseDelay(i));
-					}
-				}
-			}
-			else if (ra != null)
-            {
-                dw.AddKeyValuePair("Name", ra.Name);
-            }
-            else
-            {
-           		dw.AddKeyValuePair("Name", "(not found)");
-            }
-            
-            return dw.ToString();
+			return new RealmAbilityDelve(clt, id).GetClientDelve().ClientMessage;
         }
         #endregion
     }
