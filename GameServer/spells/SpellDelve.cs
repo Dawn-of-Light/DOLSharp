@@ -65,10 +65,6 @@ namespace DOL.GS.Spells
 			return clientDelve;
 		}
 
-		public override IEnumerable<ClientDelve> GetClientDelves()
-			=> new List<ClientDelve>() { GetClientDelve() };
-
-
 		private int GetSpellTargetType()
 		{
 			switch (Spell.Target)

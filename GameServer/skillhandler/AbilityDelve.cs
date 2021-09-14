@@ -58,10 +58,5 @@ namespace DOL.GS
 
             return delve;
         }
-
-        public override IEnumerable<ClientDelve> GetClientDelves()
-        {
-            return new List<ClientDelve>() { GetClientDelve() };
-        }
     }
 }

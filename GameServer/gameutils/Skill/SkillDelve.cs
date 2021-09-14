@@ -38,7 +38,9 @@ namespace DOL.GS
         }
 
         public abstract ClientDelve GetClientDelve();
-        public abstract IEnumerable<ClientDelve> GetClientDelves();
+
+        public virtual IEnumerable<ClientDelve> GetClientDelves()
+            => new List<ClientDelve>() { GetClientDelve() };
 
         protected ClientDelve NotFoundClientDelve
         {
