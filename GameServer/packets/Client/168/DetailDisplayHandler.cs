@@ -2005,14 +2005,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 				ra = SkillBase.GetAbilityByInternalID(id);
 			}
 			
-			MiniDelveWriter dw = new MiniDelveWriter("RealmAbility");
+			var dw = new MiniDelveWriter("RealmAbility");
 			dw.AddKeyValuePair("Index",  unchecked((short)id));
 			
-            if (ra is RealmAbility)
-            {
-           		((RealmAbility)ra).AddDelve(ref dw);
-            }
-            else if (ra != null)
+			if (ra is RealmAbility realmAbility)
+			{
+				dw.AddKeyValuePair("Name", realmAbility.Name);
+				if (ra.Icon > 0)
+					dw.AddKeyValuePair("icon", realmAbility.Icon);
+
+				for (int i = 0; i <= realmAbility.MaxLevel - 1; i++)
+				{
+					if (realmAbility.CostForUpgrade(i) > 0)
+						dw.AddKeyValuePair(string.Format("TrainingCost_{0}", (i + 1)), realmAbility.CostForUpgrade(i));
+				}
+
+				if (ra is TimedRealmAbility timedRealmAbility)
+				{
+					for (int i = 1; i <= timedRealmAbility.MaxLevel; i++)
+					{
+						dw.AddKeyValuePair(string.Format("ReuseTimer_{0}", i), timedRealmAbility.GetReUseDelay(i));
+					}
+				}
+			}
+			else if (ra != null)
             {
                 dw.AddKeyValuePair("Name", ra.Name);
             }
