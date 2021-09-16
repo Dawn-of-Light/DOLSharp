@@ -61,6 +61,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public BodyResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("parm", "16");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -74,6 +82,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public ColdResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("parm", "12");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -87,6 +103,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public EnergyResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "22");
+		}
 	}
 
 	/// <summary>
@@ -100,6 +124,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public HeatResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "10");
+		}
 	}
 
 	/// <summary>
@@ -113,6 +145,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public MatterResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "15");
+		}
 	}
 
 	/// <summary>
@@ -126,6 +166,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SpiritResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("parm", "98");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -162,6 +210,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public HeatColdMatterBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "97");
+		}
 	}
 
 	/// <summary>
@@ -186,6 +242,12 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public AllMagicResistsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -205,6 +267,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public CrushSlashThrustBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	[SpellHandlerAttribute("CrushResistBuff")]
@@ -215,6 +284,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public CrushResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -228,6 +304,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SlashResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -241,6 +324,12 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public ThrustResistBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -271,6 +360,12 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public AllResistsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 }

@@ -165,7 +165,17 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageParryBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "combat");
+			dw.AddKeyValuePair("cost_type", "2");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "15");
+		}
 	}
+
 	[SpellHandlerAttribute("SavageEvadeBuff")]
 	public class SavageEvadeBuff : AbstractSavageStatBuff
 	{
@@ -173,7 +183,17 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageEvadeBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "combat");
+			dw.AddKeyValuePair("cost_type", "2");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "16");
+		}
 	}
+
 	[SpellHandlerAttribute("SavageCombatSpeedBuff")]
 	public class SavageCombatSpeedBuff : AbstractSavageStatBuff
 	{
@@ -181,6 +201,16 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageCombatSpeedBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "combat");
+			dw.AddKeyValuePair("cost_type", "2");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "36");
+			dw.AddKeyValuePair("power_level", Spell.Value * 2);
+		}
 	}
 	[SpellHandlerAttribute("SavageDPSBuff")]
 	public class SavageDPSBuff : AbstractSavageStatBuff
@@ -189,7 +219,15 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageDPSBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
-	}	
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("cost_type", "2");
+			dw.AddKeyValuePair("damage", Spell.Value);
+		}
+	}
+
 	[SpellHandlerAttribute("SavageSlashResistanceBuff")]
 	public class SavageSlashResistanceBuff : AbstractSavageResistBuff
 	{
@@ -197,7 +235,17 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageSlashResistanceBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("cost_type", "2");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", eDamageType.Slash);
+		}
 	}
+
 	[SpellHandlerAttribute("SavageThrustResistanceBuff")]
 	public class SavageThrustResistanceBuff : AbstractSavageResistBuff
 	{
@@ -205,7 +253,17 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageThrustResistanceBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("cost_type", "2");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", eDamageType.Thrust);
+		}
 	}
+
 	[SpellHandlerAttribute("SavageCrushResistanceBuff")]
 	public class SavageCrushResistanceBuff : AbstractSavageResistBuff
 	{
@@ -213,6 +271,15 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public SavageCrushResistanceBuff(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "resistance");
+			dw.AddKeyValuePair("cost_type", "2");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", eDamageType.Crush);
+		}
 	}
 }
 

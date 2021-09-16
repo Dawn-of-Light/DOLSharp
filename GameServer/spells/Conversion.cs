@@ -153,8 +153,15 @@ namespace DOL.GS.Spells
 			}
 		}
 		public ConversionSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "1");
+		}
 	}
-	
+
 	[SpellHandlerAttribute("MagicConversion")]
 	public class MagicConversionSpellHandler : ConversionSpellHandler
 	{
@@ -231,5 +238,11 @@ namespace DOL.GS.Spells
 		}
 
 		public MagicConversionSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("parm", "0");
+		}
 	}
 }

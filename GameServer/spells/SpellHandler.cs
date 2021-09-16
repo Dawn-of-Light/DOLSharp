@@ -4025,59 +4025,56 @@ namespace DOL.GS.Spells
 		{
 			if (dw == null)
 				return;
-			
-			dw.AddKeyValuePair("Function", "light"); // Function of type "light" allows custom description to show with no hardcoded text.  Temporary Fix - tolakram
-			//.Value("Function", spellHandler.FunctionName ?? "0")
+
 			dw.AddKeyValuePair("Index", unchecked((ushort)Spell.InternalID));
 			dw.AddKeyValuePair("Name", Spell.Name);
-			
+
 			if (Spell.CastTime > 2000)
 				dw.AddKeyValuePair("cast_timer", Spell.CastTime - 2000); //minus 2 seconds (why mythic?)
 			else if (!Spell.IsInstantCast)
 				dw.AddKeyValuePair("cast_timer", 0); //minus 2 seconds (why mythic?)
-			
 			if (Spell.IsInstantCast)
 				dw.AddKeyValuePair("instant","1");
-			//.Value("damage", spellHandler.GetDelveValueDamage, spellHandler.GetDelveValueDamage != 0)
-			if ((int)Spell.DamageType > 0)
-				dw.AddKeyValuePair("damage_type", (int) Spell.DamageType + 1); // Damagetype not the same as dol
-			//.Value("type1", spellHandler.GetDelveValueType1, spellHandler.GetDelveValueType1 > 0)
+
+			dw.AddKeyValuePair("damage_type", Spell.DamageType);
+
 			if (Spell.Level > 0)
 			{
 				dw.AddKeyValuePair("level", Spell.Level);
 				dw.AddKeyValuePair("power_level", Spell.Level);
 			}
-
 			if (Spell.CostPower)
 				dw.AddKeyValuePair("power_cost", Spell.Power);
-			//.Value("round_cost",spellHandler.GetDelveValueRoundCost,spellHandler.GetDelveValueRoundCost!=0)
-			//.Value("power_level", spellHandler.GetDelveValuePowerLevel,spellHandler.GetDelveValuePowerLevel!=0)
 			if (Spell.Range > 0)
 				dw.AddKeyValuePair("range", Spell.Range);
 			if (Spell.Duration > 0)
-				dw.AddKeyValuePair("duration", Spell.Duration/1000); //seconds
+				dw.AddKeyValuePair("duration", Spell.Duration / 1000); //seconds
 			if (GetDurationType() > 0)
 				dw.AddKeyValuePair("dur_type", GetDurationType());
-			//.Value("parm",spellHandler.GetDelveValueParm,spellHandler.GetDelveValueParm>0)
 			if (Spell.HasRecastDelay)
-				dw.AddKeyValuePair("timer_value", Spell.RecastDelay/1000);
-			//.Value("bonus", spellHandler.GetDelveValueBonus, spellHandler.GetDelveValueBonus > 0)
-			//.Value("no_combat"," ",Util.Chance(50))//TODO
-			//.Value("link",14000)
-			//.Value("ability",4) // ??
-			//.Value("use_timer",4)
+				dw.AddKeyValuePair("timer_value", Spell.RecastDelay / 1000);
 			if (GetSpellTargetType() > 0)
 				dw.AddKeyValuePair("target", GetSpellTargetType());
-			//.Value("frequency", spellHandler.GetDelveValueFrequency, spellHandler.GetDelveValueFrequency != 0)
-			if (!string.IsNullOrEmpty(Spell.Description))
-				dw.AddKeyValuePair("description_string", Spell.Description);
 			if (Spell.IsAoE)
 				dw.AddKeyValuePair("radius", Spell.Radius);
 			if (Spell.IsConcentration)
 				dw.AddKeyValuePair("concentration_points", Spell.Concentration);
-			//.Value("num_targets", spellHandler.GetDelveValueNumTargets, spellHandler.GetDelveValueNumTargets>0)
-			//.Value("no_interrupt", spell.Interruptable ? (char)0 : (char)1) //Buggy?
-			//log.Info(dw.ToString());
+			if (Spell.Frequency > 0)
+				dw.AddKeyValuePair("frequency", Spell.Frequency);
+
+			if (Spell.HasSubSpell)
+			{
+				var spell = Spell.SubSpellID > 0 ? SkillBase.GetSpellByID(Spell.SubSpellID) : null;
+				if (spell == null)
+					spell = Spell.MultipleSubSpells.Select(SkillBase.GetSpellByID).FirstOrDefault();
+				if (spell != null)
+					dw.AddKeyValuePair("link", spell.InternalID);
+			}
+
+			// default values, remove them if Function changes in a specific SpellHandler
+			dw.AddKeyValuePair("Function", "light"); // Function of type "light" allows custom description to show with no hardcoded text.
+			if (!string.IsNullOrEmpty(Spell.Description))
+				dw.AddKeyValuePair("delve_string", Spell.Description);
 		}
 		
 		/// <summary>
@@ -4101,6 +4098,8 @@ namespace DOL.GS.Spells
 					return 3;
 				case "Area":
 					return 0; // TODO
+				case "Corpse":
+					return 8;
 				default:
 					return 0;
 			}

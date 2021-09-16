@@ -45,6 +45,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public StrengthConDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "twostat");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -58,6 +65,14 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public DexterityQuiDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "ntwostat");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", "2");
+		}
 	}
 	/// Dex/Con Debuff for assassin poisons
 	/// <summary>
@@ -71,6 +86,13 @@ namespace DOL.GS.Spells
 
 		// constructor
 		public DexterityConDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "ntwostat");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 
 	[SpellHandlerAttribute("WeaponSkillConstitutionDebuff")]
@@ -79,5 +101,12 @@ namespace DOL.GS.Spells
 		public override eProperty Property1 { get { return eProperty.WeaponSkill; } }
 		public override eProperty Property2 { get { return eProperty.Constitution; } }
 		public WeaponskillConDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "ntwostat");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+		}
 	}
 }

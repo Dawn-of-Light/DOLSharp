@@ -257,6 +257,15 @@ namespace DOL.GS.Spells
 			}
 		}
 
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "nresist_dam");
+			dw.AddKeyValuePair("bonus", Spell.Value);
+			dw.AddKeyValuePair("parm", Spell.DamageType);
+			dw.AddKeyValuePair("damage", Spell.Damage * 10);
+		}
+
 		// constructor
 		public DirectDamageDebuffSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}

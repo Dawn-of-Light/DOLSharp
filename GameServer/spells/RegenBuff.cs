@@ -36,6 +36,13 @@ namespace DOL.GS.Spells
 		public override eProperty Property1 { get { return eProperty.HealthRegenerationRate; } }
 
 		public HealthRegenSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "enhancement");
+			dw.AddKeyValuePair("damage", Spell.Value);
+		}
 	}
 
 	/// <summary>
@@ -56,6 +63,14 @@ namespace DOL.GS.Spells
 		public override eProperty Property1 { get { return eProperty.PowerRegenerationRate; } }
 
 		public PowerRegenSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "enhancement");
+			dw.AddKeyValuePair("damage", Spell.Value);
+			dw.AddKeyValuePair("parm", "2");
+		}
 	}
 
 	/// <summary>
@@ -248,5 +263,13 @@ namespace DOL.GS.Spells
 		/// <param name="spell">The spell used</param>
 		/// <param name="line">The spell line used</param>
 		public EnduranceRegenSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+
+		public override void TooltipDelve(ref MiniDelveWriter dw)
+		{
+			base.TooltipDelve(ref dw);
+			dw.AddKeyValuePair("Function", "enhancement");
+			dw.AddKeyValuePair("parm", "3");
+			dw.AddKeyValuePair("damage", Spell.Value);
+		}
 	}
 }
