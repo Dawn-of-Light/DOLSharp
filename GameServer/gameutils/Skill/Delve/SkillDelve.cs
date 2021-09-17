@@ -18,12 +18,11 @@
  */
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
-using DOL.GS.Spells;
 using DOL.GS.Styles;
 using System;
 using System.Collections.Generic;
 
-namespace DOL.GS
+namespace DOL.GS.Delve
 {
     public abstract class SkillDelve
     {

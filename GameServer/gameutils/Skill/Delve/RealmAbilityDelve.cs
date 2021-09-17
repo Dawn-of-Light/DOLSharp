@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using System.Linq;
 
-namespace DOL.GS
+namespace DOL.GS.Delve
 {
     public class RealmAbilityDelve : SkillDelve
     {

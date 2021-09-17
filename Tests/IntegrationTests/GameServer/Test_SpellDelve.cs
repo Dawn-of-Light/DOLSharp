@@ -18,7 +18,7 @@
  */
 using DOL.Database;
 using DOL.GS;
-using DOL.GS.Spells;
+using DOL.GS.Delve;
 using NUnit.Framework;
 using System.Linq;
 

@@ -36,9 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
+using DOL.GS.Delve;
 
 using log4net;
-using DOL.GS.PacketHandler.Client.v168;
 
 
 namespace DOL.GS.PacketHandler

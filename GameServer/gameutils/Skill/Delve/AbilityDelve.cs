@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DOL.GS
+namespace DOL.GS.Delve
 {
     public class AbilityDelve : SkillDelve
     {

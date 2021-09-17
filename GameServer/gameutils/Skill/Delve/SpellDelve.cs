@@ -17,9 +17,10 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.GS.Spells;
 using System.Collections.Generic;
 
-namespace DOL.GS.Spells
+namespace DOL.GS.Delve
 {
 	public class SpellDelve : SkillDelve
 	{

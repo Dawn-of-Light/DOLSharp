@@ -17,12 +17,12 @@
  *
  */
 using DOL.GS.PacketHandler;
-using DOL.GS.Spells;
+using DOL.GS.Styles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DOL.GS.Styles
+namespace DOL.GS.Delve
 {
 	public class StyleDelve : SkillDelve
 	{
