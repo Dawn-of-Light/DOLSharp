@@ -57,6 +57,15 @@ namespace DOL.GS
 					delve.AddElement($"TrainingCost_{i + 1}", realmAbility.CostForUpgrade(i));
 				}
 
+				if(skill is RAStatEnhancer statEnhancer)
+                {
+					for (int i = 1; i <= realmAbility.MaxLevel; i++)
+                    {
+						var statIncrease = statEnhancer.GetAmountForLevel(i) - statEnhancer.GetAmountForLevel(i - 1);
+						delve.AddElement($"AmountLvl_{i}", statIncrease);
+                    }
+				}
+
 				if (skill is TimedRealmAbility timedRealmAbility)
                 {
                     for (int i = 1; i <= timedRealmAbility.MaxLevel; i++)
