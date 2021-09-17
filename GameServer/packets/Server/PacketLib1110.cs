@@ -35,10 +35,6 @@ namespace DOL.GS.PacketHandler
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// Constructs a new PacketLib for Client Version 1.110
-        /// </summary>
-        /// <param name="client">the gameclient this lib is associated with</param>
         public PacketLib1110(GameClient client)
             : base(client)
         {
@@ -203,17 +199,7 @@ namespace DOL.GS.PacketHandler
 				if (t is Specialization)
 					continue;
 
-				if (t is RealmAbility)
-				{
-					if (m_gameClient.CanSendTooltip(27, t.InternalID))
-						SendDelveInfo(new RealmAbilityDelve(m_gameClient, t.InternalID).GetClientDelve().ClientMessage);
-				}
-				else if (t is Ability)
-				{
-					if (m_gameClient.CanSendTooltip(28, t.InternalID))
-						SendDelveInfo(new AbilityDelve(m_gameClient, t.InternalID).GetClientDelve().ClientMessage);
-				}
-				else if (t is Style || t is Spell)
+				if (t is Style || t is Spell || t is RealmAbility || t is Ability)
 				{
 					var skillDelve = SkillDelve.Create(m_gameClient, t);
 					TrySendDelveInfos(skillDelve);
