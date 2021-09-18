@@ -723,7 +723,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		protected virtual void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, bool updateMap, GameLiving living)
+		protected override void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GameLiving living)
 		{
 			pak.WriteByte((byte)(living.GroupIndex + 1)); // From 1 to 8
 			if (living.CurrentRegion != m_gameClient.Player.CurrentRegion)
@@ -780,8 +780,7 @@ namespace DOL.GS.PacketHandler
 						}
 				}
 			}
-			if (updateMap)
-				WriteGroupMemberMapUpdate(pak, living);
+			WriteGroupMemberMapUpdate(pak, living);
 		}
 
 		protected override void WriteGroupMemberMapUpdate(GSTCPPacketOut pak, GameLiving living)
@@ -1241,45 +1240,6 @@ namespace DOL.GS.PacketHandler
 				pak.WritePascalString(String.Format("{0} {1}", count, template.Name));
 			else
 				pak.WritePascalString(template.Name);
-		}
-
-		public override void SendGroupMemberUpdate(bool updateIcons, bool updateMap, GameLiving living)
-		{
-			if (m_gameClient.Player == null)
-				return;
-			Group group = m_gameClient.Player.Group;
-			if (group == null)
-				return;
-
-			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.GroupMemberUpdate)))
-			{
-				lock (group)
-				{
-					// make sure group is not modified before update is sent else player index could change _before_ update
-					if (living.Group != group)
-						return;
-					WriteGroupMemberUpdate(pak, updateIcons, updateMap, living);
-					pak.WriteByte(0x00);
-					SendTCP(pak);
-				}
-			}
-		}
-
-		public override void SendGroupMembersUpdate(bool updateIcons, bool updateMap)
-		{
-			if (m_gameClient.Player == null)
-				return;
-
-			Group group = m_gameClient.Player.Group;
-			if (group == null)
-				return;
-			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.GroupMemberUpdate)))
-			{
-				foreach (var living in m_gameClient.Player.Group.GetMembersInTheGroup())
-					WriteGroupMemberUpdate(pak, updateIcons, updateMap, living);
-				pak.WriteByte(0x00);
-				SendTCP(pak);
-			}
 		}
 	}
 }
