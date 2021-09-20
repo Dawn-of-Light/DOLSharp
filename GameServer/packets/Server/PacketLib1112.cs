@@ -205,9 +205,6 @@ namespace DOL.GS.PacketHandler
 			SendNonHybridSpellLines();
 			// clear trainer cache
 			m_gameClient.TrainerSkillCache = null;
-			
-			if (ForceTooltipUpdate)
-				SendForceTooltipUpdate(usableSkills.Select(t => t.Item1));
 		}
 
 		/// <summary>
@@ -280,9 +277,6 @@ namespace DOL.GS.PacketHandler
 				pak3.WriteByte(0x00);
 				SendTCP(pak3);
 			}
-			
-			if (ForceTooltipUpdate)
-				SendForceTooltipUpdate(spellsXLines.SelectMany(e => e.Item2));
 		}
 		
 		protected override void WriteTemplateData(GSTCPPacketOut pak, ItemTemplate template, int count)

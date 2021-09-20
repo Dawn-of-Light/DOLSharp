@@ -39,14 +39,6 @@ namespace DOL.GS.PacketHandler
             : base(client)
         {
         }
-                
-        /// <summary>
-        /// Property to enable "forced" Tooltip send when Update are made to player skills, or player effects.
-        /// This can be controlled through server propertiers !
-        /// </summary>
-		public virtual bool ForceTooltipUpdate {
-			get { return ServerProperties.Properties.USE_NEW_TOOLTIP_FORCEDUPDATE; }
-		}
 
         /// <summary>
 		/// New system in v1.110+ for delve info. delve is cached by client in extra file, stored locally.
@@ -69,8 +61,6 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 			
-			var tooltipSpellhandlers = new List<ISpellHandler>();
-			
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons)))
 			{
 				long initPos = pak.Position;
@@ -91,12 +81,6 @@ namespace DOL.GS.PacketHandler
 						if (changedEffects != null && !changedEffects.Contains(effect))
 						{
 							continue;
-						}
-						
-						// store tooltip update for gamespelleffect.
-						if (ForceTooltipUpdate && effect is GameSpellEffect gameEffect)
-						{
-							tooltipSpellhandlers.Add(gameEffect.SpellHandler);
 						}
 
 						//						log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
@@ -166,53 +150,6 @@ namespace DOL.GS.PacketHandler
 				pak.Seek(0, SeekOrigin.End);
 	
 				SendTCP(pak);
-			}
-			
-			// force tooltips update
-			foreach (var spellhandler in tooltipSpellhandlers)
-			{
-				var skillDelve = SkillDelve.Create(null, spellhandler.Spell);
-				TrySendDelveInfos(skillDelve);
-			}
-		}
-		
-		/// <summary>
-		/// Override for handling force tooltip update...
-		/// </summary>
-		public override void SendTrainerWindow()
-		{
-			base.SendTrainerWindow();
-			
-			// Send tooltips
-			if (ForceTooltipUpdate && m_gameClient.TrainerSkillCache != null)
-				SendForceTooltipUpdate(m_gameClient.TrainerSkillCache.SelectMany(e => e.Item2).Select(e => e.Item3));
-		}
-		
-		/// <summary>
-		/// Send Delve for Provided Collection of Skills that need forced Tooltip Update.
-		/// </summary>
-		/// <param name="skills"></param>
-		protected virtual void SendForceTooltipUpdate(IEnumerable<Skill> skills)
-		{
-			foreach (Skill t in skills)
-			{
-				if (t is Specialization)
-					continue;
-
-				if (t is Style || t is Spell || t is RealmAbility || t is Ability)
-				{
-					var skillDelve = SkillDelve.Create(m_gameClient, t);
-					TrySendDelveInfos(skillDelve);
-				}
-			}
-		}
-
-		public void TrySendDelveInfos(SkillDelve delveObj)
-		{
-			foreach (var clientDelve in delveObj.GetClientDelves())
-			{
-				if (m_gameClient.CanSendTooltip(clientDelve.TypeID, clientDelve.Index))
-					SendDelveInfo(clientDelve.ClientMessage);
 			}
 		}
 
