@@ -253,6 +253,8 @@ namespace DOL.GS
 		{
 			get
 			{
+				if (InternalID > 100) return eSkillPage.RealmAbilities;
+
 				return eSkillPage.Abilities;
 			}
 		}
