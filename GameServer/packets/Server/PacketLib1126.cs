@@ -333,9 +333,6 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		/// <summary>
-		/// This packet may have been updated anywhere from 1125b-1126a - not sure
-		/// </summary>
 		public override void SendUpdateWeaponAndArmorStats()
 		{
 			if (m_gameClient.Player == null)
@@ -351,10 +348,10 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x00); //unk
 
 				// weapondamage
-				var wd = (int)(m_gameClient.Player.WeaponDamage(m_gameClient.Player.AttackWeapon) * 100.0);
-				pak.WriteByte((byte)(wd / 100));
+				var wd = (int)(m_gameClient.Player.WeaponDamage(m_gameClient.Player.AttackWeapon) * 100);
+				pak.WriteByte((byte)(wd / 0x100));
 				pak.WriteByte(0x00);
-				pak.WriteByte((byte)(wd % 100));
+				pak.WriteByte((byte)(wd % 0x100));
 				pak.WriteByte(0x00);
 				// weaponskill
 				int ws = m_gameClient.Player.DisplayedWeaponSkill;
