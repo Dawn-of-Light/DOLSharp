@@ -17,22 +17,14 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.PropertyCalc;
 using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler to summon a bonedancer pet.
-	/// </summary>
-	/// <author>IST</author>
 	[SpellHandler("SummonCommander")]
 	public class SummonCommanderPet : SummonSpellHandler
 	{
@@ -77,9 +69,6 @@ namespace DOL.GS.Spells
 			return new CommanderPet(template);
 		}
 
-		/// <summary>
-		/// Delve info string.
-		/// </summary>
 		public override IList<string> DelveInfo
 		{
 			get
@@ -94,13 +83,6 @@ namespace DOL.GS.Spells
                 delve.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonCommanderPet.DelveInfo.Text5", (Spell.CastTime / 1000).ToString("0.0## " + (LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "Effects.DelveInfo.Seconds")))));
                 return delve;
             }
-		}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "summon");
-			dw.AddKeyValuePair("power_level", -100);
 		}
 	}
 }

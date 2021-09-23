@@ -65,10 +65,7 @@ namespace DOL.GS.Spells
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// UnresistableStun 
-	/// </summary>
-	[SpellHandlerAttribute("UnresistableStun")]
+	[SpellHandler("UnresistableStun")]
 	public class UnresistableStunSpellHandler : StunSpellHandler
 	{
 

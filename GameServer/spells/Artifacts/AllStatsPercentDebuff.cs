@@ -16,18 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.AI.Brain;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// All stats debuff spell handler
-	/// </summary>
-	[SpellHandlerAttribute("AllStatsPercentDebuff")]
+	[SpellHandler("AllStatsPercentDebuff")]
 	public class AllStatsPercentDebuff : SpellHandler
 	{
         protected int StrDebuff = 0;
@@ -100,11 +95,6 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect, noMessages);
 		}
 
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
@@ -127,10 +117,6 @@ namespace DOL.GS.Spells
 		}
         public AllStatsPercentDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
+		public override string ShortDescription => $"Decreases all stats of the target by {Spell.Value}%.";
 	}
 }

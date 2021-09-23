@@ -17,24 +17,15 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	///
-	/// </summary>
-	[SpellHandlerAttribute("EnduranceHeal")]
+	[SpellHandler("EnduranceHeal")]
 	public class EnduranceHealSpellHandler : SpellHandler
 	{
-		// constructor
 		public EnduranceHealSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		/// <summary>
-		/// Execute heal spell
-		/// </summary>
-		/// <param name="target"></param>
 		public override bool StartSpell(GameLiving target)
 		{
 			var targets = SelectTargets(target);
@@ -85,12 +76,6 @@ namespace DOL.GS.Spells
 			m_caster.Mana -= value;
 		}
 
-		/// <summary>
-		/// Heals hit points of one target and sends needed messages, no spell effects
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="amount">amount of hit points to heal</param>
-		/// <returns>true if heal was done</returns>
 		public virtual bool HealTarget(GameLiving target, int amount)
 		{
 			if (target == null || target.ObjectState != GameLiving.eObjectState.Active) return false;
@@ -144,10 +129,7 @@ namespace DOL.GS.Spells
 			return base.CheckBeginCast(selectedTarget);
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+		public override string ShortDescription 
+			=> $"Replenishes {(Spell.Value < 0 ? Spell.Value + "%" : Spell.Value.ToString())} endurance.";
+    }
 }

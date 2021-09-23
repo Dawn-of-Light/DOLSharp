@@ -55,23 +55,6 @@ namespace DOL.GS.RealmAbilities
 			get { return 0; }
 		}
 
-		/// <summary>
-		/// Delve for this RA
-		/// </summary>
-		/// <param name="w"></param>
-		public virtual void AddDelve(ref MiniDelveWriter w)
-		{
-			w.AddKeyValuePair("Name", Name);
-			if (Icon > 0)
-				w.AddKeyValuePair("icon", Icon);
-
-			for (int i = 0; i <= MaxLevel - 1; i++)
-			{
-				if (CostForUpgrade(i) > 0)
-					w.AddKeyValuePair(string.Format("TrainingCost_{0}", (i + 1)), CostForUpgrade(i));
-			}
-		}
-
 		public override string Name
 		{
 			get
@@ -167,16 +150,6 @@ namespace DOL.GS.RealmAbilities
 				{
 					return 3;
 				}
-			}
-		}
-
-		public override void AddDelve(ref MiniDelveWriter w)
-		{
-			base.AddDelve(ref w);
-
-			for (int i = 1; i <= MaxLevel; i++)
-			{
-				w.AddKeyValuePair(string.Format("ReuseTimer_{0}", i), GetReUseDelay(i));
 			}
 		}
 

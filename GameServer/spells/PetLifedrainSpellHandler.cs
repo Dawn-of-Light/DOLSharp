@@ -23,9 +23,6 @@ namespace DOL.spells
     using GS.PacketHandler;
     using GS.Spells;
 
-    /// <summary>
-    /// Return life to Player Owner
-    /// </summary>
     [SpellHandler("PetLifedrain")]
     public class PetLifedrainSpellHandler : LifedrainSpellHandler
     {
@@ -59,14 +56,6 @@ namespace DOL.spells
             {
                 MessageToLiving(player, "You cannot absorb any more life.", eChatType.CT_SpellResisted);
             }
-        }
-
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "lifedrain");
-            dw.AddKeyValuePair("damage", Spell.Damage * 10);
-            dw.AddKeyValuePair("bonus", Spell.LifeDrainReturn / 10);
         }
     }
 }

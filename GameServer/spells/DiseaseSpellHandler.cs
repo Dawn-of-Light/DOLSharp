@@ -16,40 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-
 using DOL.Database;
 using DOL.AI.Brain;
-using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Disease always debuffs the target by 7.5% movement
-	/// and 15% total hit points, and prevents health regeneration.
-	/// http://www.camelotherald.com/article.php?id=63
-	/// Here they say hit points but spell description states that
-	/// it is strength, what should I use hmm...
-	/// </summary>
-	[SpellHandlerAttribute("Disease")]
+	[SpellHandler("Disease")]
 	public class DiseaseSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// called after normal spell cast is completed and effect has to be started
-		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
-		/// <summary>
-		/// When an applied effect starts
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
@@ -65,7 +47,7 @@ namespace DOL.GS.Spells
 				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 			}
 
-			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(effect.Owner, "Mesmerize");
+			GameSpellEffect mezz = FindEffectOnTarget(effect.Owner, "Mesmerize");
  			if(mezz != null) mezz.Cancel(false);
 			effect.Owner.Disease(true);
 			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 0.15);
@@ -85,13 +67,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			base.OnEffectExpires(effect, noMessages);
@@ -110,12 +85,6 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = base.CalculateEffectDuration(target, effectiveness);
@@ -128,10 +97,6 @@ namespace DOL.GS.Spells
 			return (int)duration;
 		}
 
-		/// <summary>
-		/// Sends needed updates on start/stop
-		/// </summary>
-		/// <param name="effect"></param>
 		protected virtual void SendUpdates(GameSpellEffect effect)
 		{
 			GamePlayer player = effect.Owner as GamePlayer;
@@ -179,13 +144,10 @@ namespace DOL.GS.Spells
 			return this.OnEffectExpires(effect, noMessages);
 		}
 
-		// constructor
 		public DiseaseSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "disease");
-		}
-	}
+		//TODO: Adjust strength reduction
+        public override string ShortDescription 
+			=> $"Inflicts a wasting disease on the target that slows target by 15%, reduces its strength by 7.5% and inhibits healing by 50%";
+    }
 }

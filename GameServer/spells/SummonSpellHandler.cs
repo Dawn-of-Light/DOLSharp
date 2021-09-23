@@ -289,13 +289,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "summon");
-			dw.AddKeyValuePair("power_level", -Spell.Damage);
-			if (Spell.Value != 0)
-				dw.AddKeyValuePair("damage", Spell.Value);
-		}
+		public override string ShortDescription => $"Summon a pet to serve the caster. Affects monsters up to {Math.Abs(Spell.Damage)}% of your level, to a maximun of level {Spell.Value}.";
 	}
 }

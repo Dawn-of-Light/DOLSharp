@@ -229,6 +229,8 @@ namespace DOL.GS.Spells
 		/// </summary>
 		SpellLine SpellLine { get; }
 
+		string CostType { get; }
+
 		/// <summary>
 		/// The DelveInfo
 		/// </summary>
@@ -239,10 +241,10 @@ namespace DOL.GS.Spells
 		/// </summary>
 		byte DelveInfoDepth { get; set; }
 
-		/// <summary>
-		/// Event raised when casting sequence is completed and execution of spell can start
-		/// </summary>
-		event CastingCompleteCallback CastingCompleteEvent;
+        /// <summary>
+        /// Event raised when casting sequence is completed and execution of spell can start
+        /// </summary>
+        event CastingCompleteCallback CastingCompleteEvent;
 
 		PlayerXEffect GetSavedEffect(GameSpellEffect e);
 		void OnEffectRestored(GameSpellEffect effect, int[] RestoreVars);
@@ -254,7 +256,8 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <returns>Modified Spell Range</returns>
 		int CalculateSpellRange();
-		void TooltipDelve(ref DOL.GS.PacketHandler.MiniDelveWriter dw);
+
+		string ShortDescription { get; }
 	}
 
 	/// <summary>

@@ -21,21 +21,13 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.GS.Keeps;
 using DOL.GS.SkillHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell Handler for firing bolts
-	/// </summary>
-	[SpellHandlerAttribute("Bolt")]
+	[SpellHandler("Bolt")]
 	public class BoltSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Fire bolt
-		/// </summary>
-		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
@@ -102,27 +94,12 @@ namespace DOL.GS.Spells
 		}
 		#endregion
 
-		/// <summary>
-		/// Delayed action when bolt reach the target
-		/// </summary>
 		protected class BoltOnTargetAction : RegionAction
 		{
-			/// <summary>
-			/// The bolt target
-			/// </summary>
 			protected readonly GameLiving m_boltTarget;
 
-			/// <summary>
-			/// The spell handler
-			/// </summary>
 			protected readonly BoltSpellHandler m_handler;
 
-			/// <summary>
-			/// Constructs a new BoltOnTargetAction
-			/// </summary>
-			/// <param name="actionSource">The action source</param>
-			/// <param name="boltTarget">The bolt target</param>
-			/// <param name="spellHandler"></param>
 			public BoltOnTargetAction(GameLiving actionSource, GameLiving boltTarget, BoltSpellHandler spellHandler) : base(actionSource)
 			{
 				if (boltTarget == null)
@@ -133,9 +110,6 @@ namespace DOL.GS.Spells
 				m_handler = spellHandler;
 			}
 
-			/// <summary>
-			/// Called on every timer tick
-			/// </summary>
 			protected override void OnTick()
 			{
 				GameLiving target = m_boltTarget;
@@ -306,14 +280,9 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
 		public BoltSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "bolt");
-			dw.AddKeyValuePair("damage", Spell.Damage * 10);
-		}
-	}
+        public override string ShortDescription 
+			=> $"A magical bolt shoots toward the target, exploding on impact for {Spell.Damage} {Spell.DamageType} damage. Can be blocked.";
+    }
 }

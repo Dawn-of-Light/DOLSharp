@@ -17,17 +17,11 @@
  *
  */
 using System;
-using System.Reflection;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Spells
 {
-    /// <summary>
-    /// Buffs a single stat,
-    /// considered as a baseline buff (regarding the bonuscategories on statproperties)
-    /// </summary>
     public abstract class SingleStatBuff : PropertyChangingSpell
     {
         public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
@@ -36,12 +30,7 @@ namespace DOL.GS.Spells
         {
             target.UpdateHealthManaEndu();
         }
-		
-        /// <summary>
-        /// Apply effect on target or do spell action if non duration spell
-        /// </summary>
-        /// <param name="target">target that gets the effect</param>
-        /// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             int specLevel = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
@@ -81,13 +70,6 @@ namespace DOL.GS.Spells
             base.ApplyEffectOnTarget(target, effectiveness);
         }
 
-        /// <summary>
-        /// Determines wether this spell is compatible with given spell
-        /// and therefore overwritable by better versions
-        /// spells that are overwritable cannot stack
-        /// </summary>
-        /// <param name="compare"></param>
-        /// <returns></returns>
         public override bool IsOverwritable(GameSpellEffect compare)
         {
             if (Spell.EffectGroup != 0 || compare.Spell.EffectGroup != 0)
@@ -99,15 +81,12 @@ namespace DOL.GS.Spells
                 SpellLine.IsBaseLine;
         }
 
-
-        // constructor
         protected SingleStatBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription => $"Increases the target's {ConvertPropertyToText(Property1).ToLower()} by {Spell.Value}.";
     }
 
-    /// <summary>
-    /// Str stat baseline buff
-    /// </summary>
-    [SpellHandlerAttribute("StrengthBuff")]
+    [SpellHandler("StrengthBuff")]
     public class StrengthBuff : SingleStatBuff
     {
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -121,21 +100,10 @@ namespace DOL.GS.Spells
         }
         public override eProperty Property1 { get { return eProperty.Strength; } }
 
-        // constructor
         public StrengthBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "stat");
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
     }
 
-    /// <summary>
-    /// Dex stat baseline buff
-    /// </summary>
-    [SpellHandlerAttribute("DexterityBuff")]
+    [SpellHandler("DexterityBuff")]
     public class DexterityBuff : SingleStatBuff
     {
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -149,22 +117,10 @@ namespace DOL.GS.Spells
         }
         public override eProperty Property1 { get { return eProperty.Dexterity; } }
 
-        // constructor
         public DexterityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "stat");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "2");
-		}
     }
 
-    /// <summary>
-    /// Con stat baseline buff
-    /// </summary>
-    [SpellHandlerAttribute("ConstitutionBuff")]
+    [SpellHandler("ConstitutionBuff")]
     public class ConstitutionBuff : SingleStatBuff
     {
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -178,22 +134,26 @@ namespace DOL.GS.Spells
         }
         public override eProperty Property1 { get { return eProperty.Constitution; } }
 
-        // constructor
         public ConstitutionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "stat");
-            dw.AddKeyValuePair("parm", "3");
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
     }
 
-    /// <summary>
-    /// Armor factor buff
-    /// </summary>
-    [SpellHandlerAttribute("ArmorFactorBuff")]
+    [SpellHandler("AcuityBuff")]
+    public class AcuityBuff : SingleStatBuff
+    {
+        public override eProperty Property1 { get { return eProperty.Acuity; } }
+
+        public AcuityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+
+    [SpellHandler("QuicknessBuff")]
+    public class QuicknessBuff : SingleStatBuff
+    {
+        public override eProperty Property1 { get { return eProperty.Quickness; } }
+
+        public QuicknessBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+
+    [SpellHandler("ArmorFactorBuff")]
     public class ArmorFactorBuff : SingleStatBuff
     {
         public override eBuffBonusCategory BonusCategory1
@@ -207,341 +167,160 @@ namespace DOL.GS.Spells
         }
         public override eProperty Property1 { get { return eProperty.ArmorFactor; } }
 
-        // constructor
         public ArmorFactorBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "shield");
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
     }
 
-    /// <summary>
-    /// Armor Absorption buff
-    /// </summary>
-    [SpellHandlerAttribute("ArmorAbsorptionBuff")]
+    [SpellHandler("ArmorAbsorptionBuff")]
     public class ArmorAbsorptionBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.ArmorAbsorption; } }
 
-        /// <summary>
-        /// send updates about the changes
-        /// </summary>
-        /// <param name="target"></param>
-        protected override void SendUpdates(GameLiving target)
-        {
-        }
+        protected override void SendUpdates(GameLiving target) { }
 
-        // constructor
         public ArmorAbsorptionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "absorb");
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
     }
 
-    /// <summary>
-    /// Combat speed buff
-    /// </summary>
-    [SpellHandlerAttribute("CombatSpeedBuff")]
+    [SpellHandler("CombatSpeedBuff")]
     public class CombatSpeedBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.MeleeSpeed; } }
 
-        /// <summary>
-        /// send updates about the changes
-        /// </summary>
-        /// <param name="target"></param>
-        protected override void SendUpdates(GameLiving target)
-        {
-        }
+        protected override void SendUpdates(GameLiving target) { }
 
-        // constructor
         public CombatSpeedBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "combat");
-            dw.AddKeyValuePair("parm", "36");
-            dw.AddKeyValuePair("power_level", Spell.Value * 2);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} combat speed by {Spell.Value}%.";
     }
     
-    /// <summary>
-    /// Haste Buff stacking with other Combat Speed Buff
-    /// </summary>
-    [SpellHandlerAttribute("HasteBuff")]
+    [SpellHandler("HasteBuff")]
     public class HasteBuff : CombatSpeedBuff
     {
-        // constructor
         public HasteBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
-    /// <summary>
-    /// Celerity Buff stacking with other Combat Speed Buff
-    /// </summary>
-    [SpellHandlerAttribute("CelerityBuff")]
+    [SpellHandler("CelerityBuff")]
     public class CelerityBuff : CombatSpeedBuff
     {
-        // constructor
         public CelerityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} attack speed by {Math.Abs(Spell.Value)}%.";
     }
 
-    /// <summary>
-    /// Fatigue reduction buff
-    /// </summary>
-    [SpellHandlerAttribute("FatigueConsumptionBuff")]
+    [SpellHandler("FatigueConsumptionBuff")]
     public class FatigueConsumptionBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.FatigueConsumption; } }
 
-        /// <summary>
-        /// send updates about the changes
-        /// </summary>
-        /// <param name="target"></param>
-        protected override void SendUpdates(GameLiving target)
-        {
-        }
+        protected override void SendUpdates(GameLiving target) { }
 
-        // constructor
         public FatigueConsumptionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription => $"{TargetPronoun} actions require {Math.Abs(Spell.Value)}% less endurance.";
     }
 
-    /// <summary>
-    /// Melee damage buff
-    /// </summary>
-    [SpellHandlerAttribute("MeleeDamageBuff")]
+    [SpellHandler("MeleeDamageBuff")]
     public class MeleeDamageBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.MeleeDamage; } }
 
-        /// <summary>
-        /// send updates about the changes
-        /// </summary>
-        /// <param name="target"></param>
-        protected override void SendUpdates(GameLiving target)
-        {
-        }
+        protected override void SendUpdates(GameLiving target) { }
 
-        // constructor
         public MeleeDamageBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
+        public override string ShortDescription => $"You do {Spell.Value} additional damage with melee attacks.";
     }
 
-    /// <summary>
-    /// Mesmerize duration buff
-    /// </summary>
-    [SpellHandlerAttribute("MesmerizeDurationBuff")]
+    [SpellHandler("MesmerizeDurationBuff")]
     public class MesmerizeDurationBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.MesmerizeDurationReduction; } }
 
-        /// <summary>
-        /// send updates about the changes
-        /// </summary>
-        /// <param name="target"></param>
-        protected override void SendUpdates(GameLiving target)
-        {
-        }
+        protected override void SendUpdates(GameLiving target) { }
 
-        // constructor
         public MesmerizeDurationBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "mez_dampen");
-            dw.AddKeyValuePair("bonus", Spell.Value);
-            dw.AddKeyValuePair("damage_type", eDamageType.Energy);
-            dw.AddKeyValuePair("dur_type", "2");
-            dw.AddKeyValuePair("power_level", "29");
-        }
+        public override string ShortDescription => $"The effectiveness of mesmerize spells is reduced by {Spell.Value}%.";
     }
 
-
-    /// <summary>
-    /// Acuity buff
-    /// </summary>
-    [SpellHandlerAttribute("AcuityBuff")]
-    public class AcuityBuff : SingleStatBuff
-    {
-        public override eProperty Property1 { get { return eProperty.Acuity; } }
-
-        // constructor
-        public AcuityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "twostat");
-            dw.AddKeyValuePair("parm", "3");
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
-    }
-
-    /// <summary>
-    /// Quickness buff
-    /// </summary>
-    [SpellHandlerAttribute("QuicknessBuff")]
-    public class QuicknessBuff : SingleStatBuff
-    {
-        public override eProperty Property1 { get { return eProperty.Quickness; } }
-
-        // constructor
-        public QuicknessBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-    }
-
-    /// <summary>
-    /// DPS buff
-    /// </summary>
-    [SpellHandlerAttribute("DPSBuff")]
+    [SpellHandler("DPSBuff")]
     public class DPSBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.DPS; } }
 
-        // constructor
         public DPSBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
-    /// <summary>
-    /// Evade chance buff
-    /// </summary>
-    [SpellHandlerAttribute("EvadeBuff")]
+    [SpellHandler("EvadeBuff")]
     public class EvadeChanceBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.EvadeChance; } }
 
-        // constructor
         public EvadeChanceBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
+        public override string ShortDescription => $"You gain {Spell.Value}% chance to evade.";
     }
 
-    /// <summary>
-    /// Parry chance buff
-    /// </summary>
-    [SpellHandlerAttribute("ParryBuff")]
+    [SpellHandler("ParryBuff")]
     public class ParryChanceBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.ParryChance; } }
 
-        // constructor
         public ParryChanceBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
+        public override string ShortDescription => $"You gain {Spell.Value}% chance to parry.";
     }
 
-    /// <summary>
-    /// WeaponSkill buff
-    /// </summary>
-    [SpellHandlerAttribute("WeaponSkillBuff")]
+    [SpellHandler("WeaponSkillBuff")]
     public class WeaponSkillBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.WeaponSkill; } }
 
-        // constructor
         public WeaponSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} weapon skill by {Spell.Value}%.";
     }
 
-    /// <summary>
-    /// Stealth Skill buff
-    /// </summary>
-    [SpellHandlerAttribute("StealthSkillBuff")]
+    [SpellHandler("StealthSkillBuff")]
     public class StealthSkillBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.Skill_Stealth; } }
 
-        // constructor
         public StealthSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} stealth skill by {Spell.Value}%.";
     }
 
-    /// <summary>
-    /// To Hit buff
-    /// </summary>
-    [SpellHandlerAttribute("ToHitBuff")]
+    [SpellHandler("ToHitBuff")]
     public class ToHitSkillBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.ToHitBonus; } }
 
-        // constructor
         public ToHitSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
     }
 
-    /// <summary>
-    /// Magic Resists Buff
-    /// </summary>
-    [SpellHandlerAttribute("MagicResistsBuff")]
+    [SpellHandler("MagicResistsBuff")]
     public class MagicResistsBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.MagicAbsorption; } }
 
-        // constructor
         public MagicResistsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
-    [SpellHandlerAttribute("StyleAbsorbBuff")]
+    [SpellHandler("StyleAbsorbBuff")]
     public class StyleAbsorbBuff : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.StyleAbsorb; } }
         public StyleAbsorbBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "absorb");
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
     }
 
-    [SpellHandlerAttribute("ExtraHP")]
+    [SpellHandler("ExtraHP")]
     public class ExtraHP : SingleStatBuff
     {
         public override eProperty Property1 { get { return eProperty.ExtraHP; } }
         public ExtraHP(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
-    /// <summary>
-    /// Paladin Armor factor buff
-    /// </summary>
-    [SpellHandlerAttribute("PaladinArmorFactorBuff")]
+    [SpellHandler("PaladinArmorFactorBuff")]
     public class PaladinArmorFactorBuff : SingleStatBuff
     {
         public override eBuffBonusCategory BonusCategory1
@@ -553,17 +332,10 @@ namespace DOL.GS.Spells
                 return eBuffBonusCategory.Other; // no caps for spec line buffs
             }
         }
+
         public override eProperty Property1 { get { return eProperty.ArmorFactor; } }
 
-        // constructor
         public PaladinArmorFactorBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "shield");
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
     }
 
     [Obsolete("This class will be removed. Please use FlexibleSkillBuff instead!")]
@@ -579,11 +351,7 @@ namespace DOL.GS.Spells
         public override eProperty Property1 { get { return eProperty.Skill_Flexible_Weapon; } }
         public FlexibleSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("bonus", Spell.Value);
-        }
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} Flexible by {Spell.Value}%.";
     }
 
     [SpellHandler("ResiPierceBuff")]
@@ -591,5 +359,7 @@ namespace DOL.GS.Spells
     {
         public override eProperty Property1 { get { return eProperty.ResistPierce; } }
         public ResiPierceBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription => $"Grants you {Spell.Value}% chance to penetrate magical resistances.";
     }
 }

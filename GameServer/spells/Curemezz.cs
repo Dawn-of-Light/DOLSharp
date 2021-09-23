@@ -26,27 +26,16 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("CureMezz")]
+	[SpellHandler("CureMezz")]
 	public class CureMezzSpellHandler : RemoveSpellEffectHandler
 	{
-		// constructor
 		public CureMezzSpellHandler(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
-			// RR4: now it's a list
 			m_spellTypesToRemove = new List<string>();
 			m_spellTypesToRemove.Add("Mesmerize");
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "remove_eff");
-			dw.AddKeyValuePair("parm", "6");
-			dw.AddKeyValuePair("type1", "8");
-		}
+		public override string ShortDescription => "All mesmerization effects are removed from the target.";
 	}
 }

@@ -26,17 +26,9 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Damages target and decreases speed after
-	/// </summary>
-	[SpellHandlerAttribute("DamageSpeedDecrease")]
+	[SpellHandler("DamageSpeedDecrease")]
 	public class DamageSpeedDecreaseSpellHandler : SpeedDecreaseSpellHandler
 	{
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			// do damage even if immune to duration effect
@@ -48,11 +40,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// execute non duration spell effect on target
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="effectiveness"></param>
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			base.OnDirectEffect(target, effectiveness);
@@ -64,9 +51,6 @@ namespace DOL.GS.Spells
 				StealLife(ad);
 		}
 
-		/// <summary>
-		/// Uses percent of damage to heal the caster
-		/// </summary>
 		public virtual void StealLife(AttackData ad)
 		{
 			if(ad == null) return;
@@ -96,34 +80,18 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			base.OnEffectExpires(effect, noMessages);
 			return 0;
 		}
 
-		/// <summary>
-		/// Creates the corresponding spell effect for the spell
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="effectiveness"></param>
-		/// <returns></returns>
 		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
 		{
 			int duration = CalculateEffectDuration(target, effectiveness);
 			return new GameSpellEffect(this, duration, 0, effectiveness);
 		}
 
-		/// <summary>
-		/// Delve Info
-		/// </summary>
 		public override IList<string> DelveInfo
 		{
 			get
@@ -185,15 +153,8 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "snare");
-			dw.AddKeyValuePair("damage", Spell.Damage * 10);
-			dw.AddKeyValuePair("bonus", 100 - Spell.Value);
-		}
+        public override string ShortDescription => $"The target is slowed by {Spell.Value}%. Does {Spell.Damage} Cold damage to the target.";
 
-		// counstructor
-		public DamageSpeedDecreaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+        public DamageSpeedDecreaseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 }

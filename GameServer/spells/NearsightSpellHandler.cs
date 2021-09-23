@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -25,20 +23,11 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Reduce range needed to cast the sepll
-	/// </summary>
 	[SpellHandler("Nearsight")]
 	public class NearsightSpellHandler : ImmunityEffectSpellHandler
 	{
-        /// <summary>
-        /// Calculates chance of spell getting resisted
-        /// </summary>
-        /// <param name="target">the target of the spell</param>
-        /// <returns>chance that spell will be resisted for specific target</returns>
         public override int CalculateSpellResistChance(GameLiving target)
         {
-            //Bonedancer rr5
             if (target.EffectList.GetOfType<AllureofDeathEffect>() != null)
             {
                 return AllureofDeathEffect.nschance;
@@ -46,11 +35,7 @@ namespace DOL.GS.Spells
             return base.CalculateSpellResistChance(target);
 
         }
-		/// <summary>
-		/// When an applied effect starts
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
+
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(effect.Owner, "Mesmerize");
@@ -63,13 +48,6 @@ namespace DOL.GS.Spells
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), eChatType.CT_Spell, effect.Owner);
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			// percent category
@@ -82,9 +60,6 @@ namespace DOL.GS.Spells
 			return 60000;
 		}
 
-		/// <summary>
-		/// Delve Info
-		/// </summary>
 		public override IList<string> DelveInfo
 		{
 			get
@@ -145,40 +120,23 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
 		public NearsightSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("power_level", Spell.Value);
-			dw.AddKeyValuePair("parm", "12");
-		}
-	}
+        public override string ShortDescription => $"Target's effective range is reduced by {Spell.Value}% for ranged attacks.";
+    }
 
-
-	/// <summary>
-	/// Reduce efficacity of nearsight effect
-	/// </summary>
 	[SpellHandler("NearsightReduction")]
 	public class NearsightReductionSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// called after normal spell cast is completed and effect has to be started
-		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
-		}	
-		// constructor
+		}
+
 		public NearsightReductionSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+		public override string ShortDescription
+			=> $"Nearsight spells cast upon the caster's group are reduced in effectiveness by {Spell.Value}%, or outright resisted.";
+    }
 }

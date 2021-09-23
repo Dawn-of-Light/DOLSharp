@@ -25,16 +25,9 @@ using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Heal Over Time spell handler
-	/// </summary>
 	[SpellHandlerAttribute("HealOverTime")]
 	public class HoTSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Execute heal over time spell
-		/// </summary>
-		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
@@ -106,13 +99,6 @@ namespace DOL.GS.Spells
 			MessageToLiving(target, Spell.Message1, eChatType.CT_Spell);
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			base.OnEffectExpires(effect, noMessages);
@@ -125,16 +111,9 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-
-		// constructor
 		public HoTSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "regen");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("damage", Spell.Value);
-		}
-	}
+        public override string ShortDescription 
+			=> $"The target regenerates {Spell.Value} health every {Spell.Frequency/10.0} sec.";
+    }
 }

@@ -23,15 +23,9 @@ using DOL.GS.Effects;
  
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Bladeturn spellhandler
-	/// </summary>
-	[SpellHandlerAttribute("Bladeturn")]
+	[SpellHandler("Bladeturn")]
 	public class BladeturnSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Execute buff spell
-		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
@@ -47,13 +41,6 @@ namespace DOL.GS.Spells
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), toOther, effect.Owner);
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			if (!noMessages && Spell.Pulse == 0) 
@@ -63,10 +50,7 @@ namespace DOL.GS.Spells
 			}
 			return 0;
 		}
-
-        /// <summary>
-        /// Saves the effect on player exit
-        /// </summary>        
+      
         public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
         {
             PlayerXEffect eff = new PlayerXEffect();
@@ -77,10 +61,7 @@ namespace DOL.GS.Spells
             eff.SpellLine = SpellLine.KeyName;
             return eff;
         }
-
-        /// <summary>
-        /// Send messages when a restored effect expires
-        /// </summary>        
+    
         public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
         {            
             if (!noMessages && Spell.Pulse == 0)
@@ -91,14 +72,8 @@ namespace DOL.GS.Spells
             return 0;
         }
 
-        // constructor
         public BladeturnSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("parm", "9");
-		}
-	}
+        public override string ShortDescription => "Creates a 'bubble' that absorbs the damage of a single melee hit.";
+    }
 }

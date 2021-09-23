@@ -18,31 +18,19 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.Events;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summary description for TauntSpellHandler.
-	/// </summary>
 	[SpellHandler("Taunt")]
 	public class TauntSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// called after normal spell cast is completed and effect has to be started
-		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
-		/// <summary>
-		/// execute non duration spell effect on target
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="effectiveness"></param>
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			if (target == null) return;
@@ -64,10 +52,6 @@ namespace DOL.GS.Spells
 				target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
 		}
 
-		/// <summary>
-		/// When spell was resisted
-		/// </summary>
-		/// <param name="target">the target that resisted the spell</param>
 		protected override void OnSpellResisted(GameLiving target)
 		{
 			base.OnSpellResisted(target);
@@ -77,12 +61,6 @@ namespace DOL.GS.Spells
 				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 		}
 
-		/// <summary>
-		/// Apply the extra aggression
-		/// </summary>
-		/// <param name="ad"></param>
-		/// <param name="showEffectAnimation"></param>
-		/// <param name="attackResult"></param>
 		public override void DamageTarget(AttackData ad, bool showEffectAnimation, int attackResult)
 		{
 			base.DamageTarget(ad, showEffectAnimation, attackResult);
@@ -101,14 +79,9 @@ namespace DOL.GS.Spells
 			m_lastAttackData = ad;
 		}
 
-
 		public TauntSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "taunt");
-			dw.AddKeyValuePair("damage", Spell.Damage);
-		}
+		public override string ShortDescription
+			=> $"Taunts target, increasing your threat against it by {Spell.Value}.";
 	}
 }

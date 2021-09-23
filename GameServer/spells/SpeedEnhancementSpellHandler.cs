@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -26,27 +25,15 @@ using DOL.Events;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Increases the target's movement speed.
-	/// </summary>
-	[SpellHandlerAttribute("SpeedEnhancement")]
+	[SpellHandler("SpeedEnhancement")]
 	public class SpeedEnhancementSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// called after normal spell cast is completed and effect has to be started
-		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 		
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = Spell.Duration;
@@ -68,10 +55,6 @@ namespace DOL.GS.Spells
 			return (int)duration;
 		}
 		
-		/// <summary>
-		/// Start event listener for Speed Effect
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectAdd(GameSpellEffect effect)
 		{
 			GamePlayer player = effect.Owner as GamePlayer;
@@ -85,11 +68,6 @@ namespace DOL.GS.Spells
 			base.OnEffectAdd(effect);
 		}
 
-		/// <summary>
-		/// Remove event listener for Speed Effect
-		/// </summary>
-		/// <param name="effect"></param>
-		/// <param name="overwrite"></param>
 		public override void OnEffectRemove(GameSpellEffect effect, bool overwrite)
 		{
 			GamePlayer player = effect.Owner as GamePlayer;
@@ -101,11 +79,6 @@ namespace DOL.GS.Spells
 			base.OnEffectRemove(effect, overwrite);
 		}
 		
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			if (target.EffectList.GetOfType<ChargeEffect>() != null)
@@ -135,11 +108,6 @@ namespace DOL.GS.Spells
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 
-		/// <summary>
-		/// When an applied effect starts
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
@@ -153,13 +121,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
@@ -172,11 +133,6 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect, noMessages);
 		}
 
-
-		/// <summary>
-		/// Sends updates on effect start/stop
-		/// </summary>
-		/// <param name="owner"></param>
 		protected virtual void SendUpdates(GameLiving owner)
 		{
 			if (owner.IsMezzed || owner.IsStunned)
@@ -195,12 +151,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// Handles attacks on player/by player
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		private void OnAttack(DOLEvent e, object sender, EventArgs arguments)
 		{
 			GameLiving living = sender as GameLiving;
@@ -244,12 +194,6 @@ namespace DOL.GS.Spells
 				speed.Cancel(false);
 		}
 
-		/// <summary>
-		/// Handles stealth state changes
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		private void OnStealthStateChanged(DOLEvent e, object sender, EventArgs arguments)
 		{
 			GamePlayer player = (GamePlayer)sender;
@@ -259,9 +203,6 @@ namespace DOL.GS.Spells
 			// max speed update is sent in setalth method
 		}
 
-		/// <summary>
-		/// Delve Info
-		/// </summary>
 		public override IList<string> DelveInfo
 		{
 			get
@@ -289,20 +230,8 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// The spell handler constructor
-		/// </summary>
-		/// <param name="caster"></param>
-		/// <param name="spell"></param>
-		/// <param name="line"></param>
 		public SpeedEnhancementSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "10");
-		}
-	}
+		public override string ShortDescription => $"The target's speed is increased to {Spell.Value}% of normal.";
+    }
 }

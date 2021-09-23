@@ -16,33 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
-{
-	/// <summary>
-	/// Buffs two stats at once, goes into specline bonus category
-	/// </summary>	
+{	
 	public abstract class DualStatBuff : SingleStatBuff
 	{
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.SpecBuff; } }
 		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.SpecBuff; } }
 
-		/// <summary>
-		/// Default Constructor
-		/// </summary>
 		protected DualStatBuff(GameLiving caster, Spell spell, SpellLine line)
-			: base(caster, spell, line)
-		{
-		}
-	}
+			: base(caster, spell, line) { }
 
-	/// <summary>
-	/// Str/Con stat specline buff
-	/// </summary>
-	[SpellHandlerAttribute("StrengthConstitutionBuff")]
+        public override string ShortDescription => $"{TargetPronoun} {ConvertPropertyToText(Property1)} and {ConvertPropertyToText(Property2)} are increased by {Spell.Value}.";
+    }
+
+	[SpellHandler("StrengthConstitutionBuff")]
 	public class StrengthConBuff : DualStatBuff
 	{
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -58,21 +47,10 @@ namespace DOL.GS.Spells
 		public override eProperty Property1 { get { return eProperty.Strength; } }	
 		public override eProperty Property2 { get { return eProperty.Constitution; } }	
 
-		// constructor
 		public StrengthConBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "twostat");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
-	/// <summary>
-	/// Dex/Qui stat specline buff
-	/// </summary>
-	[SpellHandlerAttribute("DexterityQuicknessBuff")]
+	[SpellHandler("DexterityQuicknessBuff")]
 	public class DexterityQuiBuff : DualStatBuff
 	{
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -88,15 +66,6 @@ namespace DOL.GS.Spells
 		public override eProperty Property1 { get { return eProperty.Dexterity; } }	
 		public override eProperty Property2 { get { return eProperty.Quickness; } }	
 
-		// constructor
 		public DexterityQuiBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "twostat");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "2");
-		}
 	}
 }

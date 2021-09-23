@@ -16,15 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.Effects;
-using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using DOL.Events;
-using DOL.GS.PropertyCalc;
-using System.Collections;
 using DOL.Language;
 
 namespace DOL.GS.Spells
@@ -45,13 +37,6 @@ namespace DOL.GS.Spells
                 return false;
 			}
 			return base.CheckBeginCast(selectedTarget);
-		}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "summon");
-			dw.AddKeyValuePair("power_level", -100);
 		}
 	}
 }

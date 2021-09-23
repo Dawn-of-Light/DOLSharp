@@ -27,7 +27,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-    [SpellHandlerAttribute("Bomber")]
+    [SpellHandler("Bomber")]
     public class BomberSpellHandler : SummonSpellHandler
     {
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -47,11 +47,6 @@ namespace DOL.GS.Spells
             return base.CheckBeginCast(selectedTarget);
         }
 
-        /// <summary>
-        /// Apply effect on target or do spell action if non duration spell
-        /// </summary>
-        /// <param name="target">target that gets the effect</param>
-        /// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             base.ApplyEffectOnTarget(target, effectiveness);
@@ -84,9 +79,6 @@ namespace DOL.GS.Spells
         {
         }
 
-        /// <summary>
-        /// Called when the Bomber reaches his target
-        /// </summary>
         private void BomberArriveAtTarget(DOLEvent e, object sender, EventArgs args)
         {
             GameNPC bomber = sender as GameNPC;
@@ -120,19 +112,10 @@ namespace DOL.GS.Spells
             bomber.Health = 0;
             bomber.Delete();
         }
-		
-		/// <summary>
-		/// Do not trigger SubSpells
-		/// </summary>
-		/// <param name="target"></param>
-		public override void CastSubSpells(GameLiving target)
-		{
-		}
 
-        public override void TooltipDelve(ref MiniDelveWriter dw)
-        {
-            base.TooltipDelve(ref dw);
-            dw.AddKeyValuePair("Function", "dsummon");
-        }
+        public override void CastSubSpells(GameLiving target) { }
+
+        public override string ShortDescription
+            => "Summons an elemental spirit to attack the target.";
     }
 }

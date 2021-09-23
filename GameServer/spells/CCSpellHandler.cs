@@ -18,7 +18,6 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
@@ -26,16 +25,8 @@ using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Abstract CC spell handler
-	/// </summary>
 	public abstract class AbstractCCSpellHandler : ImmunityEffectSpellHandler
 	{
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			if (target.HasAbility(Abilities.CCImmunity))
@@ -52,11 +43,6 @@ namespace DOL.GS.Spells
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 
-		/// <summary>
-		/// When an applied effect starts
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
@@ -80,13 +66,6 @@ namespace DOL.GS.Spells
 			effect.Owner.Notify(GameLivingEvent.CrowdControlled, effect.Owner);
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			if (effect.Owner == null) return 0;
@@ -189,19 +168,10 @@ namespace DOL.GS.Spells
 			return resistvalue;
 		}
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="caster"></param>
-		/// <param name="spell"></param>
-		/// <param name="line"></param>
 		public AbstractCCSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 
-	/// <summary>
-	/// Mezz
-	/// </summary>
-	[SpellHandlerAttribute("Mesmerize")]
+	[SpellHandler("Mesmerize")]
 	public class MesmerizeSpellHandler : AbstractCCSpellHandler
 	{
 		public override void OnEffectPulse(GameSpellEffect effect)
@@ -220,13 +190,6 @@ namespace DOL.GS.Spells
 			base.OnEffectStart(effect);
 		}
 
-		/// <summary>
-		/// Variance is max 50% for players, none for mobs
-		/// </summary>
-		/// <param name="target">target to calculate variance for</param>
-		/// <param name="distance">distance from the target the spell was cast on</param>
-		/// <param name="radius">radius of the spell</param>
-		/// <returns>amount to subtract from effectiveness</returns>
 		protected override double CalculateAreaVariance(GameLiving target, int distance, int radius)
 		{
 			if (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain is IControlledBrain))
@@ -237,14 +200,8 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-
-
-
-		//If mez resisted, just rupt, dont demez
 		protected override void OnSpellResisted(GameLiving target)
 		{
-// WHRIA
-// Flute Mez (pulse>0)
             if (this.Spell.Pulse > 0)
             {
                 if (target != null && (!target.IsAlive))
@@ -296,19 +253,11 @@ namespace DOL.GS.Spells
                     }
                 }
             }
-// END
 			SendEffectAnimation(target, 0, false, 0);
 			MessageToCaster(target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
 			target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
@@ -319,9 +268,7 @@ namespace DOL.GS.Spells
 		
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-// WHRIA
-// Flute Mez (pulse>0)
-            if (this.Spell.Pulse > 0)
+            if (Spell.Pulse > 0)
             {
                 if (Caster.IsWithinRadius(target, this.Spell.Range * 5) == false)
                 {
@@ -352,8 +299,6 @@ namespace DOL.GS.Spells
                 }
 
             }
-
-//
 
 			if (target.HasAbility(Abilities.MezzImmunity))
 			{
@@ -392,12 +337,7 @@ namespace DOL.GS.Spells
 
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
+
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = base.CalculateEffectDuration(target, effectiveness);
@@ -455,22 +395,12 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		// constructor
 		public MesmerizeSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "combat");
-			dw.AddKeyValuePair("parm", "6");
-		}
-	}
+        public override string ShortDescription => "The target is mesmerized and cannot take any actions.";
+    }
 
-
-	/// <summary>
-	/// Stun
-	/// </summary>
-	[SpellHandlerAttribute("Stun")]
+	[SpellHandler("Stun")]
 	public class StunSpellHandler : AbstractCCSpellHandler
 	{
 		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
@@ -484,13 +414,6 @@ namespace DOL.GS.Spells
 			else return new GameSpellAndImmunityEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
 		}
 
-		/// <summary>
-		/// Variance is max 50% for players, none for mobs
-		/// </summary>
-		/// <param name="target">target to calculate variance for</param>
-		/// <param name="distance">distance from the target the spell was cast on</param>
-		/// <param name="radius">radius of the spell</param>
-		/// <returns>amount to subtract from effectiveness</returns>
 		protected override double CalculateAreaVariance(GameLiving target, int distance, int radius)
 		{
 			if (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain is IControlledBrain))
@@ -511,13 +434,6 @@ namespace DOL.GS.Spells
 			base.OnEffectStart(effect);
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			effect.Owner.IsStunned=false;
@@ -555,12 +471,6 @@ namespace DOL.GS.Spells
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 		
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = base.CalculateEffectDuration(target, effectiveness);
@@ -573,13 +483,6 @@ namespace DOL.GS.Spells
 			return (int)duration;
 		}
 
-		/// <summary>
-		/// Determines wether this spell is compatible with given spell
-		/// and therefore overwritable by better versions
-		/// spells that are overwritable cannot stack
-		/// </summary>
-		/// <param name="compare"></param>
-		/// <returns></returns>
 		public override bool IsOverwritable(GameSpellEffect compare)
 		{
 			if (Spell.EffectGroup != 0 || compare.Spell.EffectGroup != 0)
@@ -588,13 +491,9 @@ namespace DOL.GS.Spells
 			return base.IsOverwritable(compare);
 		}
 
-		// constructor
 		public StunSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "paralyze");
-		}
-	}
+		public override string ShortDescription 
+			=> $"The target is stunned and cannot take any actions for {Spell.Duration / 1000} seconds.";
+    }
 }

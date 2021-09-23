@@ -17,12 +17,11 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using DOL.Database;
+using DOL.GS.Delve;
 using DOL.GS.Effects;
 using DOL.GS.Quests;
 using DOL.GS.RealmAbilities;
@@ -921,28 +920,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (client.CanSendTooltip(24, objectId))
 					{
 						var spell = SkillBase.GetSpellByTooltipID(objectId);
-						client.Out.SendDelveInfo(DelveSpell(client, spell));
+						client.Out.SendDelveInfo(new SpellDelve(spell).GetClientDelve().ClientMessage);
 					}
 					break;
 				case 25://StylesNew
 					if (client.CanSendTooltip(25, objectId))
-	                    client.Out.SendDelveInfo(DelveStyle(client, objectId));
+	                    client.Out.SendDelveInfo(new StyleDelve(client, objectId).GetClientDelve().ClientMessage);
                     break;
 				case 26://SongsNew
+					if (client.CanSendTooltip(26, objectId))
 					{
-						if (client.CanSendTooltip(26, objectId))
-							client.Out.SendDelveInfo(DelveSong(client, objectId));
+						client.Out.SendDelveInfo(new SongDelve(objectId).GetClientDelve().ClientMessage);
 						var spell = SkillBase.GetSpellByTooltipID(objectId);
-						client.Out.SendDelveInfo(DelveSpell(client, spell));
+						client.Out.SendDelveInfo(new SpellDelve(spell).GetClientDelve().ClientMessage);
 					}
 					break;
 				case 27://RANew
 					if (client.CanSendTooltip(27, objectId))
-	                   client.Out.SendDelveInfo(DelveRealmAbility(client, objectId));
+	                   client.Out.SendDelveInfo(new RealmAbilityDelve(client, objectId).GetClientDelve().ClientMessage);
                     break;
 				case 28://AbilityNew
-                    if (client.CanSendTooltip(28, objectId))
-				        client.Out.SendDelveInfo(DelveAbility(client, objectId));
+					if (client.CanSendTooltip(28, objectId))
+					{
+						client.Out.SendDelveInfo(new AbilityDelve(client, objectId).GetClientDelve().ClientMessage);
+					}
 			        break;
 				#endregion
 				#region ChampionAbilities delve from trainer window
@@ -1967,276 +1968,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 		}
-
-		 #region v1.110+
-        /** General info @ v1.110:
-         *  - Examples can be found at http://dl.dropbox.com/u/48908369/delve.txt
-         *  - 'Expires' can be left out
-         *  - No idea what 'Fingerprint' does
-         **/
-
-        public static string DelveAbility(GameClient clt, int id)
-        { /* or skill */
-
-        	Skill sk = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id).OrderBy(e => e.Item1 is Ability ? 0 : 1).Select(e => e.Item1).FirstOrDefault();
-        	
-        	if(sk == null)
-        		sk = SkillBase.GetAbilityByInternalID(id);
-        	
-        	if(sk == null)
-        		sk = SkillBase.GetSpecializationByInternalID(id);
-        	
-        	MiniDelveWriter dw = new MiniDelveWriter(sk is Ability ? "Ability" : "Skill");
-
-        	dw.AddKeyValuePair("Index", unchecked((short)id));
-
-            if (sk != null) 
-            {
-                dw.AddKeyValuePair("Name", sk.Name);
-            }
-            else
-            {
-            	dw.AddKeyValuePair("Name", "(not found)");
-            }
-            
-            return dw.ToString();
-        }
-
-
-		/// <summary>
-		/// Delve Info for Songs (V1.110+)
-		/// </summary>
-		/// <param name="clt">Client</param>
-		/// <param name="id">SpellID</param>
-		/// <returns></returns>
-		public static string DelveSong(GameClient clt, int id)
-		{
-			MiniDelveWriter dw = new MiniDelveWriter("Song");
-			dw.AddKeyValuePair("Index", unchecked((short)id));
-			
-			Spell spell = SkillBase.GetSpellByTooltipID((ushort)id);
-		
-			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-			
-			if (spellHandler != null)
-			{
-				dw.AddKeyValuePair("effect", spellHandler.Spell.InternalID);
-				dw.AddKeyValuePair("Name", spellHandler.Spell.Name);
-				return dw.ToString();
-			}
-
-			// not found
-			dw.AddKeyValuePair("Name", "(not found)");
-			return dw.ToString();
-		}
-
-		/// <summary>
-		/// Delve Info for Spells (V1.110+)
-		/// </summary>
-		/// <param name="clt">Client</param>
-		/// <param name="id">SpellID</param>
-		/// <returns></returns>
-		public static string DelveSpell(GameClient clt, Spell spell, SpellLine spellLine = null)
-		{
-			// We better rely on the handler to delve it correctly ! using reserved spellline as we can't guess it ! player can delve other object effect !
-			if (spellLine == null)
-				spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-			// Spell object are mostly "DB" Object, we can't subclass this object easily, but Spellhandler create subclass using "SpellType"
-			var spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, spellLine);
-			if (spellHandler == null)
-			{
-				// not found
-				MiniDelveWriter dw = new MiniDelveWriter("Spell");
-				dw.AddKeyValuePair("Index", (ushort) spell.InternalID);
-				dw.AddKeyValuePair("Name", "(not found)");
-				return dw.ToString();
-			}
-			return DelveSpell(spellHandler);
-		}
-
-		public static string DelveSpell(ISpellHandler spellHandler)
-		{
-			MiniDelveWriter dw = new MiniDelveWriter("Spell");
-			spellHandler.TooltipDelve(ref dw);
-			return dw.ToString();
-		}
-
-		public static string DelveStyle(GameClient clt, int id)
-        {
-			Tuple<Skill,Skill> sk = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id && e.Item1 is Style).FirstOrDefault();
-        	
-			Style style = null;
-        	if(sk == null || sk.Item1 == null)
-        	{
-            	style = SkillBase.GetStyleByInternalID(id);
-        	}
-        	else if (sk.Item1 is Style)
-        	{
-        		style = (Style)sk.Item1;
-        	}
-
-            MiniDelveWriter dw = new MiniDelveWriter("Style");
-            dw.AddKeyValuePair("Index",  unchecked((short)id));
-
-            if (style != null)
-            {
-                // Not implemented:
-                // (Style (FollowupStyle "Sapphire Slash")(LevelBonus "2")(OpeningDamage "16")(Skill "1")(Expires "1343375647"))
-                // (Style (Fingerprint "1746652963")(FollowupStyle "Thigh Cut")(Hidden "1")OpeningDamage "55")(Skill "118")(SpecialNumber "1511")(SpecialType "1")(Expires "1342381240"))
-				// Skill = GetSpecToInternalIndex
-				// find opening style, and follow up !!
-				
-				IEnumerable<Style> styles = clt.Player.GetSpecList().SelectMany(e => e.PretendStylesForLiving(clt.Player, clt.Player.MaxLevel));
-				
-				// Is a followup
-				if (style.OpeningRequirementType == Style.eOpening.Offensive && style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
-				{
-					Style st = styles.Where(s => s.ID == style.OpeningRequirementValue).FirstOrDefault();
-					if (st != null)
-					{
-						// opening style should be only one.
-						dw.AddKeyValuePair("OpeningStyle", st.Name);
-					}
-				}
-				
-				// Has Followup ?
-				foreach (Style stl in styles.Where(s => (s.OpeningRequirementType == Style.eOpening.Offensive && s.AttackResultRequirement == Style.eAttackResultRequirement.Style && s.OpeningRequirementValue == style.ID)))
-				{
-					// we found the style that needs this one for opening.
-					dw.AppendKeyValuePair("FollowupStyle", stl.Name);
-				}
-				
-				dw.AddKeyValuePair("Name", style.Name);
-				dw.AddKeyValuePair("Icon", style.Icon);
-				dw.AddKeyValuePair("Level", style.Level);
-				dw.AddKeyValuePair("Fatigue", style.EnduranceCost);
-				//.Value("SpecialType", (int)style.SpecialType, style.SpecialType != 0)
-				//.Value("SpecialNumber", GetSpecialNumber(style), GetSpecialNumber(style)!=0)
-				if (style.BonusToDefense != 0)
-					dw.AddKeyValuePair("DefensiveMod", style.BonusToDefense);
-				if (style.BonusToHit != 0)
-					dw.AddKeyValuePair("AttackMod", style.BonusToHit);
-				dw.AddKeyValuePair("OpeningType", (int)style.OpeningRequirementType);
-				if (style.OpeningRequirementType == Style.eOpening.Positional)
-					dw.AddKeyValuePair("OpeningNumber", style.OpeningRequirementValue);				
-				//.Value("OpeningResult",GetOpeningResult(style,clt),GetOpeningResult(style,clt)>0)
-				//.Value("OpeningStyle",GetOpeningStyle(style),(Style.eAttackResult)GetOpeningResult(style,clt) == Style.eAttackResult.Style)
-				if (style.WeaponTypeRequirement > 0)
-					dw.AddKeyValuePair("Weapon", style.GetRequiredWeaponName());
-				if (style.StealthRequirement)
-					dw.AddKeyValuePair("Hidden", "1");
-				//.Value("TwoHandedIcon", 10, style.TwoHandAnimation > 0)
-				//.Value("Skill",43)
-				if (style.GrowthRate>0)
-					dw.AddKeyValuePair("OpeningDamage",style.GrowthRate*100);
-				//.Value("SpecialValue", GetSpecialValue(style),GetSpecialValue(style)!=0)
-				//.Value("FollowupStyle",style.DelveFollowUpStyles,!string.IsNullOrEmpty(style.DelveFollowUpStyles))
-            }
-            else
-            {
-                dw.AddKeyValuePair("Name", "(not found)");
-            }
-            
-            return dw.ToString();
-        }
-
-		#region style v1.110 methods
-		/*
-		public static int GetSpecialNumber(Style style)
-		{
-			if (style.SpecialType == Style.eSpecialType.Effect)
-			{
-				Spell spell = SkillBase.GetSpellById(style.SpecialValue);
-				if (spell != null)
-					return spell.ClientEffect;
-			}
-			return 0;
-		}
-
-		public static int GetSpecialValue(Style style)
-		{
-			switch(style.SpecialType)
-			{
-				case Style.eSpecialType.ExtendedRange:
-					return 128; // Extended Range für Reaver style
-				case Style.eSpecialType.Taunt:
-					return style.SpecialValue;
-			}
-			return 0;
-		}*/
-
-		
-		/*public static int GetOpeningResult(Style style,GameClient clt)
-		{
-			switch(StyleProcessor.ResolveAttackResult(style,clt.Player.PlayerCharacter.Class))
-			{
-				case GameLiving.eAttackResult.Any:
-					return (int)Style.eAttackResult.Any;
-				case GameLiving.eAttackResult.Missed:
-					return (int) Style.eAttackResult.Miss;
-				case GameLiving.eAttackResult.Parried:
-					return (int)Style.eAttackResult.Parry;
-				case GameLiving.eAttackResult.Evaded:
-					return (int)Style.eAttackResult.Evade;
-				case GameLiving.eAttackResult.Blocked:
-					return (int)Style.eAttackResult.Block;
-				case GameLiving.eAttackResult.Fumbled:
-					return (int)Style.eAttackResult.Fumble;
-				case GameLiving.eAttackResult.HitStyle:
-					return (int)Style.eAttackResult.Style;
-				case GameLiving.eAttackResult.HitUnstyled:
-					return (int)Style.eAttackResult.Hit;
-			}
-			return 0;
-		}*/
-		/*
-		public static string GetOpeningStyle(Style style)
-		{
-			if (style.OpeningRequirementValue > 0)
-			{
-				Style style2 = SkillBase.GetStyleByID(style.OpeningRequirementValue);
-				if (style2!=null)
-					return style2.Name;
-				return "";
-			}
-			return "";
-		}*/
-
-		#endregion
-
-		/// <summary>
-		/// Delve the realm abilities for v1.110+ clients
-		/// </summary>
-		/// <param name="clt"></param>
-		/// <param name="id"></param>
-		/// <returns></returns>
-        public static string DelveRealmAbility(GameClient clt, int id)
-        {
-			Skill ra = clt.Player.GetAllUsableSkills().Where(e => e.Item1.InternalID == id && e.Item1 is Ability).Select(e => e.Item1).FirstOrDefault();
-			
-			if (ra == null)
-			{
-				ra = SkillBase.GetAbilityByInternalID(id);
-			}
-			
-			MiniDelveWriter dw = new MiniDelveWriter("RealmAbility");
-			dw.AddKeyValuePair("Index",  unchecked((short)id));
-			
-            if (ra is RealmAbility)
-            {
-           		((RealmAbility)ra).AddDelve(ref dw);
-            }
-            else if (ra != null)
-            {
-                dw.AddKeyValuePair("Name", ra.Name);
-            }
-            else
-            {
-           		dw.AddKeyValuePair("Name", "(not found)");
-            }
-            
-            return dw.ToString();
-        }
-        #endregion
     }
 }

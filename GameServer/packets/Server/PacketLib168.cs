@@ -1683,7 +1683,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public void SendGroupMemberUpdate(bool updateIcons, bool updateMap, GameLiving living)
+		public virtual void SendGroupMemberUpdate(bool updateIcons, bool updateMap, GameLiving living)
 		{
 			if (m_gameClient.Player == null)
 				return;
@@ -1705,7 +1705,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public void SendGroupMembersUpdate(bool updateIcons, bool updateMap)
+		public virtual void SendGroupMembersUpdate(bool updateIcons, bool updateMap)
 		{
 			if (m_gameClient.Player == null)
 				return;

@@ -198,11 +198,6 @@ namespace DOL.GS.Spells
 			return true;
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "transfer");
-			dw.AddKeyValuePair("damage", Spell.Value);
-		}
-	}
+        public override string ShortDescription => $"Transfers {Spell.Value} health from the caster to the target.";
+    }
 }

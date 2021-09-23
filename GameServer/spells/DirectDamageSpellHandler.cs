@@ -25,9 +25,6 @@ using DOL.Events;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
 	[SpellHandlerAttribute("DirectDamage")]
 	public class DirectDamageSpellHandler : SpellHandler
 	{
@@ -35,10 +32,6 @@ namespace DOL.GS.Spells
 
 		private bool m_castFailed = false;
 
-		/// <summary>
-		/// Execute direct damage spell
-		/// </summary>
-		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			if (!m_castFailed)
@@ -51,12 +44,6 @@ namespace DOL.GS.Spells
 
 		private const string LOSEFFECTIVENESS = "LOS Effectivness";
 
-
-
-		/// <summary>
-		/// Calculates the base 100% spell damage which is then modified by damage variance factors
-		/// </summary>
-		/// <returns></returns>
 		public override double CalculateDamageBase(GameLiving target)
 		{
 			GamePlayer player = Caster as GamePlayer;
@@ -92,12 +79,6 @@ namespace DOL.GS.Spells
 			return base.DamageCap(effectiveness);
 		}
 
-
-		/// <summary>
-		/// execute direct effect
-		/// </summary>
-		/// <param name="target">target that gets the damage</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			if (target == null) return;
@@ -192,7 +173,6 @@ namespace DOL.GS.Spells
 			target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
 		}
 
-
 		/*
 		 * We need to send resist spell los check packets because spell resist is calculated first, and
 		 * so you could be inside keep and resist the spell and be interupted when not in view
@@ -233,14 +213,8 @@ namespace DOL.GS.Spells
 			base.OnSpellResisted(target);
 		}
 
-		// constructor
 		public DirectDamageSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "direct");
-			dw.AddKeyValuePair("damage", Spell.Damage * 10);
-		}
-	}
+        public override string ShortDescription => $"Does {Spell.Damage} {Spell.DamageType} damage to the target.";
+    }
 }

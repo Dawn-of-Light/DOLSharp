@@ -22,10 +22,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells.Atlantis
 {
-	/// <summary>
-	/// All stats debuff spell handler
-	/// </summary>
-	[SpellHandlerAttribute("AllStatsDebuff")]
+	[SpellHandler("AllStatsDebuff")]
 	public class AllStatsDebuff : SpellHandler
 	{
 		public override int CalculateSpellResistChance(GameLiving target)
@@ -81,11 +78,6 @@ namespace DOL.GS.Spells.Atlantis
 			return base.OnEffectExpires(effect, noMessages);
 		}
 
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
@@ -108,10 +100,6 @@ namespace DOL.GS.Spells.Atlantis
 		}
 		public AllStatsDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+        public override string ShortDescription => $"Decreases all stats of the target by {Spell.Value}.";
+    }
 }

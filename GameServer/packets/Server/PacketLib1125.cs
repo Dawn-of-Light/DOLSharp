@@ -434,7 +434,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		protected override void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, bool updateMap, GameLiving living)
+		protected override void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GameLiving living)
 		{
 			pak.WriteByte((byte)(0x20 | living.GroupIndex)); // From 1 to 8 // 0x20 is player status code
 			if (living.CurrentRegion != m_gameClient.Player.CurrentRegion)
@@ -474,8 +474,7 @@ namespace DOL.GS.PacketHandler
 			// 0x00 = Normal , 0x01 = Dead , 0x02 = Mezzed , 0x04 = Diseased ,
 			// 0x08 = Poisoned , 0x10 = Link Dead , 0x20 = In Another Region, 0x40 - NS
 
-			if (updateMap)
-				WriteGroupMemberMapUpdate(pak, living);
+			WriteGroupMemberMapUpdate(pak, living);
 
 			if (updateIcons)
 			{

@@ -17,38 +17,20 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.AI.Brain;
-using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.PropertyCalc;
 using DOL.Language;
 using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Base class for all resist debuffs, needed to set effectiveness and duration
-	/// </summary>
 	public abstract class AbstractResistDebuff : PropertyChangingSpell
 	{
-		/// <summary>
-		/// Gets debuff type name for delve info
-		/// </summary>
 		public abstract string DebuffTypeName { get; }
 
-		/// <summary>
-		/// Debuff category is 3 for debuffs
-		/// </summary>
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
 
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = Spell.Duration;
@@ -62,12 +44,7 @@ namespace DOL.GS.Spells
 				duration = (Spell.Duration * 4);
 			return (int)duration;
 		}
-		
-		/// <summary>
-		/// Apply effect on target or do spell action if non duration spell
-		/// </summary>
-		/// <param name="target">target that gets the effect</param>
-		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			//TODO: correct effectiveness formula
@@ -111,11 +88,6 @@ namespace DOL.GS.Spells
 			if(Spell.CastTime>0) target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 		}
 
-		/// <summary>
-		/// Calculates chance of spell getting resisted
-		/// </summary>
-		/// <param name="target">the target of the spell</param>
-		/// <returns>chance that spell will be resisted for specific target</returns>
 		public override int CalculateSpellResistChance(GameLiving target)
 		{
 			int basechance = base.CalculateSpellResistChance(target);
@@ -126,10 +98,7 @@ namespace DOL.GS.Spells
 			}
 			return Math.Min(100, basechance);
 		}
-		/// <summary>
-		/// Updates changes properties to living
-		/// </summary>
-		/// <param name="target"></param>
+
 		protected override void SendUpdates(GameLiving target)
 		{
 			base.SendUpdates(target);
@@ -140,9 +109,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// Delve Info
-		/// </summary>
 		public override IList<string> DelveInfo
 		{
 			get
@@ -197,200 +163,93 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		//constructor
-		public AbstractResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+        public override string ShortDescription => $"Decreases the target's resistances to {ConvertPropertyToText(Property1).ToLower()} damage by {Spell.Value}%.";
+
+        public AbstractResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 
-	/// <summary>
-	/// Body resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("BodyResistDebuff")]
+	[SpellHandler("BodyResistDebuff")]
 	public class BodyResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Body; } }
 		public override string DebuffTypeName { get { return "Body"; } }
 
-		// constructor
 		public BodyResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresistance");
-			dw.AddKeyValuePair("parm", "16");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
-	/// <summary>
-	/// Cold resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("ColdResistDebuff")]
+	[SpellHandler("ColdResistDebuff")]
 	public class ColdResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Cold; } }
 		public override string DebuffTypeName { get { return "Cold"; } }
 
-		// constructor
 		public ColdResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresistance");
-			dw.AddKeyValuePair("parm", "12");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
-	/// <summary>
-	/// Energy resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("EnergyResistDebuff")]
+	[SpellHandler("EnergyResistDebuff")]
 	public class EnergyResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Energy; } }
 		public override string DebuffTypeName { get { return "Energy"; } }
 
-		// constructor
 		public EnergyResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "22");
-		}
 	}
 
-	/// <summary>
-	/// Heat resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("HeatResistDebuff")]
+	[SpellHandler("HeatResistDebuff")]
 	public class HeatResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Heat; } }
 		public override string DebuffTypeName { get { return "Heat"; } }
 
-		// constructor
 		public HeatResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "10");
-		}
 	}
 
-	/// <summary>
-	/// Matter resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("MatterResistDebuff")]
+	[SpellHandler("MatterResistDebuff")]
 	public class MatterResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Matter; } }
 		public override string DebuffTypeName { get { return "Matter"; } }
 
-		// constructor
 		public MatterResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-			dw.AddKeyValuePair("parm", "15");
-		}
 	}
 
-	/// <summary>
-	/// Spirit resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("SpiritResistDebuff")]
+	[SpellHandler("SpiritResistDebuff")]
 	public class SpiritResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Spirit; } }
 		public override string DebuffTypeName { get { return "Spirit"; } }
 
-		// constructor
 		public SpiritResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresistance");
-			dw.AddKeyValuePair("parm", "98");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
-	/// <summary>
-	/// Slash resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("SlashResistDebuff")]
+	[SpellHandler("SlashResistDebuff")]
 	public class SlashResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Slash; } }
 		public override string DebuffTypeName { get { return "Slash"; } }
 
-		// constructor
 		public SlashResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
-	/// <summary>
-	/// Thrust resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("ThrustResistDebuff")]
+	[SpellHandler("ThrustResistDebuff")]
 	public class ThrustResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Thrust; } }
 		public override string DebuffTypeName { get { return "Thrust"; } }
 
-		// constructor
 		public ThrustResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
-	/// <summary>
-	/// Crush resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("CrushResistDebuff")]
+	[SpellHandler("CrushResistDebuff")]
 	public class CrushResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }
 		public override string DebuffTypeName { get { return "Crush"; } }
 
-		// constructor
 		public CrushResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "nresistance");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
 	}
 
-	/// <summary>
-	/// Crush/Slash/Thrust resistance debuff
-	/// </summary>
-	[SpellHandlerAttribute("CrushSlashThrustDebuff")]
+	[SpellHandler("CrushSlashThrustDebuff")]
 	public class CrushSlashThrustDebuff : AbstractResistDebuff
 	{
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
@@ -403,23 +262,17 @@ namespace DOL.GS.Spells
 
 		public override string DebuffTypeName { get { return "Crush/Slash/Thrust"; } }
 
-		// constructor
 		public CrushSlashThrustDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+        public override string ShortDescription => $"Decreases the target's resistances to melee damage by {Spell.Value}%.";
+    }
 
-	[SpellHandlerAttribute("EssenceSear")]
+	[SpellHandler("EssenceSear")]
 	public class EssenceResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Natural; } }
 		public override string DebuffTypeName { get { return "Essence"; } }
 
-		// constructor
 		public EssenceResistDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 

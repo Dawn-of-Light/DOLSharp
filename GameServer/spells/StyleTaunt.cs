@@ -23,28 +23,14 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Style taunt effect spell handler
-	/// </summary>
 	[SpellHandler("StyleTaunt")]
 	public class StyleTaunt : SpellHandler 
 	{
 		public override int CalculateSpellResistChance(GameLiving target)
-		{
-			return 0;
-		}
+			=> 0;
 
-		/// <summary>
-		/// Determines wether this spell is compatible with given spell
-		/// and therefore overwritable by better versions
-		/// spells that are overwritable cannot stack
-		/// </summary>
-		/// <param name="compare"></param>
-		/// <returns></returns>
 		public override bool IsOverwritable(GameSpellEffect compare)
-		{
-            return false;
-		}
+			=> false;
 
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
@@ -65,22 +51,11 @@ namespace DOL.GS.Spells
             }
         }
 
-		// constructor
         public StyleTaunt(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			if (Spell.Value < 0)
-			{
-				dw.AddKeyValuePair("Function", "detaunt");
-				dw.AddKeyValuePair("damage", -Spell.Value);
-			}
-			else
-			{
-				dw.AddKeyValuePair("Function", "taunt");
-				dw.AddKeyValuePair("damage", Spell.Value);
-			}
-		}
+		public override string ShortDescription 
+			=> Spell.Value > 0 
+			? $"Taunts target, increasing your threat against it by {Spell.Value}."
+			: $"Detaunts target, decreases your threat against it by {-Spell.Value}";
 	}
 }

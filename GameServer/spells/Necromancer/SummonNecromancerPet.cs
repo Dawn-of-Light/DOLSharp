@@ -18,21 +18,14 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.GS.Effects;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using DOL.Events;
 using DOL.GS.PropertyCalc;
-using System.Collections;
 using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler to summon a necromancer pet.
-	/// </summary>
-	/// <author>Aredhel</author>
 	[SpellHandler("SummonNecroPet")]
 	public class SummonNecromancerPet : SummonSpellHandler
 	{
@@ -42,10 +35,6 @@ namespace DOL.GS.Spells
 		private int m_summonConBonus;
 		private int m_summonHitsBonus;
 
-		/// <summary>
-		/// Note bonus constitution and bonus hits from items, then 
-		/// summon the pet.
-		/// </summary>
 		public override bool CastSpell()
 		{
 			// First check current item bonuses for constitution and hits
@@ -64,11 +53,6 @@ namespace DOL.GS.Spells
 			return base.CastSpell();
 		}
 
-        /// <summary>
-        /// Check if caster is already in shade form.
-        /// </summary>
-        /// <param name="selectedTarget"></param>
-        /// <returns></returns>
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
             if (FindStaticEffectOnTarget(Caster, typeof(ShadeEffect)) != null)
@@ -84,12 +68,6 @@ namespace DOL.GS.Spells
             return base.CheckBeginCast(selectedTarget);
         }
 
-		/// <summary>
-		/// Necromancer RR5 ability: Call of Darkness
-		/// When active, the necromancer can summon a pet with only a 3 second cast time. 
-		/// The effect remains active for 15 minutes, or until a pet is summoned.
-		/// </summary>
-		/// <returns></returns>
 		public override int CalculateCastingTime()
 		{
 			if (Caster.EffectList.GetOfType<CallOfDarknessEffect>() != null)
@@ -98,11 +76,6 @@ namespace DOL.GS.Spells
 			return base.CalculateCastingTime();
 		}
 
-		/// <summary>
-		/// Create the pet and transfer stats.
-		/// </summary>
-		/// <param name="target">Target that gets the effect</param>
-		/// <param name="effectiveness">Factor from 0..1 (0%-100%)</param>
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
@@ -117,9 +90,6 @@ namespace DOL.GS.Spells
 				callOfDarkness.Cancel(false);
 		}
 
-		/// <summary>
-		/// Delve info string.
-		/// </summary>
 		public override IList<string> DelveInfo
 		{
 			get
@@ -144,13 +114,6 @@ namespace DOL.GS.Spells
 		protected override GamePet GetGamePet(INpcTemplate template)
 		{
 			return new NecromancerPet(template, m_summonConBonus, m_summonHitsBonus);
-		}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "ssummon");
-			dw.AddKeyValuePair("power_level", -100);
 		}
 	}
 }

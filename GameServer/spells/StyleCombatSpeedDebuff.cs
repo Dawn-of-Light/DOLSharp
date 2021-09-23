@@ -16,42 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Style combat speed debuff effect spell handler
-	/// </summary>
 	[SpellHandler("StyleCombatSpeedDebuff")]
 	public class StyleCombatSpeedDebuff : CombatSpeedDebuff
 	{
-		public override int CalculateSpellResistChance(GameLiving target)
-		{
-			return 0;
-		}
+		public override int CalculateSpellResistChance(GameLiving target) 
+			=> 0;
 
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
-		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
-		{
-			return Spell.Duration;
-		}
+		protected override int CalculateEffectDuration(GameLiving target, double effectiveness) 
+			=> Spell.Duration;
 
-		// constructor
 		public StyleCombatSpeedDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "add_effect");
-			dw.AddKeyValuePair("type1", "8");
-		}
 	}
 }

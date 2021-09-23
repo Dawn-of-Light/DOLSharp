@@ -16,26 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Based on HealSpellHandler.cs
-	/// Spell calculates a percentage of the caster's health.
-	/// Heals target for the full amount, Caster loses half that amount in health.
-	/// </summary>
-	[SpellHandlerAttribute("PetConversion")]
+	[SpellHandler("PetConversion")]
 	public class PetConversionSpellHandler : SpellHandler
 	{
-		// constructor
 		public PetConversionSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		/// <summary>
-		/// Execute pet conversion spell
-		/// </summary>
 		public override bool StartSpell(GameLiving target)
 		{
 			var targets = SelectTargets(target);
@@ -62,11 +51,7 @@ namespace DOL.GS.Spells
 			return true;
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "reclaim");
-			dw.AddKeyValuePair("bonus", Spell.Value);
-		}
-	}
+        public override string ShortDescription 
+			=> $"Releases the target and all other turrets you have summoned from the area. {Spell.Value}% of the power used in summoning the pet is returned to the caster.";
+    }
 }

@@ -17,8 +17,6 @@
  *
  */
 using System;
-using System.Collections;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Language;
@@ -26,16 +24,9 @@ using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Damage Over Time spell handler
-	/// </summary>
-	[SpellHandlerAttribute("DamageOverTime")]
+	[SpellHandler("DamageOverTime")]
 	public class DoTSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Execute damage over time spell
-		/// </summary>
-		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
@@ -47,36 +38,16 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-		/// <summary>
-		/// No variance for DOT spells
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="distance"></param>
-		/// <param name="radius"></param>
-		/// <returns></returns>
 		protected override double CalculateAreaVariance(GameLiving target, int distance, int radius)
 		{
 			return 0;
 		}
 
-		/// <summary>
-		/// Determines wether this spell is compatible with given spell
-		/// and therefore overwritable by better versions
-		/// spells that are overwritable cannot stack
-		/// </summary>
-		/// <param name="compare"></param>
-		/// <returns></returns>
 		public override bool IsOverwritable(GameSpellEffect compare)
 		{
 			return Spell.SpellType == compare.Spell.SpellType && Spell.DamageType == compare.Spell.DamageType && SpellLine.IsBaseLine == compare.SpellHandler.SpellLine.IsBaseLine;
 		}
 
-		/// <summary>
-		/// Calculates damage to target with resist chance and stores it in ad
-		/// </summary>
-		/// <param name="target">spell target</param>
-		/// <param name="effectiveness">value from 0..1 to modify damage</param>
-		/// <returns>attack data</returns>
 		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
 		{
 			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
@@ -98,12 +69,6 @@ namespace DOL.GS.Spells
 			return ad;
 		}
 
-		/// <summary>
-		/// Calculates min damage variance %
-		/// </summary>
-		/// <param name="target">spell target</param>
-		/// <param name="min">returns min variance</param>
-		/// <param name="max">returns max variance</param>
 		public override void CalculateDamageVariance(GameLiving target, out double min, out double max)
 		{
 			int speclevel = 1;
@@ -140,10 +105,6 @@ namespace DOL.GS.Spells
 			if (min < 0) min = 0;
 		}
 
-		/// <summary>
-		/// Sends damage text messages but makes no damage
-		/// </summary>
-		/// <param name="ad"></param>
 		public override void SendDamageMessages(AttackData ad)
 		{
 			// Graveen: only GamePlayer should receive messages :p
@@ -169,20 +130,6 @@ namespace DOL.GS.Spells
             if (ad.CriticalDamage > 0)
                 MessageToCaster(String.Format(LanguageMgr.GetTranslation(PlayerReceivingMessages.Client, "DoTSpellHandler.SendDamageMessages.YourCriticallyHits",
                     Spell.Name, ad.Target.GetName(0, false), ad.CriticalDamage)), eChatType.CT_YouHit);
-
-                //			if (ad.Damage > 0)
-                //			{
-                //				string modmessage = "";
-                //				if (ad.Modifier > 0) modmessage = " (+"+ad.Modifier+")";
-                //				if (ad.Modifier < 0) modmessage = " ("+ad.Modifier+")";
-                //				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
-                //			}
-                //			else
-                //			{
-                //				MessageToCaster("You hit "+ad.Target.GetName(0, false)+" for " + ad.Damage + " damage!", eChatType.CT_Spell);
-                //				MessageToCaster(ad.Target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
-                //				MessageToLiving(ad.Target, "You resist the effect!", eChatType.CT_SpellResisted);
-                //			}
 		}
 
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -217,13 +164,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			base.OnEffectExpires(effect, noMessages);
@@ -272,14 +212,8 @@ namespace DOL.GS.Spells
 			return spellDamage;
 		}
 
-		// constructor
 		public DoTSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "dot");
-			dw.AddKeyValuePair("damage", Spell.Damage);
-		}
-	}
+        public override string ShortDescription => $"Target takes {Spell.Damage} {Spell.DamageType} damage every {Spell.Frequency/1000.0} seconds.";
+    }
 }

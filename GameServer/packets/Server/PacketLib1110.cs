@@ -16,21 +16,17 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 *
 */
-using System;
 using System.IO;
 using System.Reflection;
 using System.Linq;
-using DOL.Database;
 using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Styles;
-using DOL.Language;
 using log4net;
-using DOL.GS.PacketHandler.Client.v168;
 using DOL.GS.Spells;
-
+using DOL.GS.Delve;
 
 namespace DOL.GS.PacketHandler
 {
@@ -39,22 +35,10 @@ namespace DOL.GS.PacketHandler
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// Constructs a new PacketLib for Client Version 1.110
-        /// </summary>
-        /// <param name="client">the gameclient this lib is associated with</param>
         public PacketLib1110(GameClient client)
             : base(client)
         {
         }
-                
-        /// <summary>
-        /// Property to enable "forced" Tooltip send when Update are made to player skills, or player effects.
-        /// This can be controlled through server propertiers !
-        /// </summary>
-		public virtual bool ForceTooltipUpdate {
-			get { return ServerProperties.Properties.USE_NEW_TOOLTIP_FORCEDUPDATE; }
-		}
 
         /// <summary>
 		/// New system in v1.110+ for delve info. delve is cached by client in extra file, stored locally.
@@ -77,8 +61,6 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 			
-			var tooltipSpellhandlers = new List<ISpellHandler>();
-			
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons)))
 			{
 				long initPos = pak.Position;
@@ -99,12 +81,6 @@ namespace DOL.GS.PacketHandler
 						if (changedEffects != null && !changedEffects.Contains(effect))
 						{
 							continue;
-						}
-						
-						// store tooltip update for gamespelleffect.
-						if (ForceTooltipUpdate && effect is GameSpellEffect gameEffect)
-						{
-							tooltipSpellhandlers.Add(gameEffect.SpellHandler);
 						}
 
 						//						log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
@@ -175,67 +151,8 @@ namespace DOL.GS.PacketHandler
 	
 				SendTCP(pak);
 			}
-			
-			// force tooltips update
-			foreach (var spellhandler in tooltipSpellhandlers)
-			{
-				if (m_gameClient.CanSendTooltip(24, spellhandler.Spell.InternalID))
-					SendDelveInfo(DetailDisplayHandler.DelveSpell(spellhandler));
-			}
 		}
-		
-		/// <summary>
-		/// Override for handling force tooltip update...
-		/// </summary>
-		public override void SendTrainerWindow()
-		{
-			base.SendTrainerWindow();
-			
-			// Send tooltips
-			if (ForceTooltipUpdate && m_gameClient.TrainerSkillCache != null)
-				SendForceTooltipUpdate(m_gameClient.TrainerSkillCache.SelectMany(e => e.Item2).Select(e => e.Item3));
-		}
-		
-		/// <summary>
-		/// Send Delve for Provided Collection of Skills that need forced Tooltip Update.
-		/// </summary>
-		/// <param name="skills"></param>
-		protected virtual void SendForceTooltipUpdate(IEnumerable<Skill> skills)
-		{
-			foreach (Skill t in skills)
-			{
-				if (t is Specialization)
-					continue;
 
-				if (t is RealmAbility)
-				{
-					if (m_gameClient.CanSendTooltip(27, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveRealmAbility(m_gameClient, t.InternalID));
-				}
-				else if (t is Ability)
-				{
-					if (m_gameClient.CanSendTooltip(28, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveAbility(m_gameClient, t.InternalID));
-				}
-				else if (t is Style)
-				{
-					if (m_gameClient.CanSendTooltip(25, t.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveStyle(m_gameClient, t.InternalID));
-				}
-				else if (t is Spell spell)
-				{
-					if (t is Song || spell.NeedInstrument)
-					{
-						if (m_gameClient.CanSendTooltip(26, spell.InternalID))
-							SendDelveInfo(DetailDisplayHandler.DelveSong(m_gameClient, spell.InternalID));
-					}
-
-					if (m_gameClient.CanSendTooltip(24, spell.InternalID))
-						SendDelveInfo(DetailDisplayHandler.DelveSpell(m_gameClient, spell));
-				}
-			}
-		}
-		
 		/// <summary>
 		/// new siege weapon animation packet 1.110
 		/// </summary>

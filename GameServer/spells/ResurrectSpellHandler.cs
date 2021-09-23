@@ -324,12 +324,7 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "raise_dead");
-			dw.AddKeyValuePair("damage", Spell.ResurrectHealth);
-			dw.AddKeyValuePair("bonus", Spell.ResurrectMana);
-		}
-	}
+        public override string ShortDescription 
+			=> $"Brings the target back to life, restores {Spell.ResurrectHealth}% health and {Spell.ResurrectMana}% power and endurance and suffers no experience or constitution loss.";
+    }
 }

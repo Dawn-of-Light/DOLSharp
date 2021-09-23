@@ -17,25 +17,13 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler for power trasnfer.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[SpellHandlerAttribute("PowerTransfer")]
+	[SpellHandler("PowerTransfer")]
 	class PowerTransfer : SpellHandler
 	{
-		/// <summary>
-		/// Check if player tries to transfer power to himself.
-		/// </summary>
-		/// <param name="selectedTarget"></param>
-		/// <returns></returns>
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			GamePlayer owner = Owner();
@@ -52,11 +40,6 @@ namespace DOL.GS.Spells
 			return base.CheckBeginCast(selectedTarget);
 		}
 
-		/// <summary>
-		/// Execute direct effect.
-		/// </summary>
-		/// <param name="target">Target power is transferred to.</param>
-		/// <param name="effectiveness">Effectiveness of the spell (0..1, equalling 0-100%).</param>
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			if (target == null) return;
@@ -95,10 +78,6 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		/// <summary>
-		/// Returns a reference to the shade.
-		/// </summary>
-		/// <returns></returns>
 		protected virtual GamePlayer Owner()
 		{
 			if (Caster is GamePlayer)
@@ -107,20 +86,9 @@ namespace DOL.GS.Spells
 			return null;
 		}
 
-		/// <summary>
-        /// Create a new handler for the power transfer spell.
-		/// </summary>
-		/// <param name="caster"></param>
-		/// <param name="spell"></param>
-		/// <param name="line"></param>
 		public PowerTransfer(GameLiving caster, Spell spell, SpellLine line) 
             : base(caster, spell, line) { }
 
-		public override void TooltipDelve(ref MiniDelveWriter dw)
-		{
-			base.TooltipDelve(ref dw);
-			dw.AddKeyValuePair("Function", "power_xfer");
-			dw.AddKeyValuePair("damage", Spell.Value * 10);
-		}
-	}
+        public override string ShortDescription => $"Transfers {Spell.Value} power from the caster to the target.";
+    }
 }
