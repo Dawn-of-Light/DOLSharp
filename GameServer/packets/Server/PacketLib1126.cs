@@ -102,9 +102,10 @@ namespace DOL.GS.PacketHandler
 
 			int firstSlot = (byte)realm * 100;
 
+			var enableRealmSwitcherBit = GameServer.ServerRules.IsAllowedCharsInAllRealms(m_gameClient) ? 1 : 0;
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterOverview1126)))
 			{
-				pak.WriteIntLowEndian(0); // 0x01 & 0x02 are flags
+				pak.WriteIntLowEndian((uint)enableRealmSwitcherBit); // 0x01 & 0x02 are flags
 				pak.WriteIntLowEndian(0);
 				pak.WriteIntLowEndian(0);
 				pak.WriteIntLowEndian(0);
