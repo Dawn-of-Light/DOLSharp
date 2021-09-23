@@ -31,11 +31,21 @@ namespace DOL.GS.PacketHandler
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// Constructs a new PacketLib for Client Version 1.126
-		/// </summary>
-		/// <param name="client">the gameclient this lib is associated with</param>
-		public PacketLib1126(GameClient client)
+        protected override byte ServerTypeID
+        {
+			get
+			{
+				var serverType = GameServer.Instance.Configuration.ServerType;
+				switch (serverType)
+				{
+					case eGameServerType.GST_PvP: return 1;
+					case eGameServerType.GST_PvE: return 3;
+					default: return 7; //Ywain; 0x00 no longer working
+				}
+			}
+		}
+
+        public PacketLib1126(GameClient client)
 			: base(client)
 		{
 		}
