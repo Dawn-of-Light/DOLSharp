@@ -3978,13 +3978,13 @@ namespace DOL.GS.Spells
         {
 			get
 			{
-				if (Spell.Target == "Self") return "your";
-				return "the target's";
+				if (Spell.Target == "Self") return "Your";
+				return "The target's";
 			}
         }
 
 		public virtual string ShortDescription 
-			=> $"<description missing>\ntype: {GetType().ToString().Split('.').Last()}\nvalue: {Spell.Value}\ndamage: {Spell.Damage}";
+			=> $"{GetType().ToString().Split('.').Last()} has a value of {Spell.Value} and damage value of {Spell.Damage}.";
 		#endregion
 	}
 }

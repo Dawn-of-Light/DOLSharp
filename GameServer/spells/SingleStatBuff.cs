@@ -189,7 +189,7 @@ namespace DOL.GS.Spells
 
         public CombatSpeedBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override string ShortDescription => $"Increases {TargetPronoun} combat speed by {Spell.Value}%.";
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} combat speed by {Spell.Value}%.";
     }
     
     [SpellHandler("HasteBuff")]
@@ -203,7 +203,7 @@ namespace DOL.GS.Spells
     {
         public CelerityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override string ShortDescription => $"Increases {TargetPronoun} attack speed by {Spell.Value}%.";
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} attack speed by {Math.Abs(Spell.Value)}%.";
     }
 
     [SpellHandler("FatigueConsumptionBuff")]
@@ -215,7 +215,7 @@ namespace DOL.GS.Spells
 
         public FatigueConsumptionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override string ShortDescription => $"{TargetPronoun} actions require {Spell.Value}% less endurance.";
+        public override string ShortDescription => $"{TargetPronoun} actions require {Math.Abs(Spell.Value)}% less endurance.";
     }
 
     [SpellHandler("MeleeDamageBuff")]
@@ -277,7 +277,7 @@ namespace DOL.GS.Spells
 
         public WeaponSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override string ShortDescription => $"Increases {TargetPronoun} weapon skill by {Spell.Value}%.";
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} weapon skill by {Spell.Value}%.";
     }
 
     [SpellHandler("StealthSkillBuff")]
@@ -287,7 +287,7 @@ namespace DOL.GS.Spells
 
         public StealthSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override string ShortDescription => $"Increases {TargetPronoun} stealth skill by {Spell.Value}%.";
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} stealth skill by {Spell.Value}%.";
     }
 
     [SpellHandler("ToHitBuff")]
@@ -351,7 +351,7 @@ namespace DOL.GS.Spells
         public override eProperty Property1 { get { return eProperty.Skill_Flexible_Weapon; } }
         public FlexibleSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override string ShortDescription => $"Increases {TargetPronoun} Flexible by {Spell.Value}%.";
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} Flexible by {Spell.Value}%.";
     }
 
     [SpellHandler("ResiPierceBuff")]

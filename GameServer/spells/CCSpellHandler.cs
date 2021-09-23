@@ -493,6 +493,7 @@ namespace DOL.GS.Spells
 
 		public StunSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-        public override string ShortDescription => "The target is stunned and cannot take any actions.";
+		public override string ShortDescription 
+			=> $"The target is stunned and cannot take any actions for {Spell.Duration / 1000} seconds.";
     }
 }

@@ -128,7 +128,7 @@ namespace DOL.GS.Spells
 
 		public CombatSpeedDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
-		public override string ShortDescription => $"Target's attack speed reduced by {Spell.Value}%.";
+		public override string ShortDescription => $"Target's attack speed reduced by {Math.Abs(Spell.Value)}%.";
 	}
 
 	[SpellHandler("MeleeDamageDebuff")]

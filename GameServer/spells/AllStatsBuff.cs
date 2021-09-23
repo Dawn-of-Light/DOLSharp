@@ -100,6 +100,6 @@ namespace DOL.GS.Spells
 		}		
         public AllStatsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override string ShortDescription => $"Increases {TargetPronoun} all stats by {Spell.Value}.";
+        public override string ShortDescription => $"Increases {TargetPronoun.ToLower()} all stats by {Spell.Value}.";
     }
  }
