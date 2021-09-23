@@ -452,7 +452,7 @@ namespace DOL.GS
 							m_abilityIndex.Add(ability.KeyName, dba);
 	
 							if (log.IsDebugEnabled)
-								log.DebugFormat("Ability {0} successfuly instanciated from {1} (expected {2})", dba.KeyName, dba.Implementation, ability.GetType());
+								log.DebugFormat("Ability {0} successfully instantiated from {1} (expected {2})", dba.KeyName, dba.Implementation, ability.GetType());
 
 						}
 						catch (Exception e)
