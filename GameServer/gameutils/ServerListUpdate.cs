@@ -16,6 +16,7 @@ using DOL.Events;
 using DOL.GS.ServerProperties;
 using log4net;
 using System.Reflection;
+using System.Web;
 
 namespace DOL.GS.GameEvents
 {
@@ -120,9 +121,9 @@ namespace DOL.GS.GameEvents
 		{
 			//Get Playing Clients Count
 			string ClientCount = WorldMgr.GetAllPlayingClientsCount().ToString();
-			
+
 			//Set up our URI to be passed to the WebClient.
-			string Updater = UrlEncode(UpdateURL + "&username=" + Properties.SERVER_LIST_UPDATE_USER + 
+			string Updater = HttpUtility.UrlEncode(UpdateURL + "&username=" + Properties.SERVER_LIST_UPDATE_USER + 
                 "&password=" + Properties.SERVER_LIST_UPDATE_PASS + "&totalclients=" + ClientCount + "&version=" + ScriptVersion);
 
 			if (!ListUpdater(Updater))
@@ -219,18 +220,6 @@ namespace DOL.GS.GameEvents
 			return failed;
 		}
 
-		/// <summary>
-		/// This method makes the URL friendly (replaces spaces and other html characters
-		/// with their url friendly counterparts.
-		/// </summary>
-		/// <param name="Url">url to be formatted</param>
-		/// <returns>friendly url</returns>
-		public static string UrlEncode(string Url)
-		{
-			string newUrl = String.Empty;
-			newUrl = Url.Replace(" ", "%20");
-			return newUrl;
-		}
 		#endregion
 	}
 }
