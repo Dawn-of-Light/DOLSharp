@@ -41,6 +41,8 @@ namespace DOL.Database.Handlers
 			Config.AddDefaultOption("Convert Zero Datetime", "True");
 			Config.AddDefaultOption("SslMode", "None");
 			this.ConnectionString = Config.ConnectionString;
+
+			SetResultCharacterSetToUtf8mb4();
 		}
 		
 		#region MySQL Implementation
@@ -647,6 +649,19 @@ namespace DOL.Database.Handlers
 				}
 			}
 			return false;
+		}
+
+		private void SetResultCharacterSetToUtf8mb4()
+		{
+			using (var connection = new MySqlConnection(ConnectionString))
+			{
+				using (var dbCommand = connection.CreateCommand())
+				{
+					connection.Open();
+					dbCommand.CommandText = "SET character_set_results=utf8mb4";
+					dbCommand.ExecuteNonQuery();
+				}
+			}
 		}
 	}
 }
