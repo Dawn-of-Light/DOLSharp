@@ -123,8 +123,8 @@ namespace DOL.GS.GameEvents
 			string ClientCount = WorldMgr.GetAllPlayingClientsCount().ToString();
 
 			//Set up our URI to be passed to the WebClient.
-			string Updater = HttpUtility.UrlEncode(UpdateURL + "&username=" + Properties.SERVER_LIST_UPDATE_USER + 
-                "&password=" + Properties.SERVER_LIST_UPDATE_PASS + "&totalclients=" + ClientCount + "&version=" + ScriptVersion);
+			string Updater = UpdateURL + "&username=" + HttpUtility.UrlEncode(Properties.SERVER_LIST_UPDATE_USER) + 
+                "&password=" + HttpUtility.UrlEncode(Properties.SERVER_LIST_UPDATE_PASS) + "&totalclients=" + ClientCount + "&version=" + ScriptVersion;
 
 			if (!ListUpdater(Updater))
 			{
