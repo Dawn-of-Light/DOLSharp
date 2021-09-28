@@ -1160,9 +1160,7 @@ namespace DOL.GS.Keeps
 			if (component == null)
 				return;
 
-			GameKeepHookPoint hookpoint = component.HookPoints[97] as GameKeepHookPoint;
-
-			if (hookpoint == null)
+			if (!component.HookPoints.TryGetValue(97, out var hookpoint)) 
 				return;
 
 			//predict Z
