@@ -100,6 +100,6 @@ namespace DOL
 		/// <summary>
 		/// The default encoding to use for all string operations in packet writing or reading.
 		/// </summary>
-		public static readonly Encoding DefaultEncoding = Encoding.Default;
+		public static readonly Encoding DefaultEncoding = CodePagesEncodingProvider.Instance.GetEncoding(1252);
 	}
 }
