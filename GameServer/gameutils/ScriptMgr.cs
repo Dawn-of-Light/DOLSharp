@@ -520,11 +520,6 @@ namespace DOL.GS
 				if (compileVB) compiler.SetToVisualBasicNet();
 
 				var compiledAssembly = compiler.Compile(outputFile, files);
-				foreach (var errorMessage in compiler.GetDetailedErrorMessages())
-				{
-					log.Error(errorMessage);
-				}
-				if (compiler.HasErrors) return false;
 				compilationSuccessful = true;
 
 				AddOrReplaceAssembly(compiledAssembly);

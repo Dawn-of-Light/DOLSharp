@@ -22,7 +22,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-
+using DOL.GS.PacketHandler;
+using DOL.Language;
 using log4net;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -81,16 +82,28 @@ namespace DOL.GS
                 .Select(file => CSharpSyntaxTree.ParseText(File.ReadAllText(file.FullName)));
 
             Compile(outputFile, syntaxTrees);
+
+            if (HasErrors)
+            {
+                PrintErrorMessagesToConsole();
+                throw new ApplicationException("Scripts compilation was unsuccessful. Abort startup!");
+            }
             return Assembly.LoadFrom(outputFile.FullName);
         }
 
-        public Assembly CompileFromSource(string code)
+        public Assembly CompileFromText(GameClient client, string code)
         {
             var outputFile = new FileInfo("code_"+Guid.NewGuid()+".dll");
             var syntaxTrees = new List<SyntaxTree>() { CSharpSyntaxTree.ParseText(code) };
 
             Compile(outputFile, syntaxTrees);
-            if (HasErrors) return null;
+
+            if (HasErrors)
+            {
+                PrintErrorMessagesTo(client);
+                File.Delete(outputFile.FullName);
+                return null;
+            }
             var assembly = Assembly.Load(File.ReadAllBytes(outputFile.FullName));
             File.Delete(outputFile.FullName);
             return assembly;
@@ -112,33 +125,31 @@ namespace DOL.GS
             lastEmitResult = emitResult;
         }
 
-        public IEnumerable<string> GetDetailedErrorMessages()
+        private void PrintErrorMessagesToConsole()
         {
-            var errorDiagnostics = lastEmitResult.Diagnostics.Where(diagnostic =>
-                    diagnostic.IsWarningAsError ||
-                    diagnostic.Severity == DiagnosticSeverity.Error);
-
-            var errorMessages = new List<string>();
-            foreach (var diag in errorDiagnostics)
+            foreach (var diag in ErrorDiagnostics)
             {
-                errorMessages.Add($"\t{diag.Location} {diag.Id}: {diag.GetMessage()}");
+                log.Error($"\t{diag.Location} {diag.Id}: {diag.GetMessage()}");
             }
-            return errorMessages;
         }
 
-        public IEnumerable<string> GetErrorMessages()
+        private void PrintErrorMessagesTo(GameClient client)
         {
-            var errorDiagnostics = lastEmitResult.Diagnostics.Where(diagnostic =>
-                    diagnostic.IsWarningAsError ||
-                    diagnostic.Severity == DiagnosticSeverity.Error);
-
-            var errorMessages = new List<string>();
-            foreach (var diag in errorDiagnostics)
+            if (client.Player != null)
             {
-                errorMessages.Add(diag.GetMessage());
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
+                foreach (var diag in ErrorDiagnostics)
+                    client.Out.SendMessage(diag.GetMessage(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
             }
-            return errorMessages;
+            else
+            {
+                log.Debug("Error compiling code.");
+            }
         }
+
+        private IEnumerable<Diagnostic> ErrorDiagnostics
+            => lastEmitResult.Diagnostics.Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
     }
 }
 #endif

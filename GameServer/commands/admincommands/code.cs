@@ -17,8 +17,6 @@
  *
  */
 using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using DOL.GS.PacketHandler;
@@ -38,24 +36,7 @@ namespace DOL.GS.Commands
 		public static void ExecuteCode(GameClient client, string methodBody)
 		{
 			var compiler = new DOLScriptCompiler();
-			var compiledAssembly = compiler.CompileFromSource(GetCode(methodBody));
-
-			var errorMessages = compiler.GetErrorMessages();
-			if(errorMessages.Any())
-            {
-				if (client.Player != null)
-				{
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-
-					foreach (var errorMessage in errorMessages)
-						client.Out.SendMessage(errorMessage, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				}
-				else
-				{
-					log.Debug("Error compiling code.");
-				}
-				return;
-			}
+			var compiledAssembly = compiler.CompileFromText(client, GetCode(methodBody));
 
 			var methodinf = compiledAssembly.GetType("DynCode").GetMethod("DynMethod");
 

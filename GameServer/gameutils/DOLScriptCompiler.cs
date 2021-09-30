@@ -24,10 +24,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
 using log4net;
+using DOL.Language;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
@@ -37,6 +38,7 @@ namespace DOL.GS
 
         private CodeDomProvider compiler;
         private CompilerErrorCollection lastCompilationErrors;
+        private bool HasErrors => lastCompilationErrors.HasErrors;
         private static List<string> referencedAssemblies = new List<string>();
 
         static DOLScriptCompiler()
@@ -58,8 +60,6 @@ namespace DOL.GS
         {
             compiler = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v4.0" } });
         }
-
-        public bool HasErrors => lastCompilationErrors.HasErrors;
 
         public void SetToVisualBasicNet()
         {
@@ -87,10 +87,15 @@ namespace DOL.GS
             var compilerResults = compiler.CompileAssemblyFromFile(compilerParameters, sourceFilePaths);
             lastCompilationErrors = compilerResults.Errors;
             GC.Collect();
+            if (HasErrors)
+            {
+                PrintErrorMessagesToConsole();
+                throw new ApplicationException("Scripts compilation was unsuccessful. Abort startup!");
+            }
             return compilerResults.CompiledAssembly;
         }
 
-        public Assembly CompileFromSource(string code)
+        public Assembly CompileFromText(GameClient client, string code)
         {
             var compilerParameters = new CompilerParameters(referencedAssemblies.ToArray())
             {
@@ -102,13 +107,17 @@ namespace DOL.GS
 
             var compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, code);
             lastCompilationErrors = compilerResults.Errors;
-            if (HasErrors) return null;
+
+            if (HasErrors)
+            {
+                PrintErrorMessagesTo(client);
+                return null;
+            }
             return compilerResults.CompiledAssembly;
         }
 
-        public IEnumerable<string> GetDetailedErrorMessages()
+        private void PrintErrorMessagesToConsole()
         {
-            var errorMessages = new List<string>();
             foreach (CompilerError error in lastCompilationErrors)
             {
                 if (error.IsWarning) continue;
@@ -118,19 +127,23 @@ namespace DOL.GS
                 {
                     errorMessage = $"Script compilation failed because: \n{error.ErrorText}\n" + errorMessage;
                 }
-                errorMessages.Add(errorMessage);
+                log.Error(errorMessage);
             }
-            return errorMessages;
         }
 
-        public IEnumerable<string> GetErrorMessages()
+        private void PrintErrorMessagesTo(GameClient client)
         {
-            var errorMessages = new List<string>();
-            foreach (CompilerError error in lastCompilationErrors)
+            if (client.Player != null)
             {
-                errorMessages.Add(error.ErrorText);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+
+                foreach (CompilerError error in lastCompilationErrors)
+                    client.Out.SendMessage(error.ErrorText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
             }
-            return errorMessages;
+            else
+            {
+                log.Debug("Error compiling code.");
+            }
         }
     }
 }
