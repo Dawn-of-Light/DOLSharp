@@ -257,6 +257,8 @@ namespace DOL.GS.Spells
 		/// <returns>Modified Spell Range</returns>
 		int CalculateSpellRange();
 
+		void TooltipDelve(ref PacketHandler.MiniDelveWriter dw, int id, GameClient clt);
+
 		string ShortDescription { get; }
 	}
 

@@ -920,7 +920,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (client.CanSendTooltip(24, objectId))
 					{
 						var spell = SkillBase.GetSpellByTooltipID(objectId);
-						client.Out.SendDelveInfo(new SpellDelve(spell).GetClientDelve().ClientMessage);
+						client.Out.SendDelveInfo(DelveSpell(client, objectId));
 					}
 					break;
 				case 25://StylesNew
@@ -1968,5 +1968,96 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 		}
-    }
+
+		/// <summary>
+		/// Delve Info for Spells (V1.110+)
+		/// </summary>		
+		public static string DelveSpell(GameClient clt, int id)
+		{
+			MiniDelveWriter dw = new MiniDelveWriter("Spell");
+
+			Spell spell = SkillBase.GetSpellByTooltipID((ushort)id);
+
+			// Spell object are mostly "DB" Object, we can't subclass this object easily, but Spellhandler create subclass using "SpellType"
+			// We better rely on the handler to delve it correctly ! using reserved spellline as we can't guess it ! player can delve other object effect !
+			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+
+			if (spellHandler != null)
+			{
+				spellHandler.TooltipDelve(ref dw, id, clt);
+				// If spell has a subspell, we need to send another call to delve that subspell info
+				if (spell.SubSpellId > 0)
+				{
+					clt.Out.SendDelveInfo(DelveAttachedSpell(clt, spell.SubSpellId));
+				}
+				return dw.ToString();
+			}
+
+			// not found
+			dw.AddKeyValuePair("Index", unchecked((short)id));
+			dw.AddKeyValuePair("Name", "(not found)");
+			return dw.ToString();
+		}
+
+		/// <summary>
+		/// Delve Info for subspells as spellID is used not tooltip. Some custom delve too(V1.110+)
+		/// </summary>		
+		public static string DelveAttachedSpell(GameClient clt, int id)
+		{
+			MiniDelveWriter dw = new MiniDelveWriter("Spell");
+			Spell spell = SkillBase.GetSpellByID(id);
+
+			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+
+			if (spellHandler != null)
+			{
+				spellHandler.TooltipDelve(ref dw, id, clt);
+				if (!string.IsNullOrEmpty(spell.Description))
+				{
+					string desc = String.Format(spell.Description, spell.Value);
+					var newDesc = desc.Replace(@"\n", "\n");
+					dw.AddKeyValuePair("delve_string", newDesc);
+				}
+				if (spell.SubSpellId > 0) // if sub spells have 3 'links' for delving
+				{
+					clt.Out.SendDelveInfo(DelveStyleSpell(clt, spell.SubSpellId));
+				}
+				return dw.ToString();
+			}
+
+			// not found
+			dw.AddKeyValuePair("Index", unchecked((short)id));
+			dw.AddKeyValuePair("Name", "(not found)");
+			return dw.ToString();
+		}
+
+		/// <summary>
+		/// Delve Info for style spells and subspells (V1.110+)
+		/// These are bleeds, snares etc and must be delved as a spell to correctly show on the tooltip
+		/// </summary>		
+		public static string DelveStyleSpell(GameClient clt, int id)
+		{
+			MiniDelveWriter dw = new MiniDelveWriter("Spell");
+			Spell spell = SkillBase.GetSpellByID(id);
+
+			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+
+			if (spellHandler != null)
+			{
+				spellHandler.TooltipDelve(ref dw, id, clt);
+				if (spell.SubSpellId > 0)
+				{
+					clt.Out.SendDelveInfo(DelveStyleSpell(clt, spell.SubSpellId));
+				}
+				return dw.ToString();
+			}
+
+			// not found
+			dw.AddKeyValuePair("Index", unchecked((short)id));
+			dw.AddKeyValuePair("Name", "(not found)");
+			return dw.ToString();
+		}
+
+
+	}
 }
