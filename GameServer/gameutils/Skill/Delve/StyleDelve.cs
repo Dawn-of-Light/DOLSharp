@@ -101,7 +101,7 @@ namespace DOL.GS.Delve
 
 		public override IEnumerable<ClientDelve> GetClientDelves()
 		{
-			var result = new List<ClientDelve>() { GetClientDelve() };
+			var result = new List<ClientDelve>() { };
 			foreach (var proc in style.Procs)
 			{
 				if (proc.Item2 == 0 || proc.Item2 == style.ClassID)
@@ -110,6 +110,7 @@ namespace DOL.GS.Delve
 					result.Add(procDelve);
 				}
 			}
+			result.Add(GetClientDelve());
 			return result;
 		}
     }
