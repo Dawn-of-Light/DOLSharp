@@ -920,8 +920,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (client.CanSendTooltip(24, objectId))
 					{
 						var spell = SkillBase.GetSpellByTooltipID(objectId);
-						client.Out.SendDelveInfo(new SpellDelve(spell).GetClientDelve().ClientMessage);
-					}
+                        client.Out.SendDelveInfo(new SpellDelve(spell, client).GetClientDelve().ClientMessage);
+                    }
 					break;
 				case 25://StylesNew
 					if (client.CanSendTooltip(25, objectId))

@@ -19,6 +19,7 @@
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DOL.GS.Delve
 {
@@ -37,7 +38,25 @@ namespace DOL.GS.Delve
 			Index = unchecked((short)spellHandler.Spell.InternalID);
 		}
 
-		public override ClientDelve GetClientDelve()
+
+        public SpellDelve(Spell spell, GameClient client) : this(spell)
+        {
+            int level = Spell.Level;
+            int spellID = Spell.ID;
+
+            foreach (SpellLine line in client.Player.GetSpellLines())
+            {
+                Spell s = SkillBase.GetSpellList(line.KeyName).Where(o => o.ID == spellID).FirstOrDefault();
+                if (s != null)
+                {
+                    level = s.Level;
+                    break;
+                }
+            }
+            Spell.Level = level;
+
+        }
+        public override ClientDelve GetClientDelve()
 		{
 			if (spellHandler == null) return NotFoundClientDelve;
 
