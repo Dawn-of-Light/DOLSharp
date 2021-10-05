@@ -925,8 +925,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 					break;
 				case 25://StylesNew
 					if (client.CanSendTooltip(25, objectId))
-	                    client.Out.SendDelveInfo(new StyleDelve(client, objectId).GetClientDelve().ClientMessage);
-                    break;
+					{
+						foreach (var delve in new StyleDelve(client, objectId).GetClientDelves())
+						{
+							client.Out.SendDelveInfo(delve.ClientMessage);
+						}
+					}
+					break;
 				case 26://SongsNew
 					if (client.CanSendTooltip(26, objectId))
 					{
