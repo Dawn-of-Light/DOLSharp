@@ -328,6 +328,7 @@ namespace DOL.GS.ServerRules
 		/// </summary>
 		/// <param name="client">The client asking for color handling</param>
 		/// <returns>The color handling</returns>
+		[Obsolete("This is going to be removed. Use PacketLib168.ServerTypeID instead.")]
 		byte GetColorHandling(GameClient client);
 		
 		/// <summary>

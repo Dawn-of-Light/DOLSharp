@@ -523,15 +523,13 @@ namespace DOL.GS.PacketHandler
 
         public override void SendLoginGranted()
         {
-            //[Freya] Nidel: Can use realm button in character selection screen
-
-            if (ServerProperties.Properties.ALLOW_ALL_REALMS || m_gameClient.Account.PrivLevel > (int)ePrivLevel.Player)
+            if (GameServer.ServerRules.IsAllowedCharsInAllRealms(m_gameClient))
             {
                 SendLoginGranted(1);
             }
             else
             {
-                SendLoginGranted(GameServer.ServerRules.GetColorHandling(m_gameClient));
+                SendLoginGranted(ServerTypeID);
             }
         }
     }

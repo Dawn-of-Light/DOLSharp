@@ -31,11 +31,21 @@ namespace DOL.GS.PacketHandler
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// Constructs a new PacketLib for Client Version 1.126
-		/// </summary>
-		/// <param name="client">the gameclient this lib is associated with</param>
-		public PacketLib1126(GameClient client)
+        protected override byte ServerTypeID
+        {
+			get
+			{
+				var serverType = GameServer.Instance.Configuration.ServerType;
+				switch (serverType)
+				{
+					case eGameServerType.GST_PvP: return 1;
+					case eGameServerType.GST_PvE: return 3;
+					default: return 7; //Ywain; 0x00 no longer working
+				}
+			}
+		}
+
+        public PacketLib1126(GameClient client)
 			: base(client)
 		{
 		}
@@ -92,9 +102,10 @@ namespace DOL.GS.PacketHandler
 
 			int firstSlot = (byte)realm * 100;
 
+			var enableRealmSwitcherBit = GameServer.ServerRules.IsAllowedCharsInAllRealms(m_gameClient) ? 1 : 0;
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterOverview1126)))
 			{
-				pak.WriteIntLowEndian(0); // 0x01 & 0x02 are flags
+				pak.WriteIntLowEndian((uint)enableRealmSwitcherBit); // 0x01 & 0x02 are flags
 				pak.WriteIntLowEndian(0);
 				pak.WriteIntLowEndian(0);
 				pak.WriteIntLowEndian(0);
@@ -322,9 +333,6 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		/// <summary>
-		/// This packet may have been updated anywhere from 1125b-1126a - not sure
-		/// </summary>
 		public override void SendUpdateWeaponAndArmorStats()
 		{
 			if (m_gameClient.Player == null)
@@ -340,10 +348,10 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x00); //unk
 
 				// weapondamage
-				var wd = (int)(m_gameClient.Player.WeaponDamage(m_gameClient.Player.AttackWeapon) * 100.0);
-				pak.WriteByte((byte)(wd / 100));
+				var wd = (int)(m_gameClient.Player.WeaponDamage(m_gameClient.Player.AttackWeapon) * 100);
+				pak.WriteByte((byte)(wd / 0x100));
 				pak.WriteByte(0x00);
-				pak.WriteByte((byte)(wd % 100));
+				pak.WriteByte((byte)(wd % 0x100));
 				pak.WriteByte(0x00);
 				// weaponskill
 				int ws = m_gameClient.Player.DisplayedWeaponSkill;
