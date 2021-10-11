@@ -12,9 +12,15 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
     <OutputPath>..\$(Configuration)\lib\</OutputPath>
     <IntermediateOutputPath>..\build\GameServerScripts\$(Configuration)\obj\</IntermediateOutputPath>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Deterministic>false</Deterministic>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyTitle>Dawn of Light - GameServerScripts</AssemblyTitle>
+    <Description>Contains all the scripted code used to extend Game Server</Description>
+    <Copyright>Dawn of Light Development Team</Copyright>
+    <Company>Dawn of Light Development Team</Company>
+    <Product>DAoC Server Side Emulation Package - Dawn of Light</Product>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
