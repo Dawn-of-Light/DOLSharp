@@ -1,0 +1,60 @@
+name: Test Runner
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test_netcore_linux:
+    name: .Net5 Tests on Linux
+    strategy:
+      matrix:
+        build_target: [Debug]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: |
+          dotnet build -c ${{ matrix.build_target }} "Net5/Tests/Tests.csproj"
+      - name: Test
+        run: |
+          dotnet test ./Net5/build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.UnitTests"
+          dotnet test ./Net5/build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.Integration"
+
+  test_netcore_windows:
+    name: .Net5 Tests on Windows
+    if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        build_target: [Debug]
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: |
+          dotnet build -c ${{ matrix.build_target }} "Net5/DOLdotnet.sln"
+      - name: Test
+        run: |
+          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests"
+          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration"
+
+  test_netframework_linux:
+    name: Net 4.8 Tests on Linux
+    strategy:
+      matrix:
+        build_target: [Debug, Release]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: dotnet build -c ${{ matrix.build_target }} "Tests/Tests.csproj"
+      - name: Test
+        run: |
+          dotnet test ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.UnitTests"
+          dotnet test ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.Integration"
