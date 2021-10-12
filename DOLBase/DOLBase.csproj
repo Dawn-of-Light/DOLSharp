@@ -27,9 +27,15 @@
     <IntermediateOutputPath>..\build\DOLBase\$(Configuration)\obj\</IntermediateOutputPath>
     <NoWin32Manifest>False</NoWin32Manifest>
     <OutputPath>..\$(Configuration)\lib\</OutputPath>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Deterministic>false</Deterministic>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyTitle>Dawn of Light - DOLBase</AssemblyTitle>
+    <Description>Base code for Dawn of Light server</Description>
+    <Copyright>Dawn of Light Development Team</Copyright>
+    <Company>Dawn of Light Development Team</Company>
+    <Product>DAoC Server Side Emulation Package - Dawn of Light</Product>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <StartAction>Project</StartAction>

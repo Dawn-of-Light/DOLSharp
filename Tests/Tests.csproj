@@ -26,9 +26,15 @@
     <IntermediateOutputPath>..\build\Tests\$(Configuration)\obj\</IntermediateOutputPath>
     <NoWin32Manifest>False</NoWin32Manifest>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Deterministic>false</Deterministic>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyTitle>Dawn of Light - Tests</AssemblyTitle>
+    <Description>Contains all unit and integration tests of all DOLServer projects</Description>
+    <Copyright>Dawn of Light Development Team</Copyright>
+    <Company>Dawn of Light Development Team</Company>
+    <Product>DAoC Server Side Emulation Package - Dawn of Light</Product>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -52,8 +58,10 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.2" Condition=" '$(OS)' != 'Unix' " />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="True" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="True" />

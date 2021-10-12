@@ -42,9 +42,16 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <OutputPath>..\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>..\build\DOLConfig\$(Configuration)\obj</IntermediateOutputPath>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Deterministic>false</Deterministic>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyTitle>Dawn of Light - DOLConfig</AssemblyTitle>
+    <Description>Configuration software</Description>
+    <Copyright>Dawn of Light Development Team</Copyright>
+    <Company>Dawn of Light Development Team</Company>
+    <Product>DAoC Server Side Emulation Package - Dawn of Light</Product>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -67,6 +74,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
     <PackageReference Include="MySql.Data" Version="8.0.25" ExcludeAssets="Runtime" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.2" ExcludeAssets="All" Condition=" '$(OS)' != 'Unix' " />
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
