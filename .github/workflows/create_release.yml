@@ -1,0 +1,122 @@
+name: Create Release
+concurrency:
+  group: create_release
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  get_release_info:
+    name: Get Release Info
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generate Release Info
+        run: |
+          version="1.9.7"
+          last_version_tag=$(git tag -l --sort=creatordate | grep -E '^([0-9]+\.){3}[0-9]+$' | tail -n1)
+          git log origin/master --first-parent  --format="%s%n%w(0,4,4)%b" "$last_version_tag".. | grep -v "^$" >> patch_notes.txt
+          if [ ! -s patch_notes.txt ]; then echo "No commits since last run."; exit 1; fi #fail if empty
+          #Prepend patch notes with backticks
+          sed -i '1s/^/```\n/' patch_notes.txt
+          new_build_number=$((1+$(echo "$last_version_tag" | grep -oE "[0-9]+$")))
+          new_version_tag="$version"."$new_build_number"
+          echo -n $new_version_tag > version.txt
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: release_info
+          path: |
+            patch_notes.txt
+            version.txt
+  
+  netframework_build:
+    name: Create NetFramework Build
+    needs: get_release_info
+    runs-on: windows-2019
+    strategy:
+      matrix:
+        build_target: [Debug,Release]
+    env:
+      OUTPUT_FILE_NAME: DOLServer_net45_${{ matrix.build_target }}.zip
+      OUTPUT_FILE_NAME_LINUX: DOLServer_linux_net45_${{ matrix.build_target }}.zip
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download Release Info
+        uses: actions/download-artifact@v2
+      - name: Build
+        run: |
+          $Env:DOTNET_CLI_TELEMETRY_OPTOUT=1
+          $assembly_version="$(cat release_info/version.txt)"
+          dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Dawn of Light.sln"
+      - name: Test Build
+        run: |
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests"
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration"
+      - name: Compress Build Artifacts
+        run: |
+          Compress-Archive -Path .\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
+          cp .\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll .\${{ matrix.build_target }}\lib\
+          Compress-Archive -Path .\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME_LINUX }}
+      - name: Upload Build Output
+        uses: actions/upload-artifact@v2
+        with:
+          name: build_artifacts
+          path: |
+            ${{ env.OUTPUT_FILE_NAME }}
+            ${{ env.OUTPUT_FILE_NAME_LINUX }}
+            
+  netcore_build:
+    name: Create NetCore Build
+    needs: get_release_info
+    runs-on: windows-2019
+    strategy:
+      matrix:
+        build_target: [Debug]
+    env:
+      OUTPUT_FILE_NAME: DOLServer_Net5_Alpha_${{ matrix.build_target }}.zip
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download Release Info
+        uses: actions/download-artifact@v2
+      - name: Build
+        run: |
+          $Env:DOTNET_CLI_TELEMETRY_OPTOUT=1
+          $assembly_version="$(cat release_info/version.txt)"
+          dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Net5\DOLdotnet.sln"
+      - name: Test Build
+        run: |
+          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests"
+          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration"
+      - name: Compress Build Artifacts
+        run: Compress-Archive -Path .\Net5\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
+      - name: Upload Build Output
+        uses: actions/upload-artifact@v2
+        with:
+          name: build_artifacts
+          path: ${{ env.OUTPUT_FILE_NAME}}
+
+  create_release:
+    name: Create Release
+    if: always() && needs.netframework_build.result == 'success'
+    needs: [netframework_build,netcore_build]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+      - name: Create Release
+        run: |
+          new_version_tag=$(cat release_info/version.txt)
+          gh release create "$new_version_tag" --title "$new_version_tag" -F release_info/patch_notes.txt build_artifacts/*
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

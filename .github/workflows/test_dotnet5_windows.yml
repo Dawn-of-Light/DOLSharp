@@ -1,8 +1,6 @@
 name: .Net5 Tests on Windows
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
   workflow_dispatch:
