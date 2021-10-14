@@ -41,8 +41,7 @@ namespace DOL.Integration.Database
 		public void SetUp()
 		{
 			var CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().Location).LocalPath).Directory;
-			ConnectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
-			                                     Path.Combine(CodeBase.Parent.FullName, "dol-database-tests-only.sqlite3.db"));
+			ConnectionString = $"Data Source={Path.Combine(CodeBase.Parent.FullName, "dol-database-tests-only.sqlite3.db")}";
 			                                     
 			Database = (SQLObjectDatabase)ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_SQLITE, ConnectionString);
 			

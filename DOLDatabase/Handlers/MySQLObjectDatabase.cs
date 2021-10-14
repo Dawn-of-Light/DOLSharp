@@ -32,28 +32,14 @@ namespace DOL.Database.Handlers
 {
 	public class MySQLObjectDatabase : SQLObjectDatabase
 	{
-		/// <summary>
-		/// Create a new instance of <see cref="MySQLObjectDatabase"/>
-		/// </summary>
-		/// <param name="ConnectionString">Database Connection String</param>
 		public MySQLObjectDatabase(string ConnectionString)
 			: base(ConnectionString)
 		{
-			// Options of MySQL connection string
-			if (!this.ConnectionString.Contains("Treat Tiny As Boolean") && !this.ConnectionString.Contains("TreatTinyAsBoolean"))
-			{
-				this.ConnectionString += ";Treat Tiny As Boolean=False";
-			}
-
-			if (!this.ConnectionString.Contains("Allow User Variables") && !this.ConnectionString.Contains("AllowUserVariables"))
-			{
-				this.ConnectionString += ";Allow User Variables=True";
-			}
-			
-			if (!this.ConnectionString.Contains("Convert Zero Datetime") && !this.ConnectionString.Contains("ConvertZeroDateTime"))
-			{
-				this.ConnectionString += ";Convert Zero Datetime=True";
-			}
+			Config = new DbConfig(ConnectionString);
+			Config.AddDefaultOption("Treat Tiny As Boolean", "False");
+			Config.AddDefaultOption("Allow User Variables", "True");
+			Config.AddDefaultOption("Convert Zero Datetime", "True");
+			this.ConnectionString = Config.ConnectionString;
 		}
 		
 		#region MySQL Implementation
