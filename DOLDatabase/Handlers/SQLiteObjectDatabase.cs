@@ -25,7 +25,6 @@ using System.Data.Common;
 using Microsoft.Data.Sqlite;
 
 using DOL.Database.Connection;
-using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
 
 namespace DOL.Database.Handlers
 {
@@ -42,6 +41,7 @@ namespace DOL.Database.Handlers
 			Config.AddDefaultOption("Synchronous", "Off");
 			Config.AddDefaultOption("Foreign Keys", "True");
 			Config.AddDefaultOption("Default Timeout", "60");
+			Config.SuppressFromConnectionString("Version", "Pooling", "Cache Size", "Journal Mode", "Synchronous", "Default Timeout");
 			this.ConnectionString = Config.ConnectionString;
 		}
 		
@@ -718,7 +718,8 @@ namespace DOL.Database.Handlers
 			var dbParam = new SqliteParameter();
 			dbParam.ParameterName = queryParameter.Name;
 
-			if (queryParameter.Value is char)
+			if (queryParameter.Value == null) dbParam.Value = DBNull.Value;
+			else if (queryParameter.Value is char)
 				dbParam.Value = Convert.ToUInt16(queryParameter.Value);
 			else if (queryParameter.Value is uint)
 				dbParam.Value = Convert.ToInt64(queryParameter.Value);
