@@ -51,6 +51,7 @@ namespace DOL.GS
                 referencedAssemblies.Add("netstandard.dll");
             }
 
+            referencedAssemblies.Remove("testcentric.engine.metadata.dll"); //NUnit3TestAdapter 4.0.0 dependency conflict with mscorlib.dll
             referencedAssemblies.AddRange(GameServer.Instance.Configuration.AdditionalScriptAssemblies);
         }
 

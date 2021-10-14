@@ -60,7 +60,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
     <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115" Condition=" '$(OS)' != 'Unix' " />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="True" />

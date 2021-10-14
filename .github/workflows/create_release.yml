@@ -58,8 +58,8 @@ jobs:
           dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Dawn of Light.sln"
       - name: Test Build
         run: |
-          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests"
-          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration"
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
       - name: Compress Build Artifacts
         run: |
           Compress-Archive -Path .\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
@@ -94,8 +94,8 @@ jobs:
           dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Net5\DOLdotnet.sln"
       - name: Test Build
         run: |
-          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests"
-          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration"
+          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
+          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
       - name: Compress Build Artifacts
         run: Compress-Archive -Path .\Net5\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
       - name: Upload Build Output
