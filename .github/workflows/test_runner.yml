@@ -58,3 +58,19 @@ jobs:
         run: |
           dotnet test ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
           dotnet test ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
+
+  test_netframework_windows:
+    name: Net 4.8 Tests on windows
+    strategy:
+      matrix:
+        build_target: [Debug, Release]
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: dotnet build -c ${{ matrix.build_target }} "Tests\Tests.csproj"
+      - name: Test
+        run: |
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
