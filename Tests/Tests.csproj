@@ -58,11 +58,11 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="NUnit" Version="3.13.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="log4net" Version="2.0.12" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.2" Condition=" '$(OS)' != 'Unix' " />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115" Condition=" '$(OS)' != 'Unix' " />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="True" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="True" />
     <ProjectReference Include="..\DOLServer\DOLServer.csproj" Name="DOLServer" />
@@ -74,15 +74,9 @@
     <TranslationFiles Include="..\GameServer\language\**\*.txt" />
   </ItemGroup>
   <Target Name="CopyFiles" AfterTargets="AfterBuild">
-    <Copy
-      SourceFiles="@(ScriptFiles)"
-      DestinationFiles="@(ScriptFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy
-      SourceFiles="@(DbUpdaterFiles)"
-      DestinationFiles="@(DbUpdaterFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\dbupdater\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy
-      SourceFiles="@(TranslationFiles)"
-      DestinationFiles="@(TranslationFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\languages\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(ScriptFiles)" DestinationFiles="@(ScriptFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DbUpdaterFiles)" DestinationFiles="@(DbUpdaterFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\dbupdater\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(TranslationFiles)" DestinationFiles="@(TranslationFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\languages\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

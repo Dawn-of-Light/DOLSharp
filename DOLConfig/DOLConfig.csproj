@@ -74,9 +74,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
-    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
-    <PackageReference Include="MySql.Data" Version="8.0.25" ExcludeAssets="Runtime" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.2" ExcludeAssets="All" Condition=" '$(OS)' != 'Unix' " />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" ExcludeAssets="Runtime"/>
+    <PackageReference Include="MySql.Data" Version="8.0.26" ExcludeAssets="Runtime" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115" ExcludeAssets="All" Condition=" '$(OS)' != 'Unix' " />
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
       <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
     </Reference>
@@ -94,9 +94,7 @@
     <Content Include="icon.ico" />
   </ItemGroup>
   <Target Name="CopyFiles" AfterTargets="AfterBuild">
-    <Copy
-      SourceFiles="serverconfig_extraproperties.xml"
-      DestinationFolder="$(MSBuildProjectDirectory)\..\$(Configuration)\lib\config\" />
+    <Copy SourceFiles="serverconfig_extraproperties.xml" DestinationFolder="$(MSBuildProjectDirectory)\..\$(Configuration)\lib\config\" />
   </Target>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
