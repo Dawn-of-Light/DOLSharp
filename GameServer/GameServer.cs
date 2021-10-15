@@ -49,14 +49,8 @@ using log4net.Core;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Class encapsulates all game server functionality
-	/// </summary>
 	public class GameServer : BaseServer
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Variables
@@ -147,46 +141,20 @@ namespace DOL.GS
 		#endregion
 
 		#region Properties
-		/// <summary>
-		/// Returns the instance
-		/// </summary>
 		public static GameServer Instance => m_instance;
+		public static IServerRules ServerRules => m_instance.ServerRulesImpl;
+		public static IObjectDatabase Database => m_instance.DataBaseImpl;
 
-		/// <summary>
-		/// Retrieves the server configuration
-		/// </summary>
-		public new virtual GameServerConfiguration Configuration
-		{
-			get { return (GameServerConfiguration) _config; }
-		}
-
-		/// <summary>
-		/// Gets the server status
-		/// </summary>
-		public eGameServerStatus ServerStatus
-		{
-			get { return m_status; }
-		}
-		
-		/// <summary>
-		/// Gets the server Scheduler
-		/// </summary>
+		public new virtual GameServerConfiguration Configuration => (GameServerConfiguration) _config;
+		public IObjectDatabase IDatabase => m_database;
+		public eGameServerStatus ServerStatus => m_status;
 		public Scheduler.SimpleScheduler Scheduler { get; protected set; }
-		
-		/// <summary>
-		/// Gets the server WorldManager
-		/// </summary>
 		public WorldManager WorldManager { get; protected set; }
-
-		/// <summary>
-		/// Gets the server PlayerManager
-		/// </summary>
 		public PlayerManager PlayerManager { get; protected set; }
-
-		/// <summary>
-		/// Gets the server NpcManager
-		/// </summary>
 		public NpcManager NpcManager { get; protected set; }
+		public string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+		protected virtual IObjectDatabase DataBaseImpl => Instance.m_database;
 
 		protected virtual IServerRules ServerRulesImpl
 		{
@@ -211,11 +179,6 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Gets the current rules used by server
-		/// </summary>
-		public static IServerRules ServerRules => m_instance.ServerRulesImpl;
-
 		public static IKeepManager KeepManager
 		{
 			get
@@ -231,27 +194,6 @@ namespace DOL.GS
 
 				return Instance.m_keepManager;
 			}
-		}
-
-		protected virtual IObjectDatabase DataBaseImpl
-		{
-			get
-			{
-				return Instance.m_database;
-			}
-		}
-
-		/// <summary>
-		/// Gets the database instance
-		/// </summary>
-		public static IObjectDatabase Database => m_instance.DataBaseImpl;
-		
-		/// <summary>
-		/// Gets this Instance's Database
-		/// </summary>
-		public IObjectDatabase IDatabase
-		{
-			get { return m_database; }
 		}
 
 		/// <summary>
@@ -290,10 +232,6 @@ namespace DOL.GS
 
 		public static void LoadTestDouble(GameServer server) { m_instance = server; }
 
-		/// <summary>
-		/// Creates the gameserver instance
-		/// </summary>
-		/// <param name="config"></param>
 		public static void CreateInstance(GameServerConfiguration config)
 		{
 			//Only one intance
@@ -572,10 +510,6 @@ namespace DOL.GS
 
 		#region Start
 
-		/// <summary>
-		/// Starts the server
-		/// </summary>
-		/// <returns>True if the server was successfully started</returns>
 		public override bool Start()
 		{
 			try
@@ -814,7 +748,7 @@ namespace DOL.GS
 				}
 								
 				if (log.IsInfoEnabled)
-					log.Info("GameServer is now open for connections!");
+					log.Info($"GameServer {Version} is now open for connections!");
 
 				//INIT WAS FINE!
 				return true;
@@ -831,8 +765,6 @@ namespace DOL.GS
 		/// <summary>
 		/// Logs unhandled exceptions
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
 			log.Fatal("Unhandled exception!\n" + e.ExceptionObject);
@@ -840,10 +772,6 @@ namespace DOL.GS
 				LogManager.Shutdown();
 		}
 
-		/// <summary>
-		/// Recompiles or loads the scripts dll
-		/// </summary>
-		/// <returns></returns>
 		public bool CompileScripts()
 		{
 			string scriptDirectory = Path.Combine(Configuration.RootDirectory, "scripts");
@@ -1063,10 +991,6 @@ namespace DOL.GS
 			return m_keepManager.Load();
 		}
 
-		/// <summary>
-		/// Do any required updates to the database
-		/// </summary>
-		/// <returns>true if all went fine, false if errors</returns>
 		protected virtual bool UpdateDatabase()
 		{
 			bool result = true;
@@ -1407,11 +1331,6 @@ namespace DOL.GS
 		#endregion
 
 		#region Database
-
-		/// <summary>
-		/// Initializes the database
-		/// </summary>
-		/// <returns>True if the database was successfully initialized</returns>
 		public bool InitDB()
 		{
 			if (m_database == null)
@@ -1515,19 +1434,9 @@ namespace DOL.GS
 		#endregion
 
 		#region Constructors
-
-		/// <summary>
-		/// Default game server constructor
-		/// </summary>
 		protected GameServer()
-			: this(new GameServerConfiguration())
-		{
-		}
+			: this(new GameServerConfiguration()) { }
 
-		/// <summary>
-		/// Constructor with a given configuration
-		/// </summary>
-		/// <param name="config">A valid game server configuration</param>
 		protected GameServer(GameServerConfiguration config)
 			: base(config)
 		{
