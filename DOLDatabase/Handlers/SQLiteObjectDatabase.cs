@@ -45,7 +45,7 @@ namespace DOL.Database.Handlers
 			Config.AddDefaultOption("Version", "3");
 			Config.AddDefaultOption("Pooling", "False");
 			Config.AddDefaultOption("Cache Size", "1073741824");
-			Config.AddDefaultOption("Journal Mode", "Off");
+			Config.AddDefaultOption("Journal Mode", "Memory");
 			Config.AddDefaultOption("Synchronous", "Off");
 			Config.AddDefaultOption("Foreign Keys", "True");
 			Config.AddDefaultOption("Default Timeout", "60");
