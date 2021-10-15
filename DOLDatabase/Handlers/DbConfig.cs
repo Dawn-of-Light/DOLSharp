@@ -49,6 +49,18 @@ namespace DOL.Database
             }
 		}
 
+		public string GetValueOf(string optionName)
+		{
+			if (options.TryGetValue(Digest(optionName), out var optionValue))
+			{
+				return optionValue.Item2;
+			}
+			else
+			{
+				return "";
+			}
+		}
+
 		public void SetOption(string key, string value)
         {
 			if(defaultOptions.ContainsKey(Digest(key)))

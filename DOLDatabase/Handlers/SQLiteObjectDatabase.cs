@@ -30,6 +30,14 @@ namespace DOL.Database.Handlers
 {
 	public class SQLiteObjectDatabase : SQLObjectDatabase
 	{
+		#region Property implementation
+		public override ConnectionType ConnectionType { get { return ConnectionType.DATABASE_SQLITE; } }
+		protected override string PreCommandDirectives
+			=> $"PRAGMA journal_mode='{Config.GetValueOf("Journal Mode")}';"
+			+ $"PRAGMA cache_size='{Config.GetValueOf("Cache Size")}';"
+			+ $"PRAGMA synchronous='{Config.GetValueOf("Synchronous")}';";
+		#endregion
+
 		public SQLiteObjectDatabase(string ConnectionString)
 			: base(ConnectionString)
 		{
@@ -575,22 +583,8 @@ namespace DOL.Database.Handlers
 		}
 		#endregion
 
-		#region Property implementation
-		/// <summary>
-		/// The connection type to DB (xml, mysql,...)
-		/// </summary>
-		public override ConnectionType ConnectionType { get { return ConnectionType.DATABASE_SQLITE; } }
-		#endregion
-		
-		#region SQLObject Implementation
-		/// <summary>
-		/// Implementation of Scalar Query with Parameters for Prepared Query
-		/// </summary>
-		/// <param name="SQLCommand">Scalar Command</param>
-		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
-		/// <param name="retrieveLastInsertID">Return Last Insert ID of each Command instead of Scalar</param>
-		/// <returns>Objects Returned by Scalar</returns>
-		protected override object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, bool retrieveLastInsertID)
+        #region SQLObject Implementation
+        protected override object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, bool retrieveLastInsertID)
 		{
 			if (log.IsDebugEnabled)
 				log.DebugFormat("ExecuteScalarImpl: {0}", SQLCommand);
