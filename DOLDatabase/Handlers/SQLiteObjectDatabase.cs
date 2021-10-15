@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Data.Common;
-using System.Data.SQLite;
+using Microsoft.Data.Sqlite;
 
 using DOL.Database.Connection;
 using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
@@ -481,7 +481,7 @@ namespace DOL.Database.Handlers
 				throw;
 			}
 
-			using (var conn = new SQLiteConnection(ConnectionString))
+			using (var conn = new SqliteConnection(ConnectionString))
 			{
 				conn.Open();
 				using(var tran = conn.BeginTransaction(System.Data.IsolationLevel.ReadCommitted))
@@ -491,7 +491,7 @@ namespace DOL.Database.Handlers
 						// Delete Indexes
 						foreach(var index in currentIndexes)
 						{
-							using (var command = new SQLiteCommand(string.Format("DROP INDEX `{0}`", index), conn))
+							using (var command = new SqliteCommand(string.Format("DROP INDEX `{0}`", index), conn))
 							{
 								command.Transaction = tran;
 								command.ExecuteNonQuery();
@@ -499,14 +499,14 @@ namespace DOL.Database.Handlers
 						}
 						
 						// Rename Table
-						using (var command = new SQLiteCommand(string.Format("ALTER TABLE `{0}` RENAME TO `{0}_bkp`", table.TableName), conn))
+						using (var command = new SqliteCommand(string.Format("ALTER TABLE `{0}` RENAME TO `{0}_bkp`", table.TableName), conn))
 						{
 							command.Transaction = tran;
 							command.ExecuteNonQuery();
 						}
 						
 						// Create New Table
-						using (var command = new SQLiteCommand(GetTableDefinition(table), conn))
+						using (var command = new SqliteCommand(GetTableDefinition(table), conn))
 						{
 							command.Transaction = tran;
 							command.ExecuteNonQuery();
@@ -515,7 +515,7 @@ namespace DOL.Database.Handlers
 						// Create Indexes
 						foreach (var index in GetIndexesDefinition(table))
 						{
-							using (var command = new SQLiteCommand(index, conn))
+							using (var command = new SqliteCommand(index, conn))
 							{
 								command.Transaction = tran;
 								command.ExecuteNonQuery();
@@ -538,7 +538,7 @@ namespace DOL.Database.Handlers
                                                                  return new { Target = match.bind.ColumnName, Source = string.Format("`{0}`", match.bind.ColumnName) };
                                                              });
                         
-                        using (var command = new SQLiteCommand(string.Format("INSERT INTO `{0}` ({1}) SELECT {2} FROM `{0}_bkp`", table.TableName, string.Join(", ", columns.Select(c => c.Target)), string.Join(", ", columns.Select(c => c.Source))), conn))
+                        using (var command = new SqliteCommand(string.Format("INSERT INTO `{0}` ({1}) SELECT {2} FROM `{0}_bkp`", table.TableName, string.Join(", ", columns.Select(c => c.Target)), string.Join(", ", columns.Select(c => c.Source))), conn))
 						{
                             if (log.IsDebugEnabled)
                                 log.DebugFormat("AlterTableImpl, Insert/Select: {0}", command.CommandText);
@@ -548,7 +548,7 @@ namespace DOL.Database.Handlers
 						}
 
 						// Drop Renamed Table
-						using (var command = new SQLiteCommand(string.Format("DROP TABLE `{0}_bkp`", table.TableName), conn))
+						using (var command = new SqliteCommand(string.Format("DROP TABLE `{0}_bkp`", table.TableName), conn))
 						{
 							command.Transaction = tran;
 							command.ExecuteNonQuery();
@@ -604,7 +604,7 @@ namespace DOL.Database.Handlers
 
 				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
 
-				using (var conn = new SQLiteConnection(ConnectionString))
+				using (var conn = new SqliteConnection(ConnectionString))
 				{					    
 					using (var cmd = conn.CreateCommand())
 					{
@@ -629,7 +629,7 @@ namespace DOL.Database.Handlers
 											try
 											{
 												cmd.ExecuteNonQuery();
-												obj.Add(conn.LastInsertRowId);
+												obj.Add(GetLastInsertedID(conn));
 											}
 											catch (Exception ex)
 											{
@@ -689,11 +689,23 @@ namespace DOL.Database.Handlers
 
 			return obj.ToArray();
 		}
+
+		private long GetLastInsertedID(SqliteConnection conn)
+		{
+			using (var cmd = conn.CreateCommand())
+			{
+				var sql = "SELECT last_insert_rowid()";
+				cmd.CommandText = sql;
+				var lastID = (long)cmd.ExecuteScalar();
+				return lastID;
+			}
+		}
+
 		#endregion
 
 		protected override DbConnection CreateConnection(string connectionsString)
 		{
-			return new SQLiteConnection(ConnectionString);
+			return new SqliteConnection(ConnectionString);
 		}
 
 		protected override void CloseConnection(DbConnection connection)
@@ -703,7 +715,7 @@ namespace DOL.Database.Handlers
 
 		protected override DbParameter ConvertToDBParameter(QueryParameter queryParameter)
 		{
-			var dbParam = new SQLiteParameter();
+			var dbParam = new SqliteParameter();
 			dbParam.ParameterName = queryParameter.Name;
 
 			if (queryParameter.Value is char)
@@ -718,22 +730,18 @@ namespace DOL.Database.Handlers
 			return dbParam;
 		}
 
-		/// <summary>
-		/// Handle Non Fatal SQL Query Exception
-		/// </summary>
-		/// <param name="e">SQL Excepiton</param>
-		/// <returns>True if handled, False otherwise</returns>
 		protected override bool HandleSQLException(Exception e)
 		{
-			if (e is SQLiteException sqle)
+			if (e is SqliteException sqle)
 			{
-				switch (sqle.ResultCode)
+				if (sqle.SqliteErrorCode == 19) return true;
+				switch (sqle.SqliteExtendedErrorCode)
 				{
-					case SQLiteErrorCode.Constraint:
-					case SQLiteErrorCode.Constraint_Check:
-					case SQLiteErrorCode.Constraint_ForeignKey:
-					case SQLiteErrorCode.Constraint_Unique:
-					case SQLiteErrorCode.Constraint_NotNull:
+					case 19: //SqliteErrorCode.Constraint:
+					case 275: //SqliteErrorCode.Constraint_Check:
+					case 787: //SQLiteErrorCode.Constraint_ForeignKey:
+					case 2067: //SQLiteErrorCode.Constraint_Unique:
+					case 1299: //SQLiteErrorCode.Constraint_NotNull:
 						return true;
 					default:
 						return false;
