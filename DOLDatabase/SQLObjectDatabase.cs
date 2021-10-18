@@ -34,6 +34,8 @@ namespace DOL.Database
 	/// </summary>
 	public abstract class SQLObjectDatabase : ObjectDatabase
 	{
+		protected DbConfig Config { get; set; }
+
 		private static readonly object Lock = new object();
 
 		/// <summary>

@@ -359,8 +359,7 @@ namespace DOL.GS
 		    m_invalidNamesFile = Path.Combine(Path.Combine(".", "config"), "invalidnames.txt");
 
 			m_dbType = ConnectionType.DATABASE_SQLITE;
-			m_dbConnectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
-			                                     Path.Combine(m_rootDirectory, "dol.sqlite3.db"));
+			m_dbConnectionString = $"Data Source={Path.Combine(m_rootDirectory, "dol.sqlite3.db")}";
 			m_autoSave = true;
 			m_saveInterval = 10;
 			m_maxClientCount = 500;
