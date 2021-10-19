@@ -58,6 +58,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Net.Http" />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" PrivateAssets="False" />
     <PackageReference Include="log4net" Version="2.0.12" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="2.0.226801" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="False" />
