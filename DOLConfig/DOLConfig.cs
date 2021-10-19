@@ -26,7 +26,6 @@ using MySql.Data.MySqlClient;
 using DOL.Database.Connection;
 using DOL.GS;
 
-
 namespace DOLConfig
 {
 	public partial class DolConfig : Form
@@ -451,16 +450,11 @@ namespace DOLConfig
 						addWrongValueErrorHandler(this.mysql_username_textbox, "The value of \"Username\" in \"MySQL Database settings\" is not set.");
 						return;
 					}
-					sb.UserID = this.mysql_username_textbox.Text;
-
-					//Password
-					sb.Password = this.mysql_password_textbox.Text;
-
-					//Treat tiny as boolean
+					sb.UserID = mysql_username_textbox.Text;
+					sb.Password = mysql_password_textbox.Text;
 					sb.TreatTinyAsBoolean = false;
-
-					//Set generated connection string
 					currentConfig.DBConnectionString = sb.ConnectionString;
+					sb.SslMode = MySqlSslMode.None;
 
 					//Just for fun: Test the connection
 					mysql_test_button_Click(null, null);
@@ -544,12 +538,6 @@ namespace DOLConfig
 		#endregion
 
 		#region MySQL Testing feature
-
-		/// <summary>
-		/// MySQL connection test button event
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		private void mysql_test_button_Click(object sender, EventArgs e)
 		{
 			if (mysql_test_background_worker.IsBusy)
@@ -565,23 +553,18 @@ namespace DOLConfig
 			mysql_test_background_worker.RunWorkerAsync();
 		}
 
-		/// <summary>
-		/// Backgroundworker process for testing MySQL connection
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		private void mysql_test_background_worker_DoWork(object sender, DoWorkEventArgs e)
 		{
-			
-			MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder();
-			sb.Server = this.mysql_host_textbox.Text;
+			var sb = new MySqlConnectionStringBuilder();
+			sb.Server = mysql_host_textbox.Text;
 			sb.Port = Convert.ToUInt32(this.mysql_port_textbox.Text);
-			sb.Database = this.mysql_database_name_textbox.Text;
-			sb.UserID = this.mysql_username_textbox.Text;
-			sb.Password = this.mysql_password_textbox.Text;
+			sb.Database = mysql_database_name_textbox.Text;
+			sb.UserID = mysql_username_textbox.Text;
+			sb.Password = mysql_password_textbox.Text;
+			sb.SslMode = MySqlSslMode.None;
 			sb.ConnectionTimeout = 2;
 
-			MySqlConnection con = new MySqlConnection(sb.ConnectionString);
+			var con = new MySqlConnection(sb.ConnectionString);
 			try
 			{
 				con.Open();
