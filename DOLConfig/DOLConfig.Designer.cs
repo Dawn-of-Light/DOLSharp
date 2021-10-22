@@ -1307,7 +1307,7 @@
 			// toolstripTimer
 			// 
 			this.toolstripTimer.Interval = 3000;
-			this.toolstripTimer.Tick += new System.EventHandler(this.toolstripTimer_Tick);
+			this.toolstripTimer.Tick += new System.EventHandler(this.ResetToolstrip);
 			// 
 			// tabPage1
 			// 
