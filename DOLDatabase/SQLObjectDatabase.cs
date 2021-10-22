@@ -583,7 +583,7 @@ namespace DOL.Database
 
 				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
 
-				using (var conn = CreateConnection(ConnectionString))
+				using (var conn = CreateConnection())
 				{
 					using (var cmd = conn.CreateCommand())
 					{
@@ -657,7 +657,7 @@ namespace DOL.Database
 			{
 				repeat = false;
 
-				using (var conn = CreateConnection(ConnectionString))
+				using (var conn = CreateConnection())
 				{
 					using (var cmd = conn.CreateCommand())
 					{
@@ -717,7 +717,7 @@ namespace DOL.Database
 			while (repeat);
 		}
 
-		protected abstract DbConnection CreateConnection(string connectionsString);
+		public abstract DbConnection CreateConnection();
 
 		protected abstract void CloseConnection(DbConnection connection);
 		#endregion
@@ -792,7 +792,7 @@ namespace DOL.Database
 
 				if (!parameters.Any()) throw new ArgumentException("No parameter list was given.");
 
-				using (var conn = CreateConnection(ConnectionString))
+				using (var conn = CreateConnection())
 				{
 					using (var cmd = conn.CreateCommand())
 					{

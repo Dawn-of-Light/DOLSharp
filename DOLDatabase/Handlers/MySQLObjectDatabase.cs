@@ -603,10 +603,7 @@ namespace DOL.Database.Handlers
 			return MySqlDbType.Blob;
 		}
 
-		protected override DbConnection CreateConnection(string connectionsString)
-		{
-			return new MySqlConnection(ConnectionString);
-		}
+		public override DbConnection CreateConnection() => new MySqlConnection(ConnectionString);
 
 		protected override void CloseConnection(DbConnection connection)
 		{
