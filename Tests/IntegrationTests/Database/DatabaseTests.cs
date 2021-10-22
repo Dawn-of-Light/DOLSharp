@@ -1157,5 +1157,38 @@ namespace DOL.Integration.Database
 			
 			Assert.IsNull(relretrieve.Entry, "Relations Test With Precache and Primary should return null value for null local field relation...");
 		}
+
+		[Test]
+		public void SelectObject_TestFieldContainsSpecialISO88591signs_TestfieldIsUnaltered()
+		{
+			Database.RegisterDataObject(typeof(TestTable));
+			var dataObject = new TestTable() { ObjectId = "TestCharSet", TestField = "¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ" };
+
+			AddOrReplaceObject(dataObject);
+
+			var actual = Database.SelectObject<TestTable>(DB.Column("test_table_id").IsEqualTo("TestCharSet")).TestField;
+			var expected = dataObject.TestField;
+			Assert.AreEqual(expected, actual);
+		}
+
+		[Test]
+		public void SelectObject_TestFieldContainsSpecialCp1252signs_TestfieldIsUnaltered()
+		{
+			Database.RegisterDataObject(typeof(TestTable));
+			var dataObject = new TestTable() { ObjectId = "TestCharSet", TestField = "€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ" };
+
+			AddOrReplaceObject(dataObject);
+
+			var actual = Database.SelectObject<TestTable>(DB.Column("test_table_id").IsEqualTo("TestCharSet")).TestField;
+			var expected = dataObject.TestField;
+			Assert.AreEqual(expected, actual);
+		}
+
+		private void AddOrReplaceObject(DataObject dataObject)
+		{
+			var dataObjectFromDatabase = Database.SelectObject<TestTable>(DB.Column("test_table_id").IsEqualTo("TestCharSet"));
+			if (dataObjectFromDatabase != null) Database.DeleteObject(dataObject);
+			Database.AddObject(dataObject);
+		}
 	}
 }
