@@ -40,9 +40,10 @@ namespace DOL.Database.Handlers
 			Config.AddDefaultOption("Allow User Variables", "True");
 			Config.AddDefaultOption("Convert Zero Datetime", "True");
 			Config.AddDefaultOption("SslMode", "None");
-			this.ConnectionString = Config.ConnectionString;
-
 			SetResultCharacterSetToUtf8mb4();
+			Config.AddDefaultOption("CharSet", GetDatabaseCharacterSet());
+			SetResultCharacterSetToUtf8mb4();
+			this.ConnectionString = Config.ConnectionString;
 		}
 		
 		#region MySQL Implementation
@@ -653,7 +654,7 @@ namespace DOL.Database.Handlers
 
 		private void SetResultCharacterSetToUtf8mb4()
 		{
-			using (var connection = new MySqlConnection(ConnectionString))
+			using (var connection = new MySqlConnection(Config.ConnectionString))
 			{
 				using (var dbCommand = connection.CreateCommand())
 				{
@@ -663,5 +664,21 @@ namespace DOL.Database.Handlers
 				}
 			}
 		}
-	}
+
+		public string GetDatabaseCharacterSet()
+		{
+			using (var connection = new MySqlConnection(Config.ConnectionString))
+			{
+				connection.Open();
+				using (var dbCommand = connection.CreateCommand())
+				{
+					dbCommand.CommandText = "SELECT default_character_set_name FROM information_schema.SCHEMATA WHERE schema_name = @database;";
+					dbCommand.Parameters.Add(new MySqlParameter("@database", Config.GetValueOf("Database")));
+					var resultReader = dbCommand.ExecuteReader();
+					if (resultReader.Read()) return resultReader[0].ToString();
+					return "";
+				}
+			}
+		}
+    }
 }
