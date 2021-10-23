@@ -63,8 +63,6 @@ jobs:
       - name: Compress Build Artifacts
         run: |
           Compress-Archive -Path .\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
-          cp .\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll .\${{ matrix.build_target }}\lib\
-          Compress-Archive -Path .\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME_LINUX }}
       - name: Upload Build Output
         uses: actions/upload-artifact@v2
         with:
