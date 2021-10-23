@@ -26,7 +26,6 @@ using System.Data.Common;
 using MySql.Data.MySqlClient;
 
 using DOL.Database.Connection;
-using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
 
 namespace DOL.Database.Handlers
 {

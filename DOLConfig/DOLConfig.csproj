@@ -74,12 +74,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
-    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" ExcludeAssets="Runtime"/>
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" ExcludeAssets="Runtime" />
     <PackageReference Include="MySql.Data" Version="8.0.26" ExcludeAssets="Runtime" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115" ExcludeAssets="All" Condition=" '$(OS)' != 'Unix' " />
-    <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
-      <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="False" ExcludeAssets="All" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" Private="False" ExcludeAssets="All" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="False" ExcludeAssets="All" />

@@ -34,9 +34,10 @@ namespace DOL.Database
 	/// </summary>
 	public abstract class SQLObjectDatabase : ObjectDatabase
 	{
-		protected DbConfig Config { get; set; }
-
 		private static readonly object Lock = new object();
+
+		protected DbConfig Config { get; set; }
+		protected virtual string PreCommandDirectives => "";
 
 		/// <summary>
 		/// Create a new instance of <see cref="SQLObjectDatabase"/>
@@ -797,7 +798,7 @@ namespace DOL.Database
 					{
 						try
 						{
-							cmd.CommandText = SQLCommand;
+							cmd.CommandText = $"{PreCommandDirectives}{SQLCommand}";
 							conn.Open();
 							long start = (DateTime.UtcNow.Ticks / 10000);
 

@@ -59,11 +59,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.12" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.11" />
     <PackageReference Include="MySql.Data" Version="8.0.26" PrivateAssets="all" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115" PrivateAssets="all" Condition=" '$(OS)' != 'Unix' " />
-    <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
-      <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

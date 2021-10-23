@@ -26,8 +26,12 @@ namespace DOL.Database
 		private Dictionary<string,(string, string)> nonDefaultOptions = new Dictionary<string,(string, string)>();
 		private Dictionary<string, (string, string)> defaultOptions = new Dictionary<string, (string, string)>();
 		private Dictionary<string, (string, string)> options => nonDefaultOptions.Union(defaultOptions).ToDictionary(pair => pair.Key, pair => pair.Value);
+		private List<string> suppressedDigests = new List<string>();
 
-		public string ConnectionString => string.Join(";", options.Select(kv => $"{kv.Value.Item1}={kv.Value.Item2}"));
+		public string ConnectionString 
+			=> string.Join(";", options
+			.Where(k => !suppressedDigests.Contains(k.Key))
+			.Select(kv => $"{kv.Value.Item1}={kv.Value.Item2}"));
 
 		public DbConfig(string connectionString)
         {
@@ -81,6 +85,12 @@ namespace DOL.Database
 				nonDefaultOptions.Remove(Digest(key));
 			}
 			defaultOptions.Add(Digest(key), (key, value));
+		}
+
+		public void SuppressFromConnectionString(params string[] suppressedOptions)
+        {
+			suppressedDigests = new List<string>();
+			suppressedDigests.AddRange(suppressedOptions.Select(opt => Digest(opt)));
 		}
 
 		private string Digest(string input)

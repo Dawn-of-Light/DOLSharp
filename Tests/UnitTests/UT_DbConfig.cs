@@ -75,7 +75,32 @@ namespace DOL.UnitTests.Database
             dbConfig.AddDefaultOption("Default Option", "");
 
             var actual = dbConfig.ConnectionString;
+
             var expected = "NonDefaultOption=;Default Option=";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ConnectionString_DefaultOptionWhichIsAddedToSuppressed_DefaultOptionIsNotShown()
+        {
+            var dbConfig = new DbConfig("");
+            dbConfig.AddDefaultOption("Default Option", "");
+
+            dbConfig.SuppressFromConnectionString("Default Option");
+            var actual = dbConfig.ConnectionString;
+
+            var expected = "";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetValueOf_DEFAULTOPTION_DefaultOptionSetToValue_Value()
+        {
+            var dbConfig = new DbConfig("");
+            dbConfig.AddDefaultOption("Default Option", "Value");
+
+            var actual = dbConfig.GetValueOf("DEFAULTOPTION");
+            var expected = "Value";
             Assert.AreEqual(expected, actual);
         }
     }
