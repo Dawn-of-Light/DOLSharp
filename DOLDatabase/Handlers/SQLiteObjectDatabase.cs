@@ -697,10 +697,7 @@ namespace DOL.Database.Handlers
 
 		#endregion
 
-		protected override DbConnection CreateConnection(string connectionsString)
-		{
-			return new SqliteConnection(ConnectionString);
-		}
+		public override DbConnection CreateConnection() => new SqliteConnection(ConnectionString);
 
 		protected override void CloseConnection(DbConnection connection)
 		{

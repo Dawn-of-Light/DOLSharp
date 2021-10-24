@@ -33,6 +33,8 @@ namespace DOL.Database
 			.Where(k => !suppressedDigests.Contains(k.Key))
 			.Select(kv => $"{kv.Value.Item1}={kv.Value.Item2}"));
 
+		public DbConfig() { }
+
 		public DbConfig(string connectionString)
         {
 			ApplyConnectionString(connectionString);

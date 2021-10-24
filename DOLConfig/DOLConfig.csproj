@@ -75,7 +75,6 @@
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0" ExcludeAssets="Runtime" />
-    <PackageReference Include="MySql.Data" Version="8.0.26" ExcludeAssets="Runtime" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="False" ExcludeAssets="All" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" Private="False" ExcludeAssets="All" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="False" ExcludeAssets="All" />
