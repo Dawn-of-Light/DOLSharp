@@ -27,7 +27,7 @@ using NUnit.Framework;
 
 namespace DOL.Integration.Database.MySQL
 {
-	[SetUpFixture]
+	[SetUpFixture, Explicit]
 	public class MySQLDBSetUp
 	{
 		public MySQLDBSetUp()

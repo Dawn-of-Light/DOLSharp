@@ -23,7 +23,7 @@ using System.Linq;
 using System.Data;
 using System.Data.Common;
 
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 using DOL.Database.Connection;
 
