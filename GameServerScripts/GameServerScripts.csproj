@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <NoWarn>1591</NoWarn>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <OutputPath>..\$(Configuration)\lib\</OutputPath>
+    <OutputPath>..\build\GameServerScripts\$(Configuration)\lib\</OutputPath>
     <NoWin32Manifest>False</NoWin32Manifest>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <IntermediateOutputPath>..\build\GameServerScripts\$(Configuration)\obj\</IntermediateOutputPath>
