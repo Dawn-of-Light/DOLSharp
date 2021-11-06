@@ -55,7 +55,7 @@ jobs:
         run: |
           $Env:DOTNET_CLI_TELEMETRY_OPTOUT=1
           $assembly_version="$(cat release_info/version.txt)"
-          dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Dawn of Light.sln"
+          dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Dawn of Light.sln" --verbosity normal
       - name: Test Build
         run: |
           dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
@@ -89,7 +89,7 @@ jobs:
         run: |
           $Env:DOTNET_CLI_TELEMETRY_OPTOUT=1
           $assembly_version="$(cat release_info/version.txt)"
-          dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Net5\DOLdotnet.sln"
+          dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Net5\DOLdotnet.sln" --verbosity normal
       - name: Test Build
         run: |
           dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
