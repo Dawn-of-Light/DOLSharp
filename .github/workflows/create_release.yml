@@ -57,6 +57,8 @@ jobs:
           $assembly_version="$(cat release_info/version.txt)"
           dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Dawn of Light.sln" --verbosity normal
           cp -recurse $env:USERPROFILE\.nuget\packages\sqlitepclraw.lib.e_sqlite3\*\runtimes\linux-* .\${{ matrix.build_target }}\lib\runtimes\
+          cp -recurse $env:USERPROFILE\.nuget\packages\sqlitepclraw.lib.e_sqlite3\*\runtimes\alpine-* .\${{ matrix.build_target }}\lib\runtimes\
+          cp -recurse $env:USERPROFILE\.nuget\packages\sqlitepclraw.lib.e_sqlite3\*\runtimes\osx-* .\${{ matrix.build_target }}\lib\runtimes\
       - name: Test Build
         run: |
           dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
