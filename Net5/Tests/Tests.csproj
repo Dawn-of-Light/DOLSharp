@@ -13,6 +13,7 @@
     <OutputPath>..\build\Tests\$(Configuration)\lib\</OutputPath>
     <IntermediateOutputPath>..\build\Tests\$(Configuration)\obj\</IntermediateOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <SatelliteResourceLanguages>none</SatelliteResourceLanguages>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyTitle>Dawn of Light - Tests</AssemblyTitle>
