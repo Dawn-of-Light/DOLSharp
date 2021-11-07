@@ -1,13 +1,14 @@
 FROM alpine as download_stage
 
 ARG BUILD_VERSION=latest
+ARG GITHUB_API_URL="https://api.github.com/repos/Dawn-of-Light/DOLSharp"
 
 RUN set -ex; \
     # Set Constants
     DOL_NETFRAMEWORK_ARCHIVE_NAME="DOLServer_net45_Release.zip"; \
     DOL_DOTNET_ARCHIVE_NAME="DOLServer_Net5_Alpha_Debug.zip"; \
-    DOL_GITHUB_API_URL="https://api.github.com/repos/Dawn-of-Light/DOLSharp/releases/latest"; \
-    [ "$BUILD_VERSION" != "latest" ] && DOL_GITHUB_API_URL="https://api.github.com/repos/Dawn-of-Light/DOLSharp/releases/tags/$BUILD_VERSION"; \
+    DOL_GITHUB_API_URL="${GITHUB_API_URL}/releases/latest"; \
+    [ "$BUILD_VERSION" != "latest" ] && DOL_GITHUB_API_URL="${GITHUB_API_URL}/releases/tags/$BUILD_VERSION"; \
     # Install Build Dependencies
     apk add --no-cache --update \
         curl jq unzip ca-certificates; \
