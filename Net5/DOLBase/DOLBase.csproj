@@ -11,7 +11,7 @@
     <AssemblyName>DOLBase</AssemblyName>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <IntermediateOutputPath>..\build\DOLBase\$(Configuration)\obj\</IntermediateOutputPath>
-    <OutputPath>..\$(Configuration)\lib\</OutputPath>
+    <OutputPath>..\build\DOLBase\$(Configuration)\lib\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup>

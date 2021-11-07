@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>DOLDatabase</AssemblyName>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-    <OutputPath>..\$(Configuration)\lib\</OutputPath>
+    <OutputPath>..\build\DOLDatabase\$(Configuration)\lib\</OutputPath>
     <IntermediateOutputPath>..\build\DOLDatabase\$(Configuration)\obj\</IntermediateOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>

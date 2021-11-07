@@ -51,5 +51,8 @@
   <ItemGroup>
     <Compile Include="..\..\DOLServer\**\*.cs" />
   </ItemGroup>
+  <Target Name="CreateLibFolder" AfterTargets="Build">
+    <MakeDir Directories="$(OutDir)lib" />
+  </Target>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
