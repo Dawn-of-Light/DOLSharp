@@ -1,4 +1,4 @@
-FROM alpine as download_stage
+FROM --platform=$BUILDPLATFORM alpine as download_stage
 
 ARG BUILD_VERSION=latest
 ARG GITHUB_API_URL="https://api.github.com/repos/Dawn-of-Light/DOLSharp"
@@ -94,7 +94,7 @@ WORKDIR /dawn-of-light
 CMD [ "/entrypoint.sh", "dotnet", "DOLServer.dll" ]
 
 
-FROM mcr.microsoft.com/dotnet/runtime:5.0 as database_init_stage
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime:5.0 as database_init_stage
 
 COPY --from=download_stage /dawn-of-light-dotnet /dawn-of-light
 
@@ -104,7 +104,7 @@ RUN set -ex; \
     echo exit | dotnet DOLServer.dll;
 
 
-FROM download_stage as EveOfDarkness_build_stage
+FROM --platform=$BUILDPLATFORM download_stage as EveOfDarkness_build_stage
 
 COPY --from=database_init_stage /dawn-of-light/dol.sqlite3.db /dol.sqlite3.db
 
