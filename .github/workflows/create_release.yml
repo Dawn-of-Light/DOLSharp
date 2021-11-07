@@ -114,6 +114,8 @@ jobs:
     needs: [get_release_info,netframework_build,netcore_build]
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Download artifacts
         uses: actions/download-artifact@v2
       - name: Create Release
