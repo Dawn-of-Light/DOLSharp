@@ -155,3 +155,42 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: dawnoflight/dolsharp:latest,dawnoflight/dolsharp:netframework
+      - name: Build and push DotNet
+        uses: docker/build-push-action@v2
+        with:
+          context: .github/Docker
+          target: release_dotnet
+          build-args: |
+            GITHUB_API_URL=https://api.github.com/repos/${{ github.repository }}
+            BUILD_DATE=${{ needs.get_release_info.outputs.date }}
+            BUILD_VERSION=${{ needs.get_release_info.outputs.version }}
+            VCS_REF=${{ github.sha }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: dawnoflight/dolsharp:edge,dawnoflight/dolsharp:dotnet
+      - name: Build and push Sandbox NetFramework
+        uses: docker/build-push-action@v2
+        with:
+          context: .github/Docker
+          target: release_sandbox_netframework
+          build-args: |
+            GITHUB_API_URL=https://api.github.com/repos/${{ github.repository }}
+            BUILD_DATE=${{ needs.get_release_info.outputs.date }}
+            BUILD_VERSION=${{ needs.get_release_info.outputs.version }}
+            VCS_REF=${{ github.sha }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: dawnoflight/dolsharp:sandbox,dawnoflight/dolsharp:sandbox-netframework
+      - name: Build and push Sandbox DotNet
+        uses: docker/build-push-action@v2
+        with:
+          context: .github/Docker
+          target: release_sandbox_dotnet
+          build-args: |
+            GITHUB_API_URL=https://api.github.com/repos/${{ github.repository }}
+            BUILD_DATE=${{ needs.get_release_info.outputs.date }}
+            BUILD_VERSION=${{ needs.get_release_info.outputs.version }}
+            VCS_REF=${{ github.sha }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: dawnoflight/dolsharp:sandbox-edge,dawnoflight/dolsharp:sandbox-dotnet
