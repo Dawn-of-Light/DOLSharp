@@ -12,6 +12,9 @@ jobs:
   get_release_info:
     name: Get Release Info
     runs-on: ubuntu-20.04
+    outputs:
+      version: ${{ steps.getmetadata.outputs.version }}
+      date: ${{ steps.getmetadata.outputs.date }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -28,21 +31,17 @@ jobs:
           new_build_number=$((1+$(echo "$last_version_tag" | grep -oE "[0-9]+$")))
           new_version_tag="$version"."$new_build_number"
           echo -n $new_version_tag > version.txt
-      - name: Get Version
-        id: version
+      - name: Get Metadata Outputs
+        id: getmetadata
         run: |
-          cat version.txt
-      - name: Get Date
-        id: date
-        run: |
-          date -u +"%Y-%m-%dT%H:%M:%SZ"
+          echo "::set-output name=version::$(cat version.txt)"
+          echo "::set-output name=date::$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
           name: release_info
           path: |
             patch_notes.txt
-            version.txt
   
   netframework_build:
     name: Create NetFramework Build
@@ -57,20 +56,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Download Release Info
-        uses: actions/download-artifact@v2
       - name: Build
         run: |
           $Env:DOTNET_CLI_TELEMETRY_OPTOUT=1
-          $assembly_version="$(cat release_info/version.txt)"
-          dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Dawn of Light.sln" --verbosity normal
+          $assembly_version="${{ needs.get_release_info.outputs.version }}"
+          dotnet build --configuration "${{ matrix.build_target}}" -p:Version="$assembly_version" --verbosity normal "Dawn of Light.sln"
           cp -recurse $env:USERPROFILE\.nuget\packages\sqlitepclraw.lib.e_sqlite3\*\runtimes\linux-* .\${{ matrix.build_target }}\lib\runtimes\
           cp -recurse $env:USERPROFILE\.nuget\packages\sqlitepclraw.lib.e_sqlite3\*\runtimes\alpine-* .\${{ matrix.build_target }}\lib\runtimes\
           cp -recurse $env:USERPROFILE\.nuget\packages\sqlitepclraw.lib.e_sqlite3\*\runtimes\osx-* .\${{ matrix.build_target }}\lib\runtimes\
       - name: Test Build
         run: |
-          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
-          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
+          dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
+          dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
       - name: Compress Build Artifacts
         run: |
           Compress-Archive -Path .\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
@@ -94,39 +91,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Download Release Info
-        uses: actions/download-artifact@v2
       - name: Build
         run: |
           $Env:DOTNET_CLI_TELEMETRY_OPTOUT=1
-          $assembly_version="$(cat release_info/version.txt)"
-          dotnet build -c "${{ matrix.build_target}}" -p:Version="$assembly_version" "Net5\DOLdotnet.sln" --verbosity normal
+          $assembly_version="${{ needs.get_release_info.outputs.version }}"
+          dotnet build --configuration "${{ matrix.build_target}}" -p:Version="$assembly_version" --verbosity normal "Net5\DOLdotnet.sln"
       - name: Test Build
         run: |
-          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
-          dotnet test .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
+          dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
+          dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" .\Net5\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
       - name: Compress Build Artifacts
         run: Compress-Archive -Path .\Net5\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
       - name: Upload Build Output
         uses: actions/upload-artifact@v2
         with:
           name: build_artifacts
-          path: ${{ env.OUTPUT_FILE_NAME}}
+          path: ${{ env.OUTPUT_FILE_NAME }}
 
   create_release:
     name: Create Release
     if: always() && needs.netframework_build.result == 'success'
-    needs: [netframework_build,netcore_build]
+    needs: [get_release_info,netframework_build,netcore_build]
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Download artifacts
         uses: actions/download-artifact@v2
       - name: Create Release
         run: |
-          new_version_tag=$(cat release_info/version.txt)
-          gh release create "$new_version_tag" --title "$new_version_tag" -F release_info/patch_notes.txt build_artifacts/*
+          new_version_tag="${{ needs.get_release_info.outputs.version }}"
+          gh release create "$new_version_tag" --title "$new_version_tag" --notes-file release_info/patch_notes.txt build_artifacts/*
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -152,7 +145,7 @@ jobs:
         with:
           context: .github/Docker
           target: release_netframework
-          build_args: |
+          build-args: |
             BUILD_DATE=${{ needs.get_release_info.outputs.date }}
             BUILD_VERSION=${{ needs.get_release_info.outputs.version }}
             VCS_REF=${{ github.sha }}
