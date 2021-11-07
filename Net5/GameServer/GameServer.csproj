@@ -10,7 +10,7 @@
     <AssemblyName>GameServer</AssemblyName>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
     <IntermediateOutputPath>..\build\GameServer\$(Configuration)\obj\</IntermediateOutputPath>
-    <OutputPath>..\$(Configuration)\lib\</OutputPath>
+    <OutputPath>..\build\GameServer\$(Configuration)\lib\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup>
