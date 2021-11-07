@@ -148,7 +148,7 @@ jobs:
           context: .github/Docker
           target: release_netframework
           build-args: |
-            GITHUB_API_URL="https://api.github.com/repos/${{ github.repository }}"
+            GITHUB_API_URL=https://api.github.com/repos/${{ github.repository }}
             BUILD_DATE=${{ needs.get_release_info.outputs.date }}
             BUILD_VERSION=${{ needs.get_release_info.outputs.version }}
             VCS_REF=${{ github.sha }}
