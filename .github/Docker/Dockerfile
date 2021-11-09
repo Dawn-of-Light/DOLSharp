@@ -165,6 +165,9 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="2.0.0-rc1" \
       maintainer="Leodagan <leodagan@freyad.net>"
 
+RUN set -ex; \
+    mkdir -p /dawn-of-light/database/sandbox
+
 COPY --from=EveOfDarkness_build_stage /dol.sqlite3.db /dawn-of-light/database/dol.sqlite3.db
 COPY entrypoint/sandbox.sh /sandbox.sh
 COPY scripts/ /dawn-of-light/scripts/Utility
@@ -180,6 +183,9 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.usage="https://github.com/Dawn-of-Light/DOLSharp/blob/master/.github/Docker/README.md" \
       org.label-schema.schema-version="2.0.0-rc1" \
       maintainer="Leodagan <leodagan@freyad.net>"
+
+RUN set -ex; \
+    mkdir -p /dawn-of-light/database/sandbox
 
 COPY --from=EveOfDarkness_build_stage /dol.sqlite3.db /dawn-of-light/database/dol.sqlite3.db
 COPY entrypoint/sandbox.sh /sandbox.sh
