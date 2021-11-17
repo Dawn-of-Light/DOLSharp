@@ -38,7 +38,7 @@
     <RegisterForComInterop>False</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="log4net" Version="2.0.13" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" />
@@ -48,14 +48,8 @@
     <XmlFiles Include="..\..\GameServerScripts\dbupdater\**\*.xml" />
   </ItemGroup>
   <Target Name="CopyFiles" AfterTargets="AfterBuild">
-    <Copy 
-      SourceFiles="@(Compile)" 
-      DestinationFiles="@(Compile->'$(MSBuildProjectDirectory)\..\$(Configuration)\scripts\%(RecursiveDir)%(Filename)%(Extension)')"
-    />
-    <Copy 
-      SourceFiles="@(XmlFiles)" 
-      DestinationFiles="@(XmlFiles->'$(MSBuildProjectDirectory)\..\$(Configuration)\scripts\dbupdater\%(RecursiveDir)%(Filename)%(Extension)')"
-    />
+    <Copy SourceFiles="@(Compile)" DestinationFiles="@(Compile->'$(MSBuildProjectDirectory)\..\$(Configuration)\scripts\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(XmlFiles)" DestinationFiles="@(XmlFiles->'$(MSBuildProjectDirectory)\..\$(Configuration)\scripts\dbupdater\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
