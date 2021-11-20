@@ -6,7 +6,7 @@ ARG GITHUB_API_URL="https://api.github.com/repos/Dawn-of-Light/DOLSharp"
 RUN set -ex; \
     # Set Constants
     DOL_NETFRAMEWORK_ARCHIVE_NAME="DOLServer_net45_Release.zip"; \
-    DOL_DOTNET_ARCHIVE_NAME="DOLServer_Net5_Alpha_Debug.zip"; \
+    DOL_DOTNET_ARCHIVE_NAME="DOLServer_NetCore_Alpha_Debug.zip"; \
     DOL_GITHUB_API_URL="${GITHUB_API_URL}/releases/latest"; \
     [ "$BUILD_VERSION" != "latest" ] && DOL_GITHUB_API_URL="${GITHUB_API_URL}/releases/tags/$BUILD_VERSION"; \
     # Install Build Dependencies
@@ -58,7 +58,7 @@ WORKDIR /dawn-of-light
 CMD [ "/entrypoint.sh", "mono-sgen", "--server", "DOLServer.exe" ]
 
 
-FROM mcr.microsoft.com/dotnet/runtime:5.0 as release_dotnet
+FROM mcr.microsoft.com/dotnet/runtime:6.0 as release_dotnet
 
 ARG BUILD_DATE=now
 ARG VCS_REF=local
@@ -94,7 +94,7 @@ WORKDIR /dawn-of-light
 CMD [ "/entrypoint.sh", "dotnet", "DOLServer.dll" ]
 
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime:5.0 as database_init_stage
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime:6.0 as database_init_stage
 
 COPY --from=download_stage /dawn-of-light-dotnet /dawn-of-light
 

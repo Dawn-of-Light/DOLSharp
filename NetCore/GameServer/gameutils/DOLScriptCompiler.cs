@@ -47,8 +47,12 @@ namespace DOL.GS
                                 .Where(s => !string.IsNullOrEmpty(s))
                                 .Select(s => MetadataReference.CreateFromFile(s))
                                 .ToList();
-
-            var additionalReferences = GameServer.Instance.Configuration.AdditionalScriptAssemblies;
+            var gameServerScriptAdditionalReferences = new string[] { 
+                "System.Security.Cryptography.Algorithms",
+                "System.Security.Cryptography.Primitives"
+            }; //for SHA256 in AutoXMLDatabaseUpdate
+            var additionalReferences = GameServer.Instance.Configuration.AdditionalScriptAssemblies.ToList();
+            additionalReferences.AddRange(gameServerScriptAdditionalReferences);
 
             foreach (var additionalReference in additionalReferences)
             {

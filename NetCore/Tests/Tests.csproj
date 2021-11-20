@@ -1,22 +1,23 @@
 ﻿<Project>
   <PropertyGroup>
-    <BaseIntermediateOutputPath>..\build\GameServerScripts\$(Configuration)\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\build\Tests\$(Configuration)\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <AssemblyName>Tests</AssemblyName>
     <OutputType>Library</OutputType>
-    <AssemblyName>GameServerScripts</AssemblyName>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-    <OutputPath>..\build\GameServerScripts\$(Configuration)\lib\</OutputPath>
-    <IntermediateOutputPath>..\build\GameServerScripts\$(Configuration)\obj\</IntermediateOutputPath>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <OutputPath>..\build\Tests\$(Configuration)\lib\</OutputPath>
+    <IntermediateOutputPath>..\build\Tests\$(Configuration)\obj\</IntermediateOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <SatelliteResourceLanguages>none</SatelliteResourceLanguages>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyTitle>Dawn of Light - GameServerScripts</AssemblyTitle>
-    <Description>Contains all the scripted code used to extend Game Server</Description>
+    <AssemblyTitle>Dawn of Light - Tests</AssemblyTitle>
+    <Description>Contains all unit and integration tests of all DOLServer projects</Description>
     <Copyright>Dawn of Light Development Team</Copyright>
     <Company>Dawn of Light Development Team</Company>
     <Product>DAoC Server Side Emulation Package - Dawn of Light</Product>
@@ -38,24 +39,24 @@
     <RegisterForComInterop>False</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" />
+    <ProjectReference Include="..\DOLServer\DOLServer.csproj" Name="DOLServer" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\GameServerScripts\**\*.cs" />
-    <XmlFiles Include="..\..\GameServerScripts\dbupdater\**\*.xml" />
+    <Compile Include="..\..\Tests\**\*.cs" />
+    <ScriptFiles Include="..\..\GameServerScripts\**\*.cs" />
+    <DbUpdaterFiles Include="..\..\GameServerScripts\dbupdater\**\*.xml" />
+    <TranslationFiles Include="..\..\GameServer\language\**\*.txt" />
   </ItemGroup>
   <Target Name="CopyFiles" AfterTargets="AfterBuild">
-    <Copy 
-      SourceFiles="@(Compile)" 
-      DestinationFiles="@(Compile->'$(MSBuildProjectDirectory)\..\$(Configuration)\scripts\%(RecursiveDir)%(Filename)%(Extension)')"
-    />
-    <Copy 
-      SourceFiles="@(XmlFiles)" 
-      DestinationFiles="@(XmlFiles->'$(MSBuildProjectDirectory)\..\$(Configuration)\scripts\dbupdater\%(RecursiveDir)%(Filename)%(Extension)')"
-    />
+    <Copy SourceFiles="@(ScriptFiles)" DestinationFiles="@(ScriptFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DbUpdaterFiles)" DestinationFiles="@(DbUpdaterFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\scripts\dbupdater\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(TranslationFiles)" DestinationFiles="@(TranslationFiles->'$(MSBuildProjectDirectory)\$(OutputPath)\..\languages\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
