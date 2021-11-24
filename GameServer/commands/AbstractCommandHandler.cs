@@ -70,12 +70,12 @@ namespace DOL.GS.Commands
 
 		public virtual void DisplayMessage(GamePlayer player, string message)
 		{
-			DisplayMessage(player.Client, message, new object[] {});
+			DisplayMessage(player.Client, message, System.Array.Empty<object>() );
 		}
 
 		public virtual void DisplayMessage(GameClient client, string message)
 		{
-			DisplayMessage(client, message, new object[] {});
+			DisplayMessage(client, message, System.Array.Empty<object>() );
 		}
 
 		public virtual void DisplayMessage(GameClient client, string message, params object[] objs)

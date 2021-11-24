@@ -61,8 +61,8 @@ namespace DOL.GS
 		{
 			this.InvalidNamesFile = InvalidNamesFile;
 			
-			BadNamesContains = new string[0];
-			BadNamesRegex = new Regex[0];
+			BadNamesContains = Array.Empty<string>();
+			BadNamesRegex = Array.Empty<Regex>();
 			LoadInvalidNamesFromFile();
 		}
 		

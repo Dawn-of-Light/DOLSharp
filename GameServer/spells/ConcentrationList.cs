@@ -230,7 +230,7 @@ namespace DOL.GS.Spells
 		public ICollection<IConcentrationEffect> GetAllOfType(Type effectType)
 		{
 			if (m_concSpells == null)
-				return new IConcentrationEffect[0];
+				return Array.Empty<IConcentrationEffect>();
 			
 			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
@@ -296,7 +296,7 @@ namespace DOL.GS.Spells
 		public IEnumerator<IConcentrationEffect> GetEnumerator()
 		{
 			if (m_concSpells == null)
-				return new IConcentrationEffect[0].AsEnumerable().GetEnumerator();
+				return Array.Empty<IConcentrationEffect>().AsEnumerable().GetEnumerator();
 			
 			lock (m_lockObject)
 			{

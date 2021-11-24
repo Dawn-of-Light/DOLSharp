@@ -556,7 +556,7 @@ namespace DOL.Database
 		#region Select Implementation
 		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
 		protected void ExecuteSelectImpl(string SQLCommand, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
-			=> ExecuteSelectImpl(SQLCommand, new [] { new QueryParameter[] { } }, Reader);
+			=> ExecuteSelectImpl(SQLCommand, new [] { Array.Empty<QueryParameter>() }, Reader);
 
 		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
 		protected void ExecuteSelectImpl(string SQLCommand, QueryParameter param, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
@@ -749,7 +749,7 @@ namespace DOL.Database
 		/// <param name="SQLCommand">Raw Command</param>
 		protected int ExecuteNonQueryImpl(string SQLCommand)
 		{
-			return ExecuteNonQueryImpl(SQLCommand, new [] { new QueryParameter[] { }}).First();
+			return ExecuteNonQueryImpl(SQLCommand, new [] { Array.Empty<QueryParameter>() } ).First();
 		}
 		
 		/// <summary>
@@ -870,7 +870,7 @@ namespace DOL.Database
 		/// <returns>Object Returned by Scalar</returns>
 		protected object ExecuteScalarImpl(string SQLCommand, bool retrieveLastInsertID = false)
 		{
-			return ExecuteScalarImpl(SQLCommand, new [] { new QueryParameter[] { }}, retrieveLastInsertID).First();
+			return ExecuteScalarImpl(SQLCommand, new [] { Array.Empty<QueryParameter>() }, retrieveLastInsertID).First();
 		}
 		
 		/// <summary>

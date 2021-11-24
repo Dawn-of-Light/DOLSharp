@@ -299,7 +299,7 @@ namespace DOL.GS.ServerRules
 
 			eObjectType[] res = (eObjectType[])m_compatibleObjectTypes[(int)objectType];
 			if(res == null)
-				return new eObjectType[0];
+				return Array.Empty<eObjectType>();
 			return res;
 		}
 

@@ -165,7 +165,7 @@ namespace DOL.GS
 			if (!path.Exists)
 		    return new List<FileInfo>();
 		
-		   	return path.GetFiles(filter, SearchOption.TopDirectoryOnly).Union(deep ? path.GetDirectories().Where(di => !di.Name.Equals("obj", StringComparison.OrdinalIgnoreCase)).SelectMany(di => di.GetFiles(filter, SearchOption.AllDirectories)) : new FileInfo[0]).ToList();
+		   	return path.GetFiles(filter, SearchOption.TopDirectoryOnly).Union(deep ? path.GetDirectories().Where(di => !di.Name.Equals("obj", StringComparison.OrdinalIgnoreCase)).SelectMany(di => di.GetFiles(filter, SearchOption.AllDirectories)) : Array.Empty<FileInfo>() ).ToList();
 		}
 
 		/// <summary>
@@ -1089,7 +1089,7 @@ namespace DOL.GS
 		public static Type[] GetDerivedClasses(Type baseType)
 		{
 			if (baseType == null)
-				return new Type[0];
+				return Array.Empty<Type>();
 
 			List<Type> types = new List<Type>();
 

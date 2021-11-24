@@ -224,7 +224,7 @@ namespace DOL.Database.Handlers
 			try
 			{
 				ExecuteSelectImpl(string.Format("PRAGMA TABLE_INFO(`{0}`)", table.TableName),
-					new[] { new QueryParameter[] { } },
+					new[] { Array.Empty<QueryParameter>() },
 					reader =>
 					{
 						while (reader.Read())
@@ -271,7 +271,7 @@ namespace DOL.Database.Handlers
 			var columnDef = table.FieldElementBindings
 				.Select(bind => GetColumnDefinition(bind, table));
 			
-			var primaryFields = new string[]{};
+			var primaryFields = Array.Empty<string>();
 			if (!table.FieldElementBindings.Any(bind => bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement))
 				primaryFields = new [] { string.Format("PRIMARY KEY ({0})",
 				                              string.Join(", ", table.Table.PrimaryKey.Select(pk => string.Format("`{0}`", pk.ColumnName)))) };
@@ -296,8 +296,8 @@ namespace DOL.Database.Handlers
 			
 			var indexes = table.Table.ExtendedProperties["INDEXES"] as Dictionary<string, DataColumn[]>;
 			
-			var indexesFields = indexes == null ? new string[] { }
-				: indexes.Select(index => string.Format("CREATE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", index.Key,
+			var indexesFields = indexes == null ? Array.Empty<string>()
+                : indexes.Select(index => string.Format("CREATE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", index.Key,
 			                                        string.Join(", ", index.Value.Select(col => string.Format("`{0}`", col.ColumnName))),
 			                                        table.TableName));
 			

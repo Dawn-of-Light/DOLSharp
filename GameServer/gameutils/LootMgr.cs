@@ -450,7 +450,7 @@ namespace DOL.GS
 			if (lootList != null)
 				return lootList.GetLoot();
 			else
-				return new ItemTemplate[0];
+				return Array.Empty<ItemTemplate>();
 		}
 
 		/// <summary>

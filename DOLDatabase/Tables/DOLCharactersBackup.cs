@@ -176,7 +176,7 @@ namespace DOL.Database
 			// Copy Custom Params
 			this.CustomParams = character.CustomParams != null
 				? character.CustomParams.Select(param => new DOLCharactersBackupXCustomParam(param.DOLCharactersObjectId, param.KeyName, param.Value)).ToArray()
-				: new DOLCharactersBackupXCustomParam[] { } ;
+				: Array.Empty<DOLCharactersBackupXCustomParam>();
 		}
 
 		/// <summary>
