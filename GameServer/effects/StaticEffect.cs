@@ -94,7 +94,7 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				return new string[0];
+				return Array.Empty<string>();
 			}
 		}
 

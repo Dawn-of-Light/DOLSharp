@@ -403,7 +403,7 @@ namespace DOL.GS
 		/// </summary>
 		public string[] SerializedFriendsList
 		{
-			get { return DBCharacter != null ? DBCharacter.SerializedFriendsList.Split(',').Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name)).ToArray() : new string[0]; }
+			get { return DBCharacter != null ? DBCharacter.SerializedFriendsList.Split(',').Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name)).ToArray() : Array.Empty<string>(); }
 			set { if (DBCharacter != null) DBCharacter.SerializedFriendsList = string.Join(",", value.Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name))); }
 		}
 		
@@ -443,7 +443,7 @@ namespace DOL.GS
 		/// </summary>
 		public string[] SerializedIgnoreList
 		{
-			get { return DBCharacter != null ? DBCharacter.SerializedIgnoreList.Split(',').Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name)).ToArray() : new string[0]; }
+			get { return DBCharacter != null ? DBCharacter.SerializedIgnoreList.Split(',').Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name)).ToArray() : Array.Empty<string>(); }
 			set { if (DBCharacter != null) DBCharacter.SerializedIgnoreList = string.Join(",", value.Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name))); }
 		}
 
@@ -10442,7 +10442,7 @@ namespace DOL.GS
 			set
 			{
 				if (value == null)
-					SerializedIgnoreList = new string[0];
+					SerializedIgnoreList = Array.Empty<string>();
 				else
 					SerializedIgnoreList = value.OfType<string>().ToArray();
 				

@@ -105,7 +105,7 @@ namespace DOL.GS.Quests.Atlantis
 							break;
 						default:
 							title = "<unknown title>";
-							npcs = new GameNPC[0];
+							npcs = Array.Empty<GameNPC>();
 							break;
 					}
 

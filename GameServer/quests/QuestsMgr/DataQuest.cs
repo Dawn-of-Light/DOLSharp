@@ -1528,7 +1528,7 @@ namespace DOL.GS.Quests
 						{
 							try
 							{
-								m_customQuestStep = assembly.CreateInstance(m_classType, false, BindingFlags.CreateInstance, null, new object[] { }, null, null) as IDataQuestStep;
+								m_customQuestStep = assembly.CreateInstance( m_classType, false, BindingFlags.CreateInstance, null, Array.Empty<object>(), null, null ) as IDataQuestStep;
 							}
 							catch (Exception)
 							{
@@ -1546,7 +1546,7 @@ namespace DOL.GS.Quests
 							{
 								try
 								{
-									m_customQuestStep = assembly.CreateInstance(m_classType, false, BindingFlags.CreateInstance, null, new object[] { }, null, null) as IDataQuestStep;
+									m_customQuestStep = assembly.CreateInstance( m_classType, false, BindingFlags.CreateInstance, null, Array.Empty<object>(), null, null ) as IDataQuestStep;
 								}
 								catch (Exception)
 								{

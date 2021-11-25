@@ -108,7 +108,7 @@ namespace DOL.GS
 		/// </summary>
 		public GamePlayer Player { get; private set; }
 
-		private static readonly string[] AutotrainableSkills = new string[0];
+		private static readonly string[] AutotrainableSkills = Array.Empty<string>();
 
 		public CharacterClassBase()
 		{

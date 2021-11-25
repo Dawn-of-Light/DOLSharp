@@ -435,7 +435,7 @@ namespace DOL.GS
 			}
 		}
 
-		public string[] AdditionalScriptAssemblies => string.IsNullOrEmpty(m_scriptAssemblies.Trim()) ? new string[] { } : m_scriptAssemblies.Split(',');
+		public string[] AdditionalScriptAssemblies => string.IsNullOrEmpty(m_scriptAssemblies.Trim()) ? Array.Empty<string>() : m_scriptAssemblies.Split(',');
 
 		/// <summary>
 		/// Get or Set the Compilation Flag

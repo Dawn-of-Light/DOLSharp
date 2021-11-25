@@ -72,7 +72,7 @@ namespace DOL.Language
 
             if (args == null)
             {
-                args = new object[0];
+                args = Array.Empty<object>();
             }
 
             try

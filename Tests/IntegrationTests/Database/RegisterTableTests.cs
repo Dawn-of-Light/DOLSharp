@@ -62,9 +62,9 @@ namespace DOL.Integration.Database
 						                    }, "Registering All Projects Tables should not throw Exceptions... (Failed on Type {0})", type.FullName);
 						
 						Database.RegisterDataObject(type);
-						var selectall = typeof(IObjectDatabase).GetMethod("SelectAllObjects", new Type[] { }).MakeGenericMethod(type);
+						var selectall = typeof(IObjectDatabase).GetMethod("SelectAllObjects", Array.Empty<Type>() ).MakeGenericMethod(type);
 						object objs = null;
-						Assert.DoesNotThrow( () => { objs = selectall.Invoke(Database, new object[] { }); }, "Registered tables should not Throw Exception on Select All... (Failed on Type {0})", type);
+						Assert.DoesNotThrow( () => { objs = selectall.Invoke(Database, Array.Empty<object>() ); }, "Registered tables should not Throw Exception on Select All... (Failed on Type {0})", type);
 						Assert.IsNotNull(objs);
 					}
 				}

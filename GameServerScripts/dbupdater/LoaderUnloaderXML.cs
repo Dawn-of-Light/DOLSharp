@@ -154,7 +154,7 @@ namespace DOL.GS.DatabaseUpdate
 					if (log.IsInfoEnabled)
 						log.InfoFormat("Unloading Table {0} - To file {1}", tableName, path);
 					
-					var objects = (IEnumerable)genericMethod.Invoke(GameServer.Database, new object[]{});
+					var objects = (IEnumerable)genericMethod.Invoke(GameServer.Database, Array.Empty<object>() );
 					
 					try
 					{
@@ -212,7 +212,7 @@ namespace DOL.GS.DatabaseUpdate
 		public static DataObject[] LoadXMLTableFromFile(FileInfo xml)
 		{
 			if (!xml.Exists)
-				return new DataObject[0];
+				return Array.Empty<DataObject>();
 			
 			var types = GetAllDataTableTypes();
 			
@@ -229,7 +229,7 @@ namespace DOL.GS.DatabaseUpdate
 				if (log.IsErrorEnabled)
 					log.ErrorFormat("Could no guess Type of XML Package {0} - {1}", xml.FullName, e);
 				
-				return new DataObject[0];
+				return Array.Empty<DataObject>();
 			}
 			
 			var serializer = GetXMLSerializer(loadingType.MakeArrayType(), loadingType);

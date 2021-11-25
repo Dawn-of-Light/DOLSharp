@@ -1873,10 +1873,10 @@ namespace DOL.GS.Commands
 							if (name != "")
 							{
 								var items = DOLDB<ItemTemplate>.SelectObjects(DB.Column("id_nb").IsLike($"%{name}%"));
-								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Count), new object[] { });
+								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Count) );
 								foreach (ItemTemplate item in items)
 								{
-									DisplayMessage(client, item.Id_nb + " (" + item.Name + ")", new object[] { });
+									DisplayMessage(client, $"{item.Id_nb} ({item.Name})" );
 								}
 							}
 							break;
@@ -1889,10 +1889,10 @@ namespace DOL.GS.Commands
 							if (name != "")
 							{
 								var items = DOLDB<ItemTemplate>.SelectObjects(DB.Column("name").IsLike($"%{name}%"));
-								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Count), new object[] { });
+								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Count) );
 								foreach (ItemTemplate item in items)
 								{
-									DisplayMessage(client, item.Name + "  (" + item.Id_nb + ")", new object[] { });
+									DisplayMessage(client, $"{item.Name} ({item.Id_nb})" );
 								}
 							}
 							break;

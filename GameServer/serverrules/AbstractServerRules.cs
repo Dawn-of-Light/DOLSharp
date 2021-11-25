@@ -725,7 +725,7 @@ namespace DOL.GS.ServerRules
 
 			// non-armors
 			string abilityCheck = null;
-			string[] otherCheck = new string[0];
+			string[] otherCheck = Array.Empty<string>();
 
 			//http://dol.kitchenhost.de/files/dol/Info/itemtable.txt
 			switch ((eObjectType)item.Object_Type)
@@ -1025,7 +1025,7 @@ namespace DOL.GS.ServerRules
 
 			eObjectType[] res = (eObjectType[])m_compatibleObjectTypes[(int)objectType];
 			if (res == null)
-				return new eObjectType[0];
+				return Array.Empty<eObjectType>();
 			return res;
 		}
 

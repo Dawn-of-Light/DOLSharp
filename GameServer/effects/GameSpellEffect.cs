@@ -708,7 +708,7 @@ namespace DOL.GS.Effects
 			}
 		}
 
-		public int[] RestoreVars = new int[] { };
+		public int[] RestoreVars = Array.Empty<int>();
 		public bool RestoredEffect = false;
 
 		public PlayerXEffect getSavedEffect()

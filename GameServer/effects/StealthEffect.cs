@@ -81,6 +81,6 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList<string> DelveInfo { get { return new string[0]; } }
+		public override IList<string> DelveInfo { get { return Array.Empty<string>(); } }
 	}
 }

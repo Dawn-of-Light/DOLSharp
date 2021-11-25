@@ -606,11 +606,11 @@ namespace DOL.Database
 					objsResults = objects.Select(obj => {
 					                             	var local = localBind.GetValue(obj);
 					                             	if (local == null)
-					                             		return new DataObject[0];
+					                             		return Array.Empty<DataObject>();
 					                             	
 					                             	var retrieve = remoteHandler.GetPreCachedObject(local);
 					                             	if (retrieve == null)
-					                             		return new DataObject[0];
+					                             		return Array.Empty<DataObject>();
 					                             	
 					                             	return new [] { retrieve };
 					                             });
@@ -833,7 +833,7 @@ namespace DOL.Database
 		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
-			return SelectObjects<TObject>(whereExpression, new [] { new QueryParameter[] { } }).First().ToArray();
+			return SelectObjects<TObject>(whereExpression, new [] { Array.Empty<QueryParameter>() } ).First().ToArray();
 		}
 		#endregion
 		

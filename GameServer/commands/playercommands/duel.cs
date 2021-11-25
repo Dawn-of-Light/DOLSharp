@@ -126,7 +126,7 @@ namespace DOL.GS.Commands
 				case 101:
 				case 201:
 					{
-						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Duel.SafeZone"), new object[] { });
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Duel.SafeZone") );
 						return;
 					}
 			}

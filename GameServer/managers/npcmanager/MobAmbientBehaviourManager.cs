@@ -42,13 +42,13 @@ namespace DOL.GS
             {
                 if (string.IsNullOrEmpty(index))
                 {
-                    return new MobXAmbientBehaviour[0];
+                    return Array.Empty<MobXAmbientBehaviour>();
                 }
 
                 var lower = index.ToLower();
                 return AmbientBehaviour.ContainsKey(lower)
                     ? AmbientBehaviour[lower]
-                    : new MobXAmbientBehaviour[0];
+                    : Array.Empty<MobXAmbientBehaviour>();
             }
         }
 

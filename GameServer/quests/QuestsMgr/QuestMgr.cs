@@ -87,7 +87,7 @@ namespace DOL.GS.Quests
 								BindingFlags.InvokeMethod,
 								null,
 								null,
-								new object[] { });
+                                Array.Empty<object>() );
 						}
                     }
                 }
@@ -325,7 +325,7 @@ namespace DOL.GS.Quests
                     {
                         try
                         {
-                            rquest = (RewardQuest)asm.CreateInstance(questType.FullName, false, BindingFlags.CreateInstance, null, new object[] { }, null, null);
+                            rquest = (RewardQuest)asm.CreateInstance(questType.FullName, false, BindingFlags.CreateInstance, null, Array.Empty<object>(), null, null);
                         }
                         catch (Exception e)
                         {

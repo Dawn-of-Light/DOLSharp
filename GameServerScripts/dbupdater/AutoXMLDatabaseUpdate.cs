@@ -217,7 +217,7 @@ namespace DOL.GS.DatabaseUpdate
 					// Get all object "Method" Through Reflection
 					var classMethod = GameServer.Database.GetType().GetMethod("SelectAllObjects", Type.EmptyTypes);
 					var genericMethod = classMethod.MakeGenericMethod(xmlType);
-					var existingObjects = ((IEnumerable)genericMethod.Invoke(GameServer.Database, new object[]{})).Cast<DataObject>().ToArray();
+					var existingObjects = ((IEnumerable)genericMethod.Invoke(GameServer.Database, Array.Empty<object>() ) ).Cast<DataObject>().ToArray();
 					
 					// Store Object to Alter
 					var toDelete = new ConcurrentBag<DataObject>();

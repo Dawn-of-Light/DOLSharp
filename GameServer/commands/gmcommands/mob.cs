@@ -2643,7 +2643,7 @@ namespace DOL.GS.Commands
 
 			if (template == null)
 			{
-				DisplayMessage(client, "No template found for " + id, new object[] { });
+				DisplayMessage(client, $"No template found for {id}" );
 				return;
 			}
 
@@ -2656,7 +2656,7 @@ namespace DOL.GS.Commands
 				mob.Heading = client.Player.Heading;
 				mob.CurrentRegion = client.Player.CurrentRegion;
 				mob.AddToWorld();
-				DisplayMessage(client, "Created npc based on template " + id, new object[] { });
+				DisplayMessage(client, $"Created npc based on template {id}" );
 			}
 			else
 			{
@@ -2664,7 +2664,7 @@ namespace DOL.GS.Commands
 				targetMob.BroadcastLivingEquipmentUpdate();
 				targetMob.NPCTemplate = template as NpcTemplate;
 				targetMob.SaveIntoDatabase();
-				DisplayMessage(client, "Updated npc based on template " + id, new object[] { });
+				DisplayMessage(client, $"Updated npc based on template {id}" );
 			}
 		}
 

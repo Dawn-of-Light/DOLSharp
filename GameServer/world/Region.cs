@@ -224,10 +224,10 @@ namespace DOL.GS
         public Region(GameTimer.TimeManager time, RegionData data)
         {
             m_regionData = data;
-            m_objects = new GameObject[0];
+            m_objects = Array.Empty<GameObject>();
             m_objectsInRegion = 0;
             m_nextObjectSlot = 0;
-            m_objectsAllocatedSlots = new uint[0];
+            m_objectsAllocatedSlots = Array.Empty<uint>();
 
             m_graveStones = new Hashtable();
 

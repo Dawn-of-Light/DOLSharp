@@ -521,7 +521,7 @@ namespace DOL.Integration.Database
 			Assert.IsTrue(nullAdded, "Test Table Relations need an object for the Null Relation Test.");
 			
 			nullObj.ObjectId = null;
-			nullObj.Entries = new TestTableRelationsEntries[0];
+			nullObj.Entries = Array.Empty<TestTableRelationsEntries>();
 			
 			Database.FillObjectRelations(nullObj);
 
@@ -1104,7 +1104,7 @@ namespace DOL.Integration.Database
 			foreach(var obj in objs)
 			{
 				obj.ObjectId = null;
-				obj.Entries = new TestTableRelationsEntriesPrecached[0];
+				obj.Entries = Array.Empty<TestTableRelationsEntriesPrecached>();
 			}
 			
 			Database.FillObjectRelations(objs);

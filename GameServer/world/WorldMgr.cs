@@ -196,7 +196,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This array holds all gameclients connected to the game
 		/// </summary>
-		private static GameClient[] m_clients = new GameClient[0];
+		private static GameClient[] m_clients = Array.Empty<GameClient>();
 
 		/// <summary>
 		/// Timer for ping timeout checks
@@ -392,7 +392,7 @@ namespace DOL.GS
 				List<Mob> mobs;
 
 				if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
-					data.Mobs = new Mob[0];
+					data.Mobs = Array.Empty<Mob>();
 				else
 					data.Mobs = mobs.ToArray();
 
@@ -572,7 +572,7 @@ namespace DOL.GS
 		public static GameTimer.TimeManager[] GetRegionTimeManagers()
 		{
 			GameTimer.TimeManager[] timers = m_regionTimeManagers;
-			if (timers == null) return new GameTimer.TimeManager[0];
+			if (timers == null) return Array.Empty<GameTimer.TimeManager>();
 			return (GameTimer.TimeManager[])timers.Clone();
 		}
 
@@ -1053,7 +1053,7 @@ namespace DOL.GS
 		{
 			Region reg;
 			if (!m_regions.TryGetValue(regionID, out reg))
-				return new GameObject[0];
+				return Array.Empty<GameObject>();
 
 			return (GameObject[]) reg.Objects.Where(obj => obj != null).OfTypeAndToArray(objectType);
 		}
@@ -1080,7 +1080,7 @@ namespace DOL.GS
 		{
 			Region reg;
 			if (!m_regions.TryGetValue(regionID, out reg))
-				return new GameObject[0];
+				return Array.Empty<GameObject>();
 			
 			return (GameObject[]) reg.Objects.Where(obj => obj != null && obj.Realm == realm && obj.Name == name).OfTypeAndToArray(objectType);
 		}
@@ -1093,7 +1093,7 @@ namespace DOL.GS
 		{
 			Region reg;
 			if (!m_regions.TryGetValue(regionID, out reg))
-				return new GameNPC[0];
+				return Array.Empty<GameNPC>();
 
 			return reg.Objects.OfType<GameNPC>().ToArray();
 		}
