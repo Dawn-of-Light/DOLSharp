@@ -29,6 +29,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 using DOL.GS.RealmAbilities;
 using DOL.GS.SkillHandler;
+using DOL.GS.Utils;
 using DOL.Language;
 
 using log4net;
@@ -494,7 +495,7 @@ namespace DOL.GS.Spells
 		}
 
 
-		public virtual void StartCastTimer(GameLiving target)
+		public virtual void StartCastTimer( GameLiving target )
 		{
 			m_interrupted = false;
 			SendSpellMessages();
@@ -502,32 +503,32 @@ namespace DOL.GS.Spells
 			int time = CalculateCastingTime();
 
 			int step1 = time / 3;
-			if (step1 > ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH)
-				step1 = ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH;
-			if (step1 < 1)
-				step1 = 1;
+			int step3 = step1;
 
-			int step3 = time / 3;
-			if (step3 > ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH)
-				step3 = ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH;
-			if (step3 < 1)
-				step3 = 1;
+			step1 = step1.Clamp( 1, ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH );
+			step3 = step3.Clamp( 1, ServerProperties.Properties.SPELL_INTERRUPT_MAXSTAGELENGTH );
 
 			int step2 = time - step1 - step3;
-			if (step2 < 1)
+			byte step2_substeps = 0;
+			if( step2 > ServerProperties.Properties.SPELL_INTERRUPT_MAX_INTERMEDIATE_STAGELENGTH )
+			{
+				step2_substeps = (byte) ( ( step2 / ServerProperties.Properties.SPELL_INTERRUPT_MAX_INTERMEDIATE_STAGELENGTH ) + 1 );
+				step2 /= step2_substeps;
+			}
+			if( step2 < 1 )
 				step2 = 1;
 
-			if (Caster is GamePlayer && ServerProperties.Properties.ENABLE_DEBUG)
+			if( Caster is GamePlayer && ServerProperties.Properties.ENABLE_DEBUG )
 			{
-				(Caster as GamePlayer).Out.SendMessage("[DEBUG] spell time = " + time + ", step1 = " + step1 + ", step2 = " + step2 + ", step3 = " + step3, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				( Caster as GamePlayer ).Out.SendMessage( $"[DEBUG] spell time = {time}, step1 = {step1}, step2 = {step2}, step3 = {step3}", eChatType.CT_System, eChatLoc.CL_SystemWindow );
 			}
 
-			m_castTimer = new DelayedCastTimer(Caster, this, target, step2, step3);
-			m_castTimer.Start(step1);
+			m_castTimer = new DelayedCastTimer( Caster, this, target, step2, step3, step2_substeps );
+			m_castTimer.Start( step1 );
 			m_started = Caster.CurrentRegion.Time;
 			SendCastAnimation();
 
-			if (m_caster.IsMoving || m_caster.IsStrafing)
+			if( m_caster.IsMoving || m_caster.IsStrafing )
 			{
 				CasterMoves();
 			}
@@ -1662,6 +1663,8 @@ namespace DOL.GS.Spells
 			private byte m_stage;
 			private readonly int m_delay1;
 			private readonly int m_delay2;
+			private readonly byte m_delay1_substeps;
+			private byte m_stepcount;
 
 			/// <summary>
 			/// Constructs a new DelayedSpellTimer
@@ -1669,14 +1672,17 @@ namespace DOL.GS.Spells
 			/// <param name="actionSource">The caster</param>
 			/// <param name="handler">The spell handler</param>
 			/// <param name="target">The target object</param>
-			public DelayedCastTimer(GameLiving actionSource, SpellHandler handler, GameLiving target, int delay1, int delay2)
-				: base(actionSource.CurrentRegion.TimeManager)
+			/// <param name="delay1">Amount of time to wait in stage 1</param>
+			/// <param name="delay2">Amount of time to wait in stage 2</param>
+			/// <param name="delay1_substeps">Number of times to repeat stage 1</param>
+			public DelayedCastTimer( GameLiving actionSource, SpellHandler handler, GameLiving target, int delay1, int delay2, byte delay1_substeps )
+				: base( actionSource.CurrentRegion.TimeManager )
 			{
-				if (handler == null)
-					throw new ArgumentNullException("handler");
+				if( handler == null )
+					throw new ArgumentNullException( "handler" );
 
-				if (actionSource == null)
-					throw new ArgumentNullException("actionSource");
+				if( actionSource == null )
+					throw new ArgumentNullException( "actionSource" );
 
 				m_handler = handler;
 				m_target = target;
@@ -1684,6 +1690,8 @@ namespace DOL.GS.Spells
 				m_stage = 0;
 				m_delay1 = delay1;
 				m_delay2 = delay2;
+				m_delay1_substeps = delay1_substeps;
+				m_stepcount = 0;
 			}
 
 			/// <summary>
@@ -1708,6 +1716,7 @@ namespace DOL.GS.Spells
 					}
 					else if (m_stage == 1)
 					{
+						++m_stepcount;
 						if (!m_handler.CheckDuringCast(m_target))
 						{
 							Interval = 0;
@@ -1715,6 +1724,8 @@ namespace DOL.GS.Spells
 							m_handler.OnAfterSpellCastSequence();
 							return;
 						}
+						if( m_stepcount < m_delay1_substeps )
+							return;
 						m_stage = 2;
 						m_handler.Stage = 2;
 						Interval = m_delay2;
