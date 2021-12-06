@@ -44,7 +44,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			ushort jumpSpotId = packet.ReadShort();
+			ushort jumpSpotId;
+
+			if (client.Version < GameClient.eClientVersion.Version1126)
+			{
+				jumpSpotId = packet.ReadShort();
+			}
+			else
+			{
+				jumpSpotId = packet.ReadShortLowEndian();
+			}
 
 			eRealm targetRealm = client.Player.Realm;
 
