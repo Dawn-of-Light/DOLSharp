@@ -44,15 +44,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			ushort jumpSpotId = packet.ReadShort();
+			var player = client.Player;
+			ushort jumpSpotId;
 
-			eRealm targetRealm = client.Player.Realm;
+			if (client.Version < GameClient.eClientVersion.Version1126)
+			{
+				jumpSpotId = packet.ReadShort();
+			}
+			else
+			{
+				jumpSpotId = packet.ReadShortLowEndian();
+			}
 
-			if (client.Player.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis && client.Player.CurrentZone.Realm != eRealm.None)
+			eRealm targetRealm = player.Realm;
+
+			if (player.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis && player.CurrentZone.Realm != eRealm.None)
 			{
 				// if we are in TrialsOfAtlantis then base the target jump on the current region realm instead of the players realm
 				// this is only used if zone table has the proper realms defined, otherwise it reverts to old behavior - Tolakram
-                targetRealm = client.Player.CurrentZone.Realm;
+                targetRealm = player.CurrentZone.Realm;
 			}
 
 			var filterRealm = DB.Column("Realm").IsEqualTo((byte)targetRealm).Or(DB.Column("Realm").IsEqualTo(0)).Or(DB.Column("Realm").IsNull());
@@ -63,6 +73,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				ChatUtil.SendDebugMessage(client, $"Invalid Jump (ZonePoint table): [{jumpSpotId}]{((zonePoint == null) ? ". Entry missing!" : ". TargetRegion is 0!")}");
 				zonePoint = new ZonePoint();
 				zonePoint.Id = jumpSpotId;
+				string zonePointLocation = $"Region {player.CurrentRegionID} and coordinates ({player.X},{player.Y},{player.Z})";
+				Log.Error($"ZonePoint {jumpSpotId} at {zonePointLocation} on client {client.Version} missing. Either ZonePoint missing or RegionChangeRequestHandler needs to be updated.");
 			}
 
 			if (client.Account.PrivLevel > 1)
@@ -81,10 +93,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					// check for target region disabled if player is in a standard region
 					// otherwise the custom region should handle OnZonePoint for this check
-					if (client.Player.CurrentRegion.IsCustom == false && reg.IsDisabled)
+					if (player.CurrentRegion.IsCustom == false && reg.IsDisabled)
 					{
-						if ((client.Player.Mission is TaskDungeonMission &&
-						     (client.Player.Mission as TaskDungeonMission).TaskRegion.Skin == reg.Skin) == false)
+						if ((player.Mission is TaskDungeonMission &&
+						     (player.Mission as TaskDungeonMission).TaskRegion.Skin == reg.Skin) == false)
 						{
 							client.Out.SendMessage("This region has been disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							if (client.Account.PrivLevel == 1)
@@ -95,7 +107,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			// Allow the region to either deny exit or handle the zonepoint in a custom way
-			if (client.Player.CurrentRegion.OnZonePoint(client.Player, zonePoint) == false)
+			if (player.CurrentRegion.OnZonePoint(player, zonePoint) == false)
 			{
 				return;
 			}
@@ -104,8 +116,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			Battleground bg = GameServer.KeepManager.GetBattleground(zonePoint.TargetRegion);
 			if (bg != null)
 			{
-				if (client.Player.Level < bg.MinLevel && client.Player.Level > bg.MaxLevel &&
-				    client.Player.RealmLevel >= bg.MaxRealmLevel)
+				if (player.Level < bg.MinLevel && player.Level > bg.MaxLevel &&
+					player.RealmLevel >= bg.MaxRealmLevel)
 					return;
 			}
 
@@ -124,7 +136,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					//Dinberg - Instances need to use a special handler. This is because some instances will result
 					//in duplicated zonepoints, such as if Tir Na Nog were to be instanced for a quest.
-					string type = (client.Player.CurrentRegion.IsInstance)
+					string type = player.CurrentRegion.IsInstance
 						? "DOL.GS.ServerRules.InstanceDoorJumpPoint"
 						: zonePoint.ClassType;
 					Type t = ScriptMgr.GetType(type);
@@ -160,7 +172,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 
-			new RegionChangeRequestHandler(client.Player, zonePoint, customHandler).Start(1);
+			new RegionChangeRequestHandler(player, zonePoint, customHandler).Start(1);
 		}
 
 		/// <summary>
@@ -208,27 +220,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-
-				try
-				{
-
-					//check if the zonepoint has source locations set  Check prior to any zonepoint modification by handlers
-					if (m_zonePoint.SourceRegion == 0)
-					{
-						m_zonePoint.SourceRegion = player.CurrentRegionID;
-						m_zonePoint.SourceX = player.X;
-						m_zonePoint.SourceY = player.Y;
-						m_zonePoint.SourceZ = player.Z;
-						GameServer.Database.SaveObject(m_zonePoint);
-					}
-
-				}
-				catch (Exception ex)
-				{
-					Log.Error("Can't save updated ZonePoint with source info.", ex);
-				}
-
-			
 
 				if (m_checkHandler != null)
 				{
