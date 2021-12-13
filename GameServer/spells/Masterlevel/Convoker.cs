@@ -112,7 +112,9 @@ namespace DOL.GS.Spells
 		}
 
 		public PrescienceSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-	}
+
+        public override string ShortDescription => "You have been detected by a Prescience Node!";
+    }
 	#endregion
 
 	//no shared timer
@@ -233,7 +235,9 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect, noMessages);
 		}
 		public SpeedWrapSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-	}
+
+        public override string ShortDescription => "Ward that negates the effects of speed boosts for enemies who pass through it.";
+    }
 	#endregion
 
 	//shared timer 1

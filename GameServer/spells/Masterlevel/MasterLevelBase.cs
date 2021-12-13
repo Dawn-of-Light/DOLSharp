@@ -1071,7 +1071,13 @@ namespace DOL.GS.Spells
         }
 
         // constructor
-        public FontSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+        public FontSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) 
+        {
+        }
+
+        public override string ShortDescription => $"Creates a cloud that affects everyone in the area.\n\n Cloud spell:\n{CloudDescription}";
+
+        public string CloudDescription => heal.ShortDescription;
     }	
     #endregion
 
