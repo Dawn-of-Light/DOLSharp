@@ -33,7 +33,7 @@ namespace DOL.GS.Delve
 
 		public SpellDelve(Spell spell)
 		{
-			spellHandler = ScriptMgr.CreateSpellHandler(GamePlayer.CreateTestableGamePlayer(), spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+			spellHandler = ScriptMgr.CreateSpellHandler(GamePlayer.CreateDummy(), spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 			DelveType = "Spell";
 			Index = unchecked((short)spellHandler.Spell.InternalID);
 		}
