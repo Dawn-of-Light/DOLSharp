@@ -168,7 +168,7 @@ namespace DOL.GS.Effects
 			if (player == null || player.DBCharacter == null || GameServer.Database == null)
 				return;
 
-			var effs = DOLDB<PlayerXEffect>.SelectObjects(DB.Column("ChardID").IsEqualTo(player.ObjectId));
+			var effs = DOLDB<PlayerXEffect>.SelectObjects(DB.Column(nameof(PlayerXEffect.ChardID)).IsEqualTo(player.ObjectId));
 			if (effs == null)
 				return;
 

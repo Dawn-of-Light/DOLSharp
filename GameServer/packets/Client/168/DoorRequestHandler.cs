@@ -100,7 +100,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 			}
 
-			var door = DOLDB<DBDoor>.SelectObject(DB.Column("InternalID").IsEqualTo(doorID));
+			var door = DOLDB<DBDoor>.SelectObject(DB.Column(nameof(DBDoor.InternalID)).IsEqualTo(doorID));
 			if (door != null)
 			{
 				if (doorType == 7 || doorType == 9)

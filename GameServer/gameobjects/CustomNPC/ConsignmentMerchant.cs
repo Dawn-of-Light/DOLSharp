@@ -206,7 +206,7 @@ namespace DOL.GS
                 {
                     m_totalMoney = value;
 
-                    var merchant = DOLDB<HouseConsignmentMerchant>.SelectObject(DB.Column("HouseNumber").IsEqualTo(HouseNumber));
+                    var merchant = DOLDB<HouseConsignmentMerchant>.SelectObject(DB.Column(nameof(HouseConsignmentMerchant.HouseNumber)).IsEqualTo(HouseNumber));
                     merchant.Money = m_totalMoney;
                     GameServer.Database.SaveObject(merchant);
                 }
@@ -750,7 +750,7 @@ namespace DOL.GS
 
 			SetInventoryTemplate();
 
-			var houseCM = DOLDB<HouseConsignmentMerchant>.SelectObject(DB.Column("HouseNumber").IsEqualTo(HouseNumber));
+			var houseCM = DOLDB<HouseConsignmentMerchant>.SelectObject(DB.Column(nameof(HouseConsignmentMerchant.HouseNumber)).IsEqualTo(HouseNumber));
 			if (houseCM != null)
 			{
 				TotalMoney = houseCM.Money;
@@ -782,7 +782,7 @@ namespace DOL.GS
 
 			bool isFixed = false;
 
-			var items = DOLDB<InventoryItem>.SelectObjects(DB.Column("OwnerID").IsEqualTo(house.OwnerID).And(DB.Column("SlotPosition").IsGreaterOrEqualTo(FirstDBSlot)).And(DB.Column("SlotPosition").IsLessOrEqualTo(LastDBSlot)).And(DB.Column("OwnerLot").IsEqualTo(0)));
+			var items = DOLDB<InventoryItem>.SelectObjects(DB.Column(nameof(InventoryItem.OwnerID)).IsEqualTo(house.OwnerID).And(DB.Column(nameof(InventoryItem.SlotPosition)).IsGreaterOrEqualTo(FirstDBSlot)).And(DB.Column(nameof(InventoryItem.SlotPosition)).IsLessOrEqualTo(LastDBSlot)).And(DB.Column(nameof(InventoryItem.OwnerLot)).IsEqualTo(0)));
 
 			foreach (InventoryItem item in items)
 			{
@@ -879,7 +879,7 @@ namespace DOL.GS
 
             if (house.DatabaseItem.GuildHouse)
             {
-            	var guild = DOLDB<DBGuild>.SelectObject(DB.Column("GuildName").IsEqualTo(house.DatabaseItem.GuildName));
+            	var guild = DOLDB<DBGuild>.SelectObject(DB.Column(nameof(DBGuild.GuildName)).IsEqualTo(house.DatabaseItem.GuildName));
                 int emblem = guild.Emblem;
 
                 InventoryItem cloak = Inventory.GetItem(eInventorySlot.Cloak);

@@ -65,8 +65,8 @@ namespace DOL.GS.PacketHandler.Client.v168
                 targetRealm = player.CurrentZone.Realm;
 			}
 
-			var filterRealm = DB.Column("Realm").IsEqualTo((byte)targetRealm).Or(DB.Column("Realm").IsEqualTo(0)).Or(DB.Column("Realm").IsNull());
-			var zonePoint = DOLDB<ZonePoint>.SelectObject(DB.Column("Id").IsEqualTo(jumpSpotId).And(filterRealm));
+			var filterRealm = DB.Column(nameof(ZonePoint.Realm)).IsEqualTo((byte)targetRealm).Or(DB.Column(nameof(ZonePoint.Realm)).IsEqualTo(0)).Or(DB.Column(nameof(ZonePoint.Realm)).IsNull());
+			var zonePoint = DOLDB<ZonePoint>.SelectObject(DB.Column(nameof(ZonePoint.Id)).IsEqualTo(jumpSpotId).And(filterRealm));
 
 			if (zonePoint == null || zonePoint.TargetRegion == 0)
 			{

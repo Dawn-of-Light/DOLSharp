@@ -591,7 +591,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							try
 							{
-								var objs = DOLDB<InventoryItem>.SelectObjects(DB.Column("OwnerID").IsEqualTo(character.ObjectId));
+								var objs = DOLDB<InventoryItem>.SelectObjects(DB.Column(nameof(InventoryItem.OwnerID)).IsEqualTo(character.ObjectId));
 								GameServer.Database.DeleteObject(objs);
 							}
 							catch (Exception e)
@@ -603,7 +603,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							// delete quests
 							try
 							{
-								var objs = DOLDB<DBQuest>.SelectObjects(DB.Column("Character_ID").IsEqualTo(character.ObjectId));
+								var objs = DOLDB<DBQuest>.SelectObjects(DB.Column(nameof(DBQuest.Character_ID)).IsEqualTo(character.ObjectId));
 								GameServer.Database.DeleteObject(objs);
 							}
 							catch (Exception e)
@@ -615,7 +615,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							// delete ML steps
 							try
 							{
-								var objs = DOLDB<DBCharacterXMasterLevel>.SelectObjects(DB.Column("Character_ID").IsEqualTo(character.ObjectId));
+								var objs = DOLDB<DBCharacterXMasterLevel>.SelectObjects(DB.Column(nameof(DBCharacterXMasterLevel.Character_ID)).IsEqualTo(character.ObjectId));
 								GameServer.Database.DeleteObject(objs);
 							}
 							catch (Exception e)

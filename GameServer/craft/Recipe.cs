@@ -172,7 +172,7 @@ namespace DOL.GS
             ItemTemplate product = GameServer.Database.FindObjectByKey<ItemTemplate>(dbRecipe.Id_nb);
             if (product == null) throw new ArgumentException("Product ItemTemplate " + dbRecipe.Id_nb + " for Recipe with ID " + dbRecipe.CraftedItemID + " does not exist.");
 
-            var rawMaterials = DOLDB<DBCraftedXItem>.SelectObjects(DB.Column("CraftedItemId_nb").IsEqualTo(dbRecipe.Id_nb));
+            var rawMaterials = DOLDB<DBCraftedXItem>.SelectObjects(DB.Column(nameof(DBCraftedXItem.CraftedItemId_nb)).IsEqualTo(dbRecipe.Id_nb));
             if (rawMaterials.Count == 0) throw new ArgumentException("Recipe with ID " + dbRecipe.CraftedItemID + " has no ingredients.");
 
             bool isRecipeValid = true;

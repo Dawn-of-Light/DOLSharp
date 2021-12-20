@@ -926,7 +926,7 @@ namespace DOL.GS.Commands
 			{
 				string raceName = string.Join(" ", args, 2, args.Length - 2);
 
-				var npcRace = DOLDB<Race>.SelectObject(DB.Column("Name").IsEqualTo(raceName));
+				var npcRace = DOLDB<Race>.SelectObject(DB.Column(nameof(Race.Name)).IsEqualTo(raceName));
 
 				if (npcRace == null)
 				{
@@ -1049,15 +1049,15 @@ namespace DOL.GS.Commands
 
 			if (args.Length > 2 && args[2] == "true")
 			{
-				var mobs = DOLDB<Mob>.SelectObject(DB.Column("Name").IsEqualTo(mobName));
+				var mobs = DOLDB<Mob>.SelectObject(DB.Column(nameof(Mob.Name)).IsEqualTo(mobName));
 
 				if (mobs == null)
 				{
-					var deleteLoots = DOLDB<MobXLootTemplate>.SelectObjects(DB.Column("MobName").IsEqualTo(mobName));
+					var deleteLoots = DOLDB<MobXLootTemplate>.SelectObjects(DB.Column(nameof(MobXLootTemplate.MobName)).IsEqualTo(mobName));
 
 					GameServer.Database.DeleteObject(deleteLoots);
 
-					var deleteLootTempl = DOLDB<LootTemplate>.SelectObjects(DB.Column("TemplateName").IsEqualTo(mobName));
+					var deleteLootTempl = DOLDB<LootTemplate>.SelectObjects(DB.Column(nameof(LootTemplate.TemplateName)).IsEqualTo(mobName));
 					
 					GameServer.Database.DeleteObject(deleteLootTempl);
 
@@ -1863,7 +1863,7 @@ namespace DOL.GS.Commands
 						{
 							bool replace = (args.Length > 4 && args[4].ToLower() == "replace");
 
-							var existingTemplates = DOLDB<NPCEquipment>.SelectObjects(DB.Column("TemplateID").IsEqualTo(args[3]));
+							var existingTemplates = DOLDB<NPCEquipment>.SelectObjects(DB.Column(nameof(NPCEquipment.TemplateID)).IsEqualTo(args[3]));
 
 							if (existingTemplates.Count > 0)
 							{
@@ -1949,7 +1949,7 @@ namespace DOL.GS.Commands
 
 		private void dropcount<T>(GameClient client, GameNPC targetMob, string[] args) where T : MobXLootTemplate
 		{
-			var mxlt = DOLDB<T>.SelectObject(DB.Column("MobName").IsEqualTo(targetMob.Name).And(DB.Column("LootTemplateName").IsEqualTo(targetMob.Name)));
+			var mxlt = DOLDB<T>.SelectObject(DB.Column(nameof(MobXLootTemplate.MobName)).IsEqualTo(targetMob.Name).And(DB.Column(nameof(MobXLootTemplate.LootTemplateName)).IsEqualTo(targetMob.Name)));
 
 			if (args.Length < 3)
 			{
@@ -2009,7 +2009,7 @@ namespace DOL.GS.Commands
 					return;
 				}
 
-				var template = DOLDB<LootTemplateType>.SelectObjects(DB.Column("TemplateName").IsEqualTo(name).And(DB.Column("ItemTemplateID").IsEqualTo(lootTemplateID)));
+				var template = DOLDB<LootTemplateType>.SelectObjects(DB.Column(nameof(LootTemplate.TemplateName)).IsEqualTo(name).And(DB.Column(nameof(LootTemplate.ItemTemplateID)).IsEqualTo(lootTemplateID)));
 				if (template != null)
 				{
 					GameServer.Database.DeleteObject(template);
@@ -2053,7 +2053,7 @@ namespace DOL.GS.Commands
 						eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 
-				var mxlt = DOLDB<MobXLootType>.SelectObject(DB.Column("MobName").IsEqualTo(targetMob.Name).And(DB.Column("LootTemplateName").IsEqualTo(name)));
+				var mxlt = DOLDB<MobXLootType>.SelectObject(DB.Column(nameof(MobXLootTemplate.MobName)).IsEqualTo(targetMob.Name).And(DB.Column(nameof(MobXLootTemplate.LootTemplateName)).IsEqualTo(name)));
 
 				if (mxlt == null)
 				{
@@ -2088,7 +2088,7 @@ namespace DOL.GS.Commands
 					return;
 				}
 
-				var otd = DOLDB<LootOTD>.SelectObject(DB.Column("MobName").IsEqualTo(mobName).And(DB.Column("ItemTemplateID").IsEqualTo(itemTemplateID)));
+				var otd = DOLDB<LootOTD>.SelectObject(DB.Column(nameof(LootOTD.MobName)).IsEqualTo(mobName).And(DB.Column(nameof(LootOTD.ItemTemplateID)).IsEqualTo(itemTemplateID)));
 
 				if (otd != null)
 				{
@@ -2147,7 +2147,7 @@ namespace DOL.GS.Commands
 				var text = new List<string>();
 				text.Add("");
 
-				IList<LootOTD> otds = DOLDB<LootOTD>.SelectObjects(DB.Column("MobName").IsEqualTo(targetMob.Name));
+				IList<LootOTD> otds = DOLDB<LootOTD>.SelectObjects(DB.Column(nameof(LootOTD.MobName)).IsEqualTo(targetMob.Name));
 
 				if (otds != null && otds.Count > 0)
 				{
@@ -2198,14 +2198,14 @@ namespace DOL.GS.Commands
 			if (mob.NPCTemplate != null)
 			{
 				fromNPCT = true;
-				mobXloot = DOLDB<MobDropTemplateType>.SelectObjects(DB.Column("MobName").IsEqualTo(mob.NPCTemplate.TemplateId));
+				mobXloot = DOLDB<MobDropTemplateType>.SelectObjects(DB.Column(nameof(MobXLootTemplate.MobName)).IsEqualTo(mob.NPCTemplate.TemplateId));
 			}
-			if (mobXloot==null || (mobXloot!=null && mobXloot.Count()==0)) mobXloot = DOLDB<MobDropTemplateType>.SelectObjects(DB.Column("MobName").IsEqualTo(mobName));
+			if (mobXloot==null || (mobXloot!=null && mobXloot.Count()==0)) mobXloot = DOLDB<MobDropTemplateType>.SelectObjects(DB.Column(nameof(MobXLootTemplate.MobName)).IsEqualTo(mobName));
 			
 			foreach (var mobXtemplate in mobXloot)
 			{
 				didDefault = didDefault || mobXtemplate.LootTemplateName == mobName;
-				var template = DOLDB<LootTemplateType>.SelectObjects(DB.Column("TemplateName").IsEqualTo(mobXtemplate.LootTemplateName));
+				var template = DOLDB<LootTemplateType>.SelectObjects(DB.Column(nameof(LootTemplate.TemplateName)).IsEqualTo(mobXtemplate.LootTemplateName));
 				if (template.Count > 0)
 					text.Add("+ Mob's template [from " + (fromNPCT?mob.NPCTemplate.TemplateId.ToString():mobName) + "]: "+ mobXtemplate.LootTemplateName + " (DropCount: " + mobXtemplate.DropCount + ")");
 				text.AddRange(
@@ -2217,7 +2217,7 @@ namespace DOL.GS.Commands
 			}
 			if (!didDefault)
 			{
-				var template = DOLDB<LootTemplateType>.SelectObjects(DB.Column("TemplateName").IsEqualTo(mobName));
+				var template = DOLDB<LootTemplateType>.SelectObjects(DB.Column(nameof(LootTemplate.TemplateName)).IsEqualTo(mobName));
 				if (template.Count > 0)
 					text.Add("+ Default: ");
 				text.AddRange(
@@ -2237,7 +2237,7 @@ namespace DOL.GS.Commands
 
 			if (lootTemplateID.ToLower() == "all items")
 			{
-				var template = DOLDB<LootTemplateType>.SelectObjects(DB.Column("TemplateName").IsEqualTo(name));
+				var template = DOLDB<LootTemplateType>.SelectObjects(DB.Column(nameof(LootTemplate.TemplateName)).IsEqualTo(name));
 
 				if (template != null && template.Count > 0)
 				{
@@ -2259,7 +2259,7 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				IList<LootTemplateType> template = DOLDB<LootTemplateType>.SelectObjects(DB.Column("TemplateName").IsEqualTo(name).And(DB.Column("ItemTemplateID").IsEqualTo(lootTemplateID)));
+				IList<LootTemplateType> template = DOLDB<LootTemplateType>.SelectObjects(DB.Column(nameof(LootTemplate.TemplateName)).IsEqualTo(name).And(DB.Column(nameof(LootTemplate.ItemTemplateID)).IsEqualTo(lootTemplateID)));
 
 				if (template != null && template.Count > 0)
 				{
@@ -2281,7 +2281,7 @@ namespace DOL.GS.Commands
 			string itemTemplateID = args[2];
 			string name = targetMob.Name;
 
-			IList<LootOTD> template = DOLDB<LootOTD>.SelectObjects(DB.Column("MobName").IsEqualTo(name).And(DB.Column("ItemTemplateID").IsEqualTo(itemTemplateID)));
+			IList<LootOTD> template = DOLDB<LootOTD>.SelectObjects(DB.Column(nameof(LootOTD.MobName)).IsEqualTo(name).And(DB.Column(nameof(LootOTD.ItemTemplateID)).IsEqualTo(itemTemplateID)));
 
 			if (template != null)
 			{
@@ -2451,7 +2451,7 @@ namespace DOL.GS.Commands
 			{
 				string mobName = string.Join(" ", args, 2, args.Length - 2);
 
-				var dbMob = DOLDB<Mob>.SelectObject(DB.Column("Name").IsEqualTo(mobName));
+				var dbMob = DOLDB<Mob>.SelectObject(DB.Column(nameof(Mob.Name)).IsEqualTo(mobName));
 
 				if (dbMob != null)
 				{
@@ -3038,7 +3038,7 @@ namespace DOL.GS.Commands
 				maxreturn = 10;
 			}
 
-			var mobs = DOLDB<Mob>.SelectObjects(DB.Column("Name").IsLike($"%{args[2]}%")).OrderByDescending(m => m.Level).Take(maxreturn).ToArray();
+			var mobs = DOLDB<Mob>.SelectObjects(DB.Column(nameof(Mob.Name)).IsLike($"%{args[2]}%")).OrderByDescending(m => m.Level).Take(maxreturn).ToArray();
 			if (mobs != null && mobs.Length > 0)
 			{
 				string mnames = "Found : \n";

@@ -77,16 +77,16 @@ namespace DOL.GS
 
 			if (item.SalvageYieldID == 0)
 			{
-				whereClause = DB.Column("ObjectType").IsEqualTo(item.Object_Type).And(DB.Column("SalvageLevel").IsEqualTo(salvageLevel));
+				whereClause = DB.Column(nameof(SalvageYield.ObjectType)).IsEqualTo(item.Object_Type).And(DB.Column(nameof(SalvageYield.SalvageLevel)).IsEqualTo(salvageLevel));
 			}
 			else
 			{
-				whereClause = DB.Column("ID").IsEqualTo(item.SalvageYieldID);
+				whereClause = DB.Column(nameof(SalvageYield.ID)).IsEqualTo(item.SalvageYieldID);
 			}
 
 			if (ServerProperties.Properties.USE_SALVAGE_PER_REALM)
 			{
-				whereClause = whereClause.And(DB.Column("Realm").IsEqualTo((int)eRealm.None).Or(DB.Column("Realm").IsEqualTo(item.Realm)));
+				whereClause = whereClause.And(DB.Column(nameof(SalvageYield.Realm)).IsEqualTo((int)eRealm.None).Or(DB.Column(nameof(SalvageYield.Realm)).IsEqualTo(item.Realm)));
 			}
 
 			salvageYield = DOLDB<SalvageYield>.SelectObject(whereClause);
@@ -172,7 +172,7 @@ namespace DOL.GS
 			siegeWeapon.ReleaseControl();
 			siegeWeapon.RemoveFromWorld();
 			bool error = false;
-			var recipe = DOLDB<DBCraftedItem>.SelectObject(DB.Column("Id_nb").IsEqualTo(siegeWeapon.ItemId));
+			var recipe = DOLDB<DBCraftedItem>.SelectObject(DB.Column(nameof(DBCraftedItem.Id_nb)).IsEqualTo(siegeWeapon.ItemId));
 
 			if (recipe == null)
             {
@@ -181,7 +181,7 @@ namespace DOL.GS
 				return 1;
             }
 
-			var rawMaterials = DOLDB<DBCraftedXItem>.SelectObjects(DB.Column("CraftedItemId_nb").IsEqualTo(recipe.Id_nb));
+			var rawMaterials = DOLDB<DBCraftedXItem>.SelectObjects(DB.Column(nameof(DBCraftedXItem.CraftedItemId_nb)).IsEqualTo(recipe.Id_nb));
 
 			if (rawMaterials == null || rawMaterials.Count == 0)
             {

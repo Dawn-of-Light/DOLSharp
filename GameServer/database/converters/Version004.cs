@@ -47,7 +47,7 @@ namespace DOL.GS.DatabaseConverters
 				return;
 			}
 
-			var mobs = DOLDB<Mob>.SelectObjects(DB.Column("ClassType").IsEqualTo("DOL.GS.GameMob"));
+			var mobs = DOLDB<Mob>.SelectObjects(DB.Column(nameof(Mob.ClassType)).IsEqualTo("DOL.GS.GameMob"));
 
 			int count = 0;
 			foreach (Mob mob in mobs)

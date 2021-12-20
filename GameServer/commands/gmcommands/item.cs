@@ -1572,17 +1572,17 @@ namespace DOL.GS.Commands
 
 							if (item.SalvageYieldID == 0)
 							{
-								whereClause = DB.Column("ObjectType").IsEqualTo(item.Object_Type).And(DB.Column("SalvageLevel").IsEqualTo(salvageLevel));
+								whereClause = DB.Column(nameof(SalvageYield.ObjectType)).IsEqualTo(item.Object_Type).And(DB.Column(nameof(SalvageYield.SalvageLevel)).IsEqualTo(salvageLevel));
 							}
 							else
 							{
-								whereClause = DB.Column("ID").IsEqualTo(item.SalvageYieldID);
+								whereClause = DB.Column(nameof(SalvageYield.ID)).IsEqualTo(item.SalvageYieldID);
 								calculated = false;
 							}
 
 							if (ServerProperties.Properties.USE_SALVAGE_PER_REALM)
 							{
-								whereClause = whereClause.And(DB.Column("Realm").IsEqualTo((int)eRealm.None).Or(DB.Column("Realm").IsEqualTo(item.Realm)));
+								whereClause = whereClause.And(DB.Column(nameof(SalvageYield.Realm)).IsEqualTo((int)eRealm.None).Or(DB.Column(nameof(SalvageYield.Realm)).IsEqualTo(item.Realm)));
 							}
 
 							salvageYield = DOLDB<SalvageYield>.SelectObject(whereClause);
@@ -1872,7 +1872,7 @@ namespace DOL.GS.Commands
 							string name = string.Join(" ", args, 2, args.Length - 2);
 							if (name != "")
 							{
-								var items = DOLDB<ItemTemplate>.SelectObjects(DB.Column("id_nb").IsLike($"%{name}%"));
+								var items = DOLDB<ItemTemplate>.SelectObjects(DB.Column(nameof(ItemTemplate.Id_nb)).IsLike($"%{name}%"));
 								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Count) );
 								foreach (ItemTemplate item in items)
 								{
@@ -1888,7 +1888,7 @@ namespace DOL.GS.Commands
 							string name = string.Join(" ", args, 2, args.Length - 2);
 							if (name != "")
 							{
-								var items = DOLDB<ItemTemplate>.SelectObjects(DB.Column("name").IsLike($"%{name}%"));
+								var items = DOLDB<ItemTemplate>.SelectObjects(DB.Column(nameof(ItemTemplate.Name)).IsLike($"%{name}%"));
 								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Count) );
 								foreach (ItemTemplate item in items)
 								{
@@ -1921,7 +1921,7 @@ namespace DOL.GS.Commands
 							{
 								if (args[2] == "**all**") args[2] = String.Empty;
 
-								var packageItems = DOLDB<ItemTemplate>.SelectObjects(DB.Column("PackageID").IsEqualTo(args[2]));
+								var packageItems = DOLDB<ItemTemplate>.SelectObjects(DB.Column(nameof(ItemTemplate.PackageID)).IsEqualTo(args[2]));
 
 								if (packageItems != null)
 								{

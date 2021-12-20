@@ -68,7 +68,7 @@ namespace DOL.GS.Commands
 				gc = WorldMgr.GetClientByPlayerName(args[2], false, false);
 			}
 
-			var acc = gc != null ? gc.Account : DOLDB<Account>.SelectObject(DB.Column("Name").IsLike(args[2]));
+			var acc = gc != null ? gc.Account : DOLDB<Account>.SelectObject(DB.Column(nameof(Account.Name)).IsLike(args[2]));
 			if (acc == null)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.UnableToFindPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -106,7 +106,7 @@ namespace DOL.GS.Commands
 				{
 						#region Account
 					case "account":
-						var acctBans = DOLDB<DBBannedAccount>.SelectObjects(DB.Column("Type").IsEqualTo("A").Or(DB.Column("Type").IsEqualTo("B")).And(DB.Column("Account").IsEqualTo(acc.Name)));
+						var acctBans = DOLDB<DBBannedAccount>.SelectObjects(DB.Column(nameof(DBBannedAccount.Type)).IsEqualTo("A").Or(DB.Column(nameof(DBBannedAccount.Type)).IsEqualTo("B")).And(DB.Column(nameof(DBBannedAccount.Account)).IsEqualTo(acc.Name)));
 						if (acctBans.Count > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -119,7 +119,7 @@ namespace DOL.GS.Commands
 						#endregion Account
 						#region IP
 					case "ip":
-						var ipBans = DOLDB<DBBannedAccount>.SelectObjects(DB.Column("Type").IsEqualTo("I").Or(DB.Column("Type").IsEqualTo("B")).And(DB.Column("Ip").IsEqualTo(acc.LastLoginIP)));
+						var ipBans = DOLDB<DBBannedAccount>.SelectObjects(DB.Column(nameof(DBBannedAccount.Type)).IsEqualTo("I").Or(DB.Column(nameof(DBBannedAccount.Type)).IsEqualTo("B")).And(DB.Column(nameof(DBBannedAccount.Ip)).IsEqualTo(acc.LastLoginIP)));
 						if (ipBans.Count > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -132,7 +132,7 @@ namespace DOL.GS.Commands
 						#endregion IP
 						#region Both
 					case "both":
-						var acctIpBans = DOLDB<DBBannedAccount>.SelectObjects(DB.Column("Type").IsEqualTo("B").And(DB.Column("Account").IsEqualTo(acc.Name)).And(DB.Column("Ip").IsEqualTo(acc.LastLoginIP)));
+						var acctIpBans = DOLDB<DBBannedAccount>.SelectObjects(DB.Column(nameof(DBBannedAccount.Type)).IsEqualTo("B").And(DB.Column(nameof(DBBannedAccount.Account)).IsEqualTo(acc.Name)).And(DB.Column(nameof(DBBannedAccount.Ip)).IsEqualTo(acc.LastLoginIP)));
 						if (acctIpBans.Count > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
