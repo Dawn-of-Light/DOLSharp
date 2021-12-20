@@ -500,12 +500,6 @@ namespace DOL
 					m_hasConsignment = value;
 				}
 			}
-			
-			//[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
-			//public DBHouseIndoorItem[] IndoorItems;
-
-			//[Relation(LocalField = "HouseNumber", RemoteField = "HouseNumber", AutoLoad = true, AutoDelete=true)]
-			//public DBHouseOutdoorItem[] OutdoorItems;
 		}
 	}
 }

@@ -115,19 +115,19 @@ namespace DOL.Database
 		/// <summary>
 		/// Styles attached to this Specizalization
 		/// </summary>
-		[Relation(LocalField = "KeyName", RemoteField = "SpecKeyName", AutoLoad = true, AutoDelete=true)]
+		[Relation(LocalField = nameof( KeyName ), RemoteField = nameof( DBStyle.SpecKeyName ), AutoLoad = true, AutoDelete=true)]
 		public DBStyle[] Styles;
 		
 		/// <summary>
 		/// Spell Lines attached to this Specialization
 		/// </summary>
-		[Relation(LocalField = "KeyName", RemoteField = "Spec", AutoLoad = true, AutoDelete=false)]
+		[Relation(LocalField = nameof( KeyName ), RemoteField = nameof( DBSpellLine.Spec ), AutoLoad = true, AutoDelete=false)]
 		public DBSpellLine[] SpellLines;
 		
 		/// <summary>
 		/// Ability Lines Constraints attached to this Specialization
 		/// </summary>
-		[Relation(LocalField = "KeyName", RemoteField = "Spec", AutoLoad = true, AutoDelete=true)]
+		[Relation(LocalField = nameof( KeyName ), RemoteField = nameof( DBSpecXAbility.Spec ), AutoLoad = true, AutoDelete=true)]
 		public DBSpecXAbility[] AbilityConstraints;
 	}
 }

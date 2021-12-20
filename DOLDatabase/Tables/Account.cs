@@ -217,19 +217,19 @@ namespace DOL.Database
 		/// <summary>
 		/// List of characters on this account
 		/// </summary>
-		[Relation(LocalField = "Name", RemoteField = "AccountName", AutoLoad = true, AutoDelete=true)]
+		[Relation(LocalField = nameof( Name ), RemoteField = nameof( DOLCharacters.AccountName ), AutoLoad = true, AutoDelete=true)]
 		public DOLCharacters[] Characters;
 
 		/// <summary>
 		/// List of bans on this account
 		/// </summary>
-		[Relation(LocalField = "Name", RemoteField = "Account", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = nameof( Name ), RemoteField = nameof( DBBannedAccount.Account ), AutoLoad = true, AutoDelete = true)]
 		public DBBannedAccount[] BannedAccount;
 		
 		/// <summary>
 		/// List of Custom Params for this account
 		/// </summary>
-		[Relation(LocalField = "Name", RemoteField = "Name", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = nameof( Name ), RemoteField = nameof( AccountXCustomParam.Name ), AutoLoad = true, AutoDelete = true)]
 		public AccountXCustomParam[] CustomParams;
 	}
 	

@@ -372,7 +372,7 @@ namespace DOL.Database
 		/// <summary>
 		/// rank rules
 		/// </summary>
-		[Relation(LocalField = "GuildID", RemoteField = "GuildID", AutoLoad = true, AutoDelete=true)]
+		[Relation(LocalField = nameof( GuildID ), RemoteField = nameof( DBRank.GuildID ), AutoLoad = true, AutoDelete=true)]
 		public DBRank[] Ranks;
 	}
 }

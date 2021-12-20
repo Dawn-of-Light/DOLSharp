@@ -351,7 +351,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Link to StyleXSpell to assign Proc.
 		/// </summary>
-		[Relation(LocalField = "ID", RemoteField = "StyleID", AutoLoad = true, AutoDelete=false)]
+		[Relation(LocalField = nameof( ID ), RemoteField = nameof( DBStyleXSpell.StyleID ), AutoLoad = true, AutoDelete=false)]
 		public DBStyleXSpell[] AttachedProcs;
 	}
 }

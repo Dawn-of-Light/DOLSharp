@@ -2250,7 +2250,7 @@ namespace DOL.Database
 		/// <summary>
 		/// List of Custom Params for this Character
 		/// </summary>
-		[Relation(LocalField = "DOLCharacters_ID", RemoteField = "DOLCharactersObjectId", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = "DOLCharacters_ID", RemoteField = nameof( DOLCharactersXCustomParam.DOLCharactersObjectId ), AutoLoad = true, AutoDelete = true)]
 		public DOLCharactersXCustomParam[] CustomParams;
 	}
 	

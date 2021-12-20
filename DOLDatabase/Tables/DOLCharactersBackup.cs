@@ -232,7 +232,7 @@ namespace DOL.Database
 		/// <summary>
 		/// List of Custom Params for this Character Backup
 		/// </summary>
-		[Relation(LocalField = "DOLCharacters_ID", RemoteField = "DOLCharactersObjectId", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = "DOLCharacters_ID", RemoteField = nameof( DOLCharactersBackupXCustomParam.DOLCharactersObjectId ), AutoLoad = true, AutoDelete = true)]
 		public new DOLCharactersBackupXCustomParam[] CustomParams;
 	}
 	
