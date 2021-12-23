@@ -98,7 +98,7 @@ namespace DOL.Integration.Database
 	[DataTable(TableName = "Test_TableRelations")]
 	public class TestTableRelations : TestTable
 	{
-		[Relation(LocalField = "Test_TableRelations_ID", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = "Test_TableRelations_ID", RemoteField = nameof( TestTableRelationsEntries.ForeignTestField ), AutoLoad = true, AutoDelete = true)]
 		public TestTableRelationsEntries[] Entries;
 		
 		public TestTableRelations() { }
@@ -162,7 +162,7 @@ namespace DOL.Integration.Database
 	[DataTable(TableName = "Test_TableRelationsNoAutoload")]
 	public class TestTableRelationsWithNoAutoLoad : TestTable
 	{
-		[Relation(LocalField = "Test_TableRelationsNoAutoload_ID", RemoteField = "ForeignTestField", AutoLoad = false, AutoDelete = true)]
+		[Relation(LocalField = "Test_TableRelationsNoAutoload_ID", RemoteField = nameof( TestTableRelationsEntries.ForeignTestField ), AutoLoad = false, AutoDelete = true)]
 		public TestTableRelationsEntries[] Entries;
 		
 		public TestTableRelationsWithNoAutoLoad() { }
@@ -174,7 +174,7 @@ namespace DOL.Integration.Database
 	[DataTable(TableName = "Test_TableRelationsNoAutodelete")]
 	public class TestTableRelationsWithNoAutoDelete : TestTable
 	{
-		[Relation(LocalField = "Test_TableRelationsNoAutodelete_ID", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = false)]
+		[Relation(LocalField = "Test_TableRelationsNoAutodelete_ID", RemoteField = nameof( TestTableRelationsEntries.ForeignTestField ), AutoLoad = true, AutoDelete = false)]
 		public TestTableRelationsEntries[] Entries;
 		
 		public TestTableRelationsWithNoAutoDelete() { }
@@ -186,7 +186,7 @@ namespace DOL.Integration.Database
 	[DataTable(TableName = "Test_TableRelationsPrecache")]
 	public class TestTableRelationsWithPrecache : TestTable
 	{
-		[Relation(LocalField = "Test_TableRelationsPrecache_ID", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = "Test_TableRelationsPrecache_ID", RemoteField = nameof( TestTableRelationsEntriesPrecached.ForeignTestField ), AutoLoad = true, AutoDelete = true)]
 		public TestTableRelationsEntriesPrecached[] Entries;
 		
 		public TestTableRelationsWithPrecache() { }
@@ -271,7 +271,7 @@ namespace DOL.Integration.Database
 	[DataTable(TableName = "Test_TableBaseView", ViewName = "Test_TableAsViewWithRelations", ViewAs = "SELECT * FROM {0}")]
 	public class TestTableAsViewWithRelations : TestTableBaseView
 	{
-		[Relation(LocalField = "ViewValue", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = nameof( ViewValue ), RemoteField = nameof( TestTableRelationsEntries.ForeignTestField ), AutoLoad = true, AutoDelete = true)]
 		public TestTableRelationsEntries[] Entries;
 	}
 	
@@ -300,7 +300,7 @@ namespace DOL.Integration.Database
 		[DataElement(Index = true, Varchar = 255, AllowDbNull = true)]
 		public string TestValue { get { return m_testValue; } set { Dirty = true; m_testValue = value; } }
 		
-		[Relation(LocalField = "TestValue", RemoteField = "TestValue", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = nameof( TestValue ), RemoteField = nameof( TableCustomParams.TestValue ), AutoLoad = true, AutoDelete = true)]
 		public TableCustomParams[] CustomParams;
 		
 		public TableWithCustomParams() { }

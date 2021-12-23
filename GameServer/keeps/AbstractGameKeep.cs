@@ -1164,7 +1164,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			//predict Z
-			DBKeepHookPoint hp = DOLDB<DBKeepHookPoint>.SelectObject(DB.Column("HookPointID").IsEqualTo(97).And(DB.Column("Height").IsEqualTo(Height)));
+			DBKeepHookPoint hp = DOLDB<DBKeepHookPoint>.SelectObject(DB.Column(nameof(DBKeepHookPoint.HookPointID)).IsEqualTo(97).And(DB.Column(nameof(DBKeepHookPoint.Height)).IsEqualTo(Height)));
 			if (hp == null)
 				return;
 			int z = component.Z + hp.Z;

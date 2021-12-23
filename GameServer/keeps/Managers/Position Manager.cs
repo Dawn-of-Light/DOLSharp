@@ -41,10 +41,10 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepGuard guard)
 		{
-			var filterClassType = DB.Column("ClassType").IsNotEqualTo("DOL.GS.Keeps.Banner");
-			var filterTemplateID = DB.Column("TemplateID").IsEqualTo(guard.TemplateID);
-			var filterComponentSkin = DB.Column("ComponentSkin").IsEqualTo(guard.Component.Skin);
-			var filterHeight = DB.Column("Height").IsLessOrEqualTo(guard.Component.Height);
+			var filterClassType = DB.Column(nameof(DBKeepPosition.ClassType)).IsNotEqualTo("DOL.GS.Keeps.Banner");
+			var filterTemplateID = DB.Column(nameof(DBKeepPosition.TemplateID)).IsEqualTo(guard.TemplateID);
+			var filterComponentSkin = DB.Column(nameof(DBKeepPosition.ComponentSkin)).IsEqualTo(guard.Component.Skin);
+			var filterHeight = DB.Column(nameof(DBKeepPosition.Height)).IsLessOrEqualTo(guard.Component.Height);
 			return DOLDB<DBKeepPosition>.SelectObjects(filterClassType.And(filterTemplateID).And(filterComponentSkin).And(filterHeight))
 				.OrderByDescending(it => it.Height).FirstOrDefault();
 		}
@@ -56,10 +56,10 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepBanner b)
 		{
-			var filterClassType = DB.Column("ClassType").IsNotEqualTo("DOL.GS.Keeps.Banner");
-			var filterTemplateID = DB.Column("TemplateID").IsEqualTo(b.TemplateID);
-			var filterComponentSkin = DB.Column("ComponentSkin").IsEqualTo(b.Component.Skin);
-			var filterHeight = DB.Column("Height").IsLessOrEqualTo(b.Component.Height);
+			var filterClassType = DB.Column(nameof( DBKeepPosition.ClassType ) ).IsNotEqualTo("DOL.GS.Keeps.Banner");
+			var filterTemplateID = DB.Column(nameof(DBKeepPosition.TemplateID)).IsEqualTo(b.TemplateID);
+			var filterComponentSkin = DB.Column(nameof(DBKeepPosition.ComponentSkin)).IsEqualTo(b.Component.Skin);
+			var filterHeight = DB.Column(nameof(DBKeepPosition.Height)).IsLessOrEqualTo(b.Component.Height);
 			return DOLDB<DBKeepPosition>.SelectObjects(filterClassType.And(filterTemplateID).And(filterComponentSkin).And(filterHeight))
 				.OrderByDescending(it => it.Height).FirstOrDefault();
 		}
@@ -71,9 +71,9 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetPosition(GameKeepGuard guard)
 		{
-			var filterTemplateID = DB.Column("TemplateID").IsEqualTo(guard.TemplateID);
-			var filterComponentSkin = DB.Column("ComponentSkin").IsEqualTo(guard.Component.Skin);
-			var filterHeight = DB.Column("Height").IsLessOrEqualTo(guard.Component.Height);
+			var filterTemplateID = DB.Column(nameof(DBKeepPosition.TemplateID)).IsEqualTo(guard.TemplateID);
+			var filterComponentSkin = DB.Column(nameof(DBKeepPosition.ComponentSkin)).IsEqualTo(guard.Component.Skin);
+			var filterHeight = DB.Column(nameof(DBKeepPosition.Height)).IsLessOrEqualTo(guard.Component.Height);
 			return DOLDB<DBKeepPosition>.SelectObject(filterTemplateID.And(filterComponentSkin).And(filterHeight));
 		}
 
@@ -322,7 +322,7 @@ namespace DOL.GS.Keeps
 		{
 			SortedList sorted = new SortedList();
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			var dbpath = DOLDB<DBPath>.SelectObject(DB.Column("PathID").IsEqualTo(pathID));
+			var dbpath = DOLDB<DBPath>.SelectObject(DB.Column(nameof(DBPath.PathID)).IsEqualTo(pathID));
 			IList<DBPathPoint> pathpoints = null;
 			ePathType pathType = ePathType.Once;
 
@@ -332,7 +332,7 @@ namespace DOL.GS.Keeps
 			}
 			if (pathpoints == null)
 			{
-				pathpoints = DOLDB<DBPathPoint>.SelectObjects(DB.Column("PathID").IsEqualTo(pathID));
+				pathpoints = DOLDB<DBPathPoint>.SelectObjects(DB.Column(nameof(DBPathPoint.PathID)).IsEqualTo(pathID));
 			}
 
 			foreach (DBPathPoint point in pathpoints)
@@ -380,7 +380,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			GameServer.Database.DeleteObject(DOLDB<DBPath>.SelectObjects(DB.Column("PathID").IsEqualTo(pathID)));
+			GameServer.Database.DeleteObject(DOLDB<DBPath>.SelectObjects(DB.Column(nameof(DBPath.PathID)).IsEqualTo(pathID)));
 			PathPoint root = MovementMgr.FindFirstPathPoint(path);
 
 			//Set the current pathpoint to the rootpoint!

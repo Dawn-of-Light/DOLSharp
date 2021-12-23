@@ -128,7 +128,7 @@ namespace DOL.GS.Housing
 		public static string LoadHousingForRegion(ushort regionID)
 		{
 			string result = "";
-			var regionHousing = DOLDB<DBHouse>.SelectObjects(DB.Column("RegionID").IsEqualTo(regionID));
+			var regionHousing = DOLDB<DBHouse>.SelectObjects(DB.Column(nameof(DBHouse.RegionID)).IsEqualTo(regionID));
 
 			if (regionHousing == null || regionHousing.Count == 0)
 				return "No housing found for region.";
@@ -406,7 +406,7 @@ namespace DOL.GS.Housing
 			}
 
 			// if there is a consignment merchant, we have to re-initialize since we changed the house
-			var merchant = DOLDB<HouseConsignmentMerchant>.SelectObject(DB.Column("HouseNumber").IsEqualTo(house.HouseNumber));
+			var merchant = DOLDB<HouseConsignmentMerchant>.SelectObject(DB.Column(nameof(HouseConsignmentMerchant.HouseNumber)).IsEqualTo(house.HouseNumber));
 			long oldMerchantMoney = 0;
 			if (merchant != null)
 			{
@@ -482,15 +482,15 @@ namespace DOL.GS.Housing
 		{
 			house.RemoveConsignmentMerchant();
 
-			IList<DBHouseIndoorItem> iobjs = DOLDB<DBHouseIndoorItem>.SelectObjects(DB.Column("HouseNumber").IsEqualTo(house.HouseNumber));
+			IList<DBHouseIndoorItem> iobjs = DOLDB<DBHouseIndoorItem>.SelectObjects(DB.Column(nameof(DBHouseIndoorItem.HouseNumber)).IsEqualTo(house.HouseNumber));
 			GameServer.Database.DeleteObject(iobjs);
 			house.IndoorItems.Clear();
 
-			IList<DBHouseOutdoorItem> oobjs = DOLDB<DBHouseOutdoorItem>.SelectObjects(DB.Column("HouseNumber").IsEqualTo(house.HouseNumber));
+			IList<DBHouseOutdoorItem> oobjs = DOLDB<DBHouseOutdoorItem>.SelectObjects(DB.Column(nameof(DBHouseOutdoorItem.HouseNumber)).IsEqualTo(house.HouseNumber));
 			GameServer.Database.DeleteObject(oobjs);
 			house.OutdoorItems.Clear();
 
-			IList<DBHouseHookpointItem> hpobjs = DOLDB<DBHouseHookpointItem>.SelectObjects(DB.Column("HouseNumber").IsEqualTo(house.HouseNumber));
+			IList<DBHouseHookpointItem> hpobjs = DOLDB<DBHouseHookpointItem>.SelectObjects(DB.Column(nameof(DBHouseHookpointItem.HouseNumber)).IsEqualTo(house.HouseNumber));
 			GameServer.Database.DeleteObject(hpobjs);
 
 			foreach (DBHouseHookpointItem item in house.HousepointItems.Values)
@@ -518,11 +518,11 @@ namespace DOL.GS.Housing
 			house.DatabaseItem.GuildHouse = false;
 			house.DatabaseItem.GuildName = null;
 
-			IList<DBHousePermissions> pobjs = DOLDB<DBHousePermissions>.SelectObjects(DB.Column("HouseNumber").IsEqualTo(house.HouseNumber));
+			IList<DBHousePermissions> pobjs = DOLDB<DBHousePermissions>.SelectObjects(DB.Column(nameof(DBHousePermissions.HouseNumber)).IsEqualTo(house.HouseNumber));
 			GameServer.Database.DeleteObject(pobjs);
 			house.PermissionLevels.Clear();
 
-			IList<DBHouseCharsXPerms> cpobjs = DOLDB<DBHouseCharsXPerms>.SelectObjects(DB.Column("HouseNumber").IsEqualTo(house.HouseNumber));
+			IList<DBHouseCharsXPerms> cpobjs = DOLDB<DBHouseCharsXPerms>.SelectObjects(DB.Column(nameof(DBHouseCharsXPerms.HouseNumber)).IsEqualTo(house.HouseNumber));
 			GameServer.Database.DeleteObject(cpobjs);
 			house.CharXPermissions.Clear();
 		}

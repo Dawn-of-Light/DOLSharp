@@ -112,8 +112,8 @@ namespace DOL.GS
                 return;
 
             Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
-            var staticObjs = DOLDB<WorldObject>.SelectObjects(DB.Column("Region").IsEqualTo(Skin));
-            var areaObjs = DOLDB<DBArea>.SelectObjects(DB.Column("Region").IsEqualTo(Skin));            
+            var staticObjs = DOLDB<WorldObject>.SelectObjects(DB.Column(nameof(WorldObject.Region)).IsEqualTo(Skin));
+            var areaObjs = DOLDB<DBArea>.SelectObjects(DB.Column(nameof(DBArea.Region)).IsEqualTo(Skin));            
             
             int count = mobObjs.Length + staticObjs.Count;
             if (count > 0) PreAllocateRegionSpace(count + 100);

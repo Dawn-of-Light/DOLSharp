@@ -92,7 +92,7 @@ namespace DOL.GS.Commands
 			string line = string.Join(" ", args, 1, args.Length - 2);
 			line = GameServer.Database.Escape(line);
 
-			var dbSpec = DOLDB<DBSpecialization>.SelectObject(DB.Column("KeyName").IsLike($"{line}%"));
+			var dbSpec = DOLDB<DBSpecialization>.SelectObject(DB.Column(nameof(DBSpecialization.KeyName)).IsLike($"{line}%"));
 
 			Specialization spec = null;
 

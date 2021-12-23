@@ -633,7 +633,7 @@ namespace DOL.Database
 			}
 		}
 		
-		[Relation(LocalField = "SpellID", RemoteField = "SpellID", AutoLoad = true, AutoDelete=true)]
+		[Relation(LocalField = nameof( SpellID ), RemoteField = nameof( DBSpellXCustomValues.SpellID ), AutoLoad = true, AutoDelete=true)]
 		public DBSpellXCustomValues[] CustomValues;
 	}
 	

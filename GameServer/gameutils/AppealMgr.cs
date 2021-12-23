@@ -178,13 +178,13 @@ namespace DOL.GS.Appeal
 
 		public static DBAppeal GetAppealByPlayerName(string name)
 		{
-			DBAppeal appeal = DOLDB<DBAppeal>.SelectObject(DB.Column("Name").IsEqualTo(name));
+			DBAppeal appeal = DOLDB<DBAppeal>.SelectObject(DB.Column(nameof(DBAppeal.Name)).IsEqualTo(name));
 			return appeal;
 		}
 
 		public static DBAppeal GetAppealByAccountName(string name)
 		{
-			DBAppeal appeal = DOLDB<DBAppeal>.SelectObject(DB.Column("Account").IsEqualTo(name));
+			DBAppeal appeal = DOLDB<DBAppeal>.SelectObject(DB.Column(nameof(DBAppeal.Account)).IsEqualTo(name));
 			return appeal;
 		}
 

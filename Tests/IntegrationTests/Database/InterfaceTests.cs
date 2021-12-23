@@ -898,25 +898,25 @@ namespace DOL.Integration.Database
 			
 			Assert.IsNotEmpty(allobjects, "Select Objects Test Need some Data to be Accurate...");
 			
-			var simpleWhere = Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(objInitial.TestField));
+			var simpleWhere = Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsEqualTo(objInitial.TestField));
 			
 			CollectionAssert.Contains(simpleWhere.Select(obj => obj.ObjectId), objInitial.ObjectId, "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
 
-			var complexWhere = Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(objInitial.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(objInitial.ObjectId)));
+			var complexWhere = Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsEqualTo(objInitial.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(objInitial.ObjectId)));
 			
 			CollectionAssert.Contains(complexWhere.Select(obj => obj.ObjectId.ToLower()), objInitial.ObjectId.ToLower(), "Select Objects with Complex Where clause should retrieve Object similar to Created one...");
 
-			Assert.IsTrue(Database.DeleteObject(Database.SelectObjects<TestTable>(DB.Column("TestField").IsNull())));
+			Assert.IsTrue(Database.DeleteObject(Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsNull())));
 			var objNull = new TestTable { TestField = null };
 			var nullAdd = Database.AddObject(objNull);
 			
 			Assert.IsTrue(nullAdd, "Select Objects null parameter Test Need some null object to be Accurate...");
 
-			var nullParam = Database.SelectObjects<TestTable>(DB.Column("TestField").IsEqualTo(null));
+			var nullParam = Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsEqualTo(null));
 			
 			CollectionAssert.IsEmpty(nullParam, "Select Objects with Null Parameter Query should not return any record...");
 
-			var resultsWithTestfieldNull = Database.SelectObjects<TestTable>(DB.Column("TestField").IsNull());
+			var resultsWithTestfieldNull = Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsNull());
 			var allObjectsAfter = Database.SelectAllObjects<TestTable>();
 
 			Assert.AreEqual(1, resultsWithTestfieldNull.Count);
@@ -929,7 +929,7 @@ namespace DOL.Integration.Database
 			var firstEntry = new SqlKeywordTable { Type = "SomeText" };
 			Database.AddObject(firstEntry);
 
-			var result = Database.SelectObjects<SqlKeywordTable>(DB.Column("Type").IsEqualTo(firstEntry.Type));
+			var result = Database.SelectObjects<SqlKeywordTable>(DB.Column(nameof(SqlKeywordTable.Type)).IsEqualTo(firstEntry.Type));
 
 			CollectionAssert.Contains(result.Select(obj => obj.ObjectId), firstEntry.ObjectId, "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
 		}
@@ -954,7 +954,7 @@ namespace DOL.Integration.Database
 			Assert.IsTrue(added, "TestTable Objects should be added successfully...");
 
 			var parameters = new[] { "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" };
-			var retrieve = Database.MultipleSelectObjects<TestTable>(parameters.Select(parameter => DB.Column("TestField").IsEqualTo(parameter)));
+			var retrieve = Database.MultipleSelectObjects<TestTable>(parameters.Select(parameter => DB.Column(nameof(TestTable.TestField)).IsEqualTo(parameter)));
 
 			var objectByGroup = new []{ "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" }
 			.Select((grp, index) => new { Grp = grp, Objects = retrieve.ElementAt(index) });
@@ -973,7 +973,7 @@ namespace DOL.Integration.Database
 			}
 
 			var orderedObjs = objs.SelectMany(obj => obj.Value).ToArray();
-			var retrieveMany = Database.MultipleSelectObjects<TestTable>(orderedObjs.Select(obj => DB.Column("TestField").IsEqualTo(obj.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(obj.ObjectId))));
+			var retrieveMany = Database.MultipleSelectObjects<TestTable>(orderedObjs.Select(obj => DB.Column(nameof(TestTable.TestField)).IsEqualTo(obj.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(obj.ObjectId))));
 			
 			Assert.IsNotNull(retrieveMany, "Retrieve Sets from Select Objects should not return null value...");
 			Assert.IsNotEmpty(retrieveMany, "Retrieve Set from Select Objects should not be Empty...");
@@ -986,7 +986,7 @@ namespace DOL.Integration.Database
 
 			var parameterManyWithMissing = new [] { ("No Known Value", "Probably Nothing"),("Absolutely None","Nothing for Sure")}
 			.Concat(orderedObjs.Select(obj => (obj.TestField, obj.ObjectId)));
-			var manyQueriesWithMissing = parameterManyWithMissing.Select(tuple => DB.Column("TestField").IsEqualTo(tuple.Item1).And(DB.Column("Test_Table_ID").IsEqualTo(tuple.Item2)));
+			var manyQueriesWithMissing = parameterManyWithMissing.Select(tuple => DB.Column(nameof(TestTable.TestField)).IsEqualTo(tuple.Item1).And(DB.Column("Test_Table_ID").IsEqualTo(tuple.Item2)));
 			var retrieveManyWithMissing = Database.MultipleSelectObjects<TestTable>(manyQueriesWithMissing);
 			
 			Assert.IsNotNull(retrieveManyWithMissing, "Retrieve Sets from Select Objects should not return null value...");

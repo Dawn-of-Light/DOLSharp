@@ -311,7 +311,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								// check for account bombing
 								TimeSpan ts;
-								var allAccByIp = DOLDB<Account>.SelectObjects(DB.Column("LastLoginIP").IsEqualTo(ipAddress));
+								var allAccByIp = DOLDB<Account>.SelectObjects(DB.Column(nameof(Account.LastLoginIP)).IsEqualTo(ipAddress));
 								int totalacc = 0;
 								foreach (Account ac in allAccByIp)
 								{

@@ -72,9 +72,9 @@ namespace DOL.GS
 				//we can see all captures
 				IList<DBNews> newsList;
 				if (type > 0)
-					newsList = DOLDB<DBNews>.SelectObjects(DB.Column("Type").IsEqualTo(type).And(DB.Column("Realm").IsEqualTo(0).Or(DB.Column("Realm").IsEqualTo(realm))));
+					newsList = DOLDB<DBNews>.SelectObjects(DB.Column(nameof(DBNews.Type)).IsEqualTo(type).And(DB.Column(nameof(DBNews.Realm)).IsEqualTo(0).Or(DB.Column(nameof(DBNews.Realm)).IsEqualTo(realm))));
 				else
-					newsList = DOLDB<DBNews>.SelectObjects(DB.Column("Type").IsEqualTo(type));
+					newsList = DOLDB<DBNews>.SelectObjects(DB.Column(nameof(DBNews.Type)).IsEqualTo(type));
 
 				newsList = newsList.OrderByDescending(it => it.CreationDate).Take(5).ToArray();
 				int n = newsList.Count;

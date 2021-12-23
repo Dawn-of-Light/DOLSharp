@@ -114,7 +114,7 @@ namespace DOL.GS
 
 				if (player.CurrentRegionID == throneRegionID)
 				{
-					teleport = DOLDB<Teleport>.SelectObject(DB.Column("TeleportID").IsEqualTo(teleportExitID));
+					teleport = DOLDB<Teleport>.SelectObject(DB.Column(nameof(Teleport.TeleportID)).IsEqualTo(teleportExitID));
 					if (teleport == null)
 					{
 						log.ErrorFormat("Can't find throne room exit TeleportID {0}!", teleportExitID);
@@ -124,7 +124,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					teleport = DOLDB<Teleport>.SelectObject(DB.Column("TeleportID").IsEqualTo(teleportThroneID));
+					teleport = DOLDB<Teleport>.SelectObject(DB.Column(nameof(Teleport.TeleportID)).IsEqualTo(teleportThroneID));
 					if (teleport == null)
 					{
 						log.ErrorFormat("Can't find throne room TeleportID {0}!", teleportThroneID);

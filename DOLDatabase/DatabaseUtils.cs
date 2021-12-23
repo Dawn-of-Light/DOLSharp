@@ -45,7 +45,7 @@ namespace DOL.Database
 			
 			var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null
 			                                                      && !bind.PrimaryKey.AutoIncrement
-			                                                      && !bind.ColumnName.Equals(string.Format("{0}_ID", tableHandler.TableName), StringComparison.OrdinalIgnoreCase))
+			                                                      && !bind.ColumnName.Equals(tableHandler.PrimaryKeyColumnName, StringComparison.OrdinalIgnoreCase))
 				.ToArray();
 			
 			return new [] { primary }.Concat(uniques).ToArray();

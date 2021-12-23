@@ -76,7 +76,11 @@ namespace DOL.Database
 		/// Retrieve Multiple Primary Key Binding (Future Support)
 		/// </summary>
 		public ElementBinding[] PrimaryKeys { get { return Table.PrimaryKey.Select(col => ElementBindings.FirstOrDefault(bind => bind.ColumnName.Equals(col.ColumnName, StringComparison.OrdinalIgnoreCase))).ToArray(); } }
-		
+		/// <summary>
+		/// Helper to retrieve the name of the automatic primary key associated with this table
+		/// </summary>
+		public string PrimaryKeyColumnName => $"{TableName}_ID";
+
 		/// <summary>
 		/// Create new instance of <see cref="DataTableHandler"/>
 		/// </summary>
@@ -108,13 +112,13 @@ namespace DOL.Database
 					ElementBindings = ElementBindings.Concat(new [] {
 					                                         	new ElementBinding(ObjectType.GetProperty("ObjectId"),
 					                                         	                   new DataElement(){ Unique = true },
-					                                         	                   string.Format("{0}_ID", TableName))
+																				   PrimaryKeyColumnName)
 					                                         }).ToArray();
 				else if (FieldElementBindings.All(bind => bind.PrimaryKey == null))
 					ElementBindings = ElementBindings.Concat(new [] {
 					                                         	new ElementBinding(ObjectType.GetProperty("ObjectId"),
 					                                         	                   new PrimaryKey(),
-					                                         	                   string.Format("{0}_ID", TableName))
+																				   PrimaryKeyColumnName)
 					                                         }).ToArray();
 			}
 			

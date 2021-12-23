@@ -94,13 +94,13 @@ namespace DOL.Database
 		/// <summary>
 		/// Guild leader of alliance
 		/// </summary>
-		[Relation(LocalField = "LeaderGuildID", RemoteField = "GuildID", AutoLoad = true, AutoDelete = false)]
+		[Relation(LocalField = nameof( LeaderGuildID ), RemoteField = nameof( DBGuild.GuildID ), AutoLoad = true, AutoDelete = false)]
 		public DBGuild DBguildleader;
 
 		/// <summary>
 		/// All guild in this alliance
 		/// </summary>
-		[Relation(LocalField = "GuildAlliance_ID", RemoteField = "AllianceID", AutoLoad = true, AutoDelete = false)]
+		[Relation(LocalField = "GuildAlliance_ID", RemoteField = nameof( DBGuild.AllianceID ), AutoLoad = true, AutoDelete = false)]
 		public DBGuild[] DBguilds;
 	}
 }

@@ -68,8 +68,8 @@ namespace DOL.GS
 					// If we cache ALL items them all vault code must make sure to update cache, which is not ideal
 					// in addition, a player with a housing vault may still have an item in cache that may have been
 					// removed by another player with the appropriate house permission.  - Tolakram
-					var filterBySlot = DB.Column("SlotPosition").IsLessOrEqualTo((int)eInventorySlot.LastVault).Or(DB.Column("SlotPosition").IsGreaterOrEqualTo(500).And(DB.Column("SlotPosition").IsLessThan(600)));
-					var items = DOLDB<InventoryItem>.SelectObjects(DB.Column("OwnerID").IsEqualTo(inventoryID).And(filterBySlot));
+					var filterBySlot = DB.Column(nameof(InventoryItem.SlotPosition)).IsLessOrEqualTo((int)eInventorySlot.LastVault).Or(DB.Column(nameof(InventoryItem.SlotPosition)).IsGreaterOrEqualTo(500).And(DB.Column(nameof(InventoryItem.SlotPosition)).IsLessThan(600)));
+					var items = DOLDB<InventoryItem>.SelectObjects(DB.Column(nameof(InventoryItem.OwnerID)).IsEqualTo(inventoryID).And(filterBySlot));
 
 					foreach (InventoryItem item in items)
 					{
