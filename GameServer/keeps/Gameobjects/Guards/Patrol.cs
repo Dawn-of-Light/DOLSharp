@@ -81,7 +81,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void InitialiseGuards()
 		{
-			Component.Keep.Patrols.Add(PatrolID, this);
+			Component.Keep.Patrols[PatrolID] = this;
 
 			//need this here becuase it's checked in add to world
 			PatrolPath = PositionMgr.LoadPatrolPath(PatrolID, Component);
