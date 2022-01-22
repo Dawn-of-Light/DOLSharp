@@ -33,29 +33,30 @@ namespace DOL.GS.Delve
 
 		public SpellDelve(Spell spell)
 		{
-			spellHandler = ScriptMgr.CreateSpellHandler(GamePlayer.CreateDummy(), spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 			DelveType = "Spell";
-			Index = unchecked((short)spellHandler.Spell.InternalID);
+			Index = unchecked((short)spell.InternalID);
+			spellHandler = ScriptMgr.CreateSpellHandler(GamePlayer.CreateDummy(), spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 		}
-
 
         public SpellDelve(Spell spell, GameClient client) : this(spell)
         {
-            int level = Spell.Level;
-            int spellID = Spell.ID;
-
-            foreach (SpellLine line in client.Player.GetSpellLines())
-            {
-                Spell s = SkillBase.GetSpellList(line.KeyName).Where(o => o.ID == spellID).FirstOrDefault();
-                if (s != null)
-                {
-                    level = s.Level;
-                    break;
-                }
-            }
-            Spell.Level = level;
+			if (spellHandler != null)
+			{
+				int level = Spell.Level;
+				foreach (SpellLine line in client.Player.GetSpellLines())
+				{
+					Spell s = SkillBase.GetSpellList(line.KeyName).Where(o => o.ID == spell.ID).FirstOrDefault();
+					if (s != null)
+					{
+						level = s.Level;
+						break;
+					}
+				}
+				Spell.Level = level;
+			}
 
         }
+
         public override ClientDelve GetClientDelve()
 		{
 			if (spellHandler == null) return NotFoundClientDelve;
