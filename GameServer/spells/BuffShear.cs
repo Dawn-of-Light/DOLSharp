@@ -324,5 +324,8 @@ namespace DOL.GS.Spells
 			typeof(EnduranceRegenSpellHandler),typeof(DamageAddSpellHandler),typeof(DamageShieldSpellHandler) };
 		// constructor
 		public RandomBuffShear(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-	}
+
+        public override string ShortDescription 
+			=> "Randomly strips one beneficial spell effect from the target.";
+    }
 }
