@@ -106,45 +106,19 @@ RUN set -ex; \
 
 FROM --platform=$BUILDPLATFORM download_stage as EveOfDarkness_build_stage
 
-COPY --from=database_init_stage /dawn-of-light/dol.sqlite3.db /dol.sqlite3.db
-
 RUN set -ex; \
     # Set Constants
-    DOL_DB_DOWNLOAD="https://github.com/Eve-of-Darkness/db-public/archive/master.zip"; \
+    DB_PUBLIC_API_URL="https://api.github.com/repos/Eve-of-Darkness/db-public/releases/latest"; \
+    DB_PUBLIC_DOWNLOAD_URL=$(curl -s "$DB_PUBLIC_API_URL" |  jq -r ".assets[] | select(.name|startswith(\"public-db.sqlite\")) | .browser_download_url"); \
     DOL_DB_FILE="/dol.sqlite3.db"; \
     # Install Build Dependencies
     apk add --no-cache --update \
-        sqlite; \
+        sqlite p7zip; \
     # Get DOL Database
-    curl -L -o /db.zip "$DOL_DB_DOWNLOAD"; \
-    unzip /db.zip -d /db; \
-    # Clean Up existing Tables
-    echo 'DELETE FROM AutoXMLUpdate; \
-          DELETE FROM ItemTemplate; \
-          DELETE FROM NpcTemplate; \
-          DELETE FROM Mob; \
-          DELETE FROM Regions; \
-          DELETE FROM StartupLocation; \
-          DELETE FROM Zones;' | sqlite3 "$DOL_DB_FILE"; \
+    curl -L -o /db.zip "$DB_PUBLIC_DOWNLOAD_URL"; \
+    7z x /db.zip -o/db; \
     # Insert database content
-    for json in "/db/db-public-master/src/data/"*.json; do \
-        echo "Inserting $json"; \
-        # Filtering LineXSpell records
-        if [ "$(basename "$json")" = "LineXSpell.json" ]; then \
-            jq 'del(.[].PackageID)' "$json" > "$json".tmp; \
-            mv -f "$json".tmp "$json"; \
-        fi; \
-        # Building Insert Query
-        jq --raw-output '(.[0] | keys) as $fields | \
-        (input_filename | gsub(".*/"; "") | gsub("(\\.[0-9]+)?\\.json"; ""; "i")) as $tablename | \
-        ($fields | map("`" + . +"`") | join(", ")) as $cols | \
-        (map( [.[$fields[]]] | map(if . == null then "null" else "'"'"'" + (. | tostring | gsub("'"'"'"; "'"''"'"; "g")) + "'"'"'" end) | "(" + (. | join(", "))+ ")" ) | join(",\n    ")) as $tuples | \
-        "PRAGMA synchronous=OFF; PRAGMA journal_mode=MEMORY; BEGIN TRANSACTION;\nINSERT INTO `" + $tablename + "`\n" + \
-        "    (" + $cols + ")\n" + \
-        "VALUES\n    " + $tuples + ";\n" + \
-        "COMMIT;"' \
-        "$json" | sqlite3 "$DOL_DB_FILE"; \
-    done; \
+    sqlite3 "$DOL_DB_FILE" < /db/public-db.sqlite.sql; \
     # Set Server Properties
     echo 'UPDATE `ServerProperty` SET `Value` = "Welcome to the Administrator Sandbox Dark Age of Camelot Shard - This Server is meant for testing and experimenting Admin Commands" WHERE `Key` = "starting_msg"' | sqlite3 "$DOL_DB_FILE"; \
     echo 'UPDATE `ServerProperty` SET `Value` = "The Server Database is reset twice a day, feel free to edit or test anything you want !" WHERE `Key` = "motd"' | sqlite3 "$DOL_DB_FILE"; \
