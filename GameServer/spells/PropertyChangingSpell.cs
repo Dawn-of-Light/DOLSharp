@@ -350,8 +350,12 @@ namespace DOL.GS.Spells
 			{eProperty.Quickness, "Quickness" },
 			{eProperty.Acuity, "Acuity" },
 			{eProperty.ArmorFactor, "Armor Factor (AF)" },
-			{eProperty.ArmorAbsorption, "Absorption (ABS)" },
+			{eProperty.ArmorAbsorption, "melee absorption" },
 			{eProperty.WeaponSkill, "Weaponskill" },
+			{eProperty.MissHit, "Chance to Miss" },
+			{eProperty.FatigueConsumption, "fatigue effectiveness" },
+			{eProperty.CastingSpeed, "casting speed" },
+			{eProperty.ToHitBonus, "chance to hit" },
 
 			{eProperty.Resist_Slash, "Slash" },
 			{eProperty.Resist_Crush, "Crush" },
