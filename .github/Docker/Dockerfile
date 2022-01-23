@@ -94,16 +94,6 @@ WORKDIR /dawn-of-light
 CMD [ "/entrypoint.sh", "dotnet", "DOLServer.dll" ]
 
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime:6.0 as database_init_stage
-
-COPY --from=download_stage /dawn-of-light-dotnet /dawn-of-light
-
-RUN set -ex; \
-    mkdir -p /dawn-of-light/config /dawn-of-light/database; \
-    cd /dawn-of-light; \
-    echo exit | dotnet DOLServer.dll;
-
-
 FROM --platform=$BUILDPLATFORM download_stage as EveOfDarkness_build_stage
 
 RUN set -ex; \
