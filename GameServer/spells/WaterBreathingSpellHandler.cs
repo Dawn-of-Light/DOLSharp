@@ -84,5 +84,8 @@ namespace DOL.GS.Spells
 			}
 			return base.OnEffectExpires(effect, noMessages);
 		}
-	}
+
+        public override string ShortDescription 
+			=> $"The target can breathe underwater and move at {Spell.Value}% of normal land speed.";
+    }
 }
