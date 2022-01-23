@@ -57,6 +57,9 @@ namespace DOL.GS.Spells
         }
 
         public UnmakeCrystalseedSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Destroys the targeted rune, and any runes immediately nearby.";
     }
     #endregion
 
@@ -113,6 +116,9 @@ namespace DOL.GS.Spells
                 merchant.TradeItems = new MerchantTradeItems("ML_transmuteritems");
             }
         }
+
+        public override string ShortDescription 
+            => "Summon a vendor to sell to and buy basic supplies.";
     }
     #endregion
 
@@ -145,6 +151,9 @@ namespace DOL.GS.Spells
                 }
             }
         }
+
+        public override string ShortDescription 
+            => "Teleport to your world bindpoint. This spell will fail if you are in combat or in an RvR zone.";
     }
     #endregion
 
@@ -332,6 +341,10 @@ namespace DOL.GS.Spells
         }
 
         public FZSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Targeted summon that picks up the selected enemy player and carries them in a random direction. " +
+            "The zephyred player is immune to damage for the duration. Once zephyred, a player cannot be zephyred again for 1 minute.";
     }
     #endregion
 
@@ -401,6 +414,9 @@ namespace DOL.GS.Spells
 
         // constructor
         public PhaseshiftHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Self buff that provides nigh-invulnerability to spells and melee for a short duration.";
     }
     #endregion
 
@@ -464,6 +480,9 @@ namespace DOL.GS.Spells
                 player.Out.SendMessage("You are not a part of a group!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
         }
+
+        public override string ShortDescription 
+            => "Teleport your group to your world bindpoint. If any group member is in combat, this spell will fail.";
     }
     #endregion
 }
