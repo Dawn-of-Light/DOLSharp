@@ -36,6 +36,9 @@ namespace DOL.GS.Spells
                 }
 			}
 		}
+
+		public override string ShortDescription 
+			=> "Summon boards of wood usable for repairing keep doors.";
 	}
 	#endregion
 
@@ -87,7 +90,10 @@ namespace DOL.GS.Spells
 			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
 			heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
 		}
-	}
+
+        public override string ShortDescription 
+			=> "Ground targeted ward that can make enemy stealthers visible, without removing their stealth.";
+    }
 	[SpellHandlerAttribute("Prescience")]
 	public class PrescienceSpellHandler : SpellHandler
 	{
@@ -112,7 +118,9 @@ namespace DOL.GS.Spells
 		}
 
 		public PrescienceSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-	}
+
+        public override string ShortDescription => "You have been detected by a Prescience Node!";
+    }
 	#endregion
 
 	//no shared timer
@@ -160,7 +168,10 @@ namespace DOL.GS.Spells
 			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
 			trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
 		}
-	}
+
+        public override string ShortDescription 
+			=> "Rune that drains power from realm enemies when it detonates. This ability only works against enemy realm players.";
+    }
 	#endregion
 
 	//no shared timer
@@ -233,7 +244,9 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect, noMessages);
 		}
 		public SpeedWrapSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-	}
+
+        public override string ShortDescription => "Ward that negates the effects of speed boosts for enemies who pass through it.";
+    }
 	#endregion
 
 	//shared timer 1
@@ -269,7 +282,10 @@ namespace DOL.GS.Spells
 
 			}
 		}
-	}
+
+        public override string ShortDescription 
+			=> "Summon a powerful piece of siege ammunition.";
+    }
 	#endregion
 
 	//shared timer 1
@@ -393,6 +409,9 @@ namespace DOL.GS.Spells
 			warder.GuildName = "";
 			warder.Size = 50;
 		}
+
+		public override string ShortDescription
+			=> "Ground targeted summon which has great power, but neither it nor you can move for the duration. This spell works only against enemy players, pets and guards and requires LOS to the ground target to use.";
 	}
 	#endregion
 
@@ -441,7 +460,10 @@ namespace DOL.GS.Spells
 			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
 			trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
 		}
-	}
+
+        public override string ShortDescription 
+			=> "Rune that does essence damage to the enemy when it detonates.";
+    }
 	#endregion
 
 	//no shared timer
@@ -539,7 +561,10 @@ namespace DOL.GS.Spells
 			}
 			return base.OnEffectExpires(effect, noMessages);
 		}
-	}
+
+        public override string ShortDescription 
+			=> "Summon a guardian who will intercept incoming melee attacks for you.";
+    }
 	#endregion
 
 	//no shared timer
@@ -601,7 +626,10 @@ namespace DOL.GS.Spells
 		{
 			m_player = caster as GamePlayer;
 		}
-	}
+
+        public override string ShortDescription 
+			=> "Boosts effective level of pets to determine enemy damage variance for spells and melee";
+    }
 	#endregion
 
 
@@ -746,6 +774,9 @@ namespace DOL.GS.Spells
 		{
 			return 0;
 		}
+
+		public override string ShortDescription
+		   => "Ground targeted summon that has to grow to full strength before pummeling enemies. ";
 	}
 	#endregion
 }

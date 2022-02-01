@@ -162,6 +162,9 @@ namespace DOL.GS.Spells
         }
 
         public VacuumVortexSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Ground targeted effect that pushes any storms near the ground target directly away from that point.";
     }
     #endregion
 
@@ -246,6 +249,9 @@ namespace DOL.GS.Spells
         {
             return 0;
         }
+
+        public override string ShortDescription 
+            => "Storm that drains fatigue from enemies who stand inside it.";
     }
     #endregion
 
@@ -433,6 +439,9 @@ namespace DOL.GS.Spells
             effect.Owner.EffectList.Remove(effect);
             return base.OnEffectExpires(effect, noMessages);
         }
+
+        public override string ShortDescription 
+            => "Storm that drains power from enemies who stand inside it.";
     }
 
     #endregion
@@ -483,6 +492,9 @@ namespace DOL.GS.Spells
             }
         }
         public FocusingWindsSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Cast on a friendly storm, focusing on it to hold it in place.";
     }
     #endregion
 
@@ -620,19 +632,7 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("StormAcuityDebuff")]
     public class StormAcuityDebuff : SingleStatDebuff
     {
-        public override eProperty Property1
-        {
-
-            get
-            {
-                eProperty temp = eProperty.Acuity;
-                if (m_spellTarget.Realm == eRealm.Albion) temp = eProperty.Intelligence;
-                if (m_spellTarget.Realm == eRealm.Midgard) temp = eProperty.Piety;
-                if (m_spellTarget.Realm == eRealm.Hibernia) temp = eProperty.Intelligence;
-
-                return temp;
-            }
-        }
+        public override eProperty Property1 => eProperty.Acuity;
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
@@ -711,10 +711,6 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("StormEnergyTempest")]
     public class StormEnergyTempest : SpellHandler
     {
-        /// <summary>
-        /// Calculates the base 100% spell damage which is then modified by damage variance factors
-        /// </summary>
-        /// <returns></returns>
         public override double CalculateDamageBase(GameLiving target)
         {
             GamePlayer player = Caster as GamePlayer;
@@ -775,8 +771,10 @@ namespace DOL.GS.Spells
             return 0;
         }
 
-        // constructor
         public StormEnergyTempest(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Storm that wracks the enemy with essence damage.";
     }
     #endregion
 

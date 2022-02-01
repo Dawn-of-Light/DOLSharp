@@ -117,5 +117,8 @@ namespace DOL.GS.spells
 			double factor = 1 + (double)intRandom / 100;
 			return factor;
 		}
-	}
+
+        public override string ShortDescription 
+			=> $"Target loses {Spell.Value}% power.";
+    }
 }

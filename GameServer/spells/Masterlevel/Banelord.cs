@@ -103,6 +103,12 @@ namespace DOL.GS.Spells
         {
             return 25;
         }
+
+        public override string ShortDescription 
+            => $"Point blank area effect shout that reduces the power/health/fatigue of enemies by {Spell.Value}% of their current value{AgonyTransmissionAddition}.";
+
+        private string AgonyTransmissionAddition
+            => Spell.Damage != 0 ? $", but costs the user {Spell.Damage}% of their own health" : "";
     }
     #endregion
 
@@ -147,6 +153,9 @@ namespace DOL.GS.Spells
             return base.OnEffectExpires(effect, noMessages);
         }
         public OppressionSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Point blank area effect shout that decreases enemies' max encumbrance.";
     }
     #endregion
 
@@ -330,6 +339,9 @@ namespace DOL.GS.Spells
             : base(caster, spell, line)
         {
         }
+
+        public override string ShortDescription 
+            => "Point blank area effect shout that snares nearby enemies, but stuns the user.";
     }
     #endregion
     #endregion
@@ -343,6 +355,9 @@ namespace DOL.GS.Spells
 
         // constructor
         public BLToHit(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Point blank area effect shout that makes it easier for nearby allies to hit enemies.";
     }
     #endregion
 
@@ -382,7 +397,8 @@ namespace DOL.GS.Spells
 
         public EffectivenessDeBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override string ShortDescription => $"Point blank area effect shout that reduces effective spec of enemies by {Spell.Value}% for determining variance for spell and melee damage.";
+        public override string ShortDescription 
+            => $"Point blank area effect shout that reduces effective spec of enemies by {Spell.Value}% for determining variance for spell and melee damage.";
     }
     #endregion
 
@@ -394,6 +410,9 @@ namespace DOL.GS.Spells
         public override eProperty Property1 { get { return eProperty.MeleeDamage; } }
 
         public BanespikeHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription
+            => "Point blank area effect shout that boosts damage of attacks from nearby allies.";
     }
     #endregion
 }

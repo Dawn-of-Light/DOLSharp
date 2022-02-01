@@ -114,6 +114,6 @@ namespace DOL.GS.Spells
 		public HoTSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 
         public override string ShortDescription 
-			=> $"The target regenerates {Spell.Value} health every {Spell.Frequency/10.0} sec.";
+			=> $"The target regenerates {Spell.Value} health every {Spell.Frequency/1000.0} sec.";
     }
 }

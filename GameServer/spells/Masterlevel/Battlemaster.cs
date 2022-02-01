@@ -39,6 +39,9 @@ namespace DOL.GS.Spells
 
             target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
         }
+
+        public override string ShortDescription 
+            => $"The target loses {Spell.Damage} endurance.";
     }
     #endregion
 
@@ -49,6 +52,9 @@ namespace DOL.GS.Spells
         public override eProperty Property1 { get { return eProperty.KeepDamage; } }
 
         public KeepDamageBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Increases damage against keep components.";
     }
     #endregion
 
@@ -75,6 +81,9 @@ namespace DOL.GS.Spells
 
             target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
         }
+
+        public override string ShortDescription 
+            => $"Target loses {Spell.Damage} power.";
     }
     #endregion
 
@@ -254,6 +263,9 @@ namespace DOL.GS.Spells
 
         // constructor
         public EssenceFlamesProcSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Buff that gives the subject a chance to gain bonus essence damage when attacking in melee combat.";
     }
     #endregion
 
@@ -620,7 +632,10 @@ namespace DOL.GS.Spells
             return ad;
         }
 		public ThrowWeaponSpellHandler(GameLiving caster,Spell spell,SpellLine line) : base(caster,spell,line) {}
-	}
+
+        public override string ShortDescription 
+            => "A ranged attack using melee damage formulas; cannot attack with normal melee for 10 seconds afterwards.";
+    }
 	#endregion
 
     //essence debuff
@@ -682,6 +697,9 @@ namespace DOL.GS.Spells
             }
         }
         public EssenceSearHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => $"Decreases the target's resistances to Essence damage by {Spell.Value}%.";
     }
     #endregion
 
@@ -709,6 +727,9 @@ namespace DOL.GS.Spells
             }
         }
         public BodyguardHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "You protect one group member from all melee attacks, however you cannot move.";
     }
     #endregion
 
@@ -776,6 +797,9 @@ namespace DOL.GS.Spells
             }
         }
         public EssenceDampenHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "PBAE effect that reduces the dexterity of enemy targets.";
     }
     #endregion
 

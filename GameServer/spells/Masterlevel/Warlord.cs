@@ -119,6 +119,12 @@ namespace DOL.GS.Spells
 
         // constructor
         public PBAEHealHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => Spell.DamageType == 0 ? ML2Description : ML8Description;
+
+        private string ML2Description => "Point blank area effect shout that heals allies' health, power and fatigue.";
+        private string ML8Description => "The target regains 1000 hit points.";
     }
     #endregion
 
@@ -144,6 +150,9 @@ namespace DOL.GS.Spells
         }
 
         public CoweringBellowSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Point blank area effect shout that sends enemy pets running. This spell works only against enemy realm monsters.";
     }
     #endregion
 
@@ -158,6 +167,9 @@ namespace DOL.GS.Spells
         public override eProperty Property2 { get { return eProperty.CriticalMeleeHitChance; } }
 
         public CriticalDamageBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => $"Point blank area effect shout that increases allies' chance of getting a critical hit on their next attack by {Spell.Value}%.";
     }
     #endregion  
        
@@ -174,6 +186,9 @@ namespace DOL.GS.Spells
         }
 
         public CleansingAurauraSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Point blank area effect shout which reduces the effect of damage-over-time spells significantly. If this reduces the damage below zero, the DOT is dispelled.";
     }
     #endregion
 
@@ -232,6 +247,9 @@ namespace DOL.GS.Spells
         }
 
         public EffectivenessBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Point blank area effect shout that boosts effective level of allies for determining damage variance for spell and melee damage.";
     }
     #endregion
 

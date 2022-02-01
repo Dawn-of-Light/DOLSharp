@@ -15709,14 +15709,15 @@ namespace DOL.GS
 				.ToString();
 		}
 
-        public static GamePlayer CreateTestableGamePlayer() { return CreateTestableGamePlayer(new DefaultCharacterClass()); }
+		public static GamePlayer CreateDummy() 
+		{
+			var player = new GamePlayer();
+			player.m_characterClass = new DefaultCharacterClass();
+			player.m_dbCharacter = new DOLCharacters();
+			return player; 
+		}
 
-        public static GamePlayer CreateTestableGamePlayer(ICharacterClass charClass) { return new GamePlayer(charClass); }
-
-        private GamePlayer(ICharacterClass charClass) : base()
-        {
-            m_characterClass = charClass;
-        }
+		private GamePlayer() : base() { }
 
 		/// <summary>
 		/// Creates a new player

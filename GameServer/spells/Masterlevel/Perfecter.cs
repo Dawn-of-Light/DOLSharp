@@ -210,6 +210,9 @@ namespace DOL.GS.Spells
             m_spellTypesToRemove.Add("PveResurrectionIllness");
             m_spellTypesToRemove.Add("RvrResurrectionIllness");
         }
+
+        public override string ShortDescription 
+            => "Cure resurrection illness.";
     }
     #endregion
 
@@ -364,6 +367,9 @@ namespace DOL.GS.Spells
 
         // constructor
         public PoTSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => $"Targets in range are regain {-Spell.Value}% additional power every tick.";
     }
     #endregion
 

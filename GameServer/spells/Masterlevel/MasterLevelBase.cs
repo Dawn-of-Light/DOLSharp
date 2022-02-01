@@ -1002,6 +1002,9 @@ namespace DOL.GS.Spells
         }
 
         public BanelordSnare(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
+
+        public override string ShortDescription 
+            => "Point blank area effect shout that snares nearby enemies, but stuns the user.";
     }
     #endregion
 
@@ -1071,7 +1074,13 @@ namespace DOL.GS.Spells
         }
 
         // constructor
-        public FontSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+        public FontSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) 
+        {
+        }
+
+        public override string ShortDescription => $"Creates a cloud that affects everyone in the area.\n\n Cloud spell:\n{CloudDescription}";
+
+        private string CloudDescription => heal.ShortDescription;
     }	
     #endregion
 
@@ -1198,6 +1207,11 @@ namespace DOL.GS.Spells
 
         // constructor
         public StormSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => $"Creates a cloud that affects everyone in the area.\n\n Cloud spell:\n{CloudDescription}";
+
+        private string CloudDescription => tempest.ShortDescription;
     }
     #endregion
 
@@ -1267,6 +1281,9 @@ namespace DOL.GS.Spells
             get { return true; }
         }
         public TargetModifierSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override string ShortDescription 
+            => "Self buff that grants the next non-area effect direct damage spell cast a radius, or increases the radius of an area effect damage spell.";
     }
     #endregion
 
