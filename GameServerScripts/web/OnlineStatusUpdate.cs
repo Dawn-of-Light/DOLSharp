@@ -28,7 +28,7 @@
 
 using System;
 using System.Net;
-using System.Text;
+using System.Net.Http;
 using System.Threading;
 using DOL.Events;
 using log4net;
@@ -90,6 +90,8 @@ namespace DOL.GS.GameEvents
 		/// Sets up our logger instance
 		/// </summary>
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		private static readonly HttpClient httpClient = new HttpClient();
 
         /// <summary>
         /// This method is called when the script is loaded.
@@ -178,9 +180,7 @@ namespace DOL.GS.GameEvents
 		{
 			try
 			{
-				WebClient webclient = new WebClient();
-				Byte[] contentBuffer = webclient.DownloadData(updateurl);
-				string result = Encoding.ASCII.GetString(contentBuffer).ToLower();
+				string result = httpClient.GetStringAsync(updateurl).Result.ToLower();
 				if (result.IndexOf("success") != -1)
 				{
 					return true;

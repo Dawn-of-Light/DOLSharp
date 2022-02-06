@@ -48,9 +48,10 @@ namespace DOL.GS
                                 .Select(s => MetadataReference.CreateFromFile(s))
                                 .ToList();
             var gameServerScriptAdditionalReferences = new string[] { 
-                "System.Security.Cryptography.Algorithms",
-                "System.Security.Cryptography.Primitives"
-            }; //for SHA256 in AutoXMLDatabaseUpdate
+                "System.Security.Cryptography.Algorithms", //for SHA256 in AutoXMLDatabaseUpdate
+                "System.Security.Cryptography.Primitives", //for SHA256 in AutoXMLDatabaseUpdate
+                "System.Net.Http"
+            };
             var additionalReferences = GameServer.Instance.Configuration.AdditionalScriptAssemblies.ToList();
             additionalReferences.AddRange(gameServerScriptAdditionalReferences);
 
