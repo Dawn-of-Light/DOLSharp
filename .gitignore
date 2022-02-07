@@ -1,31 +1,10 @@
-/*.suo
-/Ankh.Load
-/Dawn of Light.resharper.user
-/Ophyr.sln
-/Storm.sln
-/_ReSharper.Dawn of Light
-/auto_version
-/[dD]ebug
-/no_versionning
-/obj
-/[rR]elease
-/Dawn of Light - Working.sln
-/Dawn of Light.sln.cache
-/desktop.ini
-/_patches
-/.sonar
-/DOLBase/.sonar
-/DOLConfig/.sonar
-/DOLDatabase/.sonar
-/DOLServer/.sonar
-/GameServer/.sonar
-/sonar-project.properties
-/sonar-runner.bat
-/sys$command
-/UnitTests/.sonar
-/UnitTests/obj
-/GameServerScripts/.sonar
+/build
+/Debug
+/Release
 /.vs
-/[pP]ackages
-/[bB]uild
-/*.user
+/.vscode
+/NetCore/.vs
+/NetCore/build
+/NetCore/Debug
+/NetCore/Release
+**/*.csproj.user
