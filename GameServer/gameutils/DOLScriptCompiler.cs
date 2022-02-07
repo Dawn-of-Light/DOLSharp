@@ -48,12 +48,13 @@ namespace DOL.GS
             referencedAssemblies.Add("System.dll");
             referencedAssemblies.Add("System.Xml.dll");
             referencedAssemblies.Add("System.Core.dll");
+            referencedAssemblies.Add("System.Net.Http.dll");
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 referencedAssemblies.Add("netstandard.dll");
             }
 
-            referencedAssemblies.Remove("testcentric.engine.metadata.dll"); //NUnit3TestAdapter 4.0.0 dependency conflict with mscorlib.dll
+            referencedAssemblies.Remove("testcentric.engine.metadata.dll"); //NUnit3TestAdapter 4.x dependency conflict with mscorlib.dll
             referencedAssemblies.AddRange(GameServer.Instance.Configuration.AdditionalScriptAssemblies);
         }
 

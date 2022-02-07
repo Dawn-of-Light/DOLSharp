@@ -9,8 +9,7 @@
  */
 
 using System;
-using System.Net;
-using System.Text;
+using System.Net.Http;
 using System.Threading;
 using DOL.Events;
 using DOL.GS.ServerProperties;
@@ -23,6 +22,7 @@ namespace DOL.GS.GameEvents
 	public class ServerListUpdate
 	{
         private const string UpdateURL = "http://portal.dolserver.net/serverlist.php?action=submit";
+		private static HttpClient httpClient = new HttpClient();
 
 		#region Code
 
@@ -148,9 +148,7 @@ namespace DOL.GS.GameEvents
 		{
 			try
 			{
-				WebClient webclient = new WebClient();
-				Byte[] contentBuffer = webclient.DownloadData(updateurl);
-				string result = Encoding.ASCII.GetString(contentBuffer).ToLower();
+				var result = httpClient.GetStringAsync(updateurl).Result.ToLower();
 				if (result.IndexOf("success") != -1)
 				{
 					return true;

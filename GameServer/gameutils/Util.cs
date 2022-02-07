@@ -56,9 +56,6 @@ namespace DOL.GS
 		/// </summary>
 		[ThreadStatic]
 		private static Random m_random = null;
-
-		[ThreadStatic]
-		private static RNGCryptoServiceProvider m_cryptoRandom = null;
 		
 		/// <summary>
 		/// Gets the random number generator
@@ -76,24 +73,7 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Gets the Crypto Service Random Generator
-		/// </summary>
-		public static RNGCryptoServiceProvider CryptoRandom
-		{
-			get
-			{
-				if(m_cryptoRandom == null)
-				{
-					m_cryptoRandom = new RNGCryptoServiceProvider();
-				}
-				
-				return m_cryptoRandom;
-			}
-			set
-			{
-			}
-		}
+		private static readonly RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 		
 		/// <summary>
 		/// Get a Crypto Strength Random Int
@@ -103,7 +83,7 @@ namespace DOL.GS
 		{
 		    byte[] buffer = new byte[4];
 		
-		    CryptoRandom.GetBytes(buffer);
+		    randomNumberGenerator.GetBytes(buffer);
 		    return BitConverter.ToInt32(buffer, 0) & 0x7FFFFFFF; 
 		}
 		
@@ -144,7 +124,7 @@ namespace DOL.GS
 			while (true)
 			{
 				counter++;
-				CryptoRandom.GetBytes(buffer);
+				randomNumberGenerator.GetBytes(buffer);
 				uint rand = BitConverter.ToUInt32(buffer, 0);
 				long max = (1 + (long)int.MaxValue);
 				
@@ -168,7 +148,7 @@ namespace DOL.GS
 		public static double CryptoNextDouble()
 		{
 			byte[] buffer = new byte[4];
-			CryptoRandom.GetBytes(buffer);
+			randomNumberGenerator.GetBytes(buffer);
 			uint rand = BitConverter.ToUInt32(buffer, 0);
 			return rand / (1.0 + uint.MaxValue);
 		}

@@ -18,14 +18,16 @@
  */
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Xml;
+using System.Net.Http;
 
 public class UPnPNat
 {
+	private static HttpClient httpClient = new HttpClient();
+
 	public class PortForwading
 	{
 		public IPAddress internalIP;
@@ -58,7 +60,7 @@ public class UPnPNat
 	private static string _GetServiceUrl(string resp)
 	{
 		XmlDocument desc = new XmlDocument();
-		desc.Load(WebRequest.Create(resp).GetResponse().GetResponseStream());
+		desc.Load(httpClient.GetStreamAsync(resp).Result);
 		XmlNamespaceManager nsMgr = new XmlNamespaceManager(desc.NameTable);
 		nsMgr.AddNamespace("tns", "urn:schemas-upnp-org:device-1-0");
 		XmlNode typen = desc.SelectSingleNode("//tns:device/tns:deviceType/text()", nsMgr);
@@ -84,18 +86,13 @@ public class UPnPNat
 			soap +
 			"</s:Body>" +
 			"</s:Envelope>";
-		WebRequest r = WebRequest.Create(url);
-		r.Method = "POST";
-		byte[] b = Encoding.UTF8.GetBytes(req);
-		r.Headers.Add("SOAPACTION", "\"urn:schemas-upnp-org:service:WANIPConnection:1#" + function + "\"");
-		r.ContentType = "text/xml; charset=\"utf-8\"";
-		r.ContentLength = b.Length;
-		r.GetRequestStream().Write(b, 0, b.Length);
-		XmlDocument resp = new XmlDocument();
-		WebResponse wres = r.GetResponse();
-		Stream ress = wres.GetResponseStream();
-		resp.Load(ress);
-		return resp;
+		var content = new StringContent(req, Encoding.UTF8, "text/xml");
+		content.Headers.Add("SOAPACTION", "\"urn:schemas-upnp-org:service:WANIPConnection:1#" + function + "\"");
+		var response = httpClient.PostAsync(url, content).Result;
+		var responseStream = response.Content.ReadAsStreamAsync().Result;
+		XmlDocument resultXml = new XmlDocument();
+		resultXml.Load(responseStream);
+		return resultXml;
 	}
 
 	public UPnPNat()

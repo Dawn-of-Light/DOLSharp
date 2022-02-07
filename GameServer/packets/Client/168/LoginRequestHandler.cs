@@ -472,7 +472,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public static string CryptPassword(string password)
 		{
-			MD5 md5 = new MD5CryptoServiceProvider();
+			var md5 = MD5.Create();
 
 			char[] pw = password.ToCharArray();
 
