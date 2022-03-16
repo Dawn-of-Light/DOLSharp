@@ -606,6 +606,12 @@ namespace DOL.GS.ServerProperties
 		public static int SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
 
 		/// <summary>
+		/// Load mobs in disabled zones
+		/// </summary>
+		[ServerProperty("world", "load_mobs_in_disabled_zones", "Should Mobs be loaded in disabled zones?", false)]
+		public static bool  DISABLED_MOBS_IN_DISABLED_REGIONS;
+
+		/// <summary>
 		/// A serialised list of disabled RegionIDs
 		/// </summary>
 		[ServerProperty("world", "disabled_regions", "Serialized list of disabled region IDs, separated by semi-colon or a range with a dash (ie 1-5;7;9)", "")]

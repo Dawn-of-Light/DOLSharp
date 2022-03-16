@@ -349,8 +349,17 @@ namespace DOL.GS
 					mobList.AddRange(DOLDB<Mob>.SelectObjects(DB.Column(nameof(Mob.Region)).IsEqualTo(loadRegion)));
 				}
 			}
+			 
+			if (ServerProperties.Properties.DISABLED_MOBS_IN_DISABLED_REGIONS == false)
+			{
+				foreach (string loadRegion in Util.SplitCSV(ServerProperties.Properties.DISABLED_REGIONS, true))
+				{
+					mobList.AddRange(DOLDB<Mob>.SelectObjects(DB.Column(nameof(Mob.Region)).IsEqualTo(loadRegion)));
+				}
+			}
 			else
 			{
+
 				mobList.AddRange(GameServer.Database.SelectAllObjects<Mob>());
 			}
 
