@@ -202,7 +202,7 @@ namespace DOL.Network
 			Write(bytes, 0, bytes.Length);
 		}
 
-		public void WritePascalStringIntLE(string str)
+		public void WritePascalStringIntLE(string str, int maxlen = 2048)
 		{
 			if (str == null || str.Length <= 0)
 			{
@@ -211,8 +211,9 @@ namespace DOL.Network
 			}
 
 			byte[] bytes = Constants.DefaultEncoding.GetBytes(str);
-			WriteIntLowEndian((uint)bytes.Length + 1);
-			Write(bytes, 0, bytes.Length);
+			var len = Math.Min(maxlen - 1, bytes.Length);
+			WriteIntLowEndian((uint)len + 1);
+			Write(bytes, 0, len);
 			WriteByte(0);
 		}
 
