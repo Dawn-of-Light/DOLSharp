@@ -228,7 +228,7 @@ namespace DOL.GS.PacketHandler
 						armsColor = (ushort)(arms.Emblem != 0 ? arms.Emblem : arms.Color);
 
 					pak.WriteByte((byte)c.Level);
-					pak.WritePascalStringIntLE(c.Name);
+					pak.WritePascalStringIntLE(c.Name, 0x18);
 					pak.WriteIntLowEndian(0x18);
 					pak.WriteByte(1); // always 1 ?
 					pak.WriteByte(c.EyeSize); // seems to be : 0xF0 = eyes, 0x0F = nose
@@ -242,9 +242,9 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(c.CustomisationStep); //1 = auto generate config, 2= config ended by player, 3= enable config to player
 					pak.WriteByte(c.MoodType);
 					pak.Fill(0x0, 13);
-					pak.WritePascalStringIntLE(locationDescription);
-					pak.WritePascalStringIntLE(classname);
-					pak.WritePascalStringIntLE(racename);
+					pak.WritePascalStringIntLE(locationDescription, 0x18);
+					pak.WritePascalStringIntLE(classname, 0x18);
+					pak.WritePascalStringIntLE(racename, 0x18);
 					pak.WriteShortLowEndian((ushort)c.CurrentModel);
 
 					pak.WriteByte((byte)c.Region);
@@ -326,7 +326,7 @@ namespace DOL.GS.PacketHandler
 				var ip = region.ServerIP;
 				if (ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.") || ip.StartsWith("192.168."))
 					ip = ((IPEndPoint)m_gameClient.Socket.LocalEndPoint).Address.ToString();
-				pak.WritePascalStringIntLE(ip);
+				pak.WritePascalStringIntLE(ip, 0x14);
 				pak.WriteIntLowEndian(region.ServerPort);
 				pak.WriteIntLowEndian(region.ServerPort);
 				SendTCP(pak);

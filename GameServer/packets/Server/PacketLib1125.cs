@@ -184,7 +184,7 @@ namespace DOL.GS.PacketHandler
 							}
 
 							pak.WriteByte((byte)c.Level); // moved
-							pak.WritePascalStringIntLE(c.Name);
+							pak.WritePascalStringIntLE(c.Name, 0x18);
 							pak.WriteByte(0x18); // no idea
 							pak.WriteInt(1); // no idea
 							pak.WriteByte((byte)c.EyeSize);
@@ -209,18 +209,18 @@ namespace DOL.GS.PacketHandler
 							{
 								locationDescription = (locationDescription.Substring(0, 20)) + "...";
 							}
-							pak.WritePascalStringIntLE(locationDescription);
+							pak.WritePascalStringIntLE(locationDescription, 0x18);
 
 							string classname = "";
 							if (c.Class != 0)
 							{
 								classname = ((eCharacterClass)c.Class).ToString();
 							}
-							pak.WritePascalStringIntLE(classname);
+							pak.WritePascalStringIntLE(classname, 0x18);
 
 							string racename = m_gameClient.RaceToTranslatedName(c.Race, c.Gender);
 
-							pak.WritePascalStringIntLE(racename);
+							pak.WritePascalStringIntLE(racename, 0x18);
 							pak.WriteShortLowEndian((ushort)c.CurrentModel); // moved
 																			 // something here
 							pak.WriteByte((byte)c.Region);
@@ -711,7 +711,7 @@ namespace DOL.GS.PacketHandler
 								pak.WriteShortLowEndian((ushort)value2);
 								pak.WriteIntLowEndian((uint)item.Price);
 								pak.WriteShortLowEndian((ushort)item.Model);
-								pak.WritePascalStringIntLE(item.Name);
+								pak.WritePascalStringIntLE(item.Name, 0x30);
 							}
 							else
 							{
