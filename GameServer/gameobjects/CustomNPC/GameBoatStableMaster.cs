@@ -45,7 +45,7 @@ namespace DOL.GS
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+			var template = Catalog.GetEntry(pagenumber, slotnumber).Item;
 			if (template == null) return;
 
 			//Calculate the amout of items

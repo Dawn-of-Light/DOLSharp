@@ -113,7 +113,7 @@ namespace DOL.GS.Spells
                 merchant.GuildName = "";
                 merchant.Size = 50;
                 merchant.Flags |= GameNPC.eFlags.PEACE;
-                merchant.TradeItems = new MerchantTradeItems("ML_transmuteritems");
+                merchant.Catalog = MerchantCatalog.LoadFromDatabase("ML_transmuteritems");
             }
         }
 

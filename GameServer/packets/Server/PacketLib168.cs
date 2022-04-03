@@ -1833,28 +1833,38 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMerchantWindow(MerchantTradeItems tradeItemsList, eMerchantWindowType windowType)
 		{
-
 			if (tradeItemsList != null)
+			{
+				SendMerchantWindow(tradeItemsList.Catalog, windowType);
+			}
+			else
+			{
+				SendMerchantWindow((MerchantCatalog)null, windowType);
+			}
+		}
+
+		public virtual void SendMerchantWindow(MerchantCatalog catalog, eMerchantWindowType windowType)
+		{
+			if (catalog != null)
 			{
 				for (byte page = 0; page < MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS; page++)
 				{
-					IDictionary itemsInPage = tradeItemsList.GetItemsInPage((int)page);
-					if (itemsInPage == null || itemsInPage.Count == 0)
-						continue;
+					var itemsOnPage = catalog.GetAllEntriesOnPage(page);
+					if(itemsOnPage.Any() == false) continue;
 
 					using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 					{
-						pak.WriteByte((byte) itemsInPage.Count); //Item count on this page
+						pak.WriteByte((byte) itemsOnPage.Count()); //Item count on this page
 						pak.WriteByte((byte) windowType);
 						pak.WriteByte((byte) page); //Page number
 						pak.WriteByte(0x00); //Unused
 
 						for (ushort i = 0; i < MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS; i++)
 						{
-							if (!itemsInPage.Contains((int)i))
-								continue;
+							var catalogEntry = itemsOnPage.Where(x => x.SlotPosition == i).FirstOrDefault();
+							if (catalogEntry == null) continue;
 
-							var item = (ItemTemplate) itemsInPage[(int)i];
+							var item = catalogEntry.Item;
 							if (item != null)
 							{
 								pak.WriteByte((byte) i); //Item index on page
@@ -1919,9 +1929,9 @@ namespace DOL.GS.PacketHandler
 							else
 							{
 								if (log.IsErrorEnabled)
-									log.Error("Merchant item template '" +
-									          ((MerchantItem) itemsInPage[page*MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS + i]).ItemTemplateID +
-									          "' not found, abort!!!");
+								{
+									log.Error($"ItemTemplate for ItemList {catalog.ItemListId} on Page {page} and Slot {i} could not be loaded.");
+								}
 								return;
 							}
 						}

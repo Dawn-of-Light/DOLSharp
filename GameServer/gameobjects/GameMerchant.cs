@@ -81,25 +81,24 @@ namespace DOL.GS
 		/// <param name="state">The game player to send to</param>
 		protected virtual void SendMerchantWindowCallback(object state)
 		{
-			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Normal);
+			((GamePlayer)state).Out.SendMerchantWindow(Catalog, eMerchantWindowType.Normal);
 		}
 		#endregion
 
 		#region Items List
 
-		/// <summary>
-		/// Items available for sale
-		/// </summary>
-		protected MerchantTradeItems m_tradeItems;
-
-		/// <summary>
-		/// Gets the items available from this merchant
-		/// </summary>
+		[Obsolete("Use .Catalog instead.")]
 		public MerchantTradeItems TradeItems
 		{
-			get { return m_tradeItems; }
-			set { m_tradeItems = value; }
+			get => Catalog != null ? Catalog.ConvertToMerchantTradeItems() : null;
+			set 
+			{
+				if(value == null) Catalog = null;
+				Catalog = value.Catalog; 
+			}
 		}
+
+		public MerchantCatalog Catalog { get; set; }
 
 		#endregion
 
@@ -118,8 +117,8 @@ namespace DOL.GS
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
-			if (template == null) return;
+            var template = Catalog.GetEntry(pagenumber, slotnumber).Item;
+            if (template == null) return;
 
 			//Calculate the amout of items
 			int amountToBuy = number;
@@ -309,7 +308,7 @@ namespace DOL.GS
 
 			if (template != null && string.IsNullOrEmpty(template.ItemsListTemplateID) == false)
 			{
-				TradeItems = new MerchantTradeItems(template.ItemsListTemplateID);
+				Catalog = MerchantCatalog.LoadFromDatabase(template.ItemsListTemplateID);
 			}
 		}
 		#endregion NPCTemplate
@@ -326,7 +325,7 @@ namespace DOL.GS
 			if (!(merchantobject is Mob)) return;
 			Mob merchant = (Mob)merchantobject;
 			if (merchant.ItemsListTemplateID != null && merchant.ItemsListTemplateID.Length > 0)
-				m_tradeItems = new MerchantTradeItems(merchant.ItemsListTemplateID);
+				Catalog = MerchantCatalog.LoadFromDatabase(merchant.ItemsListTemplateID);
 		}
 
 		/// <summary>
@@ -367,13 +366,13 @@ namespace DOL.GS
 			}
 			merchant.ClassType = this.GetType().ToString();
 			merchant.EquipmentTemplateID = EquipmentTemplateID;
-			if (m_tradeItems == null)
+			if (Catalog == null)
 			{
 				merchant.ItemsListTemplateID = null;
 			}
 			else
 			{
-				merchant.ItemsListTemplateID = m_tradeItems.ItemsListID;
+				merchant.ItemsListTemplateID = Catalog.ItemListId;
 			}
 
 			if (InternalID == null)
@@ -456,7 +455,7 @@ namespace DOL.GS
 
 		protected override void SendMerchantWindowCallback(object state)
 		{
-			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Bp);
+			((GamePlayer)state).Out.SendMerchantWindow(Catalog, eMerchantWindowType.Bp);
 		}
 
 		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
@@ -465,8 +464,8 @@ namespace DOL.GS
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
-			if (template == null) return;
+			var template = Catalog.GetEntry(pagenumber, slotnumber).Item;
+            if (template == null) return;
 
 			//Calculate the amout of items
 			int amountToBuy = number;
@@ -622,7 +621,7 @@ namespace DOL.GS
 
 		protected override void SendMerchantWindowCallback(object state)
 		{
-			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Count);
+			((GamePlayer)state).Out.SendMerchantWindow(Catalog, eMerchantWindowType.Count);
 		}
 
 		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
@@ -633,8 +632,8 @@ namespace DOL.GS
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
-			if (template == null) return;
+			var template = Catalog.GetEntry(pagenumber, slotnumber).Item;
+            if (template == null) return;
 
 			//Calculate the amout of items
 			int amountToBuy = number;

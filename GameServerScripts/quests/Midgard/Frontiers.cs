@@ -299,8 +299,8 @@ namespace DOL.GS.Quests.Midgard
 				njiedi = npcs[0] as GameStableMaster;
 			}
 
-			njiedi.TradeItems = new MerchantTradeItems(null);
-			if (!njiedi.TradeItems.AddTradeItem(1, eMerchantWindowSlot.FirstEmptyInPage, ticketToSvasudFaste))
+			njiedi.Catalog = MerchantCatalog.CreateEmpty();
+			if (!njiedi.Catalog.AddItemToPage(ticketToSvasudFaste, 1))
 				if (log.IsWarnEnabled)
 					log.Warn("ticketToSvasudFaste not added");
 

@@ -306,8 +306,8 @@ namespace DOL.GS.Quests.Albion
 			}
 
 
-			colm.TradeItems = new MerchantTradeItems(null);
-			if (!colm.TradeItems.AddTradeItem(0, eMerchantWindowSlot.FirstEmptyInPage, dragonflyTicket))
+			colm.Catalog = MerchantCatalog.CreateEmpty();
+			if (!colm.Catalog.AddItemToPage(dragonflyTicket, 0))
 				if (log.IsWarnEnabled)
 					log.Warn("dragonflyTicket not added");
 

@@ -25,6 +25,7 @@ using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using System.Collections;
 using log4net;
+using System.Linq;
 
 namespace DOL.GS
 {
@@ -53,7 +54,7 @@ namespace DOL.GS
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+			var template = Catalog.GetEntry(pagenumber, slotnumber).Item;
 			if (template == null) return;
 
 			//Calculate the amout of items
@@ -226,23 +227,7 @@ namespace DOL.GS
 		}
 
 		private bool isItemInMerchantList(InventoryItem item)
-		{
-			if (m_tradeItems != null)
-			{
-				foreach (DictionaryEntry de in m_tradeItems.GetAllItems())
-				{
-					ItemTemplate compareItem = de.Value as ItemTemplate;
-					if (compareItem != null)
-					{
-						if (compareItem.Id_nb == item.Id_nb)
-						{
-							return true;
-						}
-					}
-				}
-			}
-			return false;
-		}
+			=> Catalog.GetAllEntries().Where(x => x.Item.Id_nb == item.Id_nb).Count() > 0;
 
 
 		private void SendReply(GamePlayer target, string msg)

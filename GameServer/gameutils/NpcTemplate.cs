@@ -300,7 +300,7 @@ namespace DOL.GS
 
 				if (merchant != null)
 				{
-					merchant.TradeItems = new MerchantTradeItems(ItemsListTemplateID);
+					merchant.Catalog = MerchantCatalog.LoadFromDatabase(ItemsListTemplateID);
 				}
 			}
 		}

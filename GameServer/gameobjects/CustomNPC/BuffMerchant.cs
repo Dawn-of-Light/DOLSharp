@@ -858,7 +858,7 @@ namespace DOL.GS
 		
 		public override bool Interact(GamePlayer player)
 		{
-			TradeItems = new MerchantTradeItems("BuffTokens");
+			Catalog = MerchantCatalog.LoadFromDatabase("BuffTokens");
 			if (!base.Interact(player)) return false;
 			TurnTo(player, 10000);
 			player.Out.SendMessage("Greetings, " + player.Name + ". The King has instructed me to strengthen you so that you may defend the lands with valor. Simply hand me the token for the enhancement you desire, and I will empower you accordingly. Do you wish to purchase tokens with [Gold] or [Bounty Points]?", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
@@ -880,7 +880,7 @@ namespace DOL.GS
 					{
 						TurnTo(player, 10000);
 						isBounty = false;
-						TradeItems = new MerchantTradeItems("BuffTokens");
+						Catalog = MerchantCatalog.LoadFromDatabase("BuffTokens");
 						SendMerchantWindow(player);
 					}
 					break;
@@ -888,8 +888,8 @@ namespace DOL.GS
 					{
 						TurnTo(player, 10000);
 						isBounty = true;
-						TradeItems = new MerchantTradeItems("BPBuffTokens");
-						player.Out.SendMerchantWindow(TradeItems, eMerchantWindowType.Bp);
+						Catalog = MerchantCatalog.LoadFromDatabase("BPBuffTokens");
+						player.Out.SendMerchantWindow(Catalog, eMerchantWindowType.Bp);
 					}
 					break;
 			}
@@ -903,7 +903,7 @@ namespace DOL.GS
 				int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 				int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-				ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+				var template = Catalog.GetEntry(pagenumber, slotnumber).Item;
 				if (template == null) return;
 
 				int amountToBuy = number;
@@ -943,7 +943,7 @@ namespace DOL.GS
 				int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 				int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-				ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+				var template = Catalog.GetEntry(pagenumber, slotnumber).Item;
 				if (template == null) return;
 
 				int amountToBuy = number;

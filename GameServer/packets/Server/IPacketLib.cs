@@ -705,7 +705,9 @@ namespace DOL.GS.PacketHandler
 		void SendInventoryItemsUpdate(eInventoryWindowType windowType, ICollection<InventoryItem> itemsToUpdate);
 		void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, eInventoryWindowType windowType);
 		void SendDoorState(Region region, IDoor door);
+		[Obsolete("Please use SendMerchantWindow(MerchantCatalog,eMerchantWindowType) instead.")]
 		void SendMerchantWindow(MerchantTradeItems itemlist, eMerchantWindowType windowType);
+		void SendMerchantWindow(MerchantCatalog catalog, eMerchantWindowType windowType);
 		void SendTradeWindow();
 		void SendCloseTradeWindow();
 		void SendPlayerDied(GamePlayer killedPlayer, GameObject killer);

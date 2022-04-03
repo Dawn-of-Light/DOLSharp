@@ -80,7 +80,7 @@ namespace DOL.GS.Scripts
 		
 		public MasterLevelsMerchant()
 		{
-			m_tradeItems = m_offeredItems;
+			Catalog = m_offeredItems.Catalog;
 		}
 
 		public override bool Interact(GamePlayer player)
