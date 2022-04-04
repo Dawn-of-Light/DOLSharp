@@ -1847,27 +1847,22 @@ namespace DOL.GS.PacketHandler
 		{
 			if (catalog != null)
 			{
-				for (byte page = 0; page < MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS; page++)
+				foreach(var page in catalog.GetAllEntries().Select(x => x.Page).Distinct())
 				{
-					var itemsOnPage = catalog.GetAllEntriesOnPage(page);
-					if(itemsOnPage.Any() == false) continue;
-
+					var pageEntries = catalog.GetAllEntriesOnPage(page);
 					using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 					{
-						pak.WriteByte((byte) itemsOnPage.Count()); //Item count on this page
+						pak.WriteByte((byte) pageEntries.Count()); //Item count on this page
 						pak.WriteByte((byte) windowType);
 						pak.WriteByte((byte) page); //Page number
 						pak.WriteByte(0x00); //Unused
 
-						for (ushort i = 0; i < MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS; i++)
+						foreach(var entry in pageEntries)
 						{
-							var catalogEntry = itemsOnPage.Where(x => x.SlotPosition == i).FirstOrDefault();
-							if (catalogEntry == null) continue;
-
-							var item = catalogEntry.Item;
+							var item = entry.Item;
 							if (item != null)
 							{
-								pak.WriteByte((byte) i); //Item index on page
+								pak.WriteByte((byte) entry.SlotPosition); //Item index on page
 								pak.WriteByte((byte) item.Level);
 								// some objects use this for count
 								int value1;
@@ -1930,7 +1925,7 @@ namespace DOL.GS.PacketHandler
 							{
 								if (log.IsErrorEnabled)
 								{
-									log.Error($"ItemTemplate for ItemList {catalog.ItemListId} on Page {page} and Slot {i} could not be loaded.");
+									log.Error($"ItemTemplate for ItemList {catalog.ItemListId} on Page {page} and Slot {entry.SlotPosition} could not be loaded.");
 								}
 								return;
 							}
