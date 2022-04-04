@@ -442,6 +442,7 @@ namespace DOL.GS.PacketHandler
 		HousingInsideMenu = 0x0B,
 		HousingTicket = 0x0C,
 		HousingGuildTicket = 0x0D,
+		Mithril = 0x0E,
 	}
 
 
