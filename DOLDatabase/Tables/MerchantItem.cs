@@ -32,6 +32,7 @@ namespace DOL
 			private string		m_id_nb;
 			private int			m_page_number;
 			private int			m_slot_pos;
+			private long		price;	
 
 
 			public MerchantItem()
@@ -63,6 +64,20 @@ namespace DOL
 				{
 					Dirty = true;
 					m_id_nb = value;
+				}
+			}
+
+			[DataElement(AllowDbNull=false)]
+			public long Price
+			{
+				get
+				{
+					return price;
+				}
+				set
+				{
+					Dirty = true;
+					price = value;
 				}
 			}
 

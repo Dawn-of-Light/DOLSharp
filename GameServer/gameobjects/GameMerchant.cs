@@ -19,13 +19,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Language;
-using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
+using DOL.GS.Finance;
 
 namespace DOL.GS
 {
@@ -103,63 +102,88 @@ namespace DOL.GS
 		#endregion
 
 		#region Buy / Sell / Apparaise
-
-		/// <summary>
-		/// Called when a player buys an item
-		/// </summary>
-		/// <param name="player">The player making the purchase</param>
-		/// <param name="item_slot">slot of the item to be bought</param>
-		/// <param name="number">Number to be bought</param>
-		/// <returns>true if buying is allowed, false if buying should be prevented</returns>
-		public virtual void OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		public virtual void OnPlayerBuy(GamePlayer player, int globalSlotPosition, int amountToBuy)
 		{
-			//Get the template
-			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
-			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			int pageNumber = globalSlotPosition / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			int slotPosition = globalSlotPosition % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			var page = Catalog.GetPage(pageNumber);
+			var itemToBuy = page.GetEntry((byte)slotPosition).Item;
+            if (itemToBuy == null) return;
+			var currency = page.Currency;
 
-            var template = Catalog.GetEntry(pagenumber, slotnumber).Item;
-            if (template == null) return;
-
-			//Calculate the amout of items
-			int amountToBuy = number;
-			if (template.PackSize > 0)
-				amountToBuy *= template.PackSize;
+			if (itemToBuy.PackSize > 0)
+				amountToBuy *= itemToBuy.PackSize;
 
 			if (amountToBuy <= 0) return;
 
-			//Calculate the value of items
-			long totalValue = number * template.Price;
+			long cost = amountToBuy * itemToBuy.Price;
 
-			lock (player.Inventory)
-			{
+            lock (player.Inventory)
+            {
+                if (currency.Equals(Money.Copper) || currency.Equals(Money.BP) || currency is ItemCurrency)
+                {
+                    var currencyItem = page.CurrencyItem;
+                    var costToText = CurrencyToText(currency.Create(cost));
+                    if (!HasPlayerEnoughBalance(player, currency.Create(cost)))
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedGeneric", costToText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return;
+                    }
+                    if (!player.Inventory.AddTemplate(GameInventoryItem.Create(itemToBuy), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return;
+                    }
+                    InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, itemToBuy, amountToBuy);
 
-				if (player.GetCurrentMoney() < totalValue)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalValue)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
-				}
+                    string message;
+                    if (amountToBuy == 1)
+                        message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtGeneric", itemToBuy.Name, costToText);
+                    else
+                        message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesGeneric", amountToBuy, itemToBuy.Name, costToText);
+                    WithdrawCurrencyFromPlayer(player, currency.Create(cost));
+                    player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 
-				if (!player.Inventory.AddTemplate(GameInventoryItem.Create(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
-				}
-				InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
-				//Generate the buy message
-				string message;
-				if (amountToBuy > 1)
-					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPieces", amountToBuy, template.GetName(1, false), Money.GetString(totalValue));
-				else
-					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), Money.GetString(totalValue));
+                }
+                else if (currency.Equals(Money.Mithril)) throw new NotImplementedException("Mithril is currently not implemented as a separate currency.");
+                else throw new ArgumentException($"{currency} is not implemented.");
+            }
+        }
 
-				// Check if player has enough money and subtract the money
-				if (!player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
-				{
-					throw new Exception("Money amount changed while adding items.");
-				}
-				InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalValue);
-			}
-		}
+        private void WithdrawCurrencyFromPlayer(GamePlayer player, Money price)
+        {
+            if (price.Type.Equals(Money.Copper))
+            {
+                if (!player.RemoveMoney(price.Amount)) throw new Exception("Money amount changed while adding items.");
+            }
+            else if (price.Type.Equals(Money.BP)) player.BountyPoints -= price.Amount;
+            else if (price.Type is ItemCurrency itemCurrency)
+            {
+                player.Inventory.RemoveTemplate(itemCurrency.Item.Id_nb, (int)price.Amount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+            }
+            else throw new NotImplementedException($"{price.Type} is currently not implemented.");
+        }
+
+        private bool HasPlayerEnoughBalance(GamePlayer player, Money price)
+        {
+            if (price.Type.Equals(Money.Copper)) return player.GetCurrentMoney() > price.Amount;
+            else if (price.Type.Equals(Money.BP)) return player.BountyPoints > price.Amount;
+            else if (price.Type is ItemCurrency itemCurrency)
+            {
+                var balance = player.Inventory.CountItemTemplate(itemCurrency.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+                return balance > price.Amount;
+            }
+            else throw new ArgumentException($"ToText for currency {price.Type} does not exist.");
+        }
+
+        private string CurrencyToText(Money money)
+        {
+            if (money.Type.Equals(Money.Copper)) return Money.GetString(money.Amount);
+            else if (money.Type.Equals(Money.BP)) return $"{money.Amount} BPs";
+            else if (money.Type.Equals(Money.Mithril)) return $"{money.Amount} Mithril";
+            else if (money.Type is ItemCurrency itemCurrency) return $"{money.Amount} {itemCurrency.Item.Id_nb}";
+            else throw new ArgumentException($"ToText for currency {money.Type} does not exist.");
+        }
 
 
 		/// <summary>
@@ -191,7 +215,6 @@ namespace DOL.GS
 
 			lock (player.Inventory)
 			{
-
 				if (player.GetCurrentMoney() < totalValue)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalValue)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -647,9 +670,10 @@ namespace DOL.GS
 
 			lock (player.Inventory)
 			{
+				var costToText = $"{totalValue} {MoneyItemName}";
 				if (player.Inventory.CountItemTemplate(m_moneyItem.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) < totalValue)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, MoneyItemName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedGeneric", costToText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (!player.Inventory.AddTemplate(GameInventoryItem.Create(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
@@ -662,9 +686,9 @@ namespace DOL.GS
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
-					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPieces2", amountToBuy, template.GetName(1, false), totalValue, MoneyItemName);
+					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesGeneric", amountToBuy, template.GetName(1, false), costToText);
 				else
-					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought2", template.GetName(1, false), totalValue, MoneyItemName);
+					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtGeneric", template.GetName(1, false), costToText);
 
 				var items = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 				int removed = 0;

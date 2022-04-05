@@ -17,24 +17,40 @@
  *
  */
 using System.Text;
+using DOL.GS.Finance;
+using DOL.Database;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// capsulate money operations
-	/// currently there is no instance of Money
-	/// use long instead
-	/// </summary>
 	public class Money
 	{
-		private Money()
-		{
-		}
+        public long Amount { get; private set; }
+        public Currency Type { get; private set; }
 
-		// 11111111111
-		// 550000000   // 11111111111
+        private Money() { }
+
+        public static Money Create(long value, Currency type)
+            => new Money() { Amount = value, Type = type };
+
+        public static Currency Copper => Currency.Create(eCurrency.Copper);
+        public static Currency BP => Currency.Create(eCurrency.BountyPoints);
+        public static Currency Mithril => Currency.Create(eCurrency.Mithril);
+        public static Currency Item(ItemTemplate item) => ItemCurrency.Create(item);
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Money otherCurrency)
+            {
+                var areOfSameValue = otherCurrency.Amount == this.Amount;
+                var areOfSameType = otherCurrency.Type.Equals(Type);
+                return areOfSameType && areOfSameValue;
+            }
+            return false;
+        }
+
+        public override int GetHashCode() => base.GetHashCode();
 
 		public static int GetMithril(long money)
 		{
@@ -66,11 +82,6 @@ namespace DOL.GS
 			return ((((long)mithril * 1000L + (long)platinum) * 1000L + (long)gold) * 100L + (long)silver) * 100L + (long)copper;
 		}
 
-		/// <summary>
-		/// return different formatted strings for money
-		/// </summary>
-		/// <param name="money"></param>
-		/// <returns></returns>
 		public static string GetString(long money)
 		{
 			if (money == 0)

@@ -38,6 +38,7 @@ using DOL.GS.Styles;
 
 using log4net;
 using DOL.GS.ServerProperties;
+using DOL.GS.Finance;
 
 namespace DOL.GS.PacketHandler
 {
@@ -1847,17 +1848,17 @@ namespace DOL.GS.PacketHandler
 		{
 			if (catalog != null)
 			{
-				foreach(var page in catalog.GetAllEntries().Select(x => x.Page).Distinct())
+				foreach(var page in catalog.GetAllPages())
 				{
-					var pageEntries = catalog.GetPage(page).GetAllEntries();
+					if (page.Currency.Equals(Money.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency); 
 					using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 					{
-						pak.WriteByte((byte) pageEntries.Count()); //Item count on this page
+						pak.WriteByte((byte) page.EntryCount); //Item count on this page
 						pak.WriteByte((byte) windowType);
-						pak.WriteByte((byte) page); //Page number
+						pak.WriteByte((byte) page.Number); //Page number
 						pak.WriteByte(0x00); //Unused
 
-						foreach(var entry in pageEntries)
+						foreach(var entry in page.GetAllEntries())
 						{
 							var item = entry.Item;
 							if (item != null)
@@ -1925,7 +1926,7 @@ namespace DOL.GS.PacketHandler
 							{
 								if (log.IsErrorEnabled)
 								{
-									log.Error($"ItemTemplate for ItemList {catalog.ItemListId} on Page {page} and Slot {entry.SlotPosition} could not be loaded.");
+									log.Error($"ItemTemplate for ItemList {catalog.ItemListId} on Page {page.Number} and Slot {entry.SlotPosition} could not be loaded.");
 								}
 								return;
 							}
@@ -1945,6 +1946,15 @@ namespace DOL.GS.PacketHandler
 					SendTCP(pak);
 				}
 			}
+		}
+
+		protected eMerchantWindowType ConvertCurrencyToMerchantWindowType(Currency currency)
+		{
+			if(Money.Copper.Equals(currency)) return eMerchantWindowType.Normal;
+			else if(Money.BP.Equals(currency)) return eMerchantWindowType.Bp;
+			else if(Money.Mithril.Equals(currency)) return eMerchantWindowType.Mithril;
+			else if(currency is ItemCurrency) return eMerchantWindowType.Count;
+			else throw new ArgumentException($"Currency {currency} has no MerchantWindowType conversion, yet.");
 		}
 
 		public virtual void SendTradeWindow()

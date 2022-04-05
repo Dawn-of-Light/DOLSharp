@@ -16,20 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using DOL.Database;
+using DOL.GS.Finance;
 
 namespace DOL.GS
 {
-    public enum eCurrency : byte
-    {
-        Copper = 0,
-        ItemTemplate = 3,
-        BountyPoints = 4,
-        Mithril = 5
-    }
-
     public class MerchantCatalogEntry
     {
         public int SlotPosition { get; } = -1;
@@ -52,45 +46,43 @@ namespace DOL.GS
         private List<MerchantCatalogEntry> entries = new List<MerchantCatalogEntry>();
 
         public int Number { get; }
-        public eCurrency Currency { get; private set; }
+        public Currency Currency { get; private set; } = GS.Money.Copper;
+        public ItemTemplate CurrencyItem => Currency is ItemCurrency itemCurrency ? itemCurrency.Item : null;
 
-        public MerchantCatalogPage(int number, IEnumerable<MerchantCatalogEntry> entries)
-            : this(number, entries, eCurrency.Copper) { }
-
-        public MerchantCatalogPage(int number, IEnumerable<MerchantCatalogEntry> entries, eCurrency currency)
+        public MerchantCatalogPage(int number)
         {
             Number = number;
-            this.entries = entries.ToList();
-            Currency = currency;
         }
-
-        public MerchantCatalogPage(int number) { }
 
         public bool Add(MerchantCatalogEntry entry)
         {
             var isSlotInvalid = entry.SlotPosition < FIRST_SLOT || entry.SlotPosition > MAX_SLOTS;
-            if(isSlotInvalid) return false;
+            if (isSlotInvalid) return false;
             entries.Add(entry);
             return true;
         }
 
         public bool Add(ItemTemplate item)
-        {   var nextSlot = GetNextFreeSlot();
+        {
+            var nextSlot = GetNextFreeSlot();
             return Add(new MerchantCatalogEntry(nextSlot, Number, item));
         }
 
         public bool Remove(byte slot)
         {
             var entry = entries.Where(x => x.SlotPosition == slot);
-            if(!entry.Any()) return false;
+            if (!entry.Any()) return false;
             return entries.Remove(entry.First());
         }
 
-        public void SetCurrency(eCurrency newCurrency) { Currency = newCurrency; }
+        public void SetCurrency(Currency currency)
+        {
+            Currency = currency;
+        }
 
         public IEnumerable<MerchantCatalogEntry> GetAllEntries()
             => entries.ToArray();
-        
+
         public MerchantCatalogEntry GetEntry(byte slotPosition)
         {
             var entry = entries.Where(x => x.SlotPosition == slotPosition).FirstOrDefault();
@@ -115,8 +107,6 @@ namespace DOL.GS
 
     public class MerchantCatalog
     {
-        private const int FIRST_SLOT = 0;
-        private const int MAX_SLOTS = 30;
         private const int FIRST_PAGE = 0;
         private const int MAX_PAGES = 5;
         private SortedList<byte, MerchantCatalogPage> merchantPages = new SortedList<byte, MerchantCatalogPage>();
@@ -129,10 +119,23 @@ namespace DOL.GS
 
         public static MerchantCatalog LoadFromDatabase(string itemListId)
         {
+            var currencySlotPosition = -1;
             var catalog = new MerchantCatalog();
             var dbMerchantItems = DOLDB<MerchantItem>.SelectObjects(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(itemListId));
             foreach (var dbMerchantItem in dbMerchantItems)
             {
+                var page = catalog.GetPage(dbMerchantItem.PageNumber);
+                if (dbMerchantItem.SlotPosition == currencySlotPosition)
+                {
+                    var currencyId = (eCurrency)dbMerchantItem.Price;
+                    if (currencyId == eCurrency.ItemTemplate)
+                    {
+                        var currencyItem = GameServer.Database.FindObjectByKey<ItemTemplate>(dbMerchantItem.ItemTemplateID);
+                        if (currencyItem == null) throw new NullReferenceException($"The currency item {dbMerchantItem.ItemTemplateID} for item list {itemListId} on page {dbMerchantItem.PageNumber} could not be loaded");
+                        page.SetCurrency(Money.Item(currencyItem));
+                    }
+                    else page.SetCurrency(Currency.Create((eCurrency)currencyId));
+                }
                 var itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(dbMerchantItem.ItemTemplateID);
                 if (itemTemplate == null) continue;
                 var catalogEntry = new MerchantCatalogEntry(dbMerchantItem.SlotPosition, dbMerchantItem.PageNumber, itemTemplate);
@@ -147,12 +150,17 @@ namespace DOL.GS
 
         public MerchantCatalogPage GetPage(int pageNumber)
         {
-            if(merchantPages.TryGetValue((byte)pageNumber, out var page) == false)
+            var pageIsInvalid = pageNumber < FIRST_PAGE || pageNumber >= MAX_PAGES;
+            if (pageIsInvalid) throw new ArgumentException($"PageNumber {pageNumber} is invalid. PageNumber must be in the range of 0-4.");
+            if (merchantPages.TryGetValue((byte)pageNumber, out var page) == false)
             {
                 merchantPages.Add((byte)pageNumber, new MerchantCatalogPage((byte)pageNumber));
             }
             return merchantPages[(byte)pageNumber];
         }
+
+        public IEnumerable<MerchantCatalogPage> GetAllPages()
+            => merchantPages.Values;
 
         public MerchantCatalogEntry GetEntry(int atPage, int atSlot)
             => GetPage(atPage).GetEntry((byte)atSlot);
