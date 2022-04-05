@@ -300,7 +300,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 
 			njiedi.Catalog = MerchantCatalog.CreateEmpty();
-			if (!njiedi.Catalog.AddItemToPage(ticketToSvasudFaste, 1))
+			if (!njiedi.Catalog.GetPage(1).Add(ticketToSvasudFaste))
 				if (log.IsWarnEnabled)
 					log.Warn("ticketToSvasudFaste not added");
 

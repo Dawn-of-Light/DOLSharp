@@ -64,15 +64,15 @@ namespace DOL.GS
         {
             if (item == null) throw new NullReferenceException("Null may not be added as MerchantTradeItem.");
 
-            eMerchantWindowSlot pageSlot = GetValidSlot(page, slot);
+            slot = GetValidSlot(page, slot);
 
-            if (pageSlot == eMerchantWindowSlot.Invalid)
+            if (slot == eMerchantWindowSlot.Invalid)
             {
                 log.ErrorFormat("Invalid slot {0} specified for page {1} of TradeItemList {2}", slot, page, ItemsListID);
                 return false;
             }
 
-            Catalog.Add(new MerchantCatalogEntry((int)slot, page, item));
+            Catalog.GetPage(page).Add(new MerchantCatalogEntry((int)slot, page, item));
 
             return true;
         }
@@ -81,14 +81,14 @@ namespace DOL.GS
         {
             slot = GetValidSlot(page, slot);
             if (slot == eMerchantWindowSlot.Invalid) return false;
-            return Catalog.Remove(page, (int)slot);
+            return Catalog.GetPage(page).Remove((byte)slot);
         }
         #endregion
 
         #region Get Inventory Informations
         public virtual IDictionary GetItemsInPage(int page)
         {
-            var pageEntries = Catalog.GetAllEntriesOnPage(page);
+            var pageEntries = Catalog.GetPage(page).GetAllEntries();
             var result = new HybridDictionary();
             foreach (var entry in pageEntries)
             {
@@ -98,10 +98,7 @@ namespace DOL.GS
         }
 
         public virtual ItemTemplate GetItem(int page, eMerchantWindowSlot slot)
-        {
-            var entry = Catalog.GetEntry(page, (int)slot);
-            return entry != null ? entry.Item : null;
-        }
+            => Catalog.GetPage(page).GetEntry((byte)slot).Item;
 
         public virtual IDictionary GetAllItems()
         {

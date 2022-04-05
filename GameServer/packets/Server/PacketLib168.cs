@@ -1849,7 +1849,7 @@ namespace DOL.GS.PacketHandler
 			{
 				foreach(var page in catalog.GetAllEntries().Select(x => x.Page).Distinct())
 				{
-					var pageEntries = catalog.GetAllEntriesOnPage(page);
+					var pageEntries = catalog.GetPage(page).GetAllEntries();
 					using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 					{
 						pak.WriteByte((byte) pageEntries.Count()); //Item count on this page

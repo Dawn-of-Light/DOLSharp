@@ -345,7 +345,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							byte pagenumber = (byte)(objectId / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 							short slotnumber = (short)(objectId % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 
-							item = merchant.Catalog.GetEntry(pagenumber, slotnumber).Item;
+							item = merchant.Catalog.GetPage(pagenumber).GetEntry((byte)slotnumber).Item;
 						}
 						else if (objectType == 19)
 						{

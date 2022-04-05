@@ -288,6 +288,19 @@ namespace DOL.Integration.Gameserver
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [Test]
+        public void Add_SlotIsFirstEmptyInPage_AllItemsCountIsOne()
+        {
+            var item = new ItemTemplate() { Id_nb = $"item1" };
+            var tradeItems = new MerchantTradeItems("merchantList");
+
+            tradeItems.AddTradeItem(0,eMerchantWindowSlot.FirstEmptyInPage, item);
+
+            var actual = tradeItems.GetAllItems().Count;
+            var expected = 1;
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         private void AddObject(DataObject dataObject)
         {
             GameServer.Database.AddObject(dataObject);
