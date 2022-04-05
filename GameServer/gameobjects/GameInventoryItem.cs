@@ -409,12 +409,17 @@ namespace DOL.GS
 				delve.Add(" ");
 			}
 
-			if ((Object_Type >= (int)eObjectType.GenericWeapon) && (Object_Type <= (int)eObjectType._LastWeapon) ||
-			    Object_Type == (int)eObjectType.Instrument)
+			if ((Object_Type >= (int)eObjectType.GenericWeapon) && (Object_Type <= (int)eObjectType._LastWeapon))
 			{
 				WriteUsableClasses(delve, player.Client);
 				WriteMagicalBonuses(delve, player.Client, false);
 				DelveWeaponStats(delve, player);
+			}
+
+			if( Object_Type == (int)eObjectType.Instrument )
+			{
+				WriteUsableClasses(delve, player.Client);
+				WriteMagicalBonuses(delve, player.Client, false);
 			}
 
 			if (Object_Type >= (int)eObjectType.Cloth && Object_Type <= (int)eObjectType.Scale)
