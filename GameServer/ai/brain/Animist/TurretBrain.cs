@@ -49,16 +49,18 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override void Think()
 		{
-		  GamePlayer playerowner = GetPlayerOwner();
-			if (playerowner != null && (GameTimer.GetTickCount() - playerowner.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID)]) > ThinkInterval)
-		  {
-			playerowner.Out.SendObjectUpdate(Body);
-		  }
+            GamePlayer playerowner = GetPlayerOwner();
+            var gameObjectRegionAndId = new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID);
+            var isObjectInUpdateArray = playerowner.Client.GameObjectUpdateArray.TryGetValue(gameObjectRegionAndId, out var updateTime);
+            if (playerowner != null && isObjectInUpdateArray && (GameTimer.GetTickCount() - updateTime > ThinkInterval))
+            {
+                playerowner.Out.SendObjectUpdate(Body);
+            }
 
-		  if(!CheckSpells(eCheckSpellType.Defensive))
-		  {
-		  	AttackMostWanted();
-		  }
+            if (!CheckSpells(eCheckSpellType.Defensive))
+            {
+                AttackMostWanted();
+            }
 		}
 
 

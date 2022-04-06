@@ -102,5 +102,10 @@ namespace DOL.GS
 		{
 			return;
 		}
+
+		public override bool IsObjectInFront(GameObject target, double viewangle, bool rangeCheck = true)
+		{
+			return true;
+		}
 	}
 }
