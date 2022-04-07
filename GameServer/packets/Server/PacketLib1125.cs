@@ -696,7 +696,7 @@ namespace DOL.GS.PacketHandler
 								}
 
 								pak.WriteShortLowEndian((ushort)value2);
-								pak.WriteIntLowEndian((uint)item.Price);
+								pak.WriteIntLowEndian((uint)entry.CurrencyAmount);
 								pak.WriteShortLowEndian((ushort)item.Model);
 								pak.WritePascalStringIntLE(item.Name, 0x30);
 							}

@@ -107,7 +107,8 @@ namespace DOL.GS
 			int pageNumber = globalSlotPosition / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotPosition = globalSlotPosition % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			var page = Catalog.GetPage(pageNumber);
-			var itemToBuy = page.GetEntry((byte)slotPosition).Item;
+            var articleToBuy = page.GetEntry((byte)slotPosition);
+			var itemToBuy = articleToBuy.Item;
             if (itemToBuy == null) return;
 			var currency = page.Currency;
 
@@ -116,7 +117,7 @@ namespace DOL.GS
 
 			if (amountToBuy <= 0) return;
 
-			long cost = amountToBuy * itemToBuy.Price;
+			long cost = amountToBuy * articleToBuy.CurrencyAmount;
 
             lock (player.Inventory)
             {

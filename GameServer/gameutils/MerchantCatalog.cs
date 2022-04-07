@@ -29,12 +29,17 @@ namespace DOL.GS
         public int SlotPosition { get; } = -1;
         public int Page { get; } = 0;
         public ItemTemplate Item { get; }
+        public long CurrencyAmount {get; } = 0;
 
         public MerchantCatalogEntry(int slotPosition, int page, ItemTemplate itemTemplate)
+            : this(slotPosition, page, itemTemplate, 0) { }
+
+        public MerchantCatalogEntry(int slotPosition, int page, ItemTemplate itemTemplate, long currencyAmount)
         {
             SlotPosition = slotPosition;
             Page = page;
             Item = itemTemplate;
+            CurrencyAmount = currencyAmount;
         }
     }
 
@@ -138,7 +143,8 @@ namespace DOL.GS
                 }
                 var itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(dbMerchantItem.ItemTemplateID);
                 if (itemTemplate == null) continue;
-                var catalogEntry = new MerchantCatalogEntry(dbMerchantItem.SlotPosition, dbMerchantItem.PageNumber, itemTemplate);
+                var currencyAmount = dbMerchantItem.Price != 0 ? dbMerchantItem.Price : itemTemplate.Price;
+                var catalogEntry = new MerchantCatalogEntry(dbMerchantItem.SlotPosition, dbMerchantItem.PageNumber, itemTemplate, currencyAmount);
                 catalog.GetPage(dbMerchantItem.PageNumber).Add(catalogEntry);
             }
             catalog.ItemListId = itemListId;
