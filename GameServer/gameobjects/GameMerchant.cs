@@ -528,24 +528,6 @@ namespace DOL.GS
 		}
 	}
 
-	public class GameChampionMerchant : GameMerchant
-	{
-		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
-		{
-			/*
-			int page = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
-			if (player.ChampionLevel >= page + 2)
-				return base.OnPlayerBuy(player, item_slot, number);
-			else
-			{
-				player.Out.SendMessage("You must be Champion Level " + (page + 2) + " or higher to be able to buy this horse!", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				return false;
-			}
-			 */
-		}
-
-	}
-
 	/// <summary>
 	/// A merchant that uses an item as currency instead of money
 	/// </summary>
