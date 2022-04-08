@@ -613,118 +613,98 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public override void SendMerchantWindow(MerchantCatalog catalog, eMerchantWindowType windowType)
-		{
-			if (catalog != null)
-			{
-				foreach(var page in catalog.GetAllPages())
-				{
-					if (page.Currency.Equals(Money.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency); 
-					using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
-					{
-						pak.WriteByte((byte)page.EntryCount); //Item count on this page
-						pak.WriteByte((byte)windowType);
-						pak.WriteByte((byte)page.Number); //Page number
-												   //pak.WriteByte(0x00); //Unused // testing
+        public override void SendMerchantWindow(MerchantCatalog catalog, eMerchantWindowType windowType)
+        {
+            if (catalog != null) return;
 
-						foreach(var entry in page.GetAllEntries())
-						{
-							var item = entry.Item;
-							if (item != null)
-							{
-								pak.WriteByte((byte)entry.SlotPosition); //Item index on page
-								pak.WriteByte((byte)item.Level);
-								// some objects use this for count
-								int value1;
-								int value2;
-								switch (item.Object_Type)
-								{
-									case (int)eObjectType.Arrow:
-									case (int)eObjectType.Bolt:
-									case (int)eObjectType.Poison:
-									case (int)eObjectType.GenericItem:
-										{
-											value1 = item.PackSize;
-											value2 = value1 * item.Weight;
-											break;
-										}
-									case (int)eObjectType.Thrown:
-										{
-											value1 = item.DPS_AF;
-											value2 = item.PackSize;
-											break;
-										}
-									case (int)eObjectType.Shield:
-										{
-											value1 = item.Type_Damage;
-											value2 = item.Weight;
-											break;
-										}
-									case (int)eObjectType.GardenObject:
-										{
-											value1 = 0;
-											value2 = item.Weight;
-											break;
-										}
-									default:
-										{
-											value1 = item.DPS_AF;
-											value2 = item.Weight;
-											break;
-										}
-								}
-								pak.WriteByte((byte)value1);
-								pak.WriteByte((byte)item.SPD_ABS);
-								if (item.Object_Type == (int)eObjectType.GardenObject)
-								{
-									pak.WriteByte((byte)(item.DPS_AF));
-								}
-								else
-								{
-									pak.WriteByte((byte)(item.Hand << 6));
-								}
+            foreach (var page in catalog.GetAllPages())
+            {
+                if (page.Currency.Equals(Money.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency);
+                using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
+                {
+                    pak.WriteByte((byte)page.EntryCount); //Item count on this page
+                    pak.WriteByte((byte)windowType);
+                    pak.WriteByte((byte)page.Number); //Page number
+                                                      //pak.WriteByte(0x00); //Unused // testing
 
-								pak.WriteByte((byte)((item.Type_Damage << 6) | item.Object_Type));
-								//1 if item cannot be used by your class (greyed out)
-								if (m_gameClient.Player != null && m_gameClient.Player.HasAbilityToUseItem(item))
-								{
-									pak.WriteByte(0x01); // these maybe switched in 1125 earlier revs
-								}
-								else
-								{
-									pak.WriteByte(0x00); // these maybe switched in 1125 earlier revs
-								}
+                    foreach (var entry in page.GetAllEntries())
+                    {
+                        var item = entry.Item;
+                        if (item != null)
+                        {
+                            pak.WriteByte((byte)entry.SlotPosition); //Item index on page
+                            pak.WriteByte((byte)item.Level);
+                            // some objects use this for count
+                            int value1;
+                            int value2;
+                            switch (item.Object_Type)
+                            {
+                                case (int)eObjectType.Arrow:
+                                case (int)eObjectType.Bolt:
+                                case (int)eObjectType.Poison:
+                                case (int)eObjectType.GenericItem:
+                                    {
+                                        value1 = item.PackSize;
+                                        value2 = value1 * item.Weight;
+                                        break;
+                                    }
+                                case (int)eObjectType.Thrown:
+                                    {
+                                        value1 = item.DPS_AF;
+                                        value2 = item.PackSize;
+                                        break;
+                                    }
+                                case (int)eObjectType.Shield:
+                                    {
+                                        value1 = item.Type_Damage;
+                                        value2 = item.Weight;
+                                        break;
+                                    }
+                                case (int)eObjectType.GardenObject:
+                                    {
+                                        value1 = 0;
+                                        value2 = item.Weight;
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        value1 = item.DPS_AF;
+                                        value2 = item.Weight;
+                                        break;
+                                    }
+                            }
+                            pak.WriteByte((byte)value1);
+                            pak.WriteByte((byte)item.SPD_ABS);
+                            if (item.Object_Type == (int)eObjectType.GardenObject)
+                            {
+                                pak.WriteByte((byte)(item.DPS_AF));
+                            }
+                            else
+                            {
+                                pak.WriteByte((byte)(item.Hand << 6));
+                            }
 
-								pak.WriteShortLowEndian((ushort)value2);
-								pak.WriteIntLowEndian((uint)entry.CurrencyAmount);
-								pak.WriteShortLowEndian((ushort)item.Model);
-								pak.WritePascalStringIntLE(item.Name, 0x30);
-							}
-							else
-							{
-								if (log.IsErrorEnabled)
-								{
-									log.Error($"ItemTemplate for ItemList {catalog.ItemListId} on Page {page.Number} and Slot {entry.SlotPosition} could not be loaded.");
-								}
-								return;
-							}
-						}
-						SendTCP(pak);
-					}
-				}
-			}
-			else
-			{
-				using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
-				{
-					pak.WriteByte(0); //Item count on this page
-					pak.WriteByte((byte)windowType); //Unknown 0x00
-					pak.WriteByte(0); //Page number
-					pak.WriteByte(0x00); //Unused
-					SendTCP(pak);
-				}
-			}
-		}
+                            pak.WriteByte((byte)((item.Type_Damage << 6) | item.Object_Type));
+                            //1 if item cannot be used by your class (greyed out)
+                            if (m_gameClient.Player != null && m_gameClient.Player.HasAbilityToUseItem(item))
+                            {
+                                pak.WriteByte(0x01); // these maybe switched in 1125 earlier revs
+                            }
+                            else
+                            {
+                                pak.WriteByte(0x00); // these maybe switched in 1125 earlier revs
+                            }
+
+                            pak.WriteShortLowEndian((ushort)value2);
+                            pak.WriteIntLowEndian((uint)entry.CurrencyAmount);
+                            pak.WriteShortLowEndian((ushort)item.Model);
+                            pak.WritePascalStringIntLE(item.Name, 0x30);
+                        }
+                    }
+                    SendTCP(pak);
+                }
+            }
+        }
 
         public override void SendFurniture(House house)
         {
