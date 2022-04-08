@@ -1846,8 +1846,6 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMerchantWindow(MerchantCatalog catalog, eMerchantWindowType windowType)
 		{
-            if (catalog != null) return;
-
             foreach (var page in catalog.GetAllPages())
             {
                 if (page.Currency.Equals(Money.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency);
