@@ -72,7 +72,7 @@ namespace DOL.GS
                 return false;
             }
 
-            Catalog.GetPage(page).Add(item, (int)slot);
+            Catalog.GetPage(page).Add(item, (byte)slot);
 
             return true;
         }
