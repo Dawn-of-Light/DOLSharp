@@ -60,7 +60,7 @@ namespace DOL.GS.Finance
         public override int GetHashCode() => base.GetHashCode();
     }
 
-    public class ItemCurrency : Currency
+    internal class ItemCurrency : Currency
     {
         private static Dictionary<string, ItemCurrency> cachedCurrencyItems = new Dictionary<string, ItemCurrency>();
 
