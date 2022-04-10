@@ -51,7 +51,7 @@ namespace DOL.GS
         private List<MerchantCatalogEntry> entries = new List<MerchantCatalogEntry>();
 
         public int Number { get; }
-        public Currency Currency { get; private set; } = GS.Money.Copper;
+        public Currency Currency { get; private set; } = Money.Copper;
         public ItemTemplate CurrencyItem => Currency is ItemCurrency itemCurrency ? itemCurrency.Item : null;
 
         public MerchantCatalogPage(int number)
@@ -59,18 +59,18 @@ namespace DOL.GS
             Number = number;
         }
 
-        public bool Add(MerchantCatalogEntry entry)
+        public bool Add(ItemTemplate item, int toSlot)
         {
-            var isSlotInvalid = entry.SlotPosition < FIRST_SLOT || entry.SlotPosition > MAX_SLOTS;
+            var isSlotInvalid = toSlot < FIRST_SLOT || toSlot > MAX_SLOTS;
             if (isSlotInvalid) return false;
-            entries.Add(entry);
+            entries.Add(new MerchantCatalogEntry(toSlot, Number, item));
             return true;
         }
 
         public bool Add(ItemTemplate item)
         {
             var nextSlot = GetNextFreeSlot();
-            return Add(new MerchantCatalogEntry(nextSlot, Number, item));
+            return Add(item, nextSlot);
         }
 
         public bool Remove(byte slot)
@@ -144,8 +144,7 @@ namespace DOL.GS
                 var itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(dbMerchantItem.ItemTemplateID);
                 if (itemTemplate == null) continue;
                 var currencyAmount = dbMerchantItem.Price != 0 ? dbMerchantItem.Price : itemTemplate.Price;
-                var catalogEntry = new MerchantCatalogEntry(dbMerchantItem.SlotPosition, dbMerchantItem.PageNumber, itemTemplate, currencyAmount);
-                catalog.GetPage(dbMerchantItem.PageNumber).Add(catalogEntry);
+                catalog.GetPage(dbMerchantItem.PageNumber).Add(itemTemplate, dbMerchantItem.SlotPosition);
             }
             catalog.ItemListId = itemListId;
             return catalog;

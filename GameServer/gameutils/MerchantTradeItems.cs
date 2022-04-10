@@ -72,7 +72,7 @@ namespace DOL.GS
                 return false;
             }
 
-            Catalog.GetPage(page).Add(new MerchantCatalogEntry((int)slot, page, item));
+            Catalog.GetPage(page).Add(item, (int)slot);
 
             return true;
         }

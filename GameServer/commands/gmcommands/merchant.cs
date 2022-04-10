@@ -265,7 +265,7 @@ namespace DOL.GS.Commands
 											{
 												slot = (eMerchantWindowSlot)catalog.GetPage(page).GetNextFreeSlot();
 											}
-											var itemCanBeAdded = catalog.GetPage(page).Add(new MerchantCatalogEntry((int)slot,page,new ItemTemplate()));
+											var itemCanBeAdded = catalog.GetPage(page).Add(new ItemTemplate(), (byte)slot);
 											if(!itemCanBeAdded)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Add.PageAndSlotInvalid", page, (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1), slot, (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1)));
