@@ -27,12 +27,10 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
-	/// <summary>
-	/// MasterLevelsMerchant is responsible for selling ML Leveling Item and receiving them.
-	/// </summary>
+	[Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class MasterLevelsMerchant : GameBountyMerchant
 	{
-		private static MerchantTradeItems m_offeredItems = new MerchantTradeItems("Master Level Credits");
+		private static MerchantCatalog catalog = MerchantCatalog.CreateEmpty();
 		
 		[ScriptLoadedEvent]
 		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -55,7 +53,7 @@ namespace DOL.GS.Scripts
 					credit.Name = string.Format("Master Level {0} Credit", i);
 					GameServer.Database.AddObject(credit);
 				}
-				m_offeredItems.AddTradeItem(0, eMerchantWindowSlot.FirstEmptyInPage, credit);
+				catalog.GetPage(0).Add(credit);
 			}
 			
 			// Respec
@@ -75,12 +73,12 @@ namespace DOL.GS.Scripts
 				resp.Name = "Star of Destiny";
 				GameServer.Database.AddObject(resp);
 			}
-			m_offeredItems.AddTradeItem(0, eMerchantWindowSlot.FirstEmptyInPage, resp);
+			catalog.GetPage(0).Add(resp);
 		}
 		
 		public MasterLevelsMerchant()
 		{
-			Catalog = m_offeredItems.Catalog;
+			Catalog = catalog;
 		}
 
 		public override bool Interact(GamePlayer player)
@@ -93,7 +91,7 @@ namespace DOL.GS.Scripts
 			return true;
 		}
 		
-		public virtual void SendInteractMessage(GamePlayer player)
+		protected override void SendInteractMessage(GamePlayer player)
 		{
 			string text;
 			if (player.Level > 39)

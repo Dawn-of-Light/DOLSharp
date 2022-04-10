@@ -524,7 +524,7 @@ namespace DOL.GS
 		}
 	}
 
-    [Obsolete("This is going to removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
+    [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameBountyMerchant : GameItemCurrencyMerchant
 	{
 		protected static Dictionary<string, int> exchangeRatesToBountyPoints { get; private set; } = null;
@@ -568,49 +568,49 @@ namespace DOL.GS
 		}
 	}
 
-    [Obsolete("This is going to removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
+    [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameBloodSealsMerchant : GameItemCurrencyMerchant
 	{
         protected override Currency Currency 
             => ItemCurrency.CreateFromItemTemplateId("BloodSeal");
 	}
 
-    [Obsolete("This is going to removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
+    [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameDiamondSealsMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
             => ItemCurrency.CreateFromItemTemplateId("DiamondSeal");
 	}
 
-    [Obsolete("This is going to removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
+    [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameSapphireSealsMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
             => ItemCurrency.CreateFromItemTemplateId("SapphireSeal");
 	}
 
-	[Obsolete("This is going to removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
+	[Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
     public class GameEmeraldSealsMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
             => ItemCurrency.CreateFromItemTemplateId("EmeraldSeal");
 	}
 
-    [Obsolete("This is going to removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
+    [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameAuruliteMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
             => ItemCurrency.CreateFromItemTemplateId("aurulite");
 	}
 	
-    [Obsolete("This is going to removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
+    [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameAtlanteanGlassMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
             => ItemCurrency.CreateFromItemTemplateId("atlanteanglass");
 	}
 	
-    [Obsolete("This is going to removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
+    [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameDragonMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
