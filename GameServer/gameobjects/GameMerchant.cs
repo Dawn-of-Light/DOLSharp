@@ -186,39 +186,27 @@ namespace DOL.GS
             else throw new ArgumentException($"ToText for currency {money.Type} does not exist.");
         }
 
-
-		/// <summary>
-		/// Called when a player buys an item
-		/// </summary>
-		/// <param name="player">The player making the purchase</param>
-		/// <param name="item_slot">slot of the item to be bought</param>
-		/// <param name="number">Number to be bought</param>
-		/// <param name="TradeItems"></param>
-		/// <returns>true if buying is allowed, false if buying should be prevented</returns>
 		public static void OnPlayerBuy(GamePlayer player, int item_slot, int number, MerchantTradeItems TradeItems)
 		{
-			//Get the template
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
 			ItemTemplate template = TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
 			if (template == null) return;
 
-			//Calculate the amout of items
 			int amountToBuy = number;
 			if (template.PackSize > 0)
 				amountToBuy *= template.PackSize;
 
 			if (amountToBuy <= 0) return;
 
-			//Calculate the value of items
-			long totalValue = number * template.Price;
+			long totalCurrencyAmount = number * template.Price;
 
 			lock (player.Inventory)
 			{
-				if (player.GetCurrentMoney() < totalValue)
+				if (player.GetCurrentMoney() < totalCurrencyAmount)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalValue)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalCurrencyAmount)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -231,25 +219,19 @@ namespace DOL.GS
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
-					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPieces", amountToBuy, template.GetName(1, false), Money.GetString(totalValue));
+					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPieces", amountToBuy, template.GetName(1, false), Money.GetString(totalCurrencyAmount));
 				else
-					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), Money.GetString(totalValue));
+					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), Money.GetString(totalCurrencyAmount));
 
 				// Check if player has enough money and subtract the money
-				if (!player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
+				if (!player.RemoveMoney(totalCurrencyAmount, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
 					throw new Exception("Money amount changed while adding items.");
 				}
-				InventoryLogging.LogInventoryAction(player, "(TRADEITEMS;" + TradeItems.ItemsListID + ")", eInventoryActionType.Merchant, totalValue);
+				InventoryLogging.LogInventoryAction(player, "(TRADEITEMS;" + TradeItems.ItemsListID + ")", eInventoryActionType.Merchant, totalCurrencyAmount);
 			}
 		}
-		
-		/// <summary>
-		/// Called when a player sells something
-		/// </summary>
-		/// <param name="player">Player making the sale</param>
-		/// <param name="item">The InventoryItem to be sold</param>
-		/// <returns>true if selling is allowed, false if it should be prevented</returns>
+
 		public virtual void OnPlayerSell(GamePlayer player, InventoryItem item)
 		{
 			if(item==null || player==null) return;
@@ -285,13 +267,6 @@ namespace DOL.GS
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerSell.CantBeSold"), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 		}
 
-		/// <summary>
-		/// Called to appraise the value of an item
-		/// </summary>
-		/// <param name="player">The player whose item needs appraising</param>
-		/// <param name="item">The item to be appraised</param>
-		/// <param name="silent"></param>
-		/// <returns>The price this merchant will pay for the offered items</returns>
 		public virtual long OnPlayerAppraise(GamePlayer player, InventoryItem item, bool silent)
 		{
 			if (item == null)
@@ -338,11 +313,6 @@ namespace DOL.GS
 		#endregion NPCTemplate
 
 		#region Database
-
-		/// <summary>
-		/// Loads a merchant from the DB
-		/// </summary>
-		/// <param name="merchantobject">The merchant DB object</param>
 		public override void LoadFromDatabase(DataObject merchantobject)
 		{
 			base.LoadFromDatabase(merchantobject);
@@ -352,9 +322,6 @@ namespace DOL.GS
 				Catalog = MerchantCatalog.LoadFromDatabase(merchant.ItemsListTemplateID);
 		}
 
-		/// <summary>
-		/// Saves a merchant into the DB
-		/// </summary>
 		public override void SaveIntoDatabase()
 		{
 			Mob merchant = null;
@@ -410,9 +377,6 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Deletes a merchant from the DB
-		/// </summary>
 		public override void DeleteFromDatabase()
 		{
 			if (InternalID != null)
