@@ -19,10 +19,11 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using DOL.GS;
 using DOL.Database;
 using DOL.GS.Finance;
 
-namespace DOL.GS
+namespace DOL.GS.Profession
 {
     public class MerchantCatalogEntry
     {

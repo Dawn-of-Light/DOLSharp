@@ -24,6 +24,7 @@ using DOL.GS.Spells;
 using log4net;
 using System.Collections;
 using System.Linq;
+using DOL.GS.Profession;
 
 namespace DOL.GS
 {

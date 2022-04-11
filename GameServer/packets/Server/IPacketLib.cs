@@ -24,6 +24,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
+using DOL.GS.Profession;
 using DOL.GS.Quests;
 
 namespace DOL.GS.PacketHandler

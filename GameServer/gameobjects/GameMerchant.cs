@@ -19,13 +19,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.GS.Finance;
-using System.Linq;
+using DOL.GS.Profession;
 
 namespace DOL.GS
 {

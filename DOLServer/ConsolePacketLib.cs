@@ -30,6 +30,7 @@ using DOL.GS.Quests;
 
 using log4net;
 using DOL.Database;
+using DOL.GS.Profession;
 
 namespace DOLGameServerConsole
 {

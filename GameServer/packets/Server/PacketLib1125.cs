@@ -19,6 +19,7 @@
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
+using DOL.GS.Profession;
 using DOL.GS.Spells;
 using log4net;
 using System;

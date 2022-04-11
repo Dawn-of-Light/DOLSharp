@@ -20,10 +20,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using DOL.GS;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.Profession;
 
 namespace DOL.GS.Scripts
 {

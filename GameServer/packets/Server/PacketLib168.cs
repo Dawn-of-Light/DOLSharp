@@ -39,6 +39,7 @@ using DOL.GS.Styles;
 using log4net;
 using DOL.GS.ServerProperties;
 using DOL.GS.Finance;
+using DOL.GS.Profession;
 
 namespace DOL.GS.PacketHandler
 {

@@ -24,6 +24,7 @@ using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using DOL.GS.Profession;
 
 namespace DOL.GS.Commands
 {

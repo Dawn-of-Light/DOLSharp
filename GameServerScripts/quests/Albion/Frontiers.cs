@@ -38,6 +38,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.Profession;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion

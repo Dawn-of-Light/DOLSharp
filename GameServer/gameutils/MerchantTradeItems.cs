@@ -21,10 +21,9 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-
-using DOL.Database;
-
 using log4net;
+using DOL.Database;
+using DOL.GS.Profession;
 
 namespace DOL.GS
 {

@@ -27,6 +27,7 @@ using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS.Keeps;
 using DOL.GS.Housing;
+using DOL.GS.Profession;
 
 namespace DOL.Tests
 {

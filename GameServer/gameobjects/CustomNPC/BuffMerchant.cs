@@ -45,6 +45,7 @@ using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
 
 using log4net;
+using DOL.GS.Profession;
 
 namespace DOL.GS
 {

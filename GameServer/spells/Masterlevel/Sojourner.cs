@@ -8,6 +8,7 @@ using DOL.AI.Brain;
 using DOL.GS;
 using DOL.Events;
 using System.Collections.Specialized;
+using DOL.GS.Profession;
 
 namespace DOL.GS.Spells
 {
