@@ -366,7 +366,7 @@ namespace DOL.GS.Commands
 			// So we have to save a path in the database with the Id_nb as a PathID
 			// The following string will contain the item Id_nb if it is found in the merchant list
 			string pathname = "";
-			if (merchant.Catalog != null)
+			if (merchant.Catalog.IsEmpty == false)
 			{
 				foreach (var template in merchant.Catalog.GetAllEntries().Select(x => x.Item))
 				{

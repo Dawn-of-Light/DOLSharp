@@ -71,7 +71,7 @@ namespace DOL.GS.Commands
 						var targetM = client.Player.TargetObject as GameMerchant;
 						
                         info.Add(" + Is Merchant ");
-						if (targetM.Catalog != null)
+						if (targetM.Catalog.IsEmpty == false)
 						{
                             info.Add(" + Sell List: \n   " + targetM.Catalog.ItemListId);
 						}

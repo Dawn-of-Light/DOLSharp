@@ -124,7 +124,7 @@ namespace DOL.GS.Commands
 					{
 						if (args.Length == 2)
 						{
-							if (targetMerchant.Catalog == null)
+							if (targetMerchant.Catalog.IsEmpty)
 								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Info.ArtListIsEmpty"));
 							else
 							{
@@ -203,7 +203,7 @@ namespace DOL.GS.Commands
 								{
 									if (args.Length == 3)
 									{
-										targetMerchant.Catalog = null;
+										targetMerchant.Catalog = MerchantCatalog.Create();
 										targetMerchant.SaveIntoDatabase();
 										DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Sell.Remove.Removed"));
 									}
@@ -243,7 +243,7 @@ namespace DOL.GS.Commands
 											int page = Convert.ToInt32(args[4]);
 											eMerchantWindowSlot slot = eMerchantWindowSlot.FirstEmptyInPage;
 
-											if (targetMerchant.Catalog == null)
+											if (targetMerchant.Catalog.IsEmpty)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.ListNoFound"));
 												return;
@@ -326,7 +326,7 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											if (targetMerchant.Catalog == null)
+											if (targetMerchant.Catalog.IsEmpty)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.ListNoFound"));
 												return;
@@ -362,7 +362,7 @@ namespace DOL.GS.Commands
 									{
 										try
 										{
-											if (targetMerchant.Catalog == null)
+											if (targetMerchant.Catalog.IsEmpty)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.ListNoFound"));
 												return;
