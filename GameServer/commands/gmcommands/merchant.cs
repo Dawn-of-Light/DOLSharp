@@ -185,7 +185,7 @@ namespace DOL.GS.Commands
 										try
 										{
 											string templateID = args[3];
-											targetMerchant.Catalog = MerchantCatalog.LoadFromDatabase(templateID);
+											targetMerchant.Catalog = MerchantCatalog.Create(templateID);
 											targetMerchant.SaveIntoDatabase();
 											DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Sell.Add.Loaded"));
 										}
@@ -243,12 +243,6 @@ namespace DOL.GS.Commands
 											int page = Convert.ToInt32(args[4]);
 											eMerchantWindowSlot slot = eMerchantWindowSlot.FirstEmptyInPage;
 
-											if (targetMerchant.Catalog.IsEmpty)
-											{
-												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.ListNoFound"));
-												return;
-											}
-
 											ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
 											if (template == null)
 											{
@@ -266,7 +260,7 @@ namespace DOL.GS.Commands
 											{
 												slot = (eMerchantWindowSlot)catalog.GetPage(page).GetNextFreeSlot();
 											}
-											var itemCanBeAdded = catalog.GetPage(page).Add(new ItemTemplate(), (byte)slot);
+											var itemCanBeAdded = catalog.GetPage(page).AddItem(template, (byte)slot, template.Price);
 											if(!itemCanBeAdded)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Add.PageAndSlotInvalid", page, (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1), slot, (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1)));

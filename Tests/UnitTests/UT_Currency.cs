@@ -16,9 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS;
 using DOL.Database;
 using NUnit.Framework;
+using DOL.GS.Finance;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -26,23 +26,23 @@ namespace DOL.UnitTests.Gameserver
     class UT_Currency
     {
         [Test]
-        public void Equals_SameTypeAndSameValue_True()
+        public void Equals_SameCurrencyAndSameValue_True()
         {
-            var currency1 = Money.Copper.Create(1);
-            var currency2 = Money.Copper.Create(1);
+            var money1 = Currency.Copper.Mint(1);
+            var money2 = Currency.Copper.Mint(1);
 
-            var actual = currency1.Equals(currency2);
+            var actual = money1.Equals(money2);
 
             Assert.IsTrue(actual);
         }
 
         [Test]
-        public void Equals_SameTypeAndDifferentValue_False()
+        public void Equals_SameCurrencyAndDifferentValue_False()
         {
-            var currency1 = Money.Copper.Create(1);
-            var currency2 = Money.Copper.Create(2);
+            var money1 = Currency.Copper.Mint(1);
+            var money2 = Currency.Copper.Mint(2);
 
-            var actual = currency1.Equals(currency2);
+            var actual = money1.Equals(money2);
 
             Assert.IsFalse(actual);
         }
@@ -50,23 +50,23 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void Equals_SameValueButDifferentCurrencyType_False()
         {
-            var currency1 = Money.Copper.Create(1);
-            var currency2 = Money.BP.Create(1);
+            var money1 = Currency.Copper.Mint(1);
+            var money2 = Currency.BountyPoints.Mint(1);
 
-            var actual = currency1.Equals(currency2);
+            var actual = money1.Equals(money2);
 
             Assert.IsFalse(actual);
         }
 
         [Test]
-        public void Equals_ItemCurrencyDifferent_False()
+        public void Equals_CurrencyItemIsDifferent_False()
         {
-            var currencyItem1 = new ItemTemplate() { Id_nb = "itemCurrency1" };
-            var currencyItem2 = new ItemTemplate() { Id_nb = "itemCurrency2" };
-            var currency1 = Money.Item(currencyItem1).Create(1);
-            var currency2 = Money.Item(currencyItem2).Create(1);
+            var itemMoney1 = new ItemTemplate() { Id_nb = "itemCurrency1" };
+            var itemMoney2 = new ItemTemplate() { Id_nb = "itemCurrency2" };
+            var money1 = Currency.Item(itemMoney1).Mint(1);
+            var money2 = Currency.Item(itemMoney2).Mint(1);
 
-            var actual = currency1.Equals(currency2);
+            var actual = money1.Equals(money2);
 
             Assert.IsFalse(actual);
         }
@@ -76,10 +76,10 @@ namespace DOL.UnitTests.Gameserver
         {
             var currencyItem1 = new ItemTemplate() { Id_nb = "itemCurrency1" };
             var currencyItem2 = new ItemTemplate() { Id_nb = "itemCurrency1" };
-            var currency1 = Money.Item(currencyItem1).Create(1);
-            var currency2 = Money.Item(currencyItem2).Create(1);
+            var money1 = Currency.Item(currencyItem1).Mint(1);
+            var money2 = Currency.Item(currencyItem2).Mint(1);
 
-            var actual = currency1.Equals(currency2);
+            var actual = money1.Equals(money2);
 
             Assert.IsTrue(actual);
         }

@@ -18,6 +18,7 @@
  */
 using DOL.Database;
 using DOL.GS.Effects;
+using DOL.GS.Finance;
 using DOL.GS.Housing;
 using DOL.GS.Profession;
 using DOL.GS.Spells;
@@ -618,7 +619,7 @@ namespace DOL.GS.PacketHandler
         {
             foreach (var page in catalog.GetAllPages())
             {
-                if (page.Currency.Equals(Money.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency);
+                if (page.Currency.Equals(Currency.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency);
                 using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
                 {
                     pak.WriteByte((byte)page.EntryCount); //Item count on this page

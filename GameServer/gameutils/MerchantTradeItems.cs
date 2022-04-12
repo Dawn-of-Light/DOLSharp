@@ -71,7 +71,7 @@ namespace DOL.GS
                 return false;
             }
 
-            Catalog.GetPage(page).Add(item, (byte)slot);
+            Catalog.GetPage(page).AddItem(item, (byte)slot, item.Price);
 
             return true;
         }
@@ -91,7 +91,7 @@ namespace DOL.GS
             var result = new HybridDictionary();
             foreach (var entry in pageEntries)
             {
-                result.Add(entry.SlotPosition, entry.Item);
+                result.Add((int)entry.SlotPosition, entry.Item);
             }
             return result;
         }
@@ -136,8 +136,7 @@ namespace DOL.GS
             var itemsInPage = GetItemsInPage(onPage);
             for (int i = 0; i < MAX_ITEM_IN_TRADEWINDOWS; i++)
             {
-                if (!itemsInPage.Contains(i))
-                    return i;
+                if (!itemsInPage.Contains(i)) return i;
             }
             return MAX_ITEM_IN_TRADEWINDOWS;
         }

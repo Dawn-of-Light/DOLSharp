@@ -122,11 +122,11 @@ namespace DOL.GS
 
             lock (player.Inventory)
             {
-                if (currency.Equals(Money.Copper) || currency.Equals(Money.BP) || currency is ItemCurrency)
+                if (currency.Equals(Currency.Copper) || currency.Equals(Currency.BountyPoints) || currency is ItemCurrency)
                 {
                     var currencyItem = page.CurrencyItem;
-                    var costToText = CurrencyToText(currency.Create(cost));
-                    if (!HasPlayerEnoughBalance(player, currency.Create(cost)))
+                    var costToText = CurrencyToText(currency.Mint(cost));
+                    if (!HasPlayerEnoughBalance(player, currency.Mint(cost)))
                     {
                         player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedGeneric", costToText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         return;
@@ -143,48 +143,48 @@ namespace DOL.GS
                         message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtGeneric", itemToBuy.Name, costToText);
                     else
                         message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesGeneric", amountToBuy, itemToBuy.Name, costToText);
-                    WithdrawCurrencyFromPlayer(player, currency.Create(cost));
+                    WithdrawCurrencyFromPlayer(player, currency.Mint(cost));
                     player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 
                 }
-                else if (currency.Equals(Money.Mithril)) throw new NotImplementedException("Mithril is currently not implemented as a separate currency.");
+                else if (currency.Equals(Currency.Mithril)) throw new NotImplementedException("Mithril is currently not implemented as a separate currency.");
                 else throw new ArgumentException($"{currency} is not implemented.");
             }
         }
 
         private void WithdrawCurrencyFromPlayer(GamePlayer player, Money price)
         {
-            if (price.Type.Equals(Money.Copper))
+            if (price.Currency.Equals(Currency.Copper))
             {
                 if (!player.RemoveMoney(price.Amount)) throw new Exception("Money amount changed while adding items.");
             }
-            else if (price.Type.Equals(Money.BP)) player.BountyPoints -= price.Amount;
-            else if (price.Type is ItemCurrency itemCurrency)
+            else if (price.Currency.Equals(Currency.BountyPoints)) player.BountyPoints -= price.Amount;
+            else if (price.Currency is ItemCurrency itemCurrency)
             {
                 player.Inventory.RemoveTemplate(itemCurrency.Item.Id_nb, (int)price.Amount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
             }
-            else throw new NotImplementedException($"{price.Type} is currently not implemented.");
+            else throw new NotImplementedException($"{price.Currency} is currently not implemented.");
         }
 
         private bool HasPlayerEnoughBalance(GamePlayer player, Money price)
         {
-            if (price.Type.Equals(Money.Copper)) return player.GetCurrentMoney() > price.Amount;
-            else if (price.Type.Equals(Money.BP)) return player.BountyPoints > price.Amount;
-            else if (price.Type is ItemCurrency itemCurrency)
+            if (price.Currency.Equals(Currency.Copper)) return player.GetCurrentMoney() >= price.Amount;
+            else if (price.Currency.Equals(Currency.BountyPoints)) return player.BountyPoints >= price.Amount;
+            else if (price.Currency is ItemCurrency itemCurrency)
             {
                 var balance = player.Inventory.CountItemTemplate(itemCurrency.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                return balance > price.Amount;
+                return balance >= price.Amount;
             }
-            else throw new ArgumentException($"ToText for currency {price.Type} does not exist.");
+            else throw new ArgumentException($"HasPlayerEnoughBalance method for currency {price.Currency} does not exist.");
         }
 
         private string CurrencyToText(Money money)
         {
-            if (money.Type.Equals(Money.Copper)) return Money.GetString(money.Amount);
-            else if (money.Type.Equals(Money.BP)) return $"{money.Amount} BPs";
-            else if (money.Type.Equals(Money.Mithril)) return $"{money.Amount} Mithril";
-            else if (money.Type is ItemCurrency itemCurrency) return $"{money.Amount} {itemCurrency.Item.Id_nb}";
-            else throw new ArgumentException($"ToText for currency {money.Type} does not exist.");
+            if (money.Currency.Equals(Currency.Copper)) return Money.GetString(money.Amount);
+            else if (money.Currency.Equals(Currency.BountyPoints)) return $"{money.Amount} BPs";
+            else if (money.Currency.Equals(Currency.Mithril)) return $"{money.Amount} Mithril";
+            else if (money.Currency is ItemCurrency itemCurrency) return $"{money.Amount} {itemCurrency.Item.Name}";
+            else throw new ArgumentException($"ToText for currency {money.Currency} does not exist.");
         }
 
 		public static void OnPlayerBuy(GamePlayer player, int item_slot, int number, MerchantTradeItems TradeItems)
@@ -319,7 +319,7 @@ namespace DOL.GS
 			base.LoadFromDatabase(merchantobject);
 			if (!(merchantobject is Mob)) return;
 			Mob merchant = (Mob)merchantobject;
-			if (merchant.ItemsListTemplateID != null && merchant.ItemsListTemplateID.Length > 0)
+			if (string.IsNullOrEmpty(merchant.ItemsListTemplateID) == false)
 				Catalog = MerchantCatalog.LoadFromDatabase(merchant.ItemsListTemplateID);
 		}
 
@@ -358,14 +358,7 @@ namespace DOL.GS
 			}
 			merchant.ClassType = this.GetType().ToString();
 			merchant.EquipmentTemplateID = EquipmentTemplateID;
-			if (Catalog.GetAllEntries().Any())
-			{
-				merchant.ItemsListTemplateID = Catalog.ItemListId;
-			}
-			else
-			{
-				merchant.ItemsListTemplateID = null;
-			}
+			merchant.ItemsListTemplateID = Catalog.ItemListId;
 
 			if (InternalID == null)
 			{
@@ -494,7 +487,7 @@ namespace DOL.GS
 	{
 		protected static Dictionary<string, int> exchangeRatesToBountyPoints { get; private set; } = null;
 
-        protected override Currency Currency => Money.BP;
+        protected override Currency Currency => Currency.BountyPoints;
 
 		static GameBountyMerchant()
         {

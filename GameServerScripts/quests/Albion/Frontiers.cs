@@ -308,7 +308,7 @@ namespace DOL.GS.Quests.Albion
 
 
 			colm.Catalog = MerchantCatalog.Create();
-			if (!colm.Catalog.GetPage(0).Add(dragonflyTicket))
+			if (!colm.Catalog.GetPage(0).AddItemToNextFreeSlotWithDefaultPrice(dragonflyTicket))
 				if (log.IsWarnEnabled)
 					log.Warn("dragonflyTicket not added");
 

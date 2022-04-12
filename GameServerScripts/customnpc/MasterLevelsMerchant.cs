@@ -53,7 +53,7 @@ namespace DOL.GS.Scripts
 					credit.Name = string.Format("Master Level {0} Credit", i);
 					GameServer.Database.AddObject(credit);
 				}
-				catalog.GetPage(0).Add(credit);
+				catalog.GetPage(0).AddItemToNextFreeSlotWithDefaultPrice(credit);
 			}
 			
 			// Respec
@@ -73,7 +73,7 @@ namespace DOL.GS.Scripts
 				resp.Name = "Star of Destiny";
 				GameServer.Database.AddObject(resp);
 			}
-			catalog.GetPage(0).Add(resp);
+			catalog.GetPage(0).AddItemToNextFreeSlotWithDefaultPrice(resp);
 		}
 		
 		public MasterLevelsMerchant()

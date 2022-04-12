@@ -1849,7 +1849,7 @@ namespace DOL.GS.PacketHandler
 		{
             foreach (var page in catalog.GetAllPages())
             {
-                if (page.Currency.Equals(Money.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency);
+                if (page.Currency.Equals(Currency.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency);
                 using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
                 {
                     pak.WriteByte((byte)page.EntryCount); //Item count on this page
@@ -1937,9 +1937,9 @@ namespace DOL.GS.PacketHandler
 
 		protected eMerchantWindowType ConvertCurrencyToMerchantWindowType(Currency currency)
 		{
-			if(Money.Copper.Equals(currency)) return eMerchantWindowType.Normal;
-			else if(Money.BP.Equals(currency)) return eMerchantWindowType.Bp;
-			else if(Money.Mithril.Equals(currency)) return eMerchantWindowType.Mithril;
+			if(Currency.Copper.Equals(currency)) return eMerchantWindowType.Normal;
+			else if(Currency.BountyPoints.Equals(currency)) return eMerchantWindowType.Bp;
+			else if(Currency.Mithril.Equals(currency)) return eMerchantWindowType.Mithril;
 			else if(currency is ItemCurrency) return eMerchantWindowType.Count;
 			else throw new ArgumentException($"Currency {currency} has no MerchantWindowType conversion, yet.");
 		}

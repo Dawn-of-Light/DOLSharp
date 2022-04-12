@@ -27,24 +27,19 @@ namespace DOL.GS
 	public class Money
 	{
         public long Amount { get; private set; }
-        public Currency Type { get; private set; }
+        public Currency Currency { get; private set; }
 
         private Money() { }
 
-        public static Money Create(long value, Currency type)
-            => new Money() { Amount = value, Type = type };
-
-        public static Currency Copper => Currency.Create(eCurrency.Copper);
-        public static Currency BP => Currency.Create(eCurrency.BountyPoints);
-        public static Currency Mithril => Currency.Create(eCurrency.Mithril);
-        public static Currency Item(ItemTemplate item) => ItemCurrency.Create(item);
+        public static Money Mint(long value, Currency type)
+            => new Money() { Amount = value, Currency = type };
 
         public override bool Equals(object obj)
         {
             if (obj is Money otherCurrency)
             {
                 var areOfSameValue = otherCurrency.Amount == this.Amount;
-                var areOfSameType = otherCurrency.Type.Equals(Type);
+                var areOfSameType = otherCurrency.Currency.Equals(Currency);
                 return areOfSameType && areOfSameValue;
             }
             return false;

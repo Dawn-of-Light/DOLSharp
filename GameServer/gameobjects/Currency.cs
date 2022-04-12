@@ -3,27 +3,25 @@ using DOL.Database;
 
 namespace DOL.GS.Finance
 {
-    public enum eCurrency : byte
+    public abstract class Currency
     {
-        Copper = 1,
-        ItemTemplate = 2,
-        BountyPoints = 3,
-        Mithril = 4
-    }
+        private enum eCurrency : byte
+        {
+            Copper = 1,
+            ItemTemplate = 2,
+            BountyPoints = 3,
+            Mithril = 4
+        }
 
-    public class Currency
-    {
         private static Dictionary<eCurrency, Currency> cachedTypes = new Dictionary<eCurrency, Currency>(){
-            {eCurrency.Copper, new Currency(){Id = eCurrency.Copper}},
-            {eCurrency.BountyPoints, new Currency(){Id = eCurrency.BountyPoints}},
-            {eCurrency.Mithril, new Currency(){Id = eCurrency.Mithril}},
+            {eCurrency.Copper, new Copper()},
+            {eCurrency.BountyPoints, new BountyPoints()},
+            {eCurrency.Mithril, new Mithril()},
         };
-
-        public eCurrency Id { get; private set; }
 
         protected Currency() { }
 
-        internal static Currency Create(eCurrency currencyId)
+        private static Currency Create(eCurrency currencyId)
         {
             if (cachedTypes.TryGetValue(currencyId, out var currencyType))
             {
@@ -32,32 +30,41 @@ namespace DOL.GS.Finance
             throw new System.NotImplementedException($"Currency with id {currencyId} is not implemented.");
         }
 
-        public Money Create(long value)
-        {
-            return Money.Create(value, this);
-        }
+        public static Currency Create(byte currencyId)
+            => Create((eCurrency)currencyId);
 
-        public virtual string Name
-        {
-            get
-            {
-                switch (Id)
-                {
-                    case eCurrency.Copper: return "copper";
-                    case eCurrency.BountyPoints: return "bounty points";
-                    case eCurrency.Mithril: return "mithril";
-                }
-                return $"<{Id}>";
-            }
-        }
+        public static byte ItemCurrencyId => (byte)eCurrency.ItemTemplate;
+
+        public static Currency Copper => Create(eCurrency.Copper);
+        public static Currency BountyPoints => Create(eCurrency.BountyPoints);
+        public static Currency Mithril => Create(eCurrency.Mithril);
+        public static Currency Item(ItemTemplate item) => ItemCurrency.Create(item);
+
+        public Money Mint(long value) => Money.Mint(value, this);
+
+        public abstract string Name { get; }
 
         public override bool Equals(object obj)
         {
-            if (obj is Currency currencyType) return currencyType.Id == Id;
-            return false;
+            return obj.GetType().Equals(this.GetType());
         }
 
         public override int GetHashCode() => base.GetHashCode();
+    }
+
+    public class Copper : Currency
+    {
+        public override string Name => "copper";
+    }
+
+    public class BountyPoints : Currency
+    {
+        public override string Name => "bounty points";
+    }
+
+    public class Mithril : Currency
+    {
+        public override string Name => "mithril";
     }
 
     internal class ItemCurrency : Currency

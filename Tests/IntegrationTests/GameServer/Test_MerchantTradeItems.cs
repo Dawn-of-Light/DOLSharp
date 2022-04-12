@@ -278,8 +278,8 @@ namespace DOL.Integration.Gameserver
         [Test]
         public void GetValidSlot_SlotIsFirstEmptyInPage_FirstSlotTaken_One()
         {
-            AddObject(new MerchantItem() { ItemTemplateID = $"item1", ItemListID = "merchantList", SlotPosition = 0, PageNumber = 0 });
-            AddObject(new ItemTemplate() { Id_nb = $"item1" });
+            AddObject(new MerchantItem() { ItemTemplateID = "item1", ItemListID = "merchantList", SlotPosition = 0, PageNumber = 0 });
+            AddObject(new ItemTemplate() { Id_nb = "item1" });
             var tradeItems = new MerchantTradeItems("merchantList");
 
             var actual = (int)tradeItems.GetValidSlot(0, eMerchantWindowSlot.FirstEmptyInPage);
@@ -291,7 +291,7 @@ namespace DOL.Integration.Gameserver
         [Test]
         public void Add_SlotIsFirstEmptyInPage_AllItemsCountIsOne()
         {
-            var item = new ItemTemplate() { Id_nb = $"item1" };
+            var item = new ItemTemplate() { Id_nb = "item1" };
             var tradeItems = new MerchantTradeItems("merchantList");
 
             tradeItems.AddTradeItem(0,eMerchantWindowSlot.FirstEmptyInPage, item);
