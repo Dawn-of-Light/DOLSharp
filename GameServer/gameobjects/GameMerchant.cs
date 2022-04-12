@@ -91,14 +91,14 @@ namespace DOL.GS
 		[Obsolete("Use .Catalog instead.")]
 		public MerchantTradeItems TradeItems
 		{
-			get => Catalog.GetAllEntries().Any() ? Catalog.ConvertToMerchantTradeItems() : null;
+			get => Catalog.IsEmpty ? null : Catalog.ConvertToMerchantTradeItems();
 			set
 			{
 				if(value != null) Catalog = value.Catalog; 
 			}
 		}
 
-		public MerchantCatalog Catalog { get; set; } = MerchantCatalog.CreateEmpty();
+		public MerchantCatalog Catalog { get; set; } = MerchantCatalog.Create();
 
 		#endregion
 

@@ -121,7 +121,9 @@ namespace DOL.GS.Profession
 
         private MerchantCatalog() { }
 
-        public static MerchantCatalog CreateEmpty() => new MerchantCatalog();
+        public static MerchantCatalog Create() => new MerchantCatalog();
+
+        public static MerchantCatalog Create(string itemListId) => new MerchantCatalog() { ItemListId = itemListId };
 
         public static MerchantCatalog LoadFromDatabase(string itemListId)
         {
@@ -170,6 +172,9 @@ namespace DOL.GS.Profession
 
         public MerchantCatalogEntry GetEntry(int atPage, int atSlot)
             => GetPage(atPage).GetEntry((byte)atSlot);
+
+        public bool IsEmpty
+            => merchantPages.Count == 0;
 
         public MerchantTradeItems ConvertToMerchantTradeItems()
             => new MerchantTradeItems(this);

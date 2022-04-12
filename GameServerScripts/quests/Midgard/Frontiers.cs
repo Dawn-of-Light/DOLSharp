@@ -300,7 +300,7 @@ namespace DOL.GS.Quests.Midgard
 				njiedi = npcs[0] as GameStableMaster;
 			}
 
-			njiedi.Catalog = MerchantCatalog.CreateEmpty();
+			njiedi.Catalog = MerchantCatalog.Create();
 			if (!njiedi.Catalog.GetPage(1).Add(ticketToSvasudFaste))
 				if (log.IsWarnEnabled)
 					log.Warn("ticketToSvasudFaste not added");

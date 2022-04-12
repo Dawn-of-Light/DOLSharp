@@ -30,7 +30,7 @@ namespace DOL.GS.Scripts
 	[Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class MasterLevelsMerchant : GameBountyMerchant
 	{
-		private static MerchantCatalog catalog = MerchantCatalog.CreateEmpty();
+		private static MerchantCatalog catalog = MerchantCatalog.Create();
 		
 		[ScriptLoadedEvent]
 		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
