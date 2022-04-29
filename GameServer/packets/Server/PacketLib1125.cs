@@ -52,7 +52,7 @@ namespace DOL.GS.PacketHandler
 			//Construct the new packet
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CryptKey)))
 			{
-				pak.WritePascalStringIntLE((((int)m_gameClient.Version) / 1000) + "." + (((int)m_gameClient.Version) - 1000) + m_gameClient.MinorRev);
+				pak.WritePascalStringIntLE((((int)m_gameClient.Version) / 1000) + "." + (((int)m_gameClient.Version) - 1000) + m_gameClient.MinorRev, 0x20);
 				//// Same as the trailing two bytes sent in first client to server packet
 				pak.WriteByte(m_gameClient.MajorBuild); // last seen : 0x2A 0x07
 				pak.WriteByte(m_gameClient.MinorBuild);
@@ -581,30 +581,30 @@ namespace DOL.GS.PacketHandler
 
 						if (item.Count > 1)
 						{
-							pak.WritePascalStringIntLE(item.Count + " " + item.Name);
+							pak.WritePascalStringIntLE(item.Count + " " + item.Name, 0x30);
 						}
 						else if (item.PackSize > 1)
 						{
-							pak.WritePascalStringIntLE(item.PackSize + " " + item.Name + bpPrice);
+							pak.WritePascalStringIntLE(item.PackSize + " " + item.Name + bpPrice, 0x30);
 						}
 						else
 						{
-							pak.WritePascalStringIntLE(item.Name + bpPrice);
+							pak.WritePascalStringIntLE(item.Name + bpPrice, 0x30);
 						}
 					}
 					else
 					{
 						if (item.Count > 1)
 						{
-							pak.WritePascalStringIntLE(item.Count + " " + item.Name);
+							pak.WritePascalStringIntLE(item.Count + " " + item.Name, 0x30);
 						}
 						else if (item.PackSize > 1)
 						{
-							pak.WritePascalStringIntLE(item.PackSize + " " + item.Name);
+							pak.WritePascalStringIntLE(item.PackSize + " " + item.Name, 0x30);
 						}
 						else
 						{
-							pak.WritePascalStringIntLE(item.Name);
+							pak.WritePascalStringIntLE(item.Name, 0x30);
 						}
 					}
 				}
