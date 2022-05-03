@@ -17,8 +17,8 @@
  *
  */
 using DOL.Database;
-using NUnit.Framework;
 using DOL.GS.Finance;
+using NUnit.Framework;
 
 namespace DOL.UnitTests.Gameserver
 {

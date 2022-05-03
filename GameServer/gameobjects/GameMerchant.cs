@@ -154,31 +154,12 @@ namespace DOL.GS
 
         private void WithdrawMoneyFromPlayer(GamePlayer player, Finance.Money price)
         {
-            if (price.Currency.Equals(Currency.Copper))
-            {
-                if (!player.RemoveMoney(price.Amount)) throw new Exception("Money amount changed while adding items.");
-            }
-            else if (price.Currency.Equals(Currency.BountyPoints)) player.BountyPoints -= price.Amount;
-            else if (price.Currency is ItemCurrency itemCurrency)
-            {
-                if (player.Inventory.RemoveTemplate(itemCurrency.Item.Id_nb, (int)price.Amount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-                {
-                    InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, itemCurrency.Item, (int)price.Amount);
-                }
-            }
-            else throw new NotImplementedException($"{price.Currency} is currently not implemented.");
+			if (!player.Wallet.RemoveMoney(price)) throw new Exception("Money amount changed while adding items.");
         }
 
         private bool HasPlayerEnoughBalance(GamePlayer player, Finance.Money price)
         {
-            if (price.Currency.Equals(Currency.Copper)) return player.GetCurrentMoney() >= price.Amount;
-            else if (price.Currency.Equals(Currency.BountyPoints)) return player.BountyPoints >= price.Amount;
-            else if (price.Currency is ItemCurrency itemCurrency)
-            {
-                var balance = player.Inventory.CountItemTemplate(itemCurrency.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-                return balance >= price.Amount;
-            }
-            else throw new ArgumentException($"HasPlayerEnoughBalance method for currency {price.Currency} does not exist.");
+			return player.Wallet.GetBalance(price.Currency) >= price.Amount;
         }
 
         private string CurrencyToText(Finance.Money money)

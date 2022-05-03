@@ -29,6 +29,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
+using DOL.GS.Finance;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -4118,19 +4119,14 @@ namespace DOL.GS
 			return new GameEffectPlayerList(this);
 		}
 
-		#endregion
+        #endregion
 
-		#region Realm-/Region-/Bount-/Skillpoints...
-
-		/// <summary>
-		/// Gets/sets player bounty points
-		/// (delegate to PlayerCharacter)
-		/// </summary>
-		public virtual long BountyPoints
-		{
-			get { return DBCharacter != null ? DBCharacter.BountyPoints : 0; }
-			set { if (DBCharacter != null) DBCharacter.BountyPoints = value; }
-		}
+        #region Realm-/Region-/Bount-/Skillpoints...
+        public virtual long BountyPoints
+        {
+            get { return Wallet.GetBalance(Currency.BountyPoints); }
+            set { Wallet.SetBalance(Currency.BountyPoints.Mint(value)); Client.Out.SendUpdatePoints();}
+        }
 
 		/// <summary>
 		/// Gets/sets player realm points
@@ -4376,9 +4372,8 @@ namespace DOL.GS
 		/// <param name="type">The chat type</param>
 		public virtual bool RemoveBountyPoints(long amount, string str, eChatType type, eChatLoc loc)
 		{
-			if (BountyPoints < amount)
+			if (Wallet.RemoveMoney(Currency.BountyPoints.Mint(amount)) == false)
 				return false;
-			BountyPoints -= amount;
 			Out.SendUpdatePoints();
 			if (str != null && amount != 0)
 				Out.SendMessage(str, type, loc);
@@ -4454,7 +4449,7 @@ namespace DOL.GS
 			if (notify)
 				base.GainBountyPoints(amount);
 
-			BountyPoints += amount;
+			Wallet.AddMoney(Currency.BountyPoints.Mint(amount));
 
 			if (m_guild != null && Client.Account.PrivLevel == 1)
 				m_guild.BountyPoints += amount;
@@ -8590,134 +8585,60 @@ namespace DOL.GS
 			}
 		}
 
-		#region Money
-		
-		/// <summary>
-		/// Player Mithril Amount
-		/// </summary>
-		public virtual int Mithril { get { return m_Mithril; } protected set { m_Mithril = value; if (DBCharacter != null) DBCharacter.Mithril = m_Mithril; }}
-		protected int m_Mithril = 0;
-		
-		/// <summary>
-		/// Player Platinum Amount
-		/// </summary>
-		public virtual int Platinum { get { return m_Platinum; } protected set { m_Platinum = value; if (DBCharacter != null) DBCharacter.Platinum = m_Platinum; }}
-		protected int m_Platinum = 0;
-		
-		/// <summary>
-		/// Player Gold Amount
-		/// </summary>
-		public virtual int Gold { get { return m_Gold; } protected set { m_Gold = value; if (DBCharacter != null) DBCharacter.Gold = m_Gold; }}
-		protected int m_Gold = 0;
-		
-		/// <summary>
-		/// Player Silver Amount
-		/// </summary>
-		public virtual int Silver { get { return m_Silver; } protected set { m_Silver = value; if (DBCharacter != null) DBCharacter.Silver = m_Silver; }}
-		protected int m_Silver = 0;
-		
-		/// <summary>
-		/// Player Copper Amount
-		/// </summary>
-		public virtual int Copper { get { return m_Copper; } protected set { m_Copper = value; if (DBCharacter != null) DBCharacter.Copper = m_Copper; }}
-		protected int m_Copper = 0;
-		
-		/// <summary>
-		/// Gets the money value this player owns
-		/// </summary>
-		/// <returns></returns>
-		public virtual long GetCurrentMoney()
+        #region Money
+        public virtual int Mithril => Money.GetMithril(Wallet.GetBalance(Currency.Copper));
+        public virtual int Platinum => Money.GetPlatinum(Wallet.GetBalance(Currency.Copper));
+        public virtual int Gold => Money.GetGold(Wallet.GetBalance(Currency.Copper));
+        public virtual int Silver => Money.GetSilver(Wallet.GetBalance(Currency.Copper));
+        public virtual int Copper => Money.GetCopper(Wallet.GetBalance(Currency.Copper));
+
+        public Wallet Wallet { get; }
+
+		public long GetItemCurrencyBalance(Currency currency)
 		{
-			return Money.GetMoney(Mithril, Platinum, Gold, Silver, Copper);
+			if(currency is ItemCurrency == false) throw new System.ArgumentException($"{currency.Name} is not an ItemCurrency.");
+			return Wallet.GetBalance(currency);
 		}
 
-		/// <summary>
-		/// Adds money to this player
-		/// </summary>
-		/// <param name="money">money to add</param>
+		public virtual long GetCurrentMoney()
+		{
+			return Wallet.GetBalance(Currency.Copper);
+		}
+
 		public virtual void AddMoney(long money)
 		{
 			AddMoney(money, null, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
-		/// <summary>
-		/// Adds money to this player
-		/// </summary>
-		/// <param name="money">money to add</param>
-		/// <param name="messageFormat">null if no message or "text {0} text"</param>
 		public virtual void AddMoney(long money, string messageFormat)
 		{
 			AddMoney(money, messageFormat, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
-		/// <summary>
-		/// Adds money to this player
-		/// </summary>
-		/// <param name="money">money to add</param>
-		/// <param name="messageFormat">null if no message or "text {0} text"</param>
-		/// <param name="ct">message chat type</param>
-		/// <param name="cl">message chat location</param>
-		public virtual void AddMoney(long money, string messageFormat, eChatType ct, eChatLoc cl)
+		public virtual void AddMoney(long copperAmount, string messageFormat, eChatType ct, eChatLoc cl)
 		{
-			long newMoney = GetCurrentMoney() + money;
-
-			Copper = Money.GetCopper(newMoney);
-			Silver = Money.GetSilver(newMoney);
-			Gold = Money.GetGold(newMoney);
-			Platinum = Money.GetPlatinum(newMoney);
-			Mithril = Money.GetMithril(newMoney);
-
-			Out.SendUpdateMoney();
+			Wallet.AddMoney(Currency.Copper.Mint(copperAmount));
 
 			if (messageFormat != null)
 			{
-				Out.SendMessage(string.Format(messageFormat, Money.GetString(money)), ct, cl);
+				Out.SendMessage(string.Format(messageFormat, Money.GetString(copperAmount)), ct, cl);
 			}
 		}
 
-		/// <summary>
-		/// Removes money from the player
-		/// </summary>
-		/// <param name="money">money value to subtract</param>
-		/// <returns>true if successfull, false if player doesn't have enough money</returns>
 		public virtual bool RemoveMoney(long money)
 		{
 			return RemoveMoney(money, null, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
-		/// <summary>
-		/// Removes money from the player
-		/// </summary>
-		/// <param name="money">money value to subtract</param>
-		/// <param name="messageFormat">null if no message or "text {0} text"</param>
-		/// <returns>true if successfull, false if player doesn't have enough money</returns>
 		public virtual bool RemoveMoney(long money, string messageFormat)
 		{
 			return RemoveMoney(money, messageFormat, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
-		/// <summary>
-		/// Removes money from the player
-		/// </summary>
-		/// <param name="money">money value to subtract</param>
-		/// <param name="messageFormat">null if no message or "text {0} text"</param>
-		/// <param name="ct">message chat type</param>
-		/// <param name="cl">message chat location</param>
-		/// <returns>true if successfull, false if player doesn't have enough money</returns>
 		public virtual bool RemoveMoney(long money, string messageFormat, eChatType ct, eChatLoc cl)
 		{
-			if (money > GetCurrentMoney())
-				return false;
-
-			long newMoney = GetCurrentMoney() - money;
-
-			Mithril = Money.GetMithril(newMoney);
-			Platinum = Money.GetPlatinum(newMoney);
-			Gold = Money.GetGold(newMoney);
-			Silver = Money.GetSilver(newMoney);
-			Copper = Money.GetCopper(newMoney);
-
-			Out.SendUpdateMoney();
+            var insufficientFunds = Wallet.RemoveMoney(Currency.Copper.Mint(money)) == false;
+            if (insufficientFunds) return false;
 
 			if (messageFormat != null && money != 0)
 			{
@@ -12558,13 +12479,8 @@ namespace DOL.GS
 			if (!(obj is DOLCharacters))
 				return;
 			m_dbCharacter = (DOLCharacters)obj;
-
-			// Money
-			m_Copper = DBCharacter.Copper;
-			m_Silver = DBCharacter.Silver;
-			m_Gold = DBCharacter.Gold;
-			m_Platinum = DBCharacter.Platinum;
-			m_Mithril = DBCharacter.Mithril;
+			
+			Wallet.InitializeFromDatabase();
 			
 			Model = (ushort)DBCharacter.CurrentModel;
 
@@ -15727,6 +15643,7 @@ namespace DOL.GS
 		public GamePlayer(GameClient client, DOLCharacters dbChar)
 			: base()
 		{
+			Wallet = new Wallet(this);
 			IsJumping = false;
 			m_steed = new WeakRef(null);
 			m_rangeAttackAmmo = new WeakRef(null);

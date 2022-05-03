@@ -261,7 +261,6 @@ namespace DOL.GS.Commands
 					player.RespecBought++;
 					DisplayMessage(player, "You bought a single line respec!");
 				}
-				player.Out.SendUpdateMoney();
 			}			
 			// Assign full points returned
 			if (player.SkillSpecialtyPoints > specPoints)
