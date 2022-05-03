@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DOL.Database;
 
@@ -5,40 +6,25 @@ namespace DOL.GS.Finance
 {
     public abstract class Currency
     {
-        private enum eCurrency : byte
-        {
-            Copper = 1,
-            ItemTemplate = 2,
-            BountyPoints = 3,
-            Mithril = 4
-        }
-
-        private static Dictionary<eCurrency, Currency> cachedTypes = new Dictionary<eCurrency, Currency>(){
-            {eCurrency.Copper, new Copper()},
-            {eCurrency.BountyPoints, new BountyPoints()},
-            {eCurrency.Mithril, new Mithril()},
-        };
-
         protected Currency() { }
 
-        private static Currency Create(eCurrency currencyId)
+        public static Currency Create(byte currencyId, string itemTemplateId = null)
         {
-            if (cachedTypes.TryGetValue(currencyId, out var currencyType))
+            switch (currencyId)
             {
-                return currencyType;
+                case 1: return Copper;
+                case 2: return ItemCurrency.CreateFromItemTemplateId(itemTemplateId);
+                case 3: return BountyPoints;
+                case 4: return Mithril;
+                default: throw new System.NotImplementedException($"Currency with id {currencyId} is not implemented.");
             }
-            throw new System.NotImplementedException($"Currency with id {currencyId} is not implemented.");
         }
 
-        public static Currency Create(byte currencyId)
-            => Create((eCurrency)currencyId);
-
-        public static byte ItemCurrencyId => (byte)eCurrency.ItemTemplate;
-
-        public static Currency Copper => Create(eCurrency.Copper);
-        public static Currency BountyPoints => Create(eCurrency.BountyPoints);
-        public static Currency Mithril => Create(eCurrency.Mithril);
-        public static Currency Item(ItemTemplate item) => ItemCurrency.Create(item);
+        public static Currency Copper { get; } = new Copper();
+        public static Currency BountyPoints { get; } = new BountyPoints();
+        public static Currency Mithril { get; } = new Mithril();
+        public static Currency Item(ItemTemplate itemTemplate) => ItemCurrency.Create(itemTemplate);
+        public static Currency Item(string itemTemplateId) => ItemCurrency.CreateFromItemTemplateId(itemTemplateId);
 
         public Money Mint(long value) => Money.Mint(value, this);
 
@@ -52,46 +38,54 @@ namespace DOL.GS.Finance
         public override int GetHashCode() => base.GetHashCode();
     }
 
-    public class Copper : Currency
+    internal class Copper : Currency
     {
         public override string Name => "copper";
     }
 
-    public class BountyPoints : Currency
+    internal class BountyPoints : Currency
     {
         public override string Name => "bounty points";
     }
 
-    public class Mithril : Currency
+    internal class Mithril : Currency
     {
         public override string Name => "mithril";
     }
 
-    public class ItemCurrency : Currency
+    internal class ItemCurrency : Currency
     {
         private static Dictionary<string, ItemCurrency> cachedCurrencyItems = new Dictionary<string, ItemCurrency>();
 
         public new ItemTemplate Item { get; private set; }
 
-        internal static ItemCurrency Create(ItemTemplate item)
+        public static ItemCurrency Create(ItemTemplate itemTemplate)
         {
-            if (cachedCurrencyItems.TryGetValue(item.Id_nb, out var cachedItemCurrency))
+            if (cachedCurrencyItems.TryGetValue(itemTemplate.Id_nb, out var cachedItemCurrency))
             {
                 return cachedItemCurrency;
             }
-            var newItemCurrency = new ItemCurrency() { Item = item };
-            cachedCurrencyItems[item.Id_nb] = newItemCurrency;
-            return newItemCurrency;
+            var newCurrencyItem = new ItemCurrency() { Item = itemTemplate };
+            cachedCurrencyItems[itemTemplate.Id_nb] = newCurrencyItem;
+            return newCurrencyItem;
         }
 
         public static ItemCurrency CreateFromItemTemplateId(string itemTemplateId)
         {
+            if(string.IsNullOrEmpty(itemTemplateId)) throw new ArgumentException("An ItemCurrency's ItemTemplateID may not be null nor empty.");
+            
+            if (cachedCurrencyItems.TryGetValue(itemTemplateId, out var cachedItemCurrency))
+            {
+                return cachedItemCurrency;
+            }
             var itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(itemTemplateId);
             if (itemTemplate == null)
             {
                 itemTemplate = new ItemTemplate() { Id_nb = itemTemplateId, Name = itemTemplateId };
             }
-            return Create(itemTemplate);
+            var newCurrencyItem = new ItemCurrency() { Item = itemTemplate };
+            cachedCurrencyItems[itemTemplate.Id_nb] = newCurrencyItem;
+            return newCurrencyItem;
         }
 
         public override string Name
@@ -99,7 +93,7 @@ namespace DOL.GS.Finance
 
         public override bool Equals(object obj)
         {
-            if (obj is ItemCurrency itemCurrency) return itemCurrency.Item.Id_nb.ToLower() == Item.Id_nb.ToLower();
+            if (obj is ItemCurrency itemCurrency) return itemCurrency.Item.Id_nb == Item.Id_nb;
             return false;
         }
 

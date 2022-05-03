@@ -142,13 +142,9 @@ namespace DOL.GS.Profession
                 if (dbMerchantItem.SlotPosition == currencySlotPosition)
                 {
                     var currencyId = (byte)dbMerchantItem.Price;
-                    if (currencyId == Currency.ItemCurrencyId)
-                    {
-                        var currencyItem = GameServer.Database.FindObjectByKey<ItemTemplate>(dbMerchantItem.ItemTemplateID);
-                        if (currencyItem == null) throw new NullReferenceException($"The currency item {dbMerchantItem.ItemTemplateID} for item list {itemListId} on page {dbMerchantItem.PageNumber} could not be loaded");
-                        page.SetCurrency(Currency.Item(currencyItem));
-                    }
-                    else page.SetCurrency(Currency.Create(currencyId));
+                    var itemTemplateId = dbMerchantItem.ItemTemplateID;
+                    var pageCurrency = Currency.Create(currencyId, itemTemplateId);
+                    page.SetCurrency(pageCurrency);
                 }
                 var itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(dbMerchantItem.ItemTemplateID);
                 if (itemTemplate == null) continue;

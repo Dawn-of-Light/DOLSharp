@@ -18,7 +18,6 @@
  */
 using System.Text;
 using DOL.GS.Finance;
-using DOL.Database;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
