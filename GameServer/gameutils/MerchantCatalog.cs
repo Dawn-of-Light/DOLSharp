@@ -180,7 +180,7 @@ namespace DOL.GS.Profession
             => GetPage(atPage).GetEntry((byte)atSlot);
 
         public bool IsEmpty
-            => merchantPages.Count == 0;
+            => GetAllEntries().Any() == false;
 
         public MerchantTradeItems ConvertToMerchantTradeItems()
             => new MerchantTradeItems(this);

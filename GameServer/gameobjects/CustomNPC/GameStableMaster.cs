@@ -227,7 +227,7 @@ namespace DOL.GS
 		}
 
 		private bool isItemInMerchantList(InventoryItem item)
-			=> Catalog.GetAllEntries().Where(x => x.Item.Id_nb == item.Id_nb).Count() > 0;
+			=> Catalog.GetAllEntries().Where(x => x.Item.Id_nb == item.Id_nb).Any();
 
 
 		private void SendReply(GamePlayer target, string msg)

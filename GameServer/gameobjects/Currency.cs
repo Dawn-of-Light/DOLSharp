@@ -67,11 +67,11 @@ namespace DOL.GS.Finance
         public override string Name => "mithril";
     }
 
-    internal class ItemCurrency : Currency
+    public class ItemCurrency : Currency
     {
         private static Dictionary<string, ItemCurrency> cachedCurrencyItems = new Dictionary<string, ItemCurrency>();
 
-        public ItemTemplate Item { get; private set; }
+        public new ItemTemplate Item { get; private set; }
 
         internal static ItemCurrency Create(ItemTemplate item)
         {

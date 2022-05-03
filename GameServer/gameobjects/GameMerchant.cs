@@ -143,7 +143,7 @@ namespace DOL.GS
                         message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtGeneric", itemToBuy.Name, costToText);
                     else
                         message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesGeneric", amountToBuy, itemToBuy.Name, costToText);
-                    WithdrawCurrencyFromPlayer(player, currency.Mint(cost));
+                    WithdrawMoneyFromPlayer(player, currency.Mint(cost));
                     player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 
                 }
@@ -152,7 +152,7 @@ namespace DOL.GS
             }
         }
 
-        private void WithdrawCurrencyFromPlayer(GamePlayer player, Money price)
+        private void WithdrawMoneyFromPlayer(GamePlayer player, Money price)
         {
             if (price.Currency.Equals(Currency.Copper))
             {
