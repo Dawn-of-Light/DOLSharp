@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DOL.Database;
 
 namespace DOL.GS.Finance
 {
@@ -40,7 +39,7 @@ namespace DOL.GS.Finance
 
     internal class Copper : Currency
     {
-        public override string Name => "copper";
+        public override string Name => "money";
     }
 
     internal class BountyPoints : Currency
@@ -50,7 +49,7 @@ namespace DOL.GS.Finance
 
     internal class Mithril : Currency
     {
-        public override string Name => "mithril";
+        public override string Name => "Mithril";
     }
 
     internal class ItemCurrency : Currency
@@ -89,7 +88,7 @@ namespace DOL.GS.Finance
         }
 
         public override string Name
-            => Item.Name;
+            => $"units of {Item.Name}";
 
         public override bool Equals(object obj)
         {

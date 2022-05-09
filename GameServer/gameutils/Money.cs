@@ -16,9 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Text;
-using DOL.GS.ServerProperties;
-using DOL.Language;
+using System;
+using DOL.GS.Finance;
 
 namespace DOL.GS
 {
@@ -56,110 +55,15 @@ namespace DOL.GS
 
 		public static string GetString(long money)
 		{
-			if (money == 0)
-				return LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "Money.GetString.Text1");
-
-			int copper = GetCopper(money);
-			int silver = GetSilver(money);
-			int gold = GetGold(money);
-			int platin = GetPlatinum(money);
-			int mithril = GetMithril(money);
-
-			var res = new StringBuilder();
-			if (mithril != 0)
-			{
-				res.Append(mithril);
-				res.Append(" ");
-				res.Append(LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "Money.GetString.Text2"));
-				res.Append(" ");
-			}
-			if (platin != 0)
-			{
-				res.Append(platin);
-				res.Append(" ");
-				res.Append(LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "Money.GetString.Text3"));
-				res.Append(" ");
-			}
-			if (gold != 0)
-			{
-				res.Append(gold);
-				res.Append(" ");
-				res.Append(LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "Money.GetString.Text4"));
-				res.Append(" ");
-			}
-			if (silver != 0)
-			{
-				res.Append(silver);
-				res.Append(" ");
-				res.Append(LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "Money.GetString.Text5"));
-				res.Append(" ");
-			}
-			if (copper != 0)
-			{
-				res.Append(copper);
-				res.Append(" ");
-				res.Append(LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "Money.GetString.Text6"));
-				res.Append(" ");
-			}
-
-			// remove last comma
-			if (res.Length > 1)
-				res.Length -= 2;
-
-			return res.ToString();
+			return Currency.Copper.Mint(money).ToText();
 		}
 
 		public static string GetShortString(long money)
 		{
-			if (money == 0)
-				return LanguageMgr.GetTranslation(Properties.SERV_LANGUAGE, "Money.GetString.Text1");
-
-			int copper = GetCopper(money);
-			int silver = GetSilver(money);
-			int gold = GetGold(money);
-			int platin = GetPlatinum(money);
-			int mithril = GetMithril(money);
-
-			var res = new StringBuilder();
-			if (mithril != 0)
-			{
-				res.Append(mithril);
-				res.Append("m, ");
-			}
-			if (platin != 0)
-			{
-				res.Append(platin);
-				res.Append("p, ");
-			}
-			if (gold != 0)
-			{
-				res.Append(gold);
-				res.Append("g, ");
-			}
-			if (silver != 0)
-			{
-				res.Append(silver);
-				res.Append("s, ");
-			}
-			if (copper != 0)
-			{
-				res.Append(copper);
-				res.Append("c, ");
-			}
-
-			// remove last comma
-			if (res.Length > 1)
-				res.Length -= 2;
-
-			return res.ToString();
+			return Currency.Copper.Mint(money).ToAbbreviatedText();
 		}
 
-		/// <summary>
-		/// Calculate an approximate price for given level and quality
-		/// </summary>
-		/// <param name="level"></param>
-		/// <param name="quality"></param>
-		/// <returns></returns>
+		[Obsolete("This is going to be removed without replacement.")]
 		public static long SetAutoPrice(int level, int quality)
 		{
 			int levelmod = level * level * level;

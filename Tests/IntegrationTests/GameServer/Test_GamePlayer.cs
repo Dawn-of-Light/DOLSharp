@@ -45,32 +45,6 @@ namespace DOL.Integration.Gameserver
             Assert.That(actual, Is.EqualTo(expected));
         }
 
-        [Test]
-        public void GetItemCurrencyBalance_Aurulite_Init_Zero()
-        {
-            var player = CreatePlayer();
-            var auruliteCurrency = Currency.Item(Aurulite);
-
-            var actual = player.GetItemCurrencyBalance(auruliteCurrency);
-
-            var expected = 0;
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void GetItemCurrencyBalance_Aurulite_AddOneAuruliteToInventory_One()
-        {
-            var player = CreatePlayer();
-            var auruliteCurrency = Currency.Item(Aurulite);
-            var inventoryItem = new GameInventoryItem(Aurulite);
-
-            player.Inventory.AddTemplate(inventoryItem, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-            var actual = player.GetItemCurrencyBalance(auruliteCurrency);
-
-            var expected = 1;
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
         private static GamePlayer CreatePlayer() => new MinimalGamePlayer(){InternalID = System.Guid.NewGuid().ToString()};
 
         private class MinimalGamePlayer : GamePlayer

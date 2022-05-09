@@ -164,11 +164,7 @@ namespace DOL.GS
 
         private string CurrencyToText(Finance.Money money)
         {
-            if (money.Currency.Equals(Currency.Copper)) return Money.GetString(money.Amount);
-            else if (money.Currency.Equals(Currency.BountyPoints)) return $"{money.Amount} BPs";
-            else if (money.Currency.Equals(Currency.Mithril)) return $"{money.Amount} Mithril";
-            else if (money.Currency is ItemCurrency itemCurrency) return $"{money.Amount} {itemCurrency.Item.Name}";
-            else throw new ArgumentException($"ToText for currency {money.Currency} does not exist.");
+            return money.ToText();
         }
 
 		public static void OnPlayerBuy(GamePlayer player, int item_slot, int number, MerchantTradeItems TradeItems)
@@ -429,9 +425,7 @@ namespace DOL.GS
 
 		protected virtual void SendInteractMessage(GamePlayer player)
 		{
-			string text = Currency.Name + "s";
-
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, text), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, Currency.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 		}
 
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)

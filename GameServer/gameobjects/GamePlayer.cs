@@ -8594,12 +8594,6 @@ namespace DOL.GS
 
         public Wallet Wallet { get; }
 
-		public long GetItemCurrencyBalance(Currency currency)
-		{
-			if(currency is ItemCurrency == false) throw new System.ArgumentException($"{currency.Name} is not an ItemCurrency.");
-			return Wallet.GetBalance(currency);
-		}
-
 		public virtual long GetCurrentMoney()
 		{
 			return Wallet.GetBalance(Currency.Copper);
