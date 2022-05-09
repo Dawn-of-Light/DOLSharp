@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DOL.GS.Finance
 {
@@ -17,17 +18,23 @@ namespace DOL.GS.Finance
 
         public long GetBalance(Currency currency)
         {
-            if(currency is ItemCurrency itemCurrency) 
+            long balance;
+            if(currency.IsItemCurrency) 
             {
-                return owner.Inventory.CountItemTemplate(itemCurrency.Item.Id_nb,eInventorySlot.FirstBackpack,eInventorySlot.LastBackpack);
+                lock(owner.Inventory)
+                {
+                    return owner.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
+                        .Where(i => currency.Equals(Currency.Item(i.ClassType.ToLower().Replace("currency.",""))))
+                        .Aggregate(0, (acc,i) => acc + i.Count);
+                }
             }
-            balances.TryGetValue(currency, out long balance);
+            balances.TryGetValue(currency, out balance);
             return balance;
         }
 
         public void AddMoney(Money money)
         {
-            if(money.Currency is ItemCurrency)
+            if(money.Currency.IsItemCurrency)
             {
                 throw new ArgumentException("You cannot add money of type ItemCurrency.");
             }
@@ -42,10 +49,35 @@ namespace DOL.GS.Finance
 
         public bool RemoveMoney(Money money)
         {
-            if(money.Currency is ItemCurrency itemCurrency)
+            if (money.Currency.IsItemCurrency)
             {
-                var inventoryCurrencyItem = new GameInventoryItem(itemCurrency.Item);
-                return owner.Inventory.RemoveTemplate(inventoryCurrencyItem.Id_nb, (int)money.Amount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+                lock (owner.Inventory)
+                {
+                    if(GetBalance(money.Currency) < money.Amount) return false;
+
+                    var validCurrencyItemsInventory = owner.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
+                        .Where(i => money.Currency.Equals(Currency.Item(i.ClassType.ToLower().Replace("currency.",""))));
+                    var remainingDue = (int)money.Amount;
+                    foreach (var currencyItem in validCurrencyItemsInventory)
+                    {
+                        if (currencyItem.Count > remainingDue)
+                        {
+                            owner.Inventory.RemoveCountFromStack(currencyItem, remainingDue);
+                            break;
+                        }
+                        else if (currencyItem.Count == remainingDue)
+                        {
+                            owner.Inventory.RemoveItem(currencyItem);
+                            break;
+                        }
+                        else
+                        {
+                            remainingDue -= currencyItem.Count;
+                            owner.Inventory.RemoveItem(currencyItem);
+                        }
+                    }
+                    return true;
+                }
             }
             lock (balances)
             {

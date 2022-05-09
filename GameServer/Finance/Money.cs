@@ -34,7 +34,7 @@ namespace DOL.GS.Finance
                 else return string.Join(" and ", new[] { string.Join(", ", moneyParts.Take(moneyParts.Length - 1)), moneyParts.Last() });
             }
 
-            return $"{Amount} {Currency.Name}";
+            return $"{Amount} {Currency.ToText()}";
         }
 
         public string ToAbbreviatedText()

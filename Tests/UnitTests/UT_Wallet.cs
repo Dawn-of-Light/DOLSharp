@@ -77,7 +77,7 @@ namespace DOL.UnitTests.Gameserver
         {
             var player = new FakePlayer();
             var wallet = new Wallet(player);
-            var aurulite = Currency.Item(new ItemTemplate(){Id_nb="aurulite"});
+            var aurulite = Currency.Item("aurulite");
 
             var actual = wallet.GetBalance(aurulite);
             var expected = 0;

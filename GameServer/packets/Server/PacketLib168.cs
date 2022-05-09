@@ -1935,14 +1935,14 @@ namespace DOL.GS.PacketHandler
             }
 		}
 
-		protected eMerchantWindowType ConvertCurrencyToMerchantWindowType(Currency currency)
-		{
-			if(Currency.Copper.Equals(currency)) return eMerchantWindowType.Normal;
-			else if(Currency.BountyPoints.Equals(currency)) return eMerchantWindowType.Bp;
-			else if(Currency.Mithril.Equals(currency)) return eMerchantWindowType.Mithril;
-			else if(currency is ItemCurrency) return eMerchantWindowType.Count;
-			else throw new ArgumentException($"Currency {currency} has no MerchantWindowType conversion, yet.");
-		}
+        protected eMerchantWindowType ConvertCurrencyToMerchantWindowType(Currency currency)
+        {
+            if (currency.Equals(Currency.Copper)) return eMerchantWindowType.Normal;
+            else if (currency.Equals(Currency.BountyPoints)) return eMerchantWindowType.Bp;
+            else if (currency.Equals(Currency.Mithril)) return eMerchantWindowType.Mithril;
+            else if (currency.IsItemCurrency) return eMerchantWindowType.Count;
+            else throw new ArgumentException($"Currency {currency} has no MerchantWindowType conversion, yet.");
+        }
 
 		public virtual void SendTradeWindow()
 		{

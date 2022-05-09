@@ -124,7 +124,6 @@ namespace DOL.GS
             {
                 if (currency.Equals(Currency.Copper) || currency.Equals(Currency.BountyPoints) || currency is ItemCurrency)
                 {
-                    var currencyItem = page.CurrencyItem;
                     var costToText = CurrencyToText(currency.Mint(cost));
                     if (!HasPlayerEnoughBalance(player, currency.Mint(cost)))
                     {
@@ -371,7 +370,8 @@ namespace DOL.GS
 	public abstract class GameItemCurrencyMerchant : GameMerchant
 	{
         protected virtual Currency Currency {get; private set;}
-        private static Dictionary<String, int> currencyExchangeRates = null;
+        private static Dictionary<Currency, int> currencyExchangeRates = null;
+		private static Dictionary<Currency, ItemTemplate> defaultCurrencyItems = new Dictionary<Currency, ItemTemplate>();
         
         public override void LoadTemplate(INpcTemplate template)
         {
@@ -399,16 +399,16 @@ namespace DOL.GS
         {
 			if (ServerProperties.Properties.CURRENCY_EXCHANGE_ALLOW)
             {
-				foreach (string sCurrencyValue in ServerProperties.Properties.CURRENCY_EXCHANGE_VALUES.Split(';'))
+				foreach (string currencyExchangePair in ServerProperties.Properties.CURRENCY_EXCHANGE_VALUES.Split(';'))
 				{
-					string[] asVal = sCurrencyValue.Split('|');
+					string[] asVal = currencyExchangePair.Split('|');
 
 					if (asVal.Length > 1 && int.TryParse(asVal[1], out int currencyValue) && currencyValue > 0)
 					{
 						if (currencyExchangeRates == null)
-							currencyExchangeRates = new Dictionary<string, int>(1);
+							currencyExchangeRates = new Dictionary<Currency, int>(1);
 
-						currencyExchangeRates[asVal[0]] = currencyValue;
+						currencyExchangeRates[Currency.Item(asVal[0])] = currencyValue;
 					}
 				}
             }
@@ -425,21 +425,26 @@ namespace DOL.GS
 
 		protected virtual void SendInteractMessage(GamePlayer player)
 		{
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, Currency.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, Currency.ToText()), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 		}
 
-		public override bool ReceiveItem(GameLiving source, InventoryItem item)
-		{
-			if (source is GamePlayer player && item != null && currencyExchangeRates != null
-                && currencyExchangeRates.TryGetValue(item.Id_nb, out int exchangeCurrencyValue)
-                && currencyExchangeRates.TryGetValue((Currency as ItemCurrency).Item.Id_nb, out int referenceCurrencyValue))
+        public override bool ReceiveItem(GameLiving source, InventoryItem item)
+        {
+			Currency receivedCurrency = null;
+            if (item != null && string.IsNullOrEmpty(item.ClassType) == false)
+            {
+				receivedCurrency = Currency.Item(item.ClassType.ToLower().Replace("currency.", ""));
+            }
+            if (source is GamePlayer player && receivedCurrency != null && currencyExchangeRates != null
+                && currencyExchangeRates.TryGetValue(receivedCurrency, out int exchangeCurrencyValue)
+                && currencyExchangeRates.TryGetValue(Currency, out int referenceCurrencyValue))
             {
                 int giveCount = item.Count * exchangeCurrencyValue / referenceCurrencyValue;
 
                 if (giveCount > 0)
                 {
                     // Create and give new item to player
-                    InventoryItem newItem = GameInventoryItem.Create((Currency as ItemCurrency).Item);
+                    InventoryItem newItem = GameInventoryItem.Create(GetDefaultCurrencyItem(Currency));
                     newItem.OwnerID = player.InternalID;
                     newItem.Count = giveCount;
 
@@ -458,6 +463,25 @@ namespace DOL.GS
             }
         	return base.ReceiveItem(source, item);
 		}
+
+        private ItemTemplate GetDefaultCurrencyItem(Currency currency)
+        {
+            if (defaultCurrencyItems.TryGetValue(currency, out var currencyItem))
+            {
+                return currencyItem;
+            }
+            else
+            {
+                var allCurrencyItems = DOLDB<ItemTemplate>.SelectObjects(DB.Column("ClassType").IsLike("Currency.%"));
+                foreach (var item in allCurrencyItems)
+                {
+                    currency.Equals(Currency.Item(item.ClassType.ToLower().Replace("currency.", "")));
+                	defaultCurrencyItems[currency] = item;
+					return item;
+                }
+                throw new NullReferenceException($"No currency item for <{currency.ToText()}> was found.");
+            }
+        }
 	}
 
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
@@ -508,48 +532,48 @@ namespace DOL.GS
 	public class GameBloodSealsMerchant : GameItemCurrencyMerchant
 	{
         protected override Currency Currency 
-            => ItemCurrency.CreateFromItemTemplateId("BloodSeal");
+            => Currency.Item("BloodSeal");
 	}
 
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameDiamondSealsMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => ItemCurrency.CreateFromItemTemplateId("DiamondSeal");
+            => Currency.Item("DiamondSeal");
 	}
 
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameSapphireSealsMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => ItemCurrency.CreateFromItemTemplateId("SapphireSeal");
+            => Currency.Item("SapphireSeal");
 	}
 
 	[Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
     public class GameEmeraldSealsMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => ItemCurrency.CreateFromItemTemplateId("EmeraldSeal");
+            => Currency.Item("EmeraldSeal");
 	}
 
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameAuruliteMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => ItemCurrency.CreateFromItemTemplateId("aurulite");
+            => Currency.Item("aurulite");
 	}
 	
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameAtlanteanGlassMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => ItemCurrency.CreateFromItemTemplateId("atlanteanglass");
+            => Currency.Item("atlanteanglass");
 	}
 	
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameDragonMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => ItemCurrency.CreateFromItemTemplateId("dragonscales");
+            => Currency.Item("dragonscales");
 	}
 }

@@ -174,7 +174,7 @@ namespace DOL.Integration.Gameserver
 
         private static Currency Aurulite => Currency.Item("aurulite");
         private static ItemTemplate AuruliteItemTemplate
-            = new ItemTemplate() { Name = "Aurulite", Id_nb = "aurulite", MaxCount = 2000 };
+            = new ItemTemplate() { Name = "Aurulite Splitter", Id_nb = "aurulite_splitter", ClassType="Currency.aurulite", MaxCount = 2000 };
         private static Wallet CreateWallet()
             => new Wallet(new MinimalGamePlayer());
         private static Wallet CreateWallet(GamePlayer owner)
