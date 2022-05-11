@@ -24,6 +24,7 @@ using DOL.GS.Spells;
 using log4net;
 using System.Collections;
 using System.Linq;
+using DOL.GS.Profession;
 
 namespace DOL.GS
 {
@@ -300,7 +301,7 @@ namespace DOL.GS
 
 				if (merchant != null)
 				{
-					merchant.TradeItems = new MerchantTradeItems(ItemsListTemplateID);
+					merchant.Catalog = MerchantCatalog.LoadFromDatabase(ItemsListTemplateID);
 				}
 			}
 		}

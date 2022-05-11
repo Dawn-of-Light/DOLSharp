@@ -38,6 +38,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.Profession;
 using DOL.Language;
 using log4net;
 
@@ -299,8 +300,8 @@ namespace DOL.GS.Quests.Midgard
 				njiedi = npcs[0] as GameStableMaster;
 			}
 
-			njiedi.TradeItems = new MerchantTradeItems(null);
-			if (!njiedi.TradeItems.AddTradeItem(1, eMerchantWindowSlot.FirstEmptyInPage, ticketToSvasudFaste))
+			njiedi.Catalog = MerchantCatalog.Create();
+			if (!njiedi.Catalog.GetPage(1).AddItemToNextFreeSlotWithDefaultPrice(ticketToSvasudFaste))
 				if (log.IsWarnEnabled)
 					log.Warn("ticketToSvasudFaste not added");
 

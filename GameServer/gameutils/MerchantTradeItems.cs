@@ -21,295 +21,126 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-
-using DOL.Database;
-
 using log4net;
+using DOL.Database;
+using DOL.GS.Profession;
 
 namespace DOL.GS
 {
-	public enum eMerchantWindowSlot : int
-	{
-		FirstEmptyInPage = -2,
-		Invalid = -1,
+    public enum eMerchantWindowSlot : int
+    {
+        FirstEmptyInPage = -2,
+        Invalid = -1,
 
-		FirstInPage = 0,
-		LastInPage = MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1,
-	}
+        FirstInPage = 0,
+        LastInPage = MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1,
+    }
 
-	/// <summary>
-	/// This class represents a full merchant item list
-	/// and contains functions that can be used to
-	/// add and remove items
-	/// </summary>
-	public class MerchantTradeItems
-	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    public class MerchantTradeItems
+    {
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        public const byte MAX_ITEM_IN_TRADEWINDOWS = 30;
+        public const int MAX_PAGES_IN_TRADEWINDOWS = 5;
 
-		/// <summary>
-		/// The maximum number of items on one page
-		/// </summary>
-		public const byte MAX_ITEM_IN_TRADEWINDOWS = 30;
+        #region Constructor/Declaration
+        public MerchantTradeItems(string itemsListId)
+        {
+            Catalog = MerchantCatalog.LoadFromDatabase(itemsListId);
+        }
 
-		/// <summary>
-		/// The maximum number of pages supported by clients
-		/// </summary>
-		public const int MAX_PAGES_IN_TRADEWINDOWS = 5;
+        public MerchantTradeItems(MerchantCatalog catalog)
+        {
+            Catalog = catalog;
+        }
 
-		#region Constructor/Declaration
+        public string ItemsListID => Catalog.ItemListId;
 
-		// for client one page is 30 items, just need to use scrollbar to see them all
-		// item30 will be on page 0
-		// item31 will be on page 1
+        public MerchantCatalog Catalog { get; private set; }
+        #endregion
 
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="itemsListId"></param>
-		public MerchantTradeItems(string itemsListId)
-		{
-			m_itemsListID = itemsListId;
-		}
+        #region Add Trade Item
+        public virtual bool AddTradeItem(int page, eMerchantWindowSlot slot, ItemTemplate item)
+        {
+            if (item == null) throw new NullReferenceException("Null may not be added as MerchantTradeItem.");
 
-		/// <summary>
-		/// Item list id
-		/// </summary>
-		protected string m_itemsListID;
+            slot = GetValidSlot(page, slot);
 
-		/// <summary>
-		/// Item list id
-		/// </summary>
-		public string ItemsListID
-		{
-			get { return m_itemsListID; }
-		}
+            if (slot == eMerchantWindowSlot.Invalid)
+            {
+                log.ErrorFormat("Invalid slot {0} specified for page {1} of TradeItemList {2}", slot, page, ItemsListID);
+                return false;
+            }
 
-		/// <summary>
-		/// Holds item template instances defined with script
-		/// </summary>
-		protected HybridDictionary m_usedItemsTemplates = new HybridDictionary();
+            Catalog.GetPage(page).AddItem(item, (byte)slot, item.Price);
 
-		#endregion
+            return true;
+        }
 
-		#region Add Trade Item
+        public virtual bool RemoveTradeItem(int page, eMerchantWindowSlot slot)
+        {
+            slot = GetValidSlot(page, slot);
+            if (slot == eMerchantWindowSlot.Invalid) return false;
+            return Catalog.GetPage(page).Remove((byte)slot);
+        }
+        #endregion
 
-		/// <summary>
-		/// Adds an item to the merchant item list
-		/// </summary>
-		/// <param name="page">Zero-based page number</param>
-		/// <param name="slot">Zero-based slot number</param>
-		/// <param name="item">The item template to add</param>
-		public virtual bool AddTradeItem(int page, eMerchantWindowSlot slot, ItemTemplate item)
-		{
-			lock (m_usedItemsTemplates.SyncRoot)
-			{
-				if (item == null)
-				{
-					return false;
-				}
+        #region Get Inventory Informations
+        public virtual IDictionary GetItemsInPage(int page)
+        {
+            var pageEntries = Catalog.GetPage(page).GetAllEntries();
+            var result = new HybridDictionary();
+            foreach (var entry in pageEntries)
+            {
+                result.Add((int)entry.SlotPosition, entry.Item);
+            }
+            return result;
+        }
 
-				eMerchantWindowSlot pageSlot = GetValidSlot(page, slot);
+        public virtual ItemTemplate GetItem(int page, eMerchantWindowSlot slot)
+            => Catalog.GetPage(page).GetEntry((byte)slot).Item;
 
-				if (pageSlot == eMerchantWindowSlot.Invalid)
-				{
-					log.ErrorFormat("Invalid slot {0} specified for page {1} of TradeItemList {2}", slot, page, ItemsListID);
-					return false;
-				}
+        public virtual IDictionary GetAllItems()
+        {
+            var items = new Hashtable();
+            var catalogEntries = Catalog.GetAllEntries();
+            foreach (var entry in catalogEntries)
+            {
+                if (items.Contains((entry.Page, entry.SlotPosition)))
+                {
+                    log.ErrorFormat($"two merchant items on same page/slot: listID={ItemsListID} page={entry.Page} slot={entry.SlotPosition}");
+                    continue;
+                }
+                items.Add((entry.Page, entry.SlotPosition), entry.Item);
+            }
+            return items;
+        }
 
-				m_usedItemsTemplates[(page*MAX_ITEM_IN_TRADEWINDOWS)+(int)pageSlot] = item;
-			}
+        public virtual eMerchantWindowSlot GetValidSlot(int page, eMerchantWindowSlot slot)
+        {
+            var isPageInvalid = page < 0 || page >= MAX_PAGES_IN_TRADEWINDOWS;
+            if (isPageInvalid) return eMerchantWindowSlot.Invalid;
 
-			return true;
-		}
+            if (slot == eMerchantWindowSlot.FirstEmptyInPage)
+            {
+                slot = (eMerchantWindowSlot)GetNextFreeSlot(page);
+            }
 
-		/// <summary>
-		/// Removes an item from trade window
-		/// </summary>
-		/// <param name="page">Zero-based page number</param>
-		/// <param name="slot">Zero-based slot number</param>
-		/// <returns>true if removed</returns>
-		public virtual bool RemoveTradeItem(int page, eMerchantWindowSlot slot)
-		{
-			lock (m_usedItemsTemplates.SyncRoot)
-			{
-				slot = GetValidSlot(page, slot);
-				if (slot == eMerchantWindowSlot.Invalid) return false;
-				if (!m_usedItemsTemplates.Contains((page*MAX_ITEM_IN_TRADEWINDOWS)+(int)slot)) return false;
-				m_usedItemsTemplates.Remove((page*MAX_ITEM_IN_TRADEWINDOWS)+(int)slot);
-				return true;
-			}
-		}
+            var isSlotInvalid = slot < eMerchantWindowSlot.FirstInPage || slot > eMerchantWindowSlot.LastInPage;
+            if (isSlotInvalid) return eMerchantWindowSlot.Invalid;
 
-		#endregion
+            return slot;
+        }
 
-		#region Get Inventory Informations
+        private int GetNextFreeSlot(int onPage)
+        {
+            var itemsInPage = GetItemsInPage(onPage);
+            for (int i = 0; i < MAX_ITEM_IN_TRADEWINDOWS; i++)
+            {
+                if (!itemsInPage.Contains(i)) return i;
+            }
+            return MAX_ITEM_IN_TRADEWINDOWS;
+        }
 
-		/// <summary>
-		/// Get the list of all items in the specified page
-		/// </summary>
-		public virtual IDictionary GetItemsInPage(int page)
-		{
-			try
-			{
-				HybridDictionary itemsInPage = new HybridDictionary(MAX_ITEM_IN_TRADEWINDOWS);
-				if (m_itemsListID != null && m_itemsListID.Length > 0)
-				{
-					var itemList = DOLDB<MerchantItem>.SelectObjects(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(m_itemsListID).And(DB.Column(nameof(MerchantItem.PageNumber)).IsEqualTo(page)));
-					foreach (MerchantItem merchantitem in itemList)
-					{
-						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(merchantitem.ItemTemplateID);
-                        if (item != null)
-                        {
-                            ItemTemplate slotItem = (ItemTemplate)itemsInPage[merchantitem.SlotPosition];
-                            if (slotItem == null)
-                            {
-                                itemsInPage.Add(merchantitem.SlotPosition, item);
-                            }
-                            else
-                            {
-                                log.ErrorFormat("two merchant items on same page/slot: listID={0} page={1} slot={2}", m_itemsListID, page, merchantitem.SlotPosition);
-                            }
-                        }
-                        else
-                        {
-                            log.ErrorFormat("Item template with ID = '{0}' not found for merchant item list '{1}'", 
-                                merchantitem.ItemTemplateID, ItemsListID);
-                        }
-					}
-				}
-				lock (m_usedItemsTemplates.SyncRoot)
-				{
-					foreach (DictionaryEntry de in m_usedItemsTemplates)
-					{
-						if ((int)de.Key >= (MAX_ITEM_IN_TRADEWINDOWS*page) && (int)de.Key < (MAX_ITEM_IN_TRADEWINDOWS*page+MAX_ITEM_IN_TRADEWINDOWS))
-							itemsInPage[(int)de.Key%MAX_ITEM_IN_TRADEWINDOWS] = (ItemTemplate)de.Value;
-					}
-				}
-				return itemsInPage;
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Loading merchant items list (" + m_itemsListID + ") page (" + page + "): ", e);
-				return new HybridDictionary();
-			}
-		}
-
-		/// <summary>
-		/// Get the item in the specified page and slot
-		/// </summary>
-		/// <param name="page">The item page</param>
-		/// <param name="slot">The item slot</param>
-		/// <returns>Item template or null</returns>
-		public virtual ItemTemplate GetItem(int page, eMerchantWindowSlot slot)
-		{
-			try
-			{
-				slot = GetValidSlot(page, slot);
-				if (slot == eMerchantWindowSlot.Invalid) return null;
-
-				ItemTemplate item;
-				lock (m_usedItemsTemplates.SyncRoot)
-				{
-					item = m_usedItemsTemplates[(int)slot+(page*MAX_ITEM_IN_TRADEWINDOWS)] as ItemTemplate;
-					if (item != null) return item;
-				}
-
-				if (m_itemsListID != null && m_itemsListID.Length > 0)
-				{
-					var itemToFind = DOLDB<MerchantItem>.SelectObject(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(m_itemsListID).And(DB.Column(nameof(MerchantItem.PageNumber)).IsEqualTo(page)).And(DB.Column(nameof(MerchantItem.SlotPosition)).IsEqualTo((int)slot)));
-					if (itemToFind != null)
-					{
-						item = GameServer.Database.FindObjectByKey<ItemTemplate>(itemToFind.ItemTemplateID);
-					}
-				}
-				return item;
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Loading merchant items list (" + m_itemsListID + ") page (" + page + ") slot (" + slot + "): ", e);
-				return null;
-			}
-		}
-
-		/// <summary>
-		/// Gets a copy of all intems in trade window
-		/// </summary>
-		/// <returns>A list where key is the slot position and value is the ItemTemplate</returns>
-		public virtual IDictionary GetAllItems()
-		{
-			try
-			{
-				Hashtable allItems = new Hashtable();
-				if (m_itemsListID != null && m_itemsListID.Length > 0)
-				{
-					var itemList = DOLDB<MerchantItem>.SelectObjects(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(m_itemsListID));
-					foreach (MerchantItem merchantitem in itemList)
-					{
-						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(merchantitem.ItemTemplateID);
-						if (item != null)
-						{
-							ItemTemplate slotItem = (ItemTemplate)allItems[merchantitem.SlotPosition];
-							if (slotItem == null)
-							{
-								allItems.Add(merchantitem.SlotPosition, item);
-							}
-							else
-							{
-								log.ErrorFormat("two merchant items on same page/slot: listID={0} page={1} slot={2}", m_itemsListID, merchantitem.PageNumber, merchantitem.SlotPosition);
-							}
-						}
-					}
-				}
-
-				lock (m_usedItemsTemplates.SyncRoot)
-				{
-					foreach (DictionaryEntry de in m_usedItemsTemplates)
-					{
-						allItems[(int)de.Key] = (ItemTemplate)de.Value;
-					}
-				}
-				return allItems;
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("Loading merchant items list (" + m_itemsListID + "):", e);
-				return new HybridDictionary();
-			}
-		}
-
-		/// <summary>
-		/// Check if the slot is valid
-		/// </summary>
-		/// <param name="page">Zero-based page number</param>
-		/// <param name="slot">SlotPosition to check</param>
-		/// <returns>the slot if it's valid or eMerchantWindowSlot.Invalid if not</returns>
-		public virtual eMerchantWindowSlot GetValidSlot(int page, eMerchantWindowSlot slot)
-		{
-			if (page < 0 || page >= MAX_PAGES_IN_TRADEWINDOWS) return eMerchantWindowSlot.Invalid;
-
-			if (slot == eMerchantWindowSlot.FirstEmptyInPage)
-			{
-				IDictionary itemsInPage = GetItemsInPage(page);
-				for (int i = (int)eMerchantWindowSlot.FirstInPage; i < (int)eMerchantWindowSlot.LastInPage; i++)
-				{
-					if (!itemsInPage.Contains(i))
-						return ((eMerchantWindowSlot)i);
-				}
-				return eMerchantWindowSlot.Invalid;
-			}
-
-			if (slot < eMerchantWindowSlot.FirstInPage || slot > eMerchantWindowSlot.LastInPage)
-				return eMerchantWindowSlot.Invalid;
-
-			return slot;
-		}
-
-		#endregion
-	}
+        #endregion
+    }
 }

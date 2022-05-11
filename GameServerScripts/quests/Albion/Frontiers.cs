@@ -38,6 +38,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.Profession;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
@@ -306,8 +307,8 @@ namespace DOL.GS.Quests.Albion
 			}
 
 
-			colm.TradeItems = new MerchantTradeItems(null);
-			if (!colm.TradeItems.AddTradeItem(0, eMerchantWindowSlot.FirstEmptyInPage, dragonflyTicket))
+			colm.Catalog = MerchantCatalog.Create();
+			if (!colm.Catalog.GetPage(0).AddItemToNextFreeSlotWithDefaultPrice(dragonflyTicket))
 				if (log.IsWarnEnabled)
 					log.Warn("dragonflyTicket not added");
 

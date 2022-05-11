@@ -24,17 +24,9 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-    /// <summary>
-    /// A bounty merchant for artifact credit.
-    /// </summary>
-    /// <author>Aredhel</author>
+    [Obsolete("This is going to removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
     public class ArtifactCreditMerchant : GameBountyMerchant
     {
-        /// <summary>
-        /// A player right-clicked the merchant.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns></returns>
         public override bool Interact(GamePlayer player)
         {
             if (!base.Interact(player))
@@ -46,13 +38,6 @@ namespace DOL.GS
             return true;
         }
 
-
-        /// <summary>
-        /// Merchant has received a /whisper.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="text"></param>
-        /// <returns></returns>
         public override bool WhisperReceive(GameLiving source, String text)
         {
             GamePlayer player = source as GamePlayer;
@@ -89,12 +74,6 @@ namespace DOL.GS
             return base.WhisperReceive(source, text);
         }
 
-        /// <summary>
-        /// The merchant received an item from another GameLiving.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
         public override bool ReceiveItem(GameLiving source, InventoryItem item)
         {
             GamePlayer player = source as GamePlayer;

@@ -22,20 +22,8 @@ using DOL.Language;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// capsulate money operations
-	/// currently there is no instance of Money
-	/// use long instead
-	/// </summary>
 	public class Money
 	{
-		private Money()
-		{
-		}
-
-		// 11111111111
-		// 550000000   // 11111111111
-
 		public static int GetMithril(long money)
 		{
 			return (int)(money / 100L / 100L / 1000L / 1000L % 1000L);
@@ -66,11 +54,6 @@ namespace DOL.GS
 			return ((((long)mithril * 1000L + (long)platinum) * 1000L + (long)gold) * 100L + (long)silver) * 100L + (long)copper;
 		}
 
-		/// <summary>
-		/// return different formatted strings for money
-		/// </summary>
-		/// <param name="money"></param>
-		/// <returns></returns>
 		public static string GetString(long money)
 		{
 			if (money == 0)

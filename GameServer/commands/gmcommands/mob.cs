@@ -2561,9 +2561,9 @@ namespace DOL.GS.Commands
 
 			mob.EquipmentTemplateID = targetMob.EquipmentTemplateID;
 
-			if (mob is GameMerchant)
+			if (mob is GameMerchant merchant)
 			{
-				((GameMerchant)mob).TradeItems = ((GameMerchant)targetMob).TradeItems;
+				merchant.Catalog = ((GameMerchant)targetMob).Catalog;
 			}
 
 			ABrain brain = null;

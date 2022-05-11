@@ -24,6 +24,7 @@ using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using DOL.GS.Profession;
 
 namespace DOL.GS.Commands
 {
@@ -123,11 +124,11 @@ namespace DOL.GS.Commands
 					{
 						if (args.Length == 2)
 						{
-							if (targetMerchant.TradeItems == null)
+							if (targetMerchant.Catalog.IsEmpty)
 								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Info.ArtListIsEmpty"));
 							else
 							{
-								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Info.ArtList", targetMerchant.TradeItems.ItemsListID));
+								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Info.ArtList", targetMerchant.Catalog.ItemListId));
 							}
 						}
 						break;
@@ -144,7 +145,7 @@ namespace DOL.GS.Commands
 				#region SaveList
 				case "savelist":
 					{
-						string currentID = targetMerchant.TradeItems.ItemsListID;
+						string currentID = targetMerchant.Catalog.ItemListId;
 
 						var itemList = DOLDB<MerchantItem>.SelectObjects(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(currentID));
 						foreach (MerchantItem merchantItem in itemList)
@@ -184,7 +185,7 @@ namespace DOL.GS.Commands
 										try
 										{
 											string templateID = args[3];
-											targetMerchant.TradeItems = new MerchantTradeItems(templateID);
+											targetMerchant.Catalog = MerchantCatalog.Create(templateID);
 											targetMerchant.SaveIntoDatabase();
 											DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Sell.Add.Loaded"));
 										}
@@ -202,7 +203,7 @@ namespace DOL.GS.Commands
 								{
 									if (args.Length == 3)
 									{
-										targetMerchant.TradeItems = null;
+										targetMerchant.Catalog = MerchantCatalog.Create();
 										targetMerchant.SaveIntoDatabase();
 										DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Sell.Remove.Removed"));
 									}
@@ -242,12 +243,6 @@ namespace DOL.GS.Commands
 											int page = Convert.ToInt32(args[4]);
 											eMerchantWindowSlot slot = eMerchantWindowSlot.FirstEmptyInPage;
 
-											if (targetMerchant.TradeItems == null)
-											{
-												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.ListNoFound"));
-												return;
-											}
-
 											ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(templateID);
 											if (template == null)
 											{
@@ -259,19 +254,24 @@ namespace DOL.GS.Commands
 											{
 												slot = (eMerchantWindowSlot)Convert.ToInt32(args[5]);
 											}
-
-											slot = targetMerchant.TradeItems.GetValidSlot(page, slot);
-											if (slot == eMerchantWindowSlot.Invalid)
+											
+											var catalog = MerchantCatalog.LoadFromDatabase(targetMerchant.Catalog.ItemListId);
+											if(slot == eMerchantWindowSlot.LastInPage) 
+											{
+												slot = (eMerchantWindowSlot)catalog.GetPage(page).GetNextFreeSlot();
+											}
+											var itemCanBeAdded = catalog.GetPage(page).AddItem(template, (byte)slot, template.Price);
+											if(!itemCanBeAdded)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Add.PageAndSlotInvalid", page, (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1), slot, (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1)));
 												return;
 											}
 
-											var item = DOLDB<MerchantItem>.SelectObject(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(targetMerchant.TradeItems.ItemsListID).And(DB.Column(nameof(MerchantItem.PageNumber)).IsEqualTo(page)).And(DB.Column(nameof(MerchantItem.SlotPosition)).IsEqualTo(slot)));
+											var item = DOLDB<MerchantItem>.SelectObject(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(targetMerchant.Catalog.ItemListId).And(DB.Column(nameof(MerchantItem.PageNumber)).IsEqualTo(page)).And(DB.Column(nameof(MerchantItem.SlotPosition)).IsEqualTo(slot)));
 											if (item == null)
 											{
 												item = new MerchantItem();
-												item.ItemListID = targetMerchant.TradeItems.ItemsListID;
+												item.ItemListID = targetMerchant.Catalog.ItemListId;
 												item.ItemTemplateID = templateID;
 												item.SlotPosition = (int)slot;
 												item.PageNumber = page;
@@ -320,13 +320,13 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											if (targetMerchant.TradeItems == null)
+											if (targetMerchant.Catalog.IsEmpty)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.ListNoFound"));
 												return;
 											}
 
-											MerchantItem item = DOLDB<MerchantItem>.SelectObject(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(targetMerchant.TradeItems.ItemsListID).And(DB.Column(nameof(MerchantItem.PageNumber)).IsEqualTo(page)).And(DB.Column(nameof(MerchantItem.SlotPosition)).IsEqualTo(slot)));
+											MerchantItem item = DOLDB<MerchantItem>.SelectObject(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(targetMerchant.Catalog.ItemListId).And(DB.Column(nameof(MerchantItem.PageNumber)).IsEqualTo(page)).And(DB.Column(nameof(MerchantItem.SlotPosition)).IsEqualTo(slot)));
 											if (item == null)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Remove.SlotInPageIsAEmpty", slot, page));
@@ -356,14 +356,14 @@ namespace DOL.GS.Commands
 									{
 										try
 										{
-											if (targetMerchant.TradeItems == null)
+											if (targetMerchant.Catalog.IsEmpty)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.ListNoFound"));
 												return;
 											}
 											DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Delete.DeletingListTemp"));
 
-											var merchantitems = DOLDB<MerchantItem>.SelectObjects(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(targetMerchant.TradeItems.ItemsListID));
+											var merchantitems = DOLDB<MerchantItem>.SelectObjects(DB.Column(nameof(MerchantItem.ItemListID)).IsEqualTo(targetMerchant.Catalog.ItemListId));
 											if (merchantitems.Count > 0)
 											{
 												GameServer.Database.DeleteObject(merchantitems);
@@ -435,7 +435,7 @@ namespace DOL.GS.Commands
 						merchant.Size = targetMerchant.Size;
 						merchant.Inventory = targetMerchant.Inventory;
 						merchant.EquipmentTemplateID = targetMerchant.EquipmentTemplateID;
-						merchant.TradeItems = targetMerchant.TradeItems;
+						merchant.Catalog = targetMerchant.Catalog;
 						merchant.AddToWorld();
 						merchant.SaveIntoDatabase();
 						targetMerchant.Delete();

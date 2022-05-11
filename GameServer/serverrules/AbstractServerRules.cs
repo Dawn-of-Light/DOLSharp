@@ -2130,26 +2130,26 @@ namespace DOL.GS.ServerRules
 			{
 				case eMerchantWindowType.HousingInsideShop:
 				case eMerchantWindowType.HousingInsideMenu:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorShopItems, merchantType);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorShopItems.Catalog, merchantType);
 					break;
 				case eMerchantWindowType.HousingOutsideShop:
 				case eMerchantWindowType.HousingOutsideMenu:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorShopItems, merchantType);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.OutdoorShopItems.Catalog, merchantType);
 					break;
 				case eMerchantWindowType.HousingBindstoneHookpoint:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorBindstoneShopItems, merchantType);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorBindstoneShopItems.Catalog, merchantType);
 					break;
 				case eMerchantWindowType.HousingCraftingHookpoint:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorCraftShopItems, merchantType);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorCraftShopItems.Catalog, merchantType);
 					break;
 				case eMerchantWindowType.HousingNPCHookpoint:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.GetNpcShopItems(player), merchantType);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.GetNpcShopItems(player).Catalog, merchantType);
 					break;
 				case eMerchantWindowType.HousingVaultHookpoint:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorVaultShopItems, merchantType);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorVaultShopItems.Catalog, merchantType);
 					break;
 				case eMerchantWindowType.HousingDeedMenu:
-					player.Out.SendMerchantWindow(/* TODO */HouseTemplateMgr.OutdoorMenuItems, eMerchantWindowType.HousingDeedMenu);
+					player.Out.SendMerchantWindow(/* TODO */HouseTemplateMgr.OutdoorMenuItems.Catalog, eMerchantWindowType.HousingDeedMenu);
 					break;
 				default:
 					player.Out.SendMessage("Unknown merchant type!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);

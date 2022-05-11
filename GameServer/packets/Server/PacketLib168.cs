@@ -38,6 +38,8 @@ using DOL.GS.Styles;
 
 using log4net;
 using DOL.GS.ServerProperties;
+using DOL.GS.Finance;
+using DOL.GS.Profession;
 
 namespace DOL.GS.PacketHandler
 {
@@ -1833,113 +1835,113 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMerchantWindow(MerchantTradeItems tradeItemsList, eMerchantWindowType windowType)
 		{
-
 			if (tradeItemsList != null)
 			{
-				for (byte page = 0; page < MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS; page++)
-				{
-					IDictionary itemsInPage = tradeItemsList.GetItemsInPage((int)page);
-					if (itemsInPage == null || itemsInPage.Count == 0)
-						continue;
-
-					using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
-					{
-						pak.WriteByte((byte) itemsInPage.Count); //Item count on this page
-						pak.WriteByte((byte) windowType);
-						pak.WriteByte((byte) page); //Page number
-						pak.WriteByte(0x00); //Unused
-
-						for (ushort i = 0; i < MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS; i++)
-						{
-							if (!itemsInPage.Contains((int)i))
-								continue;
-
-							var item = (ItemTemplate) itemsInPage[(int)i];
-							if (item != null)
-							{
-								pak.WriteByte((byte) i); //Item index on page
-								pak.WriteByte((byte) item.Level);
-								// some objects use this for count
-								int value1;
-								int value2;
-								switch (item.Object_Type)
-								{
-									case (int) eObjectType.Arrow:
-									case (int) eObjectType.Bolt:
-									case (int) eObjectType.Poison:
-									case (int) eObjectType.GenericItem:
-										{
-											value1 = item.PackSize;
-											value2 = value1*item.Weight;
-											break;
-										}
-									case (int) eObjectType.Thrown:
-										{
-											value1 = item.DPS_AF;
-											value2 = item.PackSize;
-											break;
-										}
-									case (int) eObjectType.Shield:
-										{
-											value1 = item.Type_Damage;
-											value2 = item.Weight;
-											break;
-										}
-									case (int) eObjectType.GardenObject:
-										{
-											value1 = 0;
-											value2 = item.Weight;
-											break;
-										}
-									default:
-										{
-											value1 = item.DPS_AF;
-											value2 = item.Weight;
-											break;
-										}
-								}
-								pak.WriteByte((byte) value1);
-								pak.WriteByte((byte) item.SPD_ABS);
-								if (item.Object_Type == (int) eObjectType.GardenObject)
-									pak.WriteByte((byte) (item.DPS_AF));
-								else
-									pak.WriteByte((byte) (item.Hand << 6));
-								pak.WriteByte((byte) ((item.Type_Damage << 6) | item.Object_Type));
-								//1 if item cannot be used by your class (greyed out)
-								if (m_gameClient.Player != null && m_gameClient.Player.HasAbilityToUseItem(item))
-									pak.WriteByte(0x00);
-								else
-									pak.WriteByte(0x01);
-								pak.WriteShort((ushort) value2);
-								//Item Price
-								pak.WriteInt((uint) item.Price);
-								pak.WriteShort((ushort) item.Model);
-								pak.WritePascalString(item.Name);
-							}
-							else
-							{
-								if (log.IsErrorEnabled)
-									log.Error("Merchant item template '" +
-									          ((MerchantItem) itemsInPage[page*MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS + i]).ItemTemplateID +
-									          "' not found, abort!!!");
-								return;
-							}
-						}
-						SendTCP(pak);
-					}
-				}
+				SendMerchantWindow(tradeItemsList.Catalog, windowType);
 			}
 			else
 			{
-				using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
-				{
-					pak.WriteByte(0); //Item count on this page
-					pak.WriteByte((byte) windowType); //Unknown 0x00
-					pak.WriteByte(0); //Page number
-					pak.WriteByte(0x00); //Unused
-					SendTCP(pak);
-				}
+				SendMerchantWindow((MerchantCatalog)null, windowType);
 			}
+		}
+
+		public virtual void SendMerchantWindow(MerchantCatalog catalog, eMerchantWindowType windowType)
+		{
+            foreach (var page in catalog.GetAllPages())
+            {
+                if (page.Currency.Equals(Currency.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency);
+                using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
+                {
+                    pak.WriteByte((byte)page.EntryCount); //Item count on this page
+                    pak.WriteByte((byte)windowType);
+                    pak.WriteByte((byte)page.Number); //Page number
+                    pak.WriteByte(0x00); //Unused
+
+                    foreach (var entry in page.GetAllEntries())
+                    {
+                        var item = entry.Item;
+                        if (item != null)
+                        {
+                            pak.WriteByte((byte)entry.SlotPosition); //Item index on page
+                            pak.WriteByte((byte)item.Level);
+                            // some objects use this for count
+                            int value1;
+                            int value2;
+                            switch (item.Object_Type)
+                            {
+                                case (int)eObjectType.Arrow:
+                                case (int)eObjectType.Bolt:
+                                case (int)eObjectType.Poison:
+                                case (int)eObjectType.GenericItem:
+                                    {
+                                        value1 = item.PackSize;
+                                        value2 = value1 * item.Weight;
+                                        break;
+                                    }
+                                case (int)eObjectType.Thrown:
+                                    {
+                                        value1 = item.DPS_AF;
+                                        value2 = item.PackSize;
+                                        break;
+                                    }
+                                case (int)eObjectType.Shield:
+                                    {
+                                        value1 = item.Type_Damage;
+                                        value2 = item.Weight;
+                                        break;
+                                    }
+                                case (int)eObjectType.GardenObject:
+                                    {
+                                        value1 = 0;
+                                        value2 = item.Weight;
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        value1 = item.DPS_AF;
+                                        value2 = item.Weight;
+                                        break;
+                                    }
+                            }
+                            pak.WriteByte((byte)value1);
+                            pak.WriteByte((byte)item.SPD_ABS);
+                            if (item.Object_Type == (int)eObjectType.GardenObject)
+                                pak.WriteByte((byte)(item.DPS_AF));
+                            else
+                                pak.WriteByte((byte)(item.Hand << 6));
+                            pak.WriteByte((byte)((item.Type_Damage << 6) | item.Object_Type));
+                            //1 if item cannot be used by your class (greyed out)
+                            if (m_gameClient.Player != null && m_gameClient.Player.HasAbilityToUseItem(item))
+                                pak.WriteByte(0x00);
+                            else
+                                pak.WriteByte(0x01);
+                            pak.WriteShort((ushort)value2);
+                            //Item Price
+                            pak.WriteInt((uint)entry.CurrencyAmount);
+                            pak.WriteShort((ushort)item.Model);
+                            pak.WritePascalString(item.Name);
+                        }
+                        else
+                        {
+                            if (log.IsErrorEnabled)
+                            {
+                                log.Error($"ItemTemplate for ItemList {catalog.ItemListId} on Page {page.Number} and Slot {entry.SlotPosition} could not be loaded.");
+                            }
+                            return;
+                        }
+                    }
+                    SendTCP(pak);
+                }
+            }
+		}
+
+		protected eMerchantWindowType ConvertCurrencyToMerchantWindowType(Currency currency)
+		{
+			if(Currency.Copper.Equals(currency)) return eMerchantWindowType.Normal;
+			else if(Currency.BountyPoints.Equals(currency)) return eMerchantWindowType.Bp;
+			else if(Currency.Mithril.Equals(currency)) return eMerchantWindowType.Mithril;
+			else if(currency is ItemCurrency) return eMerchantWindowType.Count;
+			else throw new ArgumentException($"Currency {currency} has no MerchantWindowType conversion, yet.");
 		}
 
 		public virtual void SendTradeWindow()

@@ -83,7 +83,7 @@ namespace DOL.GS.Housing
 			{
 				if (HouseMgr.IsOwner(DatabaseItem, player))
 				{
-					player.Out.SendMerchantWindow(HouseTemplateMgr.GetLotMarkerItems(this), eMerchantWindowType.Normal);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.GetLotMarkerItems(this).Catalog, eMerchantWindowType.Normal);
 				}
 				else
 				{

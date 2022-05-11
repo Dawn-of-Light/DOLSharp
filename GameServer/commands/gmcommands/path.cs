@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Linq;
 using DOL.Database;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
@@ -365,9 +366,9 @@ namespace DOL.GS.Commands
 			// So we have to save a path in the database with the Id_nb as a PathID
 			// The following string will contain the item Id_nb if it is found in the merchant list
 			string pathname = "";
-			if (merchant.TradeItems != null)
+			if (merchant.Catalog.IsEmpty == false)
 			{
-				foreach (ItemTemplate template in merchant.TradeItems.GetAllItems().Values)
+				foreach (var template in merchant.Catalog.GetAllEntries().Select(x => x.Item))
 				{
 					if (template != null && template.Name.ToLower() == ticket.ToLower())
 					{
@@ -375,7 +376,6 @@ namespace DOL.GS.Commands
 						pathname = template.Id_nb;
 						break;
 					}
-
 				}
 			}
 			if (!ticketFound)

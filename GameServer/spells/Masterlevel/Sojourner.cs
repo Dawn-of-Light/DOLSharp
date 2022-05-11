@@ -8,6 +8,7 @@ using DOL.AI.Brain;
 using DOL.GS;
 using DOL.Events;
 using System.Collections.Specialized;
+using DOL.GS.Profession;
 
 namespace DOL.GS.Spells
 {
@@ -113,7 +114,7 @@ namespace DOL.GS.Spells
                 merchant.GuildName = "";
                 merchant.Size = 50;
                 merchant.Flags |= GameNPC.eFlags.PEACE;
-                merchant.TradeItems = new MerchantTradeItems("ML_transmuteritems");
+                merchant.Catalog = MerchantCatalog.LoadFromDatabase("ML_transmuteritems");
             }
         }
 

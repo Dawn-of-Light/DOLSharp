@@ -27,6 +27,7 @@ using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS.Keeps;
 using DOL.GS.Housing;
+using DOL.GS.Profession;
 
 namespace DOL.Tests
 {
@@ -438,10 +439,14 @@ namespace DOL.Tests
 		{
 			if (SendDoorStateMethod != null) SendDoorStateMethod(this, region, door);
 		}
-		public Action<TestPacketLib, MerchantTradeItems, eMerchantWindowType> SendMerchantWindowMethod { get; set; }
+		public Action<TestPacketLib, MerchantCatalog, eMerchantWindowType> SendMerchantWindowMethod { get; set; }
 		public void SendMerchantWindow(MerchantTradeItems itemlist, eMerchantWindowType windowType)
 		{
-			if (SendMerchantWindowMethod != null) SendMerchantWindowMethod(this, itemlist, windowType);
+			if (SendMerchantWindowMethod != null && itemlist != null) SendMerchantWindowMethod(this, itemlist.Catalog, windowType);
+		}
+		public void SendMerchantWindow(MerchantCatalog catalog, eMerchantWindowType windowType)
+		{
+			if (SendMerchantWindowMethod != null) SendMerchantWindowMethod(this, catalog, windowType);
 		}
 		public Action<TestPacketLib> SendTradeWindowMethod { get; set; }
 		public void SendTradeWindow()

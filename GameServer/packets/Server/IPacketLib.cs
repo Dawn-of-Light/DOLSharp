@@ -24,6 +24,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
+using DOL.GS.Profession;
 using DOL.GS.Quests;
 
 namespace DOL.GS.PacketHandler
@@ -442,6 +443,7 @@ namespace DOL.GS.PacketHandler
 		HousingInsideMenu = 0x0B,
 		HousingTicket = 0x0C,
 		HousingGuildTicket = 0x0D,
+		Mithril = 0x0E,
 	}
 
 
@@ -705,7 +707,9 @@ namespace DOL.GS.PacketHandler
 		void SendInventoryItemsUpdate(eInventoryWindowType windowType, ICollection<InventoryItem> itemsToUpdate);
 		void SendInventoryItemsUpdate(IDictionary<int, InventoryItem> updateItems, eInventoryWindowType windowType);
 		void SendDoorState(Region region, IDoor door);
+		[Obsolete("Please use SendMerchantWindow(MerchantCatalog,eMerchantWindowType) instead.")]
 		void SendMerchantWindow(MerchantTradeItems itemlist, eMerchantWindowType windowType);
+		void SendMerchantWindow(MerchantCatalog catalog, eMerchantWindowType windowType);
 		void SendTradeWindow();
 		void SendCloseTradeWindow();
 		void SendPlayerDied(GamePlayer killedPlayer, GameObject killer);
