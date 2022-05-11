@@ -161,7 +161,10 @@ namespace DOL.GS
             else if (price.Currency.Equals(Currency.BountyPoints)) player.BountyPoints -= price.Amount;
             else if (price.Currency is ItemCurrency itemCurrency)
             {
-                player.Inventory.RemoveTemplate(itemCurrency.Item.Id_nb, (int)price.Amount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+                if (player.Inventory.RemoveTemplate(itemCurrency.Item.Id_nb, (int)price.Amount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                {
+                    InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, itemCurrency.Item, (int)price.Amount);
+                }
             }
             else throw new NotImplementedException($"{price.Currency} is currently not implemented.");
         }
