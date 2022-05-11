@@ -152,7 +152,7 @@ namespace DOL.GS
             }
         }
 
-        private void WithdrawMoneyFromPlayer(GamePlayer player, Money price)
+        private void WithdrawMoneyFromPlayer(GamePlayer player, Finance.Money price)
         {
             if (price.Currency.Equals(Currency.Copper))
             {
@@ -166,7 +166,7 @@ namespace DOL.GS
             else throw new NotImplementedException($"{price.Currency} is currently not implemented.");
         }
 
-        private bool HasPlayerEnoughBalance(GamePlayer player, Money price)
+        private bool HasPlayerEnoughBalance(GamePlayer player, Finance.Money price)
         {
             if (price.Currency.Equals(Currency.Copper)) return player.GetCurrentMoney() >= price.Amount;
             else if (price.Currency.Equals(Currency.BountyPoints)) return player.BountyPoints >= price.Amount;
@@ -178,7 +178,7 @@ namespace DOL.GS
             else throw new ArgumentException($"HasPlayerEnoughBalance method for currency {price.Currency} does not exist.");
         }
 
-        private string CurrencyToText(Money money)
+        private string CurrencyToText(Finance.Money money)
         {
             if (money.Currency.Equals(Currency.Copper)) return Money.GetString(money.Amount);
             else if (money.Currency.Equals(Currency.BountyPoints)) return $"{money.Amount} BPs";
