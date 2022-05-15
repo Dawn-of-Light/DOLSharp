@@ -122,48 +122,29 @@ namespace DOL.GS
 
             lock (player.Inventory)
             {
-                if (currency.Equals(Currency.Copper) || currency.Equals(Currency.BountyPoints) || currency is ItemCurrency)
+                var price = currency.Mint(cost);
+                var costToText = price.ToText();
+                var playerHasNotEnoughBalance = player.Wallet.GetBalance(price.Currency) < price.Amount;
+                if (playerHasNotEnoughBalance)
                 {
-                    var costToText = CurrencyToText(currency.Mint(cost));
-                    if (!HasPlayerEnoughBalance(player, currency.Mint(cost)))
-                    {
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedGeneric", costToText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
-                    if (!player.Inventory.AddTemplate(GameInventoryItem.Create(itemToBuy), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-                    {
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
-                    InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, itemToBuy, amountToBuy);
-
-                    string message;
-                    if (amountToBuy == 1)
-                        message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtGeneric", itemToBuy.Name, costToText);
-                    else
-                        message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesGeneric", amountToBuy, itemToBuy.Name, costToText);
-                    WithdrawMoneyFromPlayer(player, currency.Mint(cost));
-                    player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedGeneric", costToText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
                 }
-                else if (currency.Equals(Currency.Mithril)) throw new NotImplementedException("Mithril is currently not implemented as a separate currency.");
-                else throw new ArgumentException($"{currency} is not implemented.");
+                if (!player.Inventory.AddTemplate(GameInventoryItem.Create(itemToBuy), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                {
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
+                InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, itemToBuy, amountToBuy);
+
+                string message;
+                if (amountToBuy == 1)
+                    message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtGeneric", itemToBuy.Name, costToText);
+                else
+                    message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesGeneric", amountToBuy, itemToBuy.Name, costToText);
+                if (!player.Wallet.RemoveMoney(price)) throw new Exception("Money amount changed while adding items.");
+                player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
             }
-        }
-
-        private void WithdrawMoneyFromPlayer(GamePlayer player, Finance.Money price)
-        {
-			if (!player.Wallet.RemoveMoney(price)) throw new Exception("Money amount changed while adding items.");
-        }
-
-        private bool HasPlayerEnoughBalance(GamePlayer player, Finance.Money price)
-        {
-			return player.Wallet.GetBalance(price.Currency) >= price.Amount;
-        }
-
-        private string CurrencyToText(Finance.Money money)
-        {
-            return money.ToText();
         }
 
 		public static void OnPlayerBuy(GamePlayer player, int item_slot, int number, MerchantTradeItems TradeItems)
