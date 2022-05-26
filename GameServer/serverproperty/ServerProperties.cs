@@ -1479,6 +1479,13 @@ namespace DOL.GS.ServerProperties
 		#endregion
 
 		#region KEEPS
+
+		/// <summary>
+		/// Possibility for the Keep Lord to heal itself
+		/// </summary>
+		[ServerProperty("keeps", "keep_lord_heal_itself", "Possibility for the Keep Lord to heal itself", true)]
+		public static bool KEEP_LORD_HEAL_ITSELF;
+
 		/// <summary>
 		/// Number of seconds between allowed LOS checks for keep guards
 		/// </summary>

@@ -15,22 +15,26 @@ namespace DOL.AI.Brain
 
 		public override void Think()
 		{
-			if (Body != null && Body.Spells.Count == 0)
-			{
-				switch (Body.Realm)
+			if (GS.ServerProperties.Properties.KEEP_LORD_HEAL_ITSELF == true)
+            {
+				if (Body != null && Body.Spells.Count == 0)
 				{
-					case eRealm.None:
-					case eRealm.Albion:
-						Body.Spells.Add(GuardSpellDB.AlbLordHealSpell);
-						break;
-					case eRealm.Midgard:
-						Body.Spells.Add(GuardSpellDB.MidLordHealSpell);
-						break;
-					case eRealm.Hibernia:
-						Body.Spells.Add(GuardSpellDB.HibLordHealSpell);
-						break;
+					switch (Body.Realm)
+					{
+						case eRealm.None:
+						case eRealm.Albion:
+							Body.Spells.Add(GuardSpellDB.AlbLordHealSpell);
+							break;
+						case eRealm.Midgard:
+							Body.Spells.Add(GuardSpellDB.MidLordHealSpell);
+							break;
+						case eRealm.Hibernia:
+							Body.Spells.Add(GuardSpellDB.HibLordHealSpell);
+							break;
+					}
 				}
 			}
+
 			base.Think();
 		}
 		
