@@ -15,7 +15,8 @@ namespace DOL.AI.Brain
 
 		public override void Think()
 		{
-			if (Body != null && Body.Spells.Count == 0)
+			// Add auto heal for lord above level 15
+			if (Body != null && Body.Spells.Count == 0 && Body.Level>=15)
 			{
 				switch (Body.Realm)
 				{
