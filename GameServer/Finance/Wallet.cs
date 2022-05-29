@@ -11,36 +11,36 @@ namespace DOL.GS.Finance
 
         public Wallet() { }
 
-        public Wallet(GamePlayer owner) 
-        { 
+        public Wallet(GamePlayer owner)
+        {
             this.owner = owner;
         }
 
-        public long GetBalance(Currency currency)
+        public Money GetBalance(Currency currency)
         {
             long balance;
-            if(currency.IsItemCurrency) 
+            if (currency.IsItemCurrency)
             {
-                lock(owner.Inventory)
+                lock (owner.Inventory)
                 {
-                    return owner.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
+                    return currency.Mint(owner.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
                         .Where(i => currency.Equals(Currency.Item(i.Template)))
-                        .Aggregate(0, (acc,i) => acc + i.Count);
+                        .Aggregate(0, (acc, i) => acc + i.Count));
                 }
             }
             balances.TryGetValue(currency, out balance);
-            return balance;
+            return currency.Mint(balance);
         }
 
         public void AddMoney(Money money)
         {
-            if(money.Currency.IsItemCurrency)
+            if (money.Currency.IsItemCurrency)
             {
                 throw new ArgumentException("You cannot add money of type ItemCurrency.");
             }
             lock (balances)
             {
-                var oldBalance = GetBalance(money.Currency);
+                var oldBalance = GetBalance(money.Currency).Amount;
                 var newBalance = oldBalance + money.Amount;
                 SetBalance(money.Currency.Mint(newBalance));
                 SaveToDatabase();
@@ -53,7 +53,7 @@ namespace DOL.GS.Finance
             {
                 lock (owner.Inventory)
                 {
-                    if(GetBalance(money.Currency) < money.Amount) return false;
+                    if (GetBalance(money.Currency).Amount < money.Amount) return false;
 
                     var validCurrencyItemsInventory = owner.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
                         .Where(i => money.Currency.Equals(Currency.Item(i.Template)));
@@ -81,7 +81,7 @@ namespace DOL.GS.Finance
             }
             lock (balances)
             {
-                var oldBalance = GetBalance(money.Currency);
+                var oldBalance = GetBalance(money.Currency).Amount;
                 if (oldBalance < money.Amount) return false;
                 var newBalance = oldBalance - money.Amount;
                 SetBalance(money.Currency.Mint(newBalance));
@@ -103,31 +103,31 @@ namespace DOL.GS.Finance
         public void InitializeFromDatabase()
         {
             var dbCharacter = owner.DBCharacter;
-            var initialCopperBalance = DOL.GS.Money.GetMoney(dbCharacter.Mithril,dbCharacter.Platinum,dbCharacter.Gold,dbCharacter.Silver,dbCharacter.Copper);
-			SetBalance(Currency.Copper.Mint(initialCopperBalance));
+            var initialCopperBalance = DOL.GS.Money.GetMoney(dbCharacter.Mithril, dbCharacter.Platinum, dbCharacter.Gold, dbCharacter.Silver, dbCharacter.Copper);
+            SetBalance(Currency.Copper.Mint(initialCopperBalance));
             var initialBountyPoints = dbCharacter.BountyPoints;
             SetBalance(Currency.BountyPoints.Mint(initialBountyPoints));
         }
 
         public void SaveToDatabase()
         {
-            if(owner == null || owner.DBCharacter == null) return;
+            if (owner == null || owner.DBCharacter == null) return;
             var dbCharacter = owner.DBCharacter;
 
-			dbCharacter.Copper = owner.Copper;
-			dbCharacter.Silver = owner.Silver;
-			dbCharacter.Gold = owner.Gold;
-			dbCharacter.Platinum = owner.Platinum;
-			dbCharacter.Mithril = owner.Mithril;
-            dbCharacter.BountyPoints = GetBalance(Currency.BountyPoints);
+            dbCharacter.Copper = owner.Copper;
+            dbCharacter.Silver = owner.Silver;
+            dbCharacter.Gold = owner.Gold;
+            dbCharacter.Platinum = owner.Platinum;
+            dbCharacter.Mithril = owner.Mithril;
+            dbCharacter.BountyPoints = GetBalance(Currency.BountyPoints).Amount;
         }
 
         private void UpdateCurrencyStatus(Currency currency)
         {
-            if(owner != null && owner.Out != null)
+            if (owner != null && owner.Out != null)
             {
-                if(currency.Equals(Currency.Copper)) owner.Out.SendUpdateMoney();
-                else if(currency.Equals(Currency.BountyPoints)) owner.Out.SendUpdatePoints();
+                if (currency.Equals(Currency.Copper)) owner.Out.SendUpdateMoney();
+                else if (currency.Equals(Currency.BountyPoints)) owner.Out.SendUpdatePoints();
             }
         }
     }

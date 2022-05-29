@@ -124,7 +124,7 @@ namespace DOL.GS
             {
                 var price = currency.Mint(cost);
                 var costToText = price.ToText();
-                var playerHasNotEnoughBalance = player.Wallet.GetBalance(price.Currency) < price.Amount;
+                var playerHasNotEnoughBalance = player.Wallet.GetBalance(price.Currency).Amount < price.Amount;
                 if (playerHasNotEnoughBalance)
                 {
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedGeneric", costToText), eChatType.CT_System, eChatLoc.CL_SystemWindow);

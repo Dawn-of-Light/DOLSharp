@@ -9,12 +9,12 @@ namespace DOL.UnitTests.Gameserver
     public class UT_Wallet
     {
         [Test]
-        public void Balance_Copper_Init_Zero()
+        public void Balance_Copper_Init_ZeroCopper()
         {
             var wallet = new Wallet();
 
             var actual = wallet.GetBalance(Currency.Copper);
-            var expected = 0;
+            var expected = Currency.Copper.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -27,7 +27,7 @@ namespace DOL.UnitTests.Gameserver
             wallet.AddMoney(oneCopper);
 
             var actual = wallet.GetBalance(Currency.Copper);
-            var expected = 1;
+            var expected = Currency.Copper.Mint(1);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -40,7 +40,7 @@ namespace DOL.UnitTests.Gameserver
             wallet.AddMoney(oneBp);
 
             var actual = wallet.GetBalance(Currency.Copper);
-            var expected = 0;
+            var expected = Currency.Copper.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -53,7 +53,7 @@ namespace DOL.UnitTests.Gameserver
             wallet.AddMoney(oneBp);
 
             var actual = wallet.GetBalance(Currency.BountyPoints);
-            var expected = 1;
+            var expected = Currency.BountyPoints.Mint(1);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -68,7 +68,7 @@ namespace DOL.UnitTests.Gameserver
             wallet.RemoveMoney(oneCopper);
 
             var actual = wallet.GetBalance(Currency.Copper);
-            var expected = 1;
+            var expected = Currency.Copper.Mint(1);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -80,7 +80,7 @@ namespace DOL.UnitTests.Gameserver
             var aurulite = Currency.Item("aurulite");
 
             var actual = wallet.GetBalance(aurulite);
-            var expected = 0;
+            var expected = aurulite.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
     }

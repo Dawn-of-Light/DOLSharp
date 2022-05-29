@@ -28,7 +28,7 @@ namespace DOL.Integration.Gameserver
             var wallet = CreateWallet();
 
             var actual = wallet.GetBalance(Currency.Copper);
-            var expected = 0;
+            var expected = Currency.Copper.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -40,7 +40,7 @@ namespace DOL.Integration.Gameserver
             wallet.AddMoney(Currency.Copper.Mint(1));
 
             var actual = wallet.GetBalance(Currency.Copper);
-            var expected = 1;
+            var expected = Currency.Copper.Mint(1);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -52,7 +52,7 @@ namespace DOL.Integration.Gameserver
             wallet.RemoveMoney(Currency.Copper.Mint(1));
 
             var actual = wallet.GetBalance(Currency.Copper);
-            var expected = 0;
+            var expected = Currency.Copper.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -76,7 +76,7 @@ namespace DOL.Integration.Gameserver
             wallet.RemoveMoney(Currency.Copper.Mint(2));
 
             var actual = wallet.GetBalance(Currency.Copper);
-            var expected = 1;
+            var expected = Currency.Copper.Mint(1);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -99,7 +99,7 @@ namespace DOL.Integration.Gameserver
 
             var actual = wallet.GetBalance(Aurulite);
 
-            var expected = 0;
+            var expected = Aurulite.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -113,7 +113,7 @@ namespace DOL.Integration.Gameserver
 
             var actual = wallet.GetBalance(Aurulite);
 
-            var expected = 1;
+            var expected = Aurulite.Mint(1);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -128,7 +128,7 @@ namespace DOL.Integration.Gameserver
 
             var actual = wallet.GetBalance(Aurulite);
 
-            var expected = 0;
+            var expected = Aurulite.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -143,7 +143,7 @@ namespace DOL.Integration.Gameserver
             wallet.RemoveMoney(Aurulite.Mint(1));
 
             var actual = wallet.GetBalance(Aurulite);
-            var expected = 0;
+            var expected = Aurulite.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -158,7 +158,7 @@ namespace DOL.Integration.Gameserver
             wallet.RemoveMoney(Aurulite.Mint(2));
 
             var actual = wallet.GetBalance(Aurulite);
-            var expected = 1;
+            var expected = Aurulite.Mint(1);
             Assert.That(actual, Is.EqualTo(expected));
         }
 

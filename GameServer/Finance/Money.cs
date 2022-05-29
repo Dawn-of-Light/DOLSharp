@@ -74,5 +74,7 @@ namespace DOL.GS.Finance
         }
 
         public override int GetHashCode() => base.GetHashCode();
+
+        public override string ToString() => ToText();
     }
 }

@@ -4124,7 +4124,7 @@ namespace DOL.GS
         #region Realm-/Region-/Bount-/Skillpoints...
         public virtual long BountyPoints
         {
-            get { return Wallet.GetBalance(Currency.BountyPoints); }
+            get { return Wallet.GetBalance(Currency.BountyPoints).Amount; }
             set { Wallet.SetBalance(Currency.BountyPoints.Mint(value)); Client.Out.SendUpdatePoints();}
         }
 
@@ -8586,17 +8586,17 @@ namespace DOL.GS
 		}
 
         #region Money
-        public virtual int Mithril => Money.GetMithril(Wallet.GetBalance(Currency.Copper));
-        public virtual int Platinum => Money.GetPlatinum(Wallet.GetBalance(Currency.Copper));
-        public virtual int Gold => Money.GetGold(Wallet.GetBalance(Currency.Copper));
-        public virtual int Silver => Money.GetSilver(Wallet.GetBalance(Currency.Copper));
-        public virtual int Copper => Money.GetCopper(Wallet.GetBalance(Currency.Copper));
+        public virtual int Mithril => Money.GetMithril(Wallet.GetBalance(Currency.Copper).Amount);
+        public virtual int Platinum => Money.GetPlatinum(Wallet.GetBalance(Currency.Copper).Amount);
+        public virtual int Gold => Money.GetGold(Wallet.GetBalance(Currency.Copper).Amount);
+        public virtual int Silver => Money.GetSilver(Wallet.GetBalance(Currency.Copper).Amount);
+        public virtual int Copper => Money.GetCopper(Wallet.GetBalance(Currency.Copper).Amount);
 
         public Wallet Wallet { get; }
 
 		public virtual long GetCurrentMoney()
 		{
-			return Wallet.GetBalance(Currency.Copper);
+			return Wallet.GetBalance(Currency.Copper).Amount;
 		}
 
 		public virtual void AddMoney(long money)
