@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DOL.Database;
 
 namespace DOL.GS.Finance
 {
@@ -11,6 +12,7 @@ namespace DOL.GS.Finance
         public static Currency BountyPoints { get; } = new BountyPointsCurrency();
         public static Currency Mithril { get; } = new MithrilCurrency();
         public static Currency Item(string currencyId) => ItemCurrency.Create(currencyId);
+        public static Currency Item(ItemTemplate item) => ItemCurrency.CreateFromTemplate(item);
 
         public Money Mint(long value) => Money.Mint(value, this);
 
@@ -49,6 +51,7 @@ namespace DOL.GS.Finance
 
             internal static ItemCurrency Create(string currencyId)
             {
+                currencyId = currencyId.ToLower();
                 if (string.IsNullOrEmpty(currencyId)) throw new ArgumentException("The ID of an ItemCurrency may not be null nor empty.");
 
                 if (cachedCurrencyItems.TryGetValue(currencyId, out var cachedItemCurrency))
@@ -58,6 +61,16 @@ namespace DOL.GS.Finance
                 var newCurrencyItem = new ItemCurrency() { Id = currencyId };
                 cachedCurrencyItems[currencyId] = newCurrencyItem;
                 return newCurrencyItem;
+            }
+
+            internal static Currency CreateFromTemplate(ItemTemplate item)
+            {
+                if (item.ClassType.ToLower().StartsWith("currency."))
+                {
+                    var currencyId = item.ClassType.ToLower().Replace("currency.", "");
+                    return Create(currencyId);
+                }
+                return null;
             }
 
             public override string ToText() => $"units of {Id}";

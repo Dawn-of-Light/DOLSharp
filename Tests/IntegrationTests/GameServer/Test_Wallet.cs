@@ -109,11 +109,26 @@ namespace DOL.Integration.Gameserver
             var owner = CreatePlayer();
             var wallet = CreateWallet(owner);
             var currencyAmount = 1;
-            owner.Inventory.AddTemplate(new GameInventoryItem(AuruliteItemTemplate),currencyAmount,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+            owner.Inventory.AddTemplate(new GameInventoryItem(AuruliteItemTemplate), currencyAmount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
             var actual = wallet.GetBalance(Aurulite);
 
             var expected = 1;
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void GetBalance_Aurulite_WalletOwnerHasOnlyAnotherItemInInventory_Zero()
+        {
+            var owner = CreatePlayer();
+            var wallet = CreateWallet(owner);
+            var currencyAmount = 1;
+            var anotherItem = new ItemTemplate() { Id_nb = "another_item" };
+            owner.Inventory.AddTemplate(new GameInventoryItem(anotherItem), currencyAmount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+
+            var actual = wallet.GetBalance(Aurulite);
+
+            var expected = 0;
             Assert.That(actual, Is.EqualTo(expected));
         }
 
@@ -123,10 +138,10 @@ namespace DOL.Integration.Gameserver
             var owner = CreatePlayer();
             var wallet = CreateWallet(owner);
             var currencyAmount = 1;
-            owner.Inventory.AddTemplate(new GameInventoryItem(AuruliteItemTemplate),currencyAmount,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+            owner.Inventory.AddTemplate(new GameInventoryItem(AuruliteItemTemplate), currencyAmount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
             wallet.RemoveMoney(Aurulite.Mint(1));
-            
+
             var actual = wallet.GetBalance(Aurulite);
             var expected = 0;
             Assert.That(actual, Is.EqualTo(expected));
@@ -138,10 +153,10 @@ namespace DOL.Integration.Gameserver
             var owner = CreatePlayer();
             var wallet = CreateWallet(owner);
             var currencyAmount = 1;
-            owner.Inventory.AddTemplate(new GameInventoryItem(AuruliteItemTemplate),currencyAmount,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+            owner.Inventory.AddTemplate(new GameInventoryItem(AuruliteItemTemplate), currencyAmount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
             wallet.RemoveMoney(Aurulite.Mint(2));
-            
+
             var actual = wallet.GetBalance(Aurulite);
             var expected = 1;
             Assert.That(actual, Is.EqualTo(expected));
@@ -153,7 +168,7 @@ namespace DOL.Integration.Gameserver
             var wallet = CreateWallet();
 
             var actual = wallet.RemoveMoney(Aurulite.Mint(1));
-            
+
             var expected = false;
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -164,17 +179,17 @@ namespace DOL.Integration.Gameserver
             var owner = CreatePlayer();
             var wallet = CreateWallet(owner);
             var currencyAmount = 1;
-            owner.Inventory.AddTemplate(new GameInventoryItem(AuruliteItemTemplate),currencyAmount,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+            owner.Inventory.AddTemplate(new GameInventoryItem(AuruliteItemTemplate), currencyAmount, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
             var actual = wallet.RemoveMoney(Aurulite.Mint(1));
-            
+
             var expected = true;
             Assert.That(actual, Is.EqualTo(expected));
         }
 
         private static Currency Aurulite => Currency.Item("aurulite");
         private static ItemTemplate AuruliteItemTemplate
-            = new ItemTemplate() { Name = "Aurulite Splitter", Id_nb = "aurulite_splitter", ClassType="Currency.aurulite", MaxCount = 2000 };
+            = new ItemTemplate() { Name = "Aurulite Splitter", Id_nb = "aurulite_splitter", ClassType = "Currency.aurulite", MaxCount = 2000 };
         private static Wallet CreateWallet()
             => new Wallet(new MinimalGamePlayer());
         private static Wallet CreateWallet(GamePlayer owner)

@@ -414,7 +414,7 @@ namespace DOL.GS
 			Currency receivedCurrency = null;
             if (item != null && string.IsNullOrEmpty(item.ClassType) == false)
             {
-				receivedCurrency = Currency.Item(item.ClassType.ToLower().Replace("currency.", ""));
+				receivedCurrency = Currency.Item(item.Template);
             }
             if (source is GamePlayer player && receivedCurrency != null && currencyExchangeRates != null
                 && currencyExchangeRates.TryGetValue(receivedCurrency, out int exchangeCurrencyValue)
@@ -456,7 +456,7 @@ namespace DOL.GS
                 var allCurrencyItems = DOLDB<ItemTemplate>.SelectObjects(DB.Column("ClassType").IsLike("Currency.%"));
                 foreach (var item in allCurrencyItems)
                 {
-                    currency.Equals(Currency.Item(item.ClassType.ToLower().Replace("currency.", "")));
+                    currency.Equals(Currency.Item(item));
                 	defaultCurrencyItems[currency] = item;
 					return item;
                 }

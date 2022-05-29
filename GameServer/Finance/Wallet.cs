@@ -24,7 +24,7 @@ namespace DOL.GS.Finance
                 lock(owner.Inventory)
                 {
                     return owner.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
-                        .Where(i => currency.Equals(Currency.Item(i.ClassType.ToLower().Replace("currency.",""))))
+                        .Where(i => currency.Equals(Currency.Item(i.Template)))
                         .Aggregate(0, (acc,i) => acc + i.Count);
                 }
             }
@@ -56,7 +56,7 @@ namespace DOL.GS.Finance
                     if(GetBalance(money.Currency) < money.Amount) return false;
 
                     var validCurrencyItemsInventory = owner.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
-                        .Where(i => money.Currency.Equals(Currency.Item(i.ClassType.ToLower().Replace("currency.",""))));
+                        .Where(i => money.Currency.Equals(Currency.Item(i.Template)));
                     var remainingDue = (int)money.Amount;
                     foreach (var currencyItem in validCurrencyItemsInventory)
                     {
