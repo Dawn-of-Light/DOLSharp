@@ -18,7 +18,6 @@ namespace DOL.GS.Finance
 
         public Money GetBalance(Currency currency)
         {
-            long balance;
             if (currency.IsItemCurrency)
             {
                 lock (owner.Inventory)
@@ -28,7 +27,7 @@ namespace DOL.GS.Finance
                         .Aggregate(0, (acc, i) => acc + i.Count));
                 }
             }
-            balances.TryGetValue(currency, out balance);
+            balances.TryGetValue(currency, out var balance);
             return currency.Mint(balance);
         }
 
@@ -90,6 +89,9 @@ namespace DOL.GS.Finance
             }
         }
 
+        /// <remarks>
+        /// NOTE: This is going to be declared private in the future.
+        /// </remarks>
         public void SetBalance(Money money)
         {
             lock (balances)

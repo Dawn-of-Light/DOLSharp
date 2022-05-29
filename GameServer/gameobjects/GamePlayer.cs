@@ -4122,6 +4122,8 @@ namespace DOL.GS
         #endregion
 
         #region Realm-/Region-/Bount-/Skillpoints...
+		[Obsolete("Use GetBalance(Currency.BountyPoints).Amount instead. " 
+			+ "The setter is going to be removed without replacement. Use Wallet.AddMoney/RemoveMoney instead.")]
         public virtual long BountyPoints
         {
             get { return Wallet.GetBalance(Currency.BountyPoints).Amount; }

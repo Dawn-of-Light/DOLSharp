@@ -22,6 +22,7 @@ using DOL.Database;
 using DOL.GS.Housing;
 using log4net;
 using DOL.Language;
+using DOL.GS.Finance;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -65,7 +66,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
 					{
 						client.Player.Out.SendMessage("You withdraw " + totalConMoney.ToString() + " BountyPoints from your Merchant.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
-						client.Player.BountyPoints += totalConMoney;
+						client.Player.Wallet.AddMoney(Currency.BountyPoints.Mint(totalConMoney));
 						client.Player.Out.SendUpdatePoints();
 					}
 					else

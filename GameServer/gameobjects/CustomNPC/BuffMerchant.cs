@@ -46,6 +46,7 @@ using DOL.GS.PacketHandler;
 
 using log4net;
 using DOL.GS.Profession;
+using DOL.GS.Finance;
 
 namespace DOL.GS
 {
@@ -917,7 +918,7 @@ namespace DOL.GS
 
 				lock (player.Inventory)
 				{
-					if (player.BountyPoints < totalValue)
+					if (player.Wallet.GetBalance(Currency.BountyPoints).Amount < totalValue)
 					{
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedBP", totalValue), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
@@ -934,7 +935,7 @@ namespace DOL.GS
 						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesBP", totalValue, template.GetName(1, false));
 					else
 						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtBP", template.GetName(1, false), totalValue);
-					player.BountyPoints -= totalValue;
+					player.Wallet.RemoveMoney(Currency.BountyPoints.Mint(totalValue));
 					player.Out.SendUpdatePoints();
 					player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				}

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Effects;
+using DOL.GS.Finance;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler.Client.v168;
@@ -347,7 +348,7 @@ namespace DOL.GS.Commands
 					info.Add("  - Speed : " + target.MaxSpeedBase);
 					info.Add("  - XPs : " + target.Experience);
 					info.Add("  - RPs : " + target.RealmPoints);
-					info.Add("  - BPs : " + target.BountyPoints);
+					info.Add("  - BPs : " + target.Wallet.GetBalance(Currency.BountyPoints).Amount);
 
 					String sCurrent = "";
 					String sTitle = "";

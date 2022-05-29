@@ -21,6 +21,7 @@ using System.Reflection;
 using DOL.GS.PlayerTitles;
 using log4net;
 using DOL.GS.Housing;
+using DOL.GS.Finance;
 
 namespace DOL.GS.PacketHandler
 {
@@ -120,7 +121,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteInt((uint)m_gameClient.Player.RealmPoints);
 				pak.WriteShort(m_gameClient.Player.LevelPermill);
 				pak.WriteShort((ushort) m_gameClient.Player.SkillSpecialtyPoints);
-				pak.WriteInt((uint)m_gameClient.Player.BountyPoints);
+				pak.WriteInt((uint)m_gameClient.Player.Wallet.GetBalance(Currency.BountyPoints).Amount);
 				pak.WriteShort((ushort) m_gameClient.Player.RealmSpecialtyPoints);
 				pak.WriteShort(m_gameClient.Player.ChampionLevelPermill);
 				SendTCP(pak);
