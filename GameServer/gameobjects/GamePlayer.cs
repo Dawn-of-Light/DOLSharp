@@ -8610,7 +8610,11 @@ namespace DOL.GS
         public virtual long GetCurrentMoney() => CopperBalance;
 
         [Obsolete("Use AddMoney(Money) instead.")]
-        public virtual void AddMoney(long copperAmount) => AddMoney(Currency.Copper.Mint(copperAmount));
+        public virtual void AddMoney(long copperAmount)
+        {
+            if (copperAmount >= 0) AddMoney(Currency.Copper.Mint(copperAmount));
+            else RemoveMoney(Currency.Copper.Mint(-copperAmount));
+        }
 
         [Obsolete("Use AddMoney(Money) and SendSystemMessage(string) instead.")]
         public virtual void AddMoney(long copperAmount, string message)
@@ -8622,17 +8626,25 @@ namespace DOL.GS
         [Obsolete("Use AddMoney(Money) and SendMessage(string,eChatType,eChatLoc) instead.")]
         public virtual void AddMoney(long copperAmount, string messageFormat, eChatType ct, eChatLoc cl)
         {
-            AddMoney(Currency.Copper.Mint(copperAmount));
+            AddMoney(copperAmount);
             if (messageFormat != null) SendMessage(string.Format(messageFormat, Money.GetString(copperAmount)), ct, cl);
         }
 
         [Obsolete("Use RemoveMoney(Money) and SendSystemMessage(string) instead.")]
-        public virtual bool RemoveMoney(long money) => RemoveMoney(Currency.Copper.Mint(money));
+        public virtual bool RemoveMoney(long copperAmount)
+        {
+            if (copperAmount >= 0) return RemoveMoney(Currency.Copper.Mint(copperAmount));
+            else
+            {
+                AddMoney(Currency.Copper.Mint(-copperAmount));
+                return true;
+            }
+        }
 
         [Obsolete("Use RemoveMoney(Money) and SendSystemMessage(string) instead.")]
         public virtual bool RemoveMoney(long money, string messageFormat)
         {
-            var hasEnoughMoney = RemoveMoney(Currency.Copper.Mint(money));
+            var hasEnoughMoney = RemoveMoney(money);
             if (hasEnoughMoney && messageFormat != null && money != 0) SendSystemMessage(messageFormat);
             return hasEnoughMoney;
         }
@@ -8640,7 +8652,7 @@ namespace DOL.GS
         [Obsolete("Use RemoveMoney(Money) and SendMessage(string,eChatType,eChatLoc) instead.")]
         public virtual bool RemoveMoney(long money, string messageFormat, eChatType ct, eChatLoc cl)
         {
-			var hasEnoughMoney = RemoveMoney(Currency.Copper.Mint(money));
+			var hasEnoughMoney = RemoveMoney(money);
             if (hasEnoughMoney && messageFormat != null && money != 0) SendMessage(messageFormat, ct, cl);
             return hasEnoughMoney;
         }

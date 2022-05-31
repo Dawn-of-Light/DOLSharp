@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text;
 using DOL.GS.ServerProperties;
@@ -12,6 +13,7 @@ namespace DOL.GS.Finance
 
         protected Money(long amount, Currency currency)
         {
+            if(amount < 0) throw new ArgumentException("You cannot mint negative Money.");
             Amount = amount;
             Currency = currency;
         }
