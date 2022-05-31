@@ -348,7 +348,7 @@ namespace DOL.GS.Commands
 					info.Add("  - Speed : " + target.MaxSpeedBase);
 					info.Add("  - XPs : " + target.Experience);
 					info.Add("  - RPs : " + target.RealmPoints);
-					info.Add("  - BPs : " + target.Wallet.GetBalance(Currency.BountyPoints).Amount);
+					info.Add("  - BPs : " + target.BountyPointBalance);
 
 					String sCurrent = "";
 					String sTitle = "";

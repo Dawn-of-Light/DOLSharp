@@ -94,7 +94,7 @@ namespace DOL.GS
                     InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, item.Count);
 
 					long totalValue = item.Price;
-					player.Wallet.AddMoney(Currency.BountyPoints.Mint(totalValue));
+					player.AddMoney(Currency.BountyPoints.Mint(totalValue));
 					player.Out.SendUpdatePoints();
 					player.Out.SendMessage(totalValue + " Bounty Points refunded", eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 					player.Out.SendMessage("You already have this credit or your class is not eligible to receive this artifact. " + totalValue + " Bounty Points refunded!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);

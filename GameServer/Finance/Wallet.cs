@@ -116,11 +116,12 @@ namespace DOL.GS.Finance
             if (owner == null || owner.DBCharacter == null) return;
             var dbCharacter = owner.DBCharacter;
 
-            dbCharacter.Copper = owner.Copper;
-            dbCharacter.Silver = owner.Silver;
-            dbCharacter.Gold = owner.Gold;
-            dbCharacter.Platinum = owner.Platinum;
-            dbCharacter.Mithril = owner.Mithril;
+            var copperBalance = GetBalance(Currency.Copper).Amount;
+            dbCharacter.Copper = DOL.GS.Money.GetCopper(copperBalance);
+            dbCharacter.Silver = DOL.GS.Money.GetSilver(copperBalance);
+            dbCharacter.Gold = DOL.GS.Money.GetGold(copperBalance);
+            dbCharacter.Platinum = DOL.GS.Money.GetPlatinum(copperBalance);
+            dbCharacter.Mithril = DOL.GS.Money.GetMithril(copperBalance);
             dbCharacter.BountyPoints = GetBalance(Currency.BountyPoints).Amount;
         }
 

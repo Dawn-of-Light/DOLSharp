@@ -4126,7 +4126,7 @@ namespace DOL.GS
 			+ "The setter is going to be removed without replacement. Use Wallet.AddMoney/RemoveMoney instead.")]
         public virtual long BountyPoints
         {
-            get { return Wallet.GetBalance(Currency.BountyPoints).Amount; }
+            get { return BountyPointBalance; }
             set { Wallet.SetBalance(Currency.BountyPoints.Mint(value)); }
         }
 
@@ -8586,18 +8586,27 @@ namespace DOL.GS
 		}
 
         #region Money
-        public virtual int Mithril => Money.GetMithril(Wallet.GetBalance(Currency.Copper).Amount);
-        public virtual int Platinum => Money.GetPlatinum(Wallet.GetBalance(Currency.Copper).Amount);
-        public virtual int Gold => Money.GetGold(Wallet.GetBalance(Currency.Copper).Amount);
-        public virtual int Silver => Money.GetSilver(Wallet.GetBalance(Currency.Copper).Amount);
-        public virtual int Copper => Money.GetCopper(Wallet.GetBalance(Currency.Copper).Amount);
+		[Obsolete("Use DOL.GS.Money.GetMithril(long) instead.")]
+        public virtual int Mithril => Money.GetMithril(CopperBalance);
+		[Obsolete("Use DOL.GS.Money.GetPlatinum(long) instead.")]
+        public virtual int Platinum => Money.GetPlatinum(CopperBalance);
+		[Obsolete("Use DOL.GS.Money.GetGold(long) instead.")]
+        public virtual int Gold => Money.GetGold(CopperBalance);
+		[Obsolete("Use DOL.GS.Money.GetSilver(long) instead.")]
+        public virtual int Silver => Money.GetSilver(CopperBalance);
+		[Obsolete("Use DOL.GS.Money.GetCopper(long) instead.")]
+        public virtual int Copper => Money.GetCopper(CopperBalance);
 
-        public Wallet Wallet { get; }
+        private Wallet Wallet { get; }
 
-		public virtual long GetCurrentMoney()
-		{
-			return Wallet.GetBalance(Currency.Copper).Amount;
-		}
+        public DOL.GS.Finance.Money GetBalance(Currency currency) => Wallet.GetBalance(currency);
+        public long CopperBalance => GetBalance(Currency.Copper).Amount;
+        public long BountyPointBalance => GetBalance(Currency.BountyPoints).Amount;
+
+        public void AddMoney(DOL.GS.Finance.Money money) => Wallet.AddMoney(money);
+        public bool RemoveMoney(DOL.GS.Finance.Money money) => Wallet.RemoveMoney(money);
+
+		public virtual long GetCurrentMoney() => CopperBalance;
 
 		public virtual void AddMoney(long money)
 		{
@@ -8611,7 +8620,7 @@ namespace DOL.GS
 
 		public virtual void AddMoney(long copperAmount, string messageFormat, eChatType ct, eChatLoc cl)
 		{
-			Wallet.AddMoney(Currency.Copper.Mint(copperAmount));
+			AddMoney(Currency.Copper.Mint(copperAmount));
 
 			if (messageFormat != null)
 			{
@@ -8631,7 +8640,7 @@ namespace DOL.GS
 
 		public virtual bool RemoveMoney(long money, string messageFormat, eChatType ct, eChatLoc cl)
 		{
-            var insufficientFunds = Wallet.RemoveMoney(Currency.Copper.Mint(money)) == false;
+            var insufficientFunds = RemoveMoney(Currency.Copper.Mint(money)) == false;
             if (insufficientFunds) return false;
 
 			if (messageFormat != null && money != 0)

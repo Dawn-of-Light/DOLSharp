@@ -126,7 +126,7 @@ namespace DOL.GS.Commands
 						}
 
 						long mgold = client.Player.RespecCost;
-						if ((client.Player.Gold + 1000 * client.Player.Platinum) < mgold)
+						if (client.Player.CopperBalance < mgold * 100 * 100)
 						{
 							DisplayMessage(client, "You don't have enough money! You need " + mgold + " gold!");
 							return;

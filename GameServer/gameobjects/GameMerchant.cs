@@ -124,7 +124,7 @@ namespace DOL.GS
             {
                 var price = currency.Mint(cost);
                 var costToText = price.ToText();
-                var playerHasNotEnoughBalance = player.Wallet.GetBalance(price.Currency).Amount < price.Amount;
+                var playerHasNotEnoughBalance = player.GetBalance(price.Currency).Amount < price.Amount;
                 if (playerHasNotEnoughBalance)
                 {
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedGeneric", costToText), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -142,7 +142,7 @@ namespace DOL.GS
                     message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtGeneric", itemToBuy.Name, costToText);
                 else
                     message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesGeneric", amountToBuy, itemToBuy.Name, costToText);
-                if (!player.Wallet.RemoveMoney(price)) throw new Exception("Money amount changed while adding items.");
+                if (!player.RemoveMoney(price)) throw new Exception("Money amount changed while adding items.");
                 player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
             }
         }
@@ -165,7 +165,7 @@ namespace DOL.GS
 
 			lock (player.Inventory)
 			{
-				if (player.GetCurrentMoney() < totalCurrencyAmount)
+				if (player.CopperBalance < totalCurrencyAmount)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalCurrencyAmount)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;

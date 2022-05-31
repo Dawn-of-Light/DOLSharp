@@ -72,7 +72,7 @@ namespace DOL.GS
 			lock (player.Inventory)
 			{
 
-				if (player.GetCurrentMoney() < totalValue)
+				if (player.CopperBalance < totalValue)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalValue)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;

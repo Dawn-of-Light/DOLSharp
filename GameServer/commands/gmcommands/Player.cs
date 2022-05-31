@@ -2355,7 +2355,7 @@ namespace DOL.GS.Commands
 			text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
 			text.Add("  - Realm Level Gender Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " + player.Gender + " " + player.CharacterClass.Name + " (" + player.CharacterClass.ID + ")");
 			text.Add("  - Guild : " + player.GuildName + " " + (player.GuildRank != null ? "Rank: " + player.GuildRank.RankLevel.ToString() : ""));
-			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xp, " + player.RealmPoints + " rp, " + player.Wallet.GetBalance(Currency.BountyPoints).Amount + " bp");
+			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xp, " + player.RealmPoints + " rp, " + player.BountyPointBalance + " bp");
 
             if (player.DamageRvRMemory > 0)
                 text.Add("  - Damage RvR Memory: " + player.DamageRvRMemory);

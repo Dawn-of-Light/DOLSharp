@@ -192,7 +192,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return;
 					}
 
-					if (flatMoney > client.Player.GetCurrentMoney())
+					if (flatMoney > client.Player.CopperBalance)
 					{
 						client.Out.SendInventorySlotsUpdate(new int[] { fromClientSlot });
 						return;

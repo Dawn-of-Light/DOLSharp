@@ -573,7 +573,7 @@ namespace DOL.GS
 
 					if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
 					{
-						if (player.Wallet.GetBalance(Currency.BountyPoints).Amount < purchasePrice)
+						if (player.BountyPointBalance < purchasePrice)
 						{
 							ChatUtil.SendSystemMessage(player, "GameMerchant.OnPlayerBuy.YouNeedBP", purchasePrice);
 							return;
@@ -599,7 +599,7 @@ namespace DOL.GS
 					if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
 					{
 						ChatUtil.SendMerchantMessage(player, "GameMerchant.OnPlayerBuy.BoughtBP", item.GetName(1, false), purchasePrice);
-						player.Wallet.RemoveMoney(Currency.BountyPoints.Mint(purchasePrice));
+						player.RemoveMoney(Currency.BountyPoints.Mint(purchasePrice));
 					}
 					else
 					{
