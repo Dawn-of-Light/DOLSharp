@@ -23,6 +23,7 @@ using System.Collections.Specialized;
 using System.Reflection;
 
 using DOL.Events;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 
 using log4net;
@@ -211,7 +212,8 @@ namespace DOL.GS.Quests
 
                 if (RewardMoney > 0)
                 {
-                    player.AddMoney(RewardMoney, "You recieve {0} for completing your task.");
+                    player.AddMoney(Currency.Copper.Mint(RewardMoney));
+                    player.SendSystemMessage($"You receive {Money.GetString(RewardMoney)} for completing your task.");
                     InventoryLogging.LogInventoryAction("(MISSION;" + MissionType + ")", player, eInventoryActionType.Quest, RewardMoney);
                 }
 

@@ -36,6 +36,7 @@
 
 
 using System.Collections;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
@@ -254,7 +255,7 @@ namespace DOL.GS.Commands
 			if (player.TempProperties.getProperty(BUY_RESPEC, false))
 			{
 				player.TempProperties.removeProperty(BUY_RESPEC);
-				if (player.RespecCost >= 0 && player.RemoveMoney(player.RespecCost * 10000))
+				if (player.RespecCost >= 0 && player.RemoveMoney(Currency.Copper.Mint(player.RespecCost * 100 * 100)))
 				{
                     InventoryLogging.LogInventoryAction(player, "(respec)", eInventoryActionType.Merchant, player.RespecCost * 10000);
 					player.RespecAmountSingleSkill++;

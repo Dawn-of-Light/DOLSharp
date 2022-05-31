@@ -2,6 +2,7 @@
 using DOL.GS;
 using DOL.UnitTests.Gameserver;
 using DOL.Database;
+using DOL.GS.Finance;
 
 namespace DOL.Integration.Gameserver
 {
@@ -22,25 +23,25 @@ namespace DOL.Integration.Gameserver
         }
 
         [Test]
-        public void AddMoney_MinusOne_GetCurrentMoneyIsMinusOne()
+        public void AddMoney_MinusOne_CopperBalanceIsMinusOne()
         {
             var player = CreatePlayer();
 
-            player.AddMoney(-1);
+            player.AddMoney(Currency.Copper.Mint(-1));
 
-            var actual = player.GetCurrentMoney();
+            var actual = player.CopperBalance;
             var expected = -1;
             Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
-        public void RemoveMoney_MinusOne_GetCurrentMoneyIsOne()
+        public void RemoveMoney_MinusOne_CopperBalanceMoneyIsOne()
         {
             var player = CreatePlayer();
 
-            player.RemoveMoney(-1);
+            player.RemoveMoney(Currency.Copper.Mint(-1));
 
-            var actual = player.GetCurrentMoney();
+            var actual = player.CopperBalance;
             var expected = 1;
             Assert.That(actual, Is.EqualTo(expected));
         }

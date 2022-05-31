@@ -38,6 +38,7 @@ using DOL.GS.Styles;
 using DOL.GS.Utils;
 using DOL.Language;
 using DOL.GS.ServerProperties;
+using DOL.GS.Finance;
 
 namespace DOL.GS
 {
@@ -4633,9 +4634,9 @@ namespace DOL.GS
 							if (zoneBonus > 0)
 							{
 								long amount = (long)(zoneBonus * ServerProperties.Properties.MONEY_DROP);
-								killerPlayer.AddMoney(amount,
-													  ZoneBonus.GetBonusMessage(killerPlayer, (int)(zoneBonus * ServerProperties.Properties.MONEY_DROP), ZoneBonus.eZoneBonusType.COIN),
-													  eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								killerPlayer.AddMoney(Currency.Copper.Mint(amount));
+								killerPlayer.SendMessage(ZoneBonus.GetBonusMessage(killerPlayer, (int)(zoneBonus * ServerProperties.Properties.MONEY_DROP), ZoneBonus.eZoneBonusType.COIN),
+									eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 								InventoryLogging.LogInventoryAction(this, killerPlayer, eInventoryActionType.Loot, amount);
 							}
 						}

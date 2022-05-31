@@ -22,6 +22,7 @@
 using System;
 using System.Collections;
 using DOL.GS.Effects;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using DOL.Language;
@@ -111,7 +112,7 @@ namespace DOL.GS
             if (restorePoints < 1)
                 restorePoints = 1; // at least one
             long totalCost = restorePoints * cost;
-            if (player.RemoveMoney(totalCost))
+            if (player.RemoveMoney(Currency.Copper.Mint(totalCost)))
             {
                 InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalCost);
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text3", this.Name, Money.GetString(totalCost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);

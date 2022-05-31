@@ -23,6 +23,7 @@ using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.GS.Finance;
 
 namespace DOL.GS
 {
@@ -132,6 +133,9 @@ namespace DOL.GS
 		{
 			get { return m_partnerWindow.TradeMoney; }
 		}
+
+		private DOL.GS.Finance.Money MyCopperOffer => Currency.Copper.Mint(TradeMoney);
+		private DOL.GS.Finance.Money PartnerCopperOffer => Currency.Copper.Mint(PartnerTradeMoney);
 
 		/// <summary>
 		/// Gets the owner of this window and items in it
@@ -443,8 +447,8 @@ namespace DOL.GS
 					logTrade = true;
 
 				//Test if we and our partner have enough money
-				bool enoughMoney        = m_owner.RemoveMoney(TradeMoney);
-				bool partnerEnoughMoney = partner.RemoveMoney(m_partnerWindow.TradeMoney);
+				bool enoughMoney        = m_owner.RemoveMoney(MyCopperOffer);
+				bool partnerEnoughMoney = partner.RemoveMoney(PartnerCopperOffer);
 
 				//Check the preconditions
 				if (!enoughMoney || !partnerEnoughMoney)
@@ -455,7 +459,7 @@ namespace DOL.GS
 						TradeMoney = 0;
                         if (partnerEnoughMoney)
                         {
-                            partner.AddMoney(m_partnerWindow.TradeMoney);
+                            partner.AddMoney(PartnerCopperOffer);
                             InventoryLogging.LogInventoryAction(partner, m_owner, eInventoryActionType.Trade, m_partnerWindow.TradeMoney);
                         }
 
@@ -468,7 +472,7 @@ namespace DOL.GS
 						m_partnerWindow.TradeMoney = 0;
                         if (enoughMoney)
                         {
-                            m_owner.AddMoney(TradeMoney);
+                            m_owner.AddMoney(MyCopperOffer);
                             InventoryLogging.LogInventoryAction(m_owner, partner, eInventoryActionType.Trade, TradeMoney);
                         }
 
@@ -556,8 +560,8 @@ namespace DOL.GS
 						TradeUpdate();
 
                         //This was already removed above, needs to be returned to the players on trade failure.
-                        m_owner.AddMoney(TradeMoney);
-                        partner.AddMoney(m_partnerWindow.TradeMoney);
+                        m_owner.AddMoney(MyCopperOffer);
+                        partner.AddMoney(PartnerCopperOffer);
 
 						return false;
 					}
@@ -694,8 +698,10 @@ namespace DOL.GS
 				if (TradeMoney > 0 || m_partnerWindow.TradeMoney > 0)
 				{
 					//Now add the money
-					m_owner.AddMoney(m_partnerWindow.TradeMoney, "You get {0}.");
-					partner.AddMoney(TradeMoney, "You get {0}.");
+					m_owner.AddMoney(PartnerCopperOffer);
+					m_owner.SendSystemMessage($"You get {PartnerCopperOffer.ToText()}.");
+					partner.AddMoney(MyCopperOffer);
+					partner.SendSystemMessage($"You get {MyCopperOffer.ToText()}.");
                     InventoryLogging.LogInventoryAction(m_owner, partner, eInventoryActionType.Trade, TradeMoney);
                     InventoryLogging.LogInventoryAction(partner, m_owner, eInventoryActionType.Trade, m_partnerWindow.TradeMoney);
 					m_owner.SaveIntoDatabase();

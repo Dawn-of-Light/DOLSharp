@@ -24,6 +24,7 @@ using System.Text;
 
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -375,7 +376,8 @@ namespace DOL.GS.Quests
 
             if (RewardMoney > 0)
             {
-                m_taskPlayer.AddMoney(RewardMoney, "You recieve {0} for completing your task.");
+                m_taskPlayer.AddMoney(Currency.Copper.Mint(RewardMoney));
+                m_taskPlayer.SendSystemMessage(string.Format("You recieve {0} for completing your task.", Money.GetString(RewardMoney)));
                 InventoryLogging.LogInventoryAction("(TASK;" + m_dbTask.TaskType + ")", m_taskPlayer, eInventoryActionType.Quest, RewardMoney);
             }
 

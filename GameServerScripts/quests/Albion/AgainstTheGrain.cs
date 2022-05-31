@@ -33,6 +33,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -546,7 +547,8 @@ namespace DOL.GS.Quests.Albion
 			//Give reward to player here ...
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 10 + (m_questPlayer.Level * 5), true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 25 + m_questPlayer.Level), "You are awarded "+(25+m_questPlayer.Level)+" copper!");
+			m_questPlayer.AddMoney(Currency.Copper.Mint(25 + m_questPlayer.Level));
+			m_questPlayer.SendSystemMessage("You are awarded "+(25+m_questPlayer.Level)+" copper!");
 		    InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, 25 + m_questPlayer.Level);
 		}
 	}

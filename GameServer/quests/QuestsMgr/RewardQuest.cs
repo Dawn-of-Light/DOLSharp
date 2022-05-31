@@ -23,6 +23,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.PacketHandler;
+using DOL.GS.Finance;
 
 namespace DOL.GS.Quests
 {
@@ -240,7 +241,7 @@ namespace DOL.GS.Quests
 				base.FinishQuest();
 				QuestPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
 				QuestPlayer.GainExperience(GameLiving.eXPSource.Quest, Rewards.Experience);
-				QuestPlayer.AddMoney(Rewards.Money);
+				QuestPlayer.AddMoney(Currency.Copper.Mint(Rewards.Money));
                 InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", QuestPlayer, eInventoryActionType.Quest, Rewards.Money);
 				if (Rewards.GiveBountyPoints > 0)
 					QuestPlayer.GainBountyPoints(Rewards.GiveBountyPoints);

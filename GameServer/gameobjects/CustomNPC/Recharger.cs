@@ -22,6 +22,7 @@ using System.Collections;
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
+using DOL.GS.Finance;
 
 namespace DOL.GS
 {
@@ -142,7 +143,7 @@ namespace DOL.GS
 				cost += (item.MaxCharges1 - item.Charges1)*Money.GetMoney(0,0,10,0,0);
 			}
 
-			if(!player.RemoveMoney(cost))
+			if(!player.RemoveMoney(Currency.Copper.Mint(cost)))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.NotMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

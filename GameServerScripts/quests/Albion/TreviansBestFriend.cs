@@ -30,6 +30,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -1379,7 +1380,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			else
 			{
-				if (player.RemoveMoney(Money.GetMoney(0, 0, 50, 0, 0)))
+                if (player.RemoveMoney(Currency.Copper.Mint(50 * 100 * 100)))
 				{
                     InventoryLogging.LogInventoryAction(player, "(QUEST;" + quest.Name + ")", eInventoryActionType.Quest, 50 * 10000);
 					banditAbductorLeader.SayTo(player, "Well lets call it a deal. Let her free, she wasn't any good anyway.");
@@ -1630,7 +1631,8 @@ namespace DOL.GS.Quests.Albion
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 500000, true);
             long money = Money.GetMoney(0, 0, 0, Util.Random(10) + 40, Util.Random(50));
-			m_questPlayer.AddMoney(money, "You recieve {0} as a reward for helping Trevian.");
+			m_questPlayer.AddMoney(Currency.Copper.Mint(money));
+			m_questPlayer.SendSystemMessage(string.Format("You recieve {0} as a reward for helping Trevian.", Money.GetString(money)));
             InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 
 		}

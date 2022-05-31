@@ -161,13 +161,13 @@ namespace DOL.GS
 
 			if (amountToBuy <= 0) return;
 
-			long totalCurrencyAmount = number * template.Price;
+			var totalCost = Currency.Copper.Mint(number * template.Price);
 
 			lock (player.Inventory)
 			{
-				if (player.CopperBalance < totalCurrencyAmount)
+				if (player.CopperBalance < totalCost.Amount)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalCurrencyAmount)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", totalCost.ToText()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -180,16 +180,17 @@ namespace DOL.GS
 				//Generate the buy message
 				string message;
 				if (amountToBuy > 1)
-					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPieces", amountToBuy, template.GetName(1, false), Money.GetString(totalCurrencyAmount));
+					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPieces", amountToBuy, template.GetName(1, false), totalCost.ToText());
 				else
-					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), Money.GetString(totalCurrencyAmount));
+					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), totalCost.ToText());
 
 				// Check if player has enough money and subtract the money
-				if (!player.RemoveMoney(totalCurrencyAmount, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
+				if (!player.RemoveMoney(totalCost))
 				{
 					throw new Exception("Money amount changed while adding items.");
 				}
-				InventoryLogging.LogInventoryAction(player, "(TRADEITEMS;" + TradeItems.ItemsListID + ")", eInventoryActionType.Merchant, totalCurrencyAmount);
+				player.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				InventoryLogging.LogInventoryAction(player, "(TRADEITEMS;" + TradeItems.ItemsListID + ")", eInventoryActionType.Merchant, totalCost.Amount);
 			}
 		}
 
@@ -219,7 +220,8 @@ namespace DOL.GS
 			if (player.Inventory.RemoveItem(item))
 			{
 				string message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerSell.GivesYou", GetName(0, true), Money.GetString(itemValue), item.GetName(0, false));
-				player.AddMoney(itemValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				player.AddMoney(Currency.Copper.Mint(itemValue));
+				player.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, item.Count);
 				InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, itemValue);
 				return;

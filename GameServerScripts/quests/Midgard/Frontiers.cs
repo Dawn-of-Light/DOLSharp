@@ -37,6 +37,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 using DOL.GS.Profession;
 using DOL.Language;
@@ -937,7 +938,8 @@ namespace DOL.GS.Quests.Midgard
 
 				GiveItem(dalikor, player, noteForNjiedi);
 				GiveItem(dalikor, player, askefruerPlans);
-                player.AddMoney(Money.GetMoney(0, 0, 0, 6, 0), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.CheckPlayerAcceptQuest.Text3"));
+                player.AddMoney(Currency.Copper.Mint(600));
+                player.SendSystemMessage(string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.CheckPlayerAcceptQuest.Text3"), Money.GetString(Money.GetMoney(0, 0, 0, 6, 0))));
                 InventoryLogging.LogInventoryAction("(QUEST;" + quest.Name + ")", player, eInventoryActionType.Quest, 600);
             }
 		}
@@ -1057,7 +1059,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (Step < 3 && m_questPlayer.Inventory.GetFirstItemByID(ticketToSvasudFaste.Id_nb, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) == null)
 			{
-				m_questPlayer.RemoveMoney(Money.GetMoney(0, 0, 0, 6, 0), null);
+				m_questPlayer.RemoveMoney(Currency.Copper.Mint(600));
                 InventoryLogging.LogInventoryAction(m_questPlayer, "(QUEST;" + Name + ")", eInventoryActionType.Quest, 600);
 			}
 
@@ -1080,7 +1082,8 @@ namespace DOL.GS.Quests.Midgard
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 240, true);
             long money = Money.GetMoney(0, 0, 0, 5, Util.Random(50));
-            m_questPlayer.AddMoney(money, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.FinishQuest.Text1"));
+            m_questPlayer.AddMoney(Currency.Copper.Mint(money));
+            m_questPlayer.SendSystemMessage(string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.FinishQuest.Text1"), Money.GetString(money)));
             InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 		}
 

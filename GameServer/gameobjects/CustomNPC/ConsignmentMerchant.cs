@@ -581,7 +581,7 @@ namespace DOL.GS
 					}
 					else
 					{
-						if (player.GetCurrentMoney() < purchasePrice)
+						if (player.CopperBalance < purchasePrice)
 						{
 							ChatUtil.SendSystemMessage(player, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(purchasePrice));
 							return;
@@ -603,7 +603,7 @@ namespace DOL.GS
 					}
 					else
 					{
-						if (player.RemoveMoney(purchasePrice))
+						if (player.RemoveMoney(Currency.Copper.Mint(purchasePrice)))
 						{
 							InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, purchasePrice);
 							ChatUtil.SendMerchantMessage(player, "GameMerchant.OnPlayerBuy.Bought", item.GetName(1, false), Money.GetString(purchasePrice));

@@ -33,6 +33,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -308,11 +309,11 @@ namespace DOL.GS.Quests.Albion
 							break;
 
 						case "any way":
-							yettaFletcher.SayTo(player, "They were in need of good arrows for their scouts, since the scouts on in the Frontiers rarely have time to make their own arrows. I agreed and the Defenders set up a nice little shop for me here. Between them and the residents of Cotswold, I barely have time to keep up with their demands. That’s where [you can] help me.");
+							yettaFletcher.SayTo(player, "They were in need of good arrows for their scouts, since the scouts on in the Frontiers rarely have time to make their own arrows. I agreed and the Defenders set up a nice little shop for me here. Between them and the residents of Cotswold, I barely have time to keep up with their demands. Thatï¿½s where [you can] help me.");
 							break;
 
 						case "you can":
-							yettaFletcher.SayTo(player, "I am running low on supplies for making my special arrows for the Defenders. They are slightly different than the ones I sell, so I can’t just get the supplies anywhere. If you have some time, I would be willing [to pay you] to retrieve some supplies for me. Are you interested?");
+							yettaFletcher.SayTo(player, "I am running low on supplies for making my special arrows for the Defenders. They are slightly different than the ones I sell, so I canï¿½t just get the supplies anywhere. If you have some time, I would be willing [to pay you] to retrieve some supplies for me. Are you interested?");
 							break;
 						
 							//If the player offered his help, we send the quest dialog now!
@@ -335,7 +336,7 @@ namespace DOL.GS.Quests.Albion
 						case "decayed zombie":
 							if(quest.Step == 1)
 							{
-								yettaFletcher.SayTo(player, "To find the decaying zombies, leave this building and head south to the river. Follow the bank of the river south, taking care to avoid the river sprites. There is a graveyard along the river, south of here. You’ll find the decayed zombies there as well as on the hill northeast of the graveyard. Return to me when you have two bundles of decayed zombie legs, please.");
+								yettaFletcher.SayTo(player, "To find the decaying zombies, leave this building and head south to the river. Follow the bank of the river south, taking care to avoid the river sprites. There is a graveyard along the river, south of here. Youï¿½ll find the decayed zombies there as well as on the hill northeast of the graveyard. Return to me when you have two bundles of decayed zombie legs, please.");
 								quest.Step = 2;
 							}
 							break;	
@@ -430,7 +431,7 @@ namespace DOL.GS.Quests.Albion
 				if (!yettaFletcher.GiveQuest(typeof (ArrowsForYettaFletcher), player, 1))
 					return;
 
-				SendReply(player, "Wonderful! I am so pleased that you will help me. I shall make sure that the Defenders know that you are a loyal subject of Albion. Now, let’s not waste any time. I have many arrow heads and feathers for the shaft, but I am low on the [shafts] themselves.");
+				SendReply(player, "Wonderful! I am so pleased that you will help me. I shall make sure that the Defenders know that you are a loyal subject of Albion. Now, letï¿½s not waste any time. I have many arrow heads and feathers for the shaft, but I am low on the [shafts] themselves.");
 			}
 		}
 
@@ -551,7 +552,8 @@ namespace DOL.GS.Quests.Albion
 			//Give reward to player here ...
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, (long)(m_questPlayer.ExperienceForNextLevel / 15), true);
-			m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), "You are awarded 67 copper!");
+			m_questPlayer.AddMoney(Currency.Copper.Mint(67));
+			m_questPlayer.SendSystemMessage(string.Format("You are awarded 67 copper!", Money.GetString(Money.GetMoney(0, 0, 0, 0, 67))));
             InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, 67);
 		}
 	}

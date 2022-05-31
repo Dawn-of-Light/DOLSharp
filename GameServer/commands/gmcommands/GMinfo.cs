@@ -344,7 +344,7 @@ namespace DOL.GS.Commands
 					info.Add("  - Model ID : " + target.Model);
 					info.Add("  - AFK Message: " + target.TempProperties.getProperty<string>(GamePlayer.AFK_MESSAGE) + "");
 					info.Add(" ");
-                    info.Add("  - Money : " + Money.GetString(target.GetCurrentMoney()) + "\n");
+                    info.Add("  - Money : " + Money.GetString(target.CopperBalance) + "\n");
 					info.Add("  - Speed : " + target.MaxSpeedBase);
 					info.Add("  - XPs : " + target.Experience);
 					info.Add("  - RPs : " + target.RealmPoints);
@@ -409,7 +409,7 @@ namespace DOL.GS.Commands
 					info.Add("  --------------------------------------");
 					////////////// Inventaire /////////////
 					info.Add("  ----- Money:");
-					info.Add(Money.GetShortString(target.GetCurrentMoney()));
+					info.Add(Money.GetShortString(target.CopperBalance));
 					info.Add(" ");
 
 					info.Add("  ----- Wearing:");

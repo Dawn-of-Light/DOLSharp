@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using DOL.Database;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -165,7 +166,7 @@ namespace DOL.GS
 
 			int ToRecoverCond = item.MaxCondition - item.Condition;
 
-			if (!player.RemoveMoney(item.RepairCost))
+			if (!player.RemoveMoney(Currency.Copper.Mint(item.RepairCost)))
 			{
                 InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.RepairCost);
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language,
