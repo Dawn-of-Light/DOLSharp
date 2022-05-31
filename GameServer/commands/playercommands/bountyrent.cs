@@ -114,7 +114,6 @@ namespace DOL.GS.Commands
                         client.Player.Wallet.RemoveMoney(Currency.BountyPoints.Mint(BPsToAdd));
                         client.Player.SaveIntoDatabase();
 
-                        client.Out.SendUpdatePoints();
                         client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.YouSpend", BPsToAdd, ((BPsToAdd * bpWorth) / bpWorth)),
                             eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;

@@ -600,7 +600,6 @@ namespace DOL.GS
 					{
 						ChatUtil.SendMerchantMessage(player, "GameMerchant.OnPlayerBuy.BoughtBP", item.GetName(1, false), purchasePrice);
 						player.Wallet.RemoveMoney(Currency.BountyPoints.Mint(purchasePrice));
-						player.Out.SendUpdatePoints();
 					}
 					else
 					{

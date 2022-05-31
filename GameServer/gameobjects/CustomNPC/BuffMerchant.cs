@@ -936,7 +936,6 @@ namespace DOL.GS
 					else
 						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtBP", template.GetName(1, false), totalValue);
 					player.Wallet.RemoveMoney(Currency.BountyPoints.Mint(totalValue));
-					player.Out.SendUpdatePoints();
 					player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				}
 			}

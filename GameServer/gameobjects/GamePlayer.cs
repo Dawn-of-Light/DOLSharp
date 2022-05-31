@@ -4127,7 +4127,7 @@ namespace DOL.GS
         public virtual long BountyPoints
         {
             get { return Wallet.GetBalance(Currency.BountyPoints).Amount; }
-            set { Wallet.SetBalance(Currency.BountyPoints.Mint(value)); Client.Out.SendUpdatePoints();}
+            set { Wallet.SetBalance(Currency.BountyPoints.Mint(value)); }
         }
 
 		/// <summary>
@@ -4458,8 +4458,6 @@ namespace DOL.GS
 
 			if(sendMessage == true)
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainBountyPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			
-			Out.SendUpdatePoints();
 		}
 
 		/// <summary>

@@ -67,7 +67,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						client.Player.Out.SendMessage("You withdraw " + totalConMoney.ToString() + " BountyPoints from your Merchant.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 						client.Player.Wallet.AddMoney(Currency.BountyPoints.Mint(totalConMoney));
-						client.Player.Out.SendUpdatePoints();
 					}
 					else
 					{
