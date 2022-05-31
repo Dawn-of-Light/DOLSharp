@@ -4347,40 +4347,25 @@ namespace DOL.GS
 			Out.SendUpdatePoints();
 		}
 
-		/// <summary>
-		/// Called when this living buy something with realm points
-		/// </summary>
-		/// <param name="amount">The amount of realm points loosed</param>
-		public bool RemoveBountyPoints(long amount)
-		{
-			return RemoveBountyPoints(amount, null);
-		}
-		/// <summary>
-		/// Called when this living buy something with realm points
-		/// </summary>
-		/// <param name="amount"></param>
-		/// <param name="str"></param>
-		/// <returns></returns>
-		public bool RemoveBountyPoints(long amount, string str)
-		{
-			return RemoveBountyPoints(amount, str, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-		}
-		/// <summary>
-		/// Called when this living buy something with realm points
-		/// </summary>
-		/// <param name="amount">The amount of realm points loosed</param>
-		/// <param name="loc">The chat location</param>
-		/// <param name="str">The message</param>
-		/// <param name="type">The chat type</param>
-		public virtual bool RemoveBountyPoints(long amount, string str, eChatType type, eChatLoc loc)
-		{
-			if (Wallet.RemoveMoney(Currency.BountyPoints.Mint(amount)) == false)
-				return false;
-			Out.SendUpdatePoints();
-			if (str != null && amount != 0)
-				Out.SendMessage(str, type, loc);
-			return true;
-		}
+        [Obsolete("Use RemoveMoney(Money) instead.")]
+        public bool RemoveBountyPoints(long amount)
+        {
+            return RemoveBountyPoints(amount, null);
+        }
+
+        [Obsolete("Use RemoveMoney(Money) and SendSystemMessage(string) instead.")]
+        public bool RemoveBountyPoints(long amount, string str)
+        {
+            return RemoveBountyPoints(amount, str, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+        }
+
+        [Obsolete("Use RemoveMoney(Money) and SendMessage(string,eChatType,eChatLoc) instead.")]
+        public virtual bool RemoveBountyPoints(long amount, string str, eChatType type, eChatLoc loc)
+        {
+            var hasEnoughBps = Wallet.RemoveMoney(Currency.BountyPoints.Mint(amount));
+            if (hasEnoughBps && str != null && amount != 0) SendMessage(str, type, loc);
+            return hasEnoughBps;
+        }
 
 		/// <summary>
 		/// Player gains bounty points

@@ -239,11 +239,12 @@ namespace DOL.GS.Keeps
 					} break;
 				case 2:
 					{
-						if (!player.RemoveBountyPoints(Gold, "You buy " + this.GetName(1, false) + "."))
+						if (!player.RemoveMoney(Currency.BountyPoints.Mint(Gold)))
 						{
 							player.Out.SendMessage("You dont have enough bounty point!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 							return;
 						}
+						player.SendSystemMessage("You buy " + this.GetName(1, false) + ".");
 					} break;
 				case 3:
 					{

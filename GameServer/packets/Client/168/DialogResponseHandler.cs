@@ -328,7 +328,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (bpsToMoney + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)
 									bpsToMoney = (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS) - house.KeptMoney;
 
-								if (!player.RemoveBountyPoints(Money.GetGold(bpsToMoney)))
+								if (!player.RemoveMoney(Currency.BountyPoints.Mint(Money.GetGold(bpsToMoney))))
 									return;
 
 								// add the bps to the lockbox
