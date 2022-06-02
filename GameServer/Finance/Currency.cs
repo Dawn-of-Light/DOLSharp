@@ -1,87 +1,65 @@
 using System;
-using System.Collections.Generic;
-using DOL.Database;
 
 namespace DOL.GS.Finance
 {
     public abstract class Currency
     {
+        public virtual string Name { get; }
+        public bool IsItemCurrency => this is ItemCurrency;
+
         protected Currency() { }
 
         public static Currency Copper { get; } = new CopperCurrency();
         public static Currency BountyPoints { get; } = new BountyPointsCurrency();
         public static Currency Mithril { get; } = new MithrilCurrency();
-        public static Currency Item(string currencyId) => ItemCurrency.Create(currencyId);
-        public static Currency Item(ItemTemplate item) => ItemCurrency.CreateFromTemplate(item);
+        public static Currency Item(string currencyId) => new ItemCurrency(currencyId);
 
         public Money Mint(long value) => Money.Mint(value, this);
 
-        public abstract string ToText();
-
-        public bool IsItemCurrency => this is ItemCurrency;
+        public virtual string ToText() => Name;
 
         public override bool Equals(object obj)
-        {
-            return obj.GetType().Equals(this.GetType());
-        }
+            => obj.GetType().Equals(this.GetType());
 
         public override int GetHashCode() => base.GetHashCode();
 
         #region Currency implementations
         private class CopperCurrency : Currency
         {
-            public override string ToText() => "money";
+            public override string Name => "money";
         }
 
         private class BountyPointsCurrency : Currency
         {
-            public override string ToText() => "bounty points";
+            public override string Name => "bounty points";
         }
 
         private class MithrilCurrency : Currency
         {
-            public override string ToText() => "Mithril";
+            public override string Name => "Mithril";
         }
 
         private class ItemCurrency : Currency
         {
-            private static Dictionary<string, ItemCurrency> cachedCurrencyItems = new Dictionary<string, ItemCurrency>();
+            private readonly string id;
 
-            private string Id { get; set; }
+            public override string Name => id;
 
-            internal static ItemCurrency Create(string currencyId)
+            public ItemCurrency(string id)
             {
-                currencyId = currencyId.ToLower();
-                if (string.IsNullOrEmpty(currencyId)) throw new ArgumentException("The ID of an ItemCurrency may not be null nor empty.");
-
-                if (cachedCurrencyItems.TryGetValue(currencyId, out var cachedItemCurrency))
-                {
-                    return cachedItemCurrency;
-                }
-                var newCurrencyItem = new ItemCurrency() { Id = currencyId };
-                cachedCurrencyItems[currencyId] = newCurrencyItem;
-                return newCurrencyItem;
+                if (string.IsNullOrEmpty(id)) throw new ArgumentException("The ID of an ItemCurrency may not be null nor empty.");
+                this.id = id.ToLower();
             }
 
-            internal static Currency CreateFromTemplate(ItemTemplate item)
-            {
-                if (item.ClassType.ToLower().StartsWith("currency."))
-                {
-                    var currencyId = item.ClassType.ToLower().Replace("currency.", "");
-                    return Create(currencyId);
-                }
-                return null;
-            }
-
-            public override string ToText() => $"units of {Id}";
+            public override string ToText() => $"units of {Name}";
 
             public override bool Equals(object obj)
             {
-                if (obj is ItemCurrency itemCurrency) return itemCurrency.Id == Id;
+                if (obj is ItemCurrency itemCurrency) return itemCurrency.id == id;
                 return false;
             }
 
-            public override int GetHashCode() => base.GetHashCode();
+            public override int GetHashCode() => id.GetHashCode();
         }
         #endregion
     }

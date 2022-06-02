@@ -30,9 +30,6 @@ using DOL.GS.Profession;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Represents an in-game merchant
-	/// </summary>
 	public class GameMerchant : GameNPC
 	{
         #region GetExamineMessages / Interact
@@ -352,8 +349,8 @@ namespace DOL.GS
         + "Adjust exchange rates by setting the amount/price for another currency item.")]
 	public abstract class GameItemCurrencyMerchant : GameMerchant
 	{
-        protected virtual Currency Currency {get; private set;}
-        private static Dictionary<Currency, int> currencyExchangeRates = null;
+        protected virtual Currency Currency { get; }
+        private static Dictionary<Currency, int> currencyExchangeRates = new Dictionary<Currency, int>();
 		private static Dictionary<Currency, ItemTemplate> defaultCurrencyItems = new Dictionary<Currency, ItemTemplate>();
         
         public override void LoadTemplate(INpcTemplate template)
@@ -380,20 +377,28 @@ namespace DOL.GS
 
         private static void LoadExchangeRates()
         {
-			if (ServerProperties.Properties.CURRENCY_EXCHANGE_ALLOW)
+            if (ServerProperties.Properties.CURRENCY_EXCHANGE_ALLOW == false) return;
+
+            foreach (string currencyExchangePair in ServerProperties.Properties.CURRENCY_EXCHANGE_VALUES.Split(';'))
             {
-				foreach (string currencyExchangePair in ServerProperties.Properties.CURRENCY_EXCHANGE_VALUES.Split(';'))
-				{
-					string[] asVal = currencyExchangePair.Split('|');
+                string[] asVal = currencyExchangePair.Split('|');
 
-					if (asVal.Length > 1 && int.TryParse(asVal[1], out int currencyValue) && currencyValue > 0)
-					{
-						if (currencyExchangeRates == null)
-							currencyExchangeRates = new Dictionary<Currency, int>(1);
+                if (asVal.Length > 1 && int.TryParse(asVal[1], out int currencyValue) && currencyValue > 0)
+                {
+                    var currencyId = asVal[0];
+                    var currency = Currency.Item(currencyId);
 
-						currencyExchangeRates[Currency.Item(asVal[0])] = currencyValue;
-					}
-				}
+                    var defaultCurrencyItem = DOLDB<ItemTemplate>.SelectObject(DB.Column("id_nb").IsEqualTo(currencyId));
+                    if (defaultCurrencyItem == null) continue;
+                    if (string.IsNullOrEmpty(defaultCurrencyItem.ClassType))
+                    {
+                        defaultCurrencyItem.AllowUpdate = true;
+                        defaultCurrencyItem.ClassType = $"Currency.{currencyId}";
+                        GameServer.Database.SaveObject(defaultCurrencyItem);
+                    }
+                    defaultCurrencyItems[currency] = defaultCurrencyItem;
+                    currencyExchangeRates[Currency.Item(currencyId)] = currencyValue;
+                }
             }
         }
 
@@ -413,30 +418,29 @@ namespace DOL.GS
 
         public override bool ReceiveItem(GameLiving source, InventoryItem item)
         {
-			Currency receivedCurrency = null;
-            if (item != null && string.IsNullOrEmpty(item.ClassType) == false)
-            {
-				receivedCurrency = Currency.Item(item.Template);
-            }
-            if (source is GamePlayer player && receivedCurrency != null && currencyExchangeRates != null
-                && currencyExchangeRates.TryGetValue(receivedCurrency, out int exchangeCurrencyValue)
-                && currencyExchangeRates.TryGetValue(Currency, out int referenceCurrencyValue))
-            {
-                int giveCount = item.Count * exchangeCurrencyValue / referenceCurrencyValue;
+            if (item == null) return false;
+            var receivedCurrency = Currency.Item(item.Template.Id_nb);
+            currencyExchangeRates.TryGetValue(receivedCurrency, out var fromCurrencyRate);
+            currencyExchangeRates.TryGetValue(Currency, out var toCurrencyRate);
 
-                if (giveCount > 0)
+            if (source is GamePlayer player && receivedCurrency.Equals(Currency) == false 
+                && fromCurrencyRate > 0 && toCurrencyRate > 0)
+            {
+                var fromCurrencyItemCount = item.Count;
+                var toCurrencyItemCount = fromCurrencyItemCount * fromCurrencyRate / toCurrencyRate;
+
+                if (toCurrencyItemCount > 0)
                 {
-                    // Create and give new item to player
-                    InventoryItem newItem = GameInventoryItem.Create(GetDefaultCurrencyItem(Currency));
+                    defaultCurrencyItems.TryGetValue(Currency, out var defaultCurrencyItem);
+                    InventoryItem newItem = GameInventoryItem.Create(defaultCurrencyItem);
                     newItem.OwnerID = player.InternalID;
-                    newItem.Count = giveCount;
+                    newItem.Count = toCurrencyItemCount;
 
                     if (!player.Inventory.AddTemplate(newItem, newItem.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
                         player.CreateItemOnTheGround(newItem);
 
-                    // Remove received items
-                    InventoryItem playerItem = player.Inventory.GetItem((eInventorySlot)item.SlotPosition);
-                    playerItem.Count -= giveCount * referenceCurrencyValue;
+                    var playerItem = player.Inventory.GetItem((eInventorySlot)item.SlotPosition);
+                    playerItem.Count -= toCurrencyItemCount * toCurrencyRate / fromCurrencyRate;
 
                     if (playerItem.Count < 1)
                         player.Inventory.RemoveItem(item);
@@ -446,25 +450,6 @@ namespace DOL.GS
             }
         	return base.ReceiveItem(source, item);
 		}
-
-        private ItemTemplate GetDefaultCurrencyItem(Currency currency)
-        {
-            if (defaultCurrencyItems.TryGetValue(currency, out var currencyItem))
-            {
-                return currencyItem;
-            }
-            else
-            {
-                var allCurrencyItems = DOLDB<ItemTemplate>.SelectObjects(DB.Column("ClassType").IsLike("Currency.%"));
-                foreach (var item in allCurrencyItems)
-                {
-                    currency.Equals(Currency.Item(item));
-                	defaultCurrencyItems[currency] = item;
-					return item;
-                }
-                throw new NullReferenceException($"No currency item for <{currency.ToText()}> was found.");
-            }
-        }
 	}
 
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]

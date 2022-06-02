@@ -66,10 +66,10 @@ namespace DOL.GS.Finance
 
         public override bool Equals(object obj)
         {
-            if (obj is Money otherCurrency)
+            if (obj is Money otherMoney)
             {
-                var areOfSameValue = otherCurrency.Amount == this.Amount;
-                var areOfSameType = otherCurrency.Currency.Equals(Currency);
+                var areOfSameValue = otherMoney.Amount == this.Amount;
+                var areOfSameType = otherMoney.Currency.Equals(Currency);
                 return areOfSameType && areOfSameValue;
             }
             return false;

@@ -23,7 +23,7 @@ namespace DOL.GS.Finance
                 lock (owner.Inventory)
                 {
                     return currency.Mint(owner.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
-                        .Where(i => currency.Equals(Currency.Item(i.Template)))
+                        .Where(i => i.Template.ClassType.ToLower() == $"Currency.{currency.Name}".ToLower())
                         .Aggregate(0, (acc, i) => acc + i.Count));
                 }
             }
@@ -48,14 +48,15 @@ namespace DOL.GS.Finance
 
         public bool RemoveMoney(Money money)
         {
-            if (money.Currency.IsItemCurrency)
+            var currency = money.Currency;
+            if (currency.IsItemCurrency)
             {
                 lock (owner.Inventory)
                 {
-                    if (GetBalance(money.Currency).Amount < money.Amount) return false;
+                    if (GetBalance(currency).Amount < money.Amount) return false;
 
                     var validCurrencyItemsInventory = owner.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
-                        .Where(i => money.Currency.Equals(Currency.Item(i.Template)));
+                        .Where(i => i.Template.ClassType.ToLower() == $"Currency.{currency.Name}".ToLower());
                     var remainingDue = (int)money.Amount;
                     foreach (var currencyItem in validCurrencyItemsInventory)
                     {
