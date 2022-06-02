@@ -1,5 +1,3 @@
-using DOL.Database;
-using DOL.GS;
 using DOL.GS.Finance;
 using NUnit.Framework;
 
@@ -9,11 +7,12 @@ namespace DOL.UnitTests.Gameserver
     public class UT_Wallet
     {
         [Test]
-        public void Balance_Copper_Init_ZeroCopper()
+        public void GetBalance_OfCopper_Init_ZeroCopper()
         {
-            var wallet = new Wallet();
+            var wallet = CreateWallet();
 
             var actual = wallet.GetBalance(Currency.Copper);
+
             var expected = Currency.Copper.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -21,7 +20,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void AddMoney_OneCopperToEmptyWallet_CopperBalanceIsOne()
         {
-            var wallet = new Wallet();
+            var wallet = CreateWallet();
             var oneCopper = Currency.Copper.Mint(1);
 
             wallet.AddMoney(oneCopper);
@@ -34,7 +33,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void AddMoney_OneBountyPointToEmptyWallet_CopperBalanceRemainsZero()
         {
-            var wallet = new Wallet();
+            var wallet = CreateWallet();
             var oneBp = Currency.BountyPoints.Mint(1);
 
             wallet.AddMoney(oneBp);
@@ -47,7 +46,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void AddMoney_OneBountyPointToEmptyWallet_BountyPointBalanceIsOne()
         {
-            var wallet = new Wallet();
+            var wallet = CreateWallet();
             var oneBp = Currency.BountyPoints.Mint(1);
 
             wallet.AddMoney(oneBp);
@@ -58,14 +57,12 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [Test]
-        public void RemoveMoney_OneCopper_AddOneCopperTwiceBefore_CopperBalanceIsOne()
+        public void RemoveMoney_OneCopper_Add2CopperPrior_CopperBalanceIsOne()
         {
-            var wallet = new Wallet();
-            var oneCopper = Currency.Copper.Mint(1);
+            var wallet = CreateWallet();
+            wallet.AddMoney(Currency.Copper.Mint(2));
 
-            wallet.AddMoney(oneCopper);
-            wallet.AddMoney(oneCopper);
-            wallet.RemoveMoney(oneCopper);
+            wallet.RemoveMoney(Currency.Copper.Mint(1));
 
             var actual = wallet.GetBalance(Currency.Copper);
             var expected = Currency.Copper.Mint(1);
@@ -73,15 +70,53 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [Test]
-        public void GetBalance_Aurulite_AuruliteBalanceIsZero()
+        public void RemoveMoney_OneCopper_Init_CopperBalanceIsZero()
         {
-            var player = new FakePlayer();
-            var wallet = new Wallet(player);
-            var aurulite = Currency.Item("aurulite");
+            var wallet = CreateWallet();
 
-            var actual = wallet.GetBalance(aurulite);
-            var expected = aurulite.Mint(0);
+            wallet.RemoveMoney(Currency.Copper.Mint(1));
+
+            var actual = wallet.GetBalance(Currency.Copper);
+            var expected = Currency.Copper.Mint(0);
             Assert.That(actual, Is.EqualTo(expected));
         }
+
+        [Test]
+        public void RemoveMoney_OneCopper_Init_False()
+        {
+            var wallet = CreateWallet();
+
+            var actual = wallet.RemoveMoney(Currency.Copper.Mint(1));
+
+            var expected = false;
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void RemoveMoney_TwoCopper_AddOneCopperPrior_CopperBalanceIsOne()
+        {
+            var wallet = CreateWallet();
+            wallet.AddMoney(Currency.Copper.Mint(1));
+
+            wallet.RemoveMoney(Currency.Copper.Mint(2));
+
+            var actual = wallet.GetBalance(Currency.Copper);
+            var expected = Currency.Copper.Mint(1);
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void RemoveMoney_OneCopper_AddOneCopperPrior_True()
+        {
+            var wallet = CreateWallet();
+            wallet.AddMoney(Currency.Copper.Mint(1));
+
+            var actual = wallet.RemoveMoney(Currency.Copper.Mint(1));
+
+            var expected = true;
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        private Wallet CreateWallet() => new Wallet();
     }
 }
