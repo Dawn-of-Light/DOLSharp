@@ -66,7 +66,7 @@
   <ItemGroup>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.ServiceProcess" />
-    <PackageReference Include="log4net" Version="2.0.13" ExcludeAssets="Runtime" />
+    <PackageReference Include="log4net" Version="2.0.14" ExcludeAssets="Runtime" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" Private="False" ExcludeAssets="All" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" Private="False" ExcludeAssets="All" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" Private="False" ExcludeAssets="All" />

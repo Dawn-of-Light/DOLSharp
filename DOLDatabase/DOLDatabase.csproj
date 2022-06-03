@@ -58,9 +58,9 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.13" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.12" />
-    <PackageReference Include="MySqlConnector" Version="2.0.0" PrivateAssets="all" />
+    <PackageReference Include="log4net" Version="2.0.14" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.17" />
+    <PackageReference Include="MySqlConnector" Version="2.1.10" PrivateAssets="all" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
