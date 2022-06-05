@@ -64,14 +64,9 @@ namespace DOL.GS.Finance
                     var remainingDue = (int)money.Amount;
                     foreach (var currencyItem in validCurrencyItemsInventory)
                     {
-                        if (currencyItem.Count > remainingDue)
+                        if (currencyItem.Count >= remainingDue)
                         {
                             owner.Inventory.RemoveCountFromStack(currencyItem, remainingDue);
-                            break;
-                        }
-                        else if (currencyItem.Count == remainingDue)
-                        {
-                            owner.Inventory.RemoveItem(currencyItem);
                             break;
                         }
                         else
