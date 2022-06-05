@@ -27,8 +27,12 @@ namespace DOL.GS.Finance
                         .Aggregate(0, (acc, i) => acc + i.Count));
                 }
             }
-            balances.TryGetValue(currency, out var balance);
-            return currency.Mint(balance);
+            
+            lock (balances)
+            {
+                balances.TryGetValue(currency, out var balance);
+                return currency.Mint(balance);
+            }
         }
 
         public void AddMoney(Money money)
