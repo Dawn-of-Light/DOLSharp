@@ -71,7 +71,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private static DateTime m_lastAccountCreateTime;
-		private readonly Dictionary<string, LockCount> m_locks = new Dictionary<string, LockCount>();
+		private static readonly Dictionary<string, LockCount> m_locks = new Dictionary<string, LockCount>();
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
@@ -499,7 +499,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Acquires the lock on account.
 		/// </summary>
 		/// <param name="accountName">Name of the account.</param>
-		private void EnterLock(string accountName)
+		private static void EnterLock(string accountName)
 		{
 			// Safety check
 			if (accountName == null)
@@ -539,7 +539,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Releases the lock on account.
 		/// </summary>
 		/// <param name="accountName">Name of the account.</param>
-		private void ExitLock(string accountName)
+		private static void ExitLock(string accountName)
 		{
 			// Safety check
 			if (accountName == null)
