@@ -254,8 +254,10 @@ namespace DOL.GS.Keeps
 			}
 			if (bg != null && GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvE)
 			{
-				// Battlegrounds, ignore all but GameKeepDoor
-				whereClause = whereClause.And(DB.Column(nameof(DBKeepPosition.ClassType)).IsEqualTo("DOL.GS.Keeps.GameKeepDoor"));
+				// Battlegrounds, ignore all but GameKeepDoor and GameKeepBanner
+				var whereClauseBG = DB.Column(nameof(DBKeepPosition.ClassType)).IsEqualTo("DOL.GS.Keeps.GameKeepDoor");
+				whereClauseBG = whereClauseBG.Or(DB.Column(nameof(DBKeepPosition.ClassType)).IsEqualTo("DOL.GS.Keeps.GameKeepBanner"));
+				whereClause = whereClause.And(whereClauseBG);
 			}
 			var DBPositions = DOLDB<DBKeepPosition>.SelectObjects(whereClause);
 
