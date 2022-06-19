@@ -20,6 +20,7 @@ using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Housing;
 using DOL.Language;
+using DOL.GS.Finance;
 
 namespace DOL.GS.Commands
 {
@@ -83,7 +84,7 @@ namespace DOL.GS.Commands
                             return;
                         }
 
-						if ((client.Player.BountyPoints -= BPsToAdd) < 0)
+						if ((client.Player.BountyPointBalance - BPsToAdd) < 0)
 						{
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.NotEnoughBp"),
                                 eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -110,10 +111,9 @@ namespace DOL.GS.Commands
                         house.KeptMoney += (BPsToAdd * bpWorth);
                         house.SaveIntoDatabase();
 
-                        client.Player.BountyPoints -= BPsToAdd;
+                        client.Player.RemoveMoney(Currency.BountyPoints.Mint(BPsToAdd));
                         client.Player.SaveIntoDatabase();
 
-                        client.Out.SendUpdatePoints();
                         client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.YouSpend", BPsToAdd, ((BPsToAdd * bpWorth) / bpWorth)),
                             eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;

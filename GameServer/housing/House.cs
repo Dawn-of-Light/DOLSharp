@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DOL.Database;
+using DOL.GS.Finance;
 using DOL.Language;
 using log4net;
 
@@ -980,7 +981,7 @@ namespace DOL.GS.Housing
 			}
 
 			// make sure player has enough money to cover the changes
-			if (!player.RemoveMoney(price))
+			if (!player.RemoveMoney(Currency.Copper.Mint(price)))
 			{
                 InventoryLogging.LogInventoryAction(player, "(HOUSE;" + HouseNumber + ")", eInventoryActionType.Merchant, price);
 				ChatUtil.SendMerchantMessage(player, "House.Edit.NotEnoughMoney", null);

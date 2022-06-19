@@ -5,7 +5,7 @@ using System;
 using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
-
+using DOL.GS.Finance;
 
 namespace DOL.GS.Commands
 {
@@ -42,7 +42,7 @@ namespace DOL.GS.Commands
 			}
 
 			/* When you don't have a lastname, change is for free, otherwise you need money */
-			if (client.Player.LastName != "" && client.Player.GetCurrentMoney() < Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0))
+			if (client.Player.LastName != "" && client.Player.CopperBalance < Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0))
 			{
 				client.Out.SendMessage("Changing your last name costs " + Money.GetString(Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0)) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -80,7 +80,7 @@ namespace DOL.GS.Commands
 			}
 
 			/* First char of lastname must be uppercase */
-			//if (!Char.IsUpper(NewLastname, 0)) /* IsUpper() use unicode characters, it doesn't catch all accented uppercase letters like É, Ä, Å, ecc.. that are invalid! */
+			//if (!Char.IsUpper(NewLastname, 0)) /* IsUpper() use unicode characters, it doesn't catch all accented uppercase letters like ï¿½, ï¿½, ï¿½, ecc.. that are invalid! */
 			if (NewLastname[0] < 'A' || NewLastname[0] > 'Z')
 			{
 				client.Out.SendMessage("Your lastname must start with a valid, uppercase character!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -112,7 +112,7 @@ namespace DOL.GS.Commands
 		{
 			foreach (Char c in name)
 			{
-				//if (!Char.IsLetter(c)) /* IsLetter() use unicode characters, it doesn't catch all accented letters like É, è, ì, Å, ecc.. that are invalid! */
+				//if (!Char.IsLetter(c)) /* IsLetter() use unicode characters, it doesn't catch all accented letters like ï¿½, ï¿½, ï¿½, ï¿½, ecc.. that are invalid! */
 				if (c < 'A' || (c > 'Z' && c < 'a') || c > 'z')
 					return true;
 			}
@@ -141,7 +141,7 @@ namespace DOL.GS.Commands
 			}
 
 			/* Check money only if your lastname is not blank */
-			if (player.LastName != "" && player.GetCurrentMoney() < Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0))
+			if (player.LastName != "" && player.CopperBalance < Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0))
 			{
 				player.Out.SendMessage("Changing your last name costs " + Money.GetString(Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0)) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -156,7 +156,7 @@ namespace DOL.GS.Commands
 			/* Remove money only if your lastname is not blank and is different from the previous one */
             if (player.LastName != "" && player.LastName != NewLastName)
             {
-                player.RemoveMoney(Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0), null);
+                player.RemoveMoney(Currency.Copper.Mint(LASTNAME_FEE * 100 * 100));
                 InventoryLogging.LogInventoryAction(player, player.TargetObject, eInventoryActionType.Merchant, LASTNAME_FEE * 10000);
             }
 

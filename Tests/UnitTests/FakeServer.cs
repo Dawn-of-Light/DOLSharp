@@ -23,6 +23,7 @@ namespace DOL.UnitTests.Gameserver
         public override void SendStatusUpdate() { }
         public override void SendInventorySlotsUpdate(ICollection<int> slots) { }
         public override void SendUpdateCraftingSkills() { }
+        public override void SendUpdateMoney() { }
     }
 
     public class FakeRegion : Region

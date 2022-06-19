@@ -35,6 +35,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -609,7 +610,8 @@ namespace DOL.GS.Quests.Albion
 
 								player.GainExperience(GameLiving.eXPSource.Quest, 40, true);
 							    long money = Money.GetMoney(0, 0, 0, 3, Util.Random(50));
-								player.AddMoney(money, "You are awarded 3 silver and some copper!");
+								player.AddMoney(Currency.Copper.Mint(money));
+								player.SendSystemMessage(string.Format("You are awarded 3 silver and some copper!", Money.GetString(money)));
                                 InventoryLogging.LogInventoryAction("(QUEST;" + quest.Name + ")", player, eInventoryActionType.Quest, money);
 
 								quest.Step = 3;
@@ -766,7 +768,8 @@ namespace DOL.GS.Quests.Albion
 
 						m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 40, true);
 					    long money = Money.GetMoney(0, 0, 0, 2, Util.Random(50));
-						m_questPlayer.AddMoney(money, "You are awarded 2 silver and some copper!");
+						m_questPlayer.AddMoney(Currency.Copper.Mint(money));
+						m_questPlayer.SendSystemMessage(string.Format("You are awarded 2 silver and some copper!", Money.GetString(money)));
                         InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 
 						Step = 4;
@@ -796,7 +799,8 @@ namespace DOL.GS.Quests.Albion
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 80, true);
 		    long money = Money.GetMoney(0, 0, 0, 4, Util.Random(50));
-			m_questPlayer.AddMoney(money, "You are awarded 4 silver and some copper!");
+			m_questPlayer.AddMoney(Currency.Copper.Mint(money));
+			m_questPlayer.SendSystemMessage(string.Format("You are awarded 4 silver and some copper!", Money.GetString(money)));
             InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 		}
 	}

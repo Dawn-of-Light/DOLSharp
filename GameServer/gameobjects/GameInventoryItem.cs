@@ -152,8 +152,9 @@ namespace DOL.GS
 		{
 			string classType = item.ClassType;
 			var itemUnique = item as ItemUnique;
+			var itemIsNoCurrency = !item.ClassType.ToLower().StartsWith("currency.");
 			
-			if (!string.IsNullOrEmpty(classType))
+			if (!string.IsNullOrEmpty(classType) && itemIsNoCurrency)
 			{
 				GameInventoryItem gameItem;
 				if (itemUnique != null)
@@ -183,8 +184,9 @@ namespace DOL.GS
 		public static GameInventoryItem Create(InventoryItem item)
 		{
 			string classType = item.Template.ClassType;
+			var itemIsNoCurrency = !item.ClassType.ToLower().StartsWith("currency.");
 			
-			if (!string.IsNullOrEmpty(classType))
+			if (!string.IsNullOrEmpty(classType) && itemIsNoCurrency)
 			{
 				GameInventoryItem gameItem = ScriptMgr.CreateObjectFromClassType<GameInventoryItem, InventoryItem>(classType, item);
 				

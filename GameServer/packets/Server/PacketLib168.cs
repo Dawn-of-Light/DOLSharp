@@ -1183,7 +1183,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteInt((uint) m_gameClient.Player.RealmPoints);
 				pak.WriteShort(m_gameClient.Player.LevelPermill);
 				pak.WriteShort((ushort) m_gameClient.Player.SkillSpecialtyPoints);
-				pak.WriteInt((uint) m_gameClient.Player.BountyPoints);
+				pak.WriteInt((uint) m_gameClient.Player.BountyPointBalance);
 				pak.WriteShort((ushort) m_gameClient.Player.RealmSpecialtyPoints);
 				pak.WriteShort(0); // unknown
 				SendTCP(pak);
@@ -1196,11 +1196,12 @@ namespace DOL.GS.PacketHandler
 				return;
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MoneyUpdate)))
 			{
-				pak.WriteByte((byte) m_gameClient.Player.Copper);
-				pak.WriteByte((byte) m_gameClient.Player.Silver);
-				pak.WriteShort((ushort) m_gameClient.Player.Gold);
-				pak.WriteShort((ushort) m_gameClient.Player.Mithril);
-				pak.WriteShort((ushort) m_gameClient.Player.Platinum);
+				var player = m_gameClient.Player;
+				pak.WriteByte((byte) Money.GetCopper(player.CopperBalance));
+				pak.WriteByte((byte) Money.GetSilver(player.CopperBalance));
+				pak.WriteShort((ushort) Money.GetGold(player.CopperBalance));
+				pak.WriteShort((ushort) Money.GetMithril(player.CopperBalance));
+				pak.WriteShort((ushort) Money.GetPlatinum(player.CopperBalance));
 				SendTCP(pak);
 			}
 		}
@@ -1935,14 +1936,14 @@ namespace DOL.GS.PacketHandler
             }
 		}
 
-		protected eMerchantWindowType ConvertCurrencyToMerchantWindowType(Currency currency)
-		{
-			if(Currency.Copper.Equals(currency)) return eMerchantWindowType.Normal;
-			else if(Currency.BountyPoints.Equals(currency)) return eMerchantWindowType.Bp;
-			else if(Currency.Mithril.Equals(currency)) return eMerchantWindowType.Mithril;
-			else if(currency is ItemCurrency) return eMerchantWindowType.Count;
-			else throw new ArgumentException($"Currency {currency} has no MerchantWindowType conversion, yet.");
-		}
+        protected eMerchantWindowType ConvertCurrencyToMerchantWindowType(Currency currency)
+        {
+            if (currency.Equals(Currency.Copper)) return eMerchantWindowType.Normal;
+            else if (currency.Equals(Currency.BountyPoints)) return eMerchantWindowType.Bp;
+            else if (currency.Equals(Currency.Mithril)) return eMerchantWindowType.Mithril;
+            else if (currency.IsItemCurrency) return eMerchantWindowType.Count;
+            else throw new ArgumentException($"Currency {currency} has no MerchantWindowType conversion, yet.");
+        }
 
 		public virtual void SendTradeWindow()
 		{

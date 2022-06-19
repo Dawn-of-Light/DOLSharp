@@ -18,6 +18,7 @@
  */
 
 using DOL.Events;
+using DOL.GS.Finance;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 
@@ -301,7 +302,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									moneyToAdd = (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS) - house.KeptMoney;
 
 								// take the money from the player
-								if (!player.RemoveMoney(moneyToAdd))
+								if (!player.RemoveMoney(Currency.Copper.Mint(moneyToAdd)))
 									return;
 								InventoryLogging.LogInventoryAction(player, "(HOUSE;" + house.HouseNumber + ")", eInventoryActionType.Other, moneyToAdd);
 
@@ -327,7 +328,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (bpsToMoney + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)
 									bpsToMoney = (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS) - house.KeptMoney;
 
-								if (!player.RemoveBountyPoints(Money.GetGold(bpsToMoney)))
+								if (!player.RemoveMoney(Currency.BountyPoints.Mint(Money.GetGold(bpsToMoney))))
 									return;
 
 								// add the bps to the lockbox

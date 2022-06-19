@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using DOL.Database;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -118,7 +119,7 @@ namespace DOL.GS
 
 			long Fee = CalculEnchantPrice(item);
 
-			if (player.GetCurrentMoney() < Fee)
+			if (player.CopperBalance < Fee)
 			{
                 SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text2", Money.GetString(Fee)));
                 return;
@@ -132,7 +133,7 @@ namespace DOL.GS
             player.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text4", 
                                     GetName(0, false, player.Client.Account.Language, this), Money.GetString(Fee)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            player.RemoveMoney(Fee, null);
+            player.RemoveMoney(Currency.Copper.Mint(Fee));
             InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, Fee);
             SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text5", item.GetName(1, false)));
             return;

@@ -49,7 +49,6 @@ namespace DOL.GS.Profession
 
         public byte Number { get; }
         public Currency Currency { get; private set; } = Currency.Copper;
-        public ItemTemplate CurrencyItem => Currency is ItemCurrency itemCurrency ? itemCurrency.Item : null;
 
         public MerchantCatalogPage(byte number)
         {
@@ -143,7 +142,7 @@ namespace DOL.GS.Profession
                 {
                     var currencyId = (byte)dbMerchantItem.Price;
                     var itemTemplateId = dbMerchantItem.ItemTemplateID;
-                    var pageCurrency = Currency.Create(currencyId, itemTemplateId);
+                    var pageCurrency = CreateCurrencyFromId(currencyId, itemTemplateId);
                     page.SetCurrency(pageCurrency);
                 }
                 var itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(dbMerchantItem.ItemTemplateID);
@@ -153,6 +152,18 @@ namespace DOL.GS.Profession
             }
             catalog.ItemListId = itemListId;
             return catalog;
+        }
+
+        private static Currency CreateCurrencyFromId(byte currencyId, string itemCurrencyId = null)
+        {
+            switch (currencyId)
+            {
+                case 1: return Currency.Copper;
+                case 2: return Currency.Item(itemCurrencyId);
+                case 3: return Currency.BountyPoints;
+                case 4: return Currency.Mithril;
+                default: throw new System.NotImplementedException($"Currency with id {currencyId} is not implemented.");
+            }
         }
 
         public IEnumerable<MerchantCatalogEntry> GetAllEntries()

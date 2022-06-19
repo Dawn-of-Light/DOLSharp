@@ -25,6 +25,7 @@ using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 using DOL.Language;
+using DOL.GS.Finance;
 
 namespace DOL.GS.Commands
 {
@@ -135,7 +136,7 @@ namespace DOL.GS.Commands
 							ply.TempProperties.removeProperty("Guild_Consider");
 						}
 						player.Group.Leader.TempProperties.removeProperty("Guild_Name");
-						player.Group.Leader.RemoveMoney(10000);
+						player.Group.Leader.RemoveMoney(Currency.Copper.Mint(10000));
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, player.Group.Leader.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 					}
 				}
@@ -152,7 +153,7 @@ namespace DOL.GS.Commands
 				{
 					newGuild.AddPlayer(player, newGuild.GetRankByID(0));
 					player.TempProperties.removeProperty("Guild_Name");
-					player.RemoveMoney(10000);
+					player.RemoveMoney(Currency.Copper.Mint(10000));
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 				}
 			}
@@ -1213,7 +1214,7 @@ namespace DOL.GS.Commands
 							}
 							#endregion
 							#region Enoguh money to form Check
-							if (client.Player.Group.Leader.GetCurrentMoney() < GuildFormCost)
+							if (client.Player.Group.Leader.CopperBalance < GuildFormCost)
 							{
 								client.Out.SendMessage("It cost 1 gold piece to create a guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
@@ -2333,7 +2334,7 @@ namespace DOL.GS.Commands
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.DepositInvalid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
-							else if (client.Player.GetCurrentMoney() < amount)
+							else if (client.Player.CopperBalance < amount)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.DepositTooMuch"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
@@ -2537,7 +2538,7 @@ namespace DOL.GS.Commands
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.EmblemNeedNPC"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.GetCurrentMoney() < GuildMgr.COST_RE_EMBLEM) //200 gold to re-emblem
+			if (player.CopperBalance < GuildMgr.COST_RE_EMBLEM) //200 gold to re-emblem
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.EmblemNeedGold"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

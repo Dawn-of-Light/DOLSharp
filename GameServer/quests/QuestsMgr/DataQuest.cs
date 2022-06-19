@@ -32,7 +32,7 @@ using DOL.GS.Behaviour;
 using DOL.GS.PacketHandler;
 
 using log4net;
-
+using DOL.GS.Finance;
 
 namespace DOL.GS.Quests
 {
@@ -1706,7 +1706,8 @@ namespace DOL.GS.Quests
 						
 						if (RewardMoney > 0)
 						{
-							m_questPlayer.AddMoney(RewardMoney, "You are awarded {0}!");
+							m_questPlayer.AddMoney(Currency.Copper.Mint(RewardMoney));
+							m_questPlayer.SendSystemMessage(string.Format("You are awarded {0}!", Money.GetString(RewardMoney)));;
 	                        InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, RewardMoney);
 						}
 	
@@ -2051,7 +2052,8 @@ namespace DOL.GS.Quests
 							
 							if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
 							{
-								player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
+								player.AddMoney(Currency.Copper.Mint(m_rewardMoneys[0]));
+								player.SendSystemMessage(string.Format("You are awarded {0}!", Money.GetString(m_rewardMoneys[0])));;
                                 InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", player, eInventoryActionType.Quest, m_rewardMoneys[0]);
 							}
 
@@ -2653,7 +2655,8 @@ namespace DOL.GS.Quests
 								
 								if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
 								{
-									player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
+									player.AddMoney(Currency.Copper.Mint(m_rewardMoneys[0]));
+									player.SendSystemMessage(string.Format("You are awarded {0}!", Money.GetString(m_rewardMoneys[0])));
                                     InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", player, eInventoryActionType.Quest, m_rewardMoneys[0]);
 								}
 
@@ -2920,7 +2923,8 @@ namespace DOL.GS.Quests
 							rewardMoney = m_rewardMoneys[lastStep - 1];
 							if (rewardMoney > 0)
 							{
-								m_questPlayer.AddMoney(rewardMoney, "You are awarded {0}!");
+								m_questPlayer.AddMoney(Currency.Copper.Mint(rewardMoney));
+								m_questPlayer.SendSystemMessage(string.Format("You are awarded {0}!", Money.GetString(rewardMoney)));
 	                            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, rewardMoney);
 							}
 						}
@@ -3004,7 +3008,8 @@ namespace DOL.GS.Quests
 							rewardMoney = m_rewardMoneys[0];
 							if (rewardMoney > 0)
 							{
-								m_questPlayer.AddMoney(rewardMoney, "You are awarded {0}!");
+								m_questPlayer.AddMoney(Currency.Copper.Mint(rewardMoney));
+								m_questPlayer.SendSystemMessage(string.Format("You are awarded {0}!", Money.GetString(rewardMoney)));
 	                            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, rewardMoney);
 							}
 						}

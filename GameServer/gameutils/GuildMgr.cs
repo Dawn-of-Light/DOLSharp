@@ -26,6 +26,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.GS.Finance;
 
 namespace DOL.GS
 {
@@ -563,7 +564,7 @@ namespace DOL.GS
 			player.Guild.Emblem = newemblem;
 			if (oldemblem != 0)
 			{
-				player.RemoveMoney(COST_RE_EMBLEM, null);
+				player.RemoveMoney(Currency.Copper.Mint(COST_RE_EMBLEM));
                 InventoryLogging.LogInventoryAction(player, "(GUILD;" + player.GuildName + ")", eInventoryActionType.Other, COST_RE_EMBLEM);
                 var objs = DOLDB<InventoryItem>.SelectObjects(DB.Column(nameof(InventoryItem.Emblem)).IsEqualTo(oldemblem));
 				

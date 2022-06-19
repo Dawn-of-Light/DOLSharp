@@ -1,102 +1,66 @@
 using System;
-using System.Collections.Generic;
-using DOL.Database;
 
 namespace DOL.GS.Finance
 {
     public abstract class Currency
     {
+        public virtual string Name { get; }
+        public bool IsItemCurrency => this is ItemCurrency;
+
         protected Currency() { }
 
-        public static Currency Create(byte currencyId, string itemTemplateId = null)
-        {
-            switch (currencyId)
-            {
-                case 1: return Copper;
-                case 2: return ItemCurrency.CreateFromItemTemplateId(itemTemplateId);
-                case 3: return BountyPoints;
-                case 4: return Mithril;
-                default: throw new System.NotImplementedException($"Currency with id {currencyId} is not implemented.");
-            }
-        }
-
-        public static Currency Copper { get; } = new Copper();
-        public static Currency BountyPoints { get; } = new BountyPoints();
-        public static Currency Mithril { get; } = new Mithril();
-        public static Currency Item(ItemTemplate itemTemplate) => ItemCurrency.Create(itemTemplate);
-        public static Currency Item(string itemTemplateId) => ItemCurrency.CreateFromItemTemplateId(itemTemplateId);
+        public static Currency Copper { get; } = new CopperCurrency();
+        public static Currency BountyPoints { get; } = new BountyPointsCurrency();
+        public static Currency Mithril { get; } = new MithrilCurrency();
+        public static Currency Item(string currencyId) => new ItemCurrency(currencyId);
 
         public Money Mint(long value) => Money.Mint(value, this);
 
-        public abstract string Name { get; }
+        public virtual string ToText() => Name;
 
         public override bool Equals(object obj)
-        {
-            return obj.GetType().Equals(this.GetType());
-        }
+            => obj.GetType().Equals(this.GetType());
 
         public override int GetHashCode() => base.GetHashCode();
-    }
 
-    internal class Copper : Currency
-    {
-        public override string Name => "copper";
-    }
-
-    internal class BountyPoints : Currency
-    {
-        public override string Name => "bounty points";
-    }
-
-    internal class Mithril : Currency
-    {
-        public override string Name => "mithril";
-    }
-
-    internal class ItemCurrency : Currency
-    {
-        private static Dictionary<string, ItemCurrency> cachedCurrencyItems = new Dictionary<string, ItemCurrency>();
-
-        public new ItemTemplate Item { get; private set; }
-
-        public static ItemCurrency Create(ItemTemplate itemTemplate)
+        #region Currency implementations
+        private class CopperCurrency : Currency
         {
-            if (cachedCurrencyItems.TryGetValue(itemTemplate.Id_nb, out var cachedItemCurrency))
-            {
-                return cachedItemCurrency;
-            }
-            var newCurrencyItem = new ItemCurrency() { Item = itemTemplate };
-            cachedCurrencyItems[itemTemplate.Id_nb] = newCurrencyItem;
-            return newCurrencyItem;
+            public override string Name => "money";
         }
 
-        public static ItemCurrency CreateFromItemTemplateId(string itemTemplateId)
+        private class BountyPointsCurrency : Currency
         {
-            if(string.IsNullOrEmpty(itemTemplateId)) throw new ArgumentException("An ItemCurrency's ItemTemplateID may not be null nor empty.");
-            
-            if (cachedCurrencyItems.TryGetValue(itemTemplateId, out var cachedItemCurrency))
-            {
-                return cachedItemCurrency;
-            }
-            var itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(itemTemplateId);
-            if (itemTemplate == null)
-            {
-                itemTemplate = new ItemTemplate() { Id_nb = itemTemplateId, Name = itemTemplateId };
-            }
-            var newCurrencyItem = new ItemCurrency() { Item = itemTemplate };
-            cachedCurrencyItems[itemTemplate.Id_nb] = newCurrencyItem;
-            return newCurrencyItem;
+            public override string Name => "bounty points";
         }
 
-        public override string Name
-            => Item.Name;
-
-        public override bool Equals(object obj)
+        private class MithrilCurrency : Currency
         {
-            if (obj is ItemCurrency itemCurrency) return itemCurrency.Item.Id_nb == Item.Id_nb;
-            return false;
+            public override string Name => "Mithril";
         }
 
-        public override int GetHashCode() => base.GetHashCode();
+        private class ItemCurrency : Currency
+        {
+            private readonly string id;
+
+            public override string Name => id;
+
+            public ItemCurrency(string id)
+            {
+                if (string.IsNullOrEmpty(id)) throw new ArgumentException("The ID of an ItemCurrency may not be null nor empty.");
+                this.id = id.ToLower();
+            }
+
+            public override string ToText() => $"units of {Name}";
+
+            public override bool Equals(object obj)
+            {
+                if (obj is ItemCurrency itemCurrency) return itemCurrency.id == id;
+                return false;
+            }
+
+            public override int GetHashCode() => id.GetHashCode();
+        }
+        #endregion
     }
 }

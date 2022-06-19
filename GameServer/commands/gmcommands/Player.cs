@@ -28,6 +28,7 @@ using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using DOL.GS.Friends;
+using DOL.GS.Finance;
 
 namespace DOL.GS.Commands
 {
@@ -682,7 +683,7 @@ namespace DOL.GS.Commands
                                 case "copp":
                                     {
                                         long amount = long.Parse(args[3]);
-                                        player.AddMoney(amount);
+                                        player.AddMoney(Currency.Copper.Mint(amount));
                                         InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " copper successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
@@ -696,7 +697,7 @@ namespace DOL.GS.Commands
                                 case "silv":
                                     {
                                         long amount = long.Parse(args[3]) * 100;
-                                        player.AddMoney(amount);
+                                        player.AddMoney(Currency.Copper.Mint(amount));
                                         InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " silver successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
@@ -709,7 +710,7 @@ namespace DOL.GS.Commands
                                 case "gold":
                                     {
                                         long amount = long.Parse(args[3]) * 100 * 100;
-                                        player.AddMoney(amount);
+                                        player.AddMoney(Currency.Copper.Mint(amount));
                                         InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " gold successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
@@ -722,7 +723,7 @@ namespace DOL.GS.Commands
                                 case "plat":
                                     {
                                         long amount = long.Parse(args[3]) * 100 * 100 * 1000;
-                                        player.AddMoney(amount);
+                                        player.AddMoney(Currency.Copper.Mint(amount));
                                         InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " platinum successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
@@ -735,7 +736,7 @@ namespace DOL.GS.Commands
                                 case "mith":
                                     {
                                         long amount = long.Parse(args[3]) * 100 * 100 * 1000 * 1000;
-                                        player.AddMoney(amount);
+                                        player.AddMoney(Currency.Copper.Mint(amount));
                                         InventoryLogging.LogInventoryAction(client.Player, player, eInventoryActionType.Other, amount);
                                         client.Out.SendMessage("You gave " + player.Name + " mithril successfully!", eChatType.CT_Important,
                                                                eChatLoc.CL_SystemWindow);
@@ -2264,7 +2265,7 @@ namespace DOL.GS.Commands
 			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " +
 					 player.CharacterClass.Name);
 			text.Add(" ");
-			text.Add(Money.GetShortString(player.GetCurrentMoney()));
+			text.Add(Money.GetShortString(player.CopperBalance));
 			text.Add(" ");
 
 			bool limitShown = false;
@@ -2354,7 +2355,7 @@ namespace DOL.GS.Commands
 			text.Add("  - Name Lastname : " + player.Name + " " + player.LastName);
 			text.Add("  - Realm Level Gender Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " + player.Gender + " " + player.CharacterClass.Name + " (" + player.CharacterClass.ID + ")");
 			text.Add("  - Guild : " + player.GuildName + " " + (player.GuildRank != null ? "Rank: " + player.GuildRank.RankLevel.ToString() : ""));
-			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xp, " + player.RealmPoints + " rp, " + player.BountyPoints + " bp");
+			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xp, " + player.RealmPoints + " rp, " + player.BountyPointBalance + " bp");
 
             if (player.DamageRvRMemory > 0)
                 text.Add("  - Damage RvR Memory: " + player.DamageRvRMemory);
@@ -2420,7 +2421,7 @@ namespace DOL.GS.Commands
 				text.Add("  - Master Levels :  Not Started");
 			}
 			text.Add("  - Craftingskill : " + player.CraftingPrimarySkill + "");
-			text.Add("  - Money : " + Money.GetString(player.GetCurrentMoney()) + "");
+			text.Add("  - Money : " + Money.GetString(player.CopperBalance) + "");
 			text.Add("  - Model ID : " + player.Model);
 			text.Add("  - Region OID : " + player.ObjectID);
 			text.Add("  - AFK Message: " + player.TempProperties.getProperty<string>(GamePlayer.AFK_MESSAGE) + "");

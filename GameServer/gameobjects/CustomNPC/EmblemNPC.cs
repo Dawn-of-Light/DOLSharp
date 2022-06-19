@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.Database;
+using DOL.GS.Finance;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -125,7 +126,7 @@ namespace DOL.GS
 				return;
 			}
 
-			if (!player.RemoveMoney(EMBLEM_COST))
+			if (!player.RemoveMoney(Currency.Copper.Mint(EMBLEM_COST)))
 			{
                 InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, EMBLEM_COST);
 				player.Out.SendMessage("You don't have enough money.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

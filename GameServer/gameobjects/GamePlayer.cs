@@ -29,6 +29,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
+using DOL.GS.Finance;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -4118,19 +4119,16 @@ namespace DOL.GS
 			return new GameEffectPlayerList(this);
 		}
 
-		#endregion
+        #endregion
 
-		#region Realm-/Region-/Bount-/Skillpoints...
-
-		/// <summary>
-		/// Gets/sets player bounty points
-		/// (delegate to PlayerCharacter)
-		/// </summary>
-		public virtual long BountyPoints
-		{
-			get { return DBCharacter != null ? DBCharacter.BountyPoints : 0; }
-			set { if (DBCharacter != null) DBCharacter.BountyPoints = value; }
-		}
+        #region Realm-/Region-/Bount-/Skillpoints...
+		[Obsolete("Use GetBalance(Currency.BountyPoints).Amount instead. " 
+			+ "The setter is going to be removed without replacement. Use Wallet.AddMoney/RemoveMoney instead.")]
+        public virtual long BountyPoints
+        {
+            get { return BountyPointBalance; }
+            set { Wallet.SetBalance(Currency.BountyPoints.Mint(value)); }
+        }
 
 		/// <summary>
 		/// Gets/sets player realm points
@@ -4349,41 +4347,25 @@ namespace DOL.GS
 			Out.SendUpdatePoints();
 		}
 
-		/// <summary>
-		/// Called when this living buy something with realm points
-		/// </summary>
-		/// <param name="amount">The amount of realm points loosed</param>
-		public bool RemoveBountyPoints(long amount)
-		{
-			return RemoveBountyPoints(amount, null);
-		}
-		/// <summary>
-		/// Called when this living buy something with realm points
-		/// </summary>
-		/// <param name="amount"></param>
-		/// <param name="str"></param>
-		/// <returns></returns>
-		public bool RemoveBountyPoints(long amount, string str)
-		{
-			return RemoveBountyPoints(amount, str, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-		}
-		/// <summary>
-		/// Called when this living buy something with realm points
-		/// </summary>
-		/// <param name="amount">The amount of realm points loosed</param>
-		/// <param name="loc">The chat location</param>
-		/// <param name="str">The message</param>
-		/// <param name="type">The chat type</param>
-		public virtual bool RemoveBountyPoints(long amount, string str, eChatType type, eChatLoc loc)
-		{
-			if (BountyPoints < amount)
-				return false;
-			BountyPoints -= amount;
-			Out.SendUpdatePoints();
-			if (str != null && amount != 0)
-				Out.SendMessage(str, type, loc);
-			return true;
-		}
+        [Obsolete("Use RemoveMoney(Money) instead.")]
+        public bool RemoveBountyPoints(long amount)
+        {
+            return RemoveBountyPoints(amount, null);
+        }
+
+        [Obsolete("Use RemoveMoney(Money) and SendSystemMessage(string) instead.")]
+        public bool RemoveBountyPoints(long amount, string str)
+        {
+            return RemoveBountyPoints(amount, str, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+        }
+
+        [Obsolete("Use RemoveMoney(Money) and SendMessage(string,eChatType,eChatLoc) instead.")]
+        public virtual bool RemoveBountyPoints(long amount, string str, eChatType type, eChatLoc loc)
+        {
+            var hasEnoughBps = Wallet.RemoveMoney(Currency.BountyPoints.Mint(amount));
+            if (hasEnoughBps && str != null && amount != 0) SendMessage(str, type, loc);
+            return hasEnoughBps;
+        }
 
 		/// <summary>
 		/// Player gains bounty points
@@ -4454,15 +4436,13 @@ namespace DOL.GS
 			if (notify)
 				base.GainBountyPoints(amount);
 
-			BountyPoints += amount;
+			Wallet.AddMoney(Currency.BountyPoints.Mint(amount));
 
 			if (m_guild != null && Client.Account.PrivLevel == 1)
 				m_guild.BountyPoints += amount;
 
 			if(sendMessage == true)
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainBountyPoints.YouGet", amount.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			
-			Out.SendUpdatePoints();
 		}
 
 		/// <summary>
@@ -8590,141 +8570,77 @@ namespace DOL.GS
 			}
 		}
 
-		#region Money
-		
-		/// <summary>
-		/// Player Mithril Amount
-		/// </summary>
-		public virtual int Mithril { get { return m_Mithril; } protected set { m_Mithril = value; if (DBCharacter != null) DBCharacter.Mithril = m_Mithril; }}
-		protected int m_Mithril = 0;
-		
-		/// <summary>
-		/// Player Platinum Amount
-		/// </summary>
-		public virtual int Platinum { get { return m_Platinum; } protected set { m_Platinum = value; if (DBCharacter != null) DBCharacter.Platinum = m_Platinum; }}
-		protected int m_Platinum = 0;
-		
-		/// <summary>
-		/// Player Gold Amount
-		/// </summary>
-		public virtual int Gold { get { return m_Gold; } protected set { m_Gold = value; if (DBCharacter != null) DBCharacter.Gold = m_Gold; }}
-		protected int m_Gold = 0;
-		
-		/// <summary>
-		/// Player Silver Amount
-		/// </summary>
-		public virtual int Silver { get { return m_Silver; } protected set { m_Silver = value; if (DBCharacter != null) DBCharacter.Silver = m_Silver; }}
-		protected int m_Silver = 0;
-		
-		/// <summary>
-		/// Player Copper Amount
-		/// </summary>
-		public virtual int Copper { get { return m_Copper; } protected set { m_Copper = value; if (DBCharacter != null) DBCharacter.Copper = m_Copper; }}
-		protected int m_Copper = 0;
-		
-		/// <summary>
-		/// Gets the money value this player owns
-		/// </summary>
-		/// <returns></returns>
-		public virtual long GetCurrentMoney()
-		{
-			return Money.GetMoney(Mithril, Platinum, Gold, Silver, Copper);
-		}
+        #region Money
+		[Obsolete("Use DOL.GS.Money.GetMithril(long) instead.")]
+        public virtual int Mithril => Money.GetMithril(CopperBalance);
+		[Obsolete("Use DOL.GS.Money.GetPlatinum(long) instead.")]
+        public virtual int Platinum => Money.GetPlatinum(CopperBalance);
+		[Obsolete("Use DOL.GS.Money.GetGold(long) instead.")]
+        public virtual int Gold => Money.GetGold(CopperBalance);
+		[Obsolete("Use DOL.GS.Money.GetSilver(long) instead.")]
+        public virtual int Silver => Money.GetSilver(CopperBalance);
+		[Obsolete("Use DOL.GS.Money.GetCopper(long) instead.")]
+        public virtual int Copper => Money.GetCopper(CopperBalance);
 
-		/// <summary>
-		/// Adds money to this player
-		/// </summary>
-		/// <param name="money">money to add</param>
-		public virtual void AddMoney(long money)
-		{
-			AddMoney(money, null, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
+        private Wallet Wallet { get; }
 
-		/// <summary>
-		/// Adds money to this player
-		/// </summary>
-		/// <param name="money">money to add</param>
-		/// <param name="messageFormat">null if no message or "text {0} text"</param>
-		public virtual void AddMoney(long money, string messageFormat)
-		{
-			AddMoney(money, messageFormat, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
+        public DOL.GS.Finance.Money GetBalance(Currency currency) => Wallet.GetBalance(currency);
+        public long CopperBalance => GetBalance(Currency.Copper).Amount;
+        public long BountyPointBalance => GetBalance(Currency.BountyPoints).Amount;
 
-		/// <summary>
-		/// Adds money to this player
-		/// </summary>
-		/// <param name="money">money to add</param>
-		/// <param name="messageFormat">null if no message or "text {0} text"</param>
-		/// <param name="ct">message chat type</param>
-		/// <param name="cl">message chat location</param>
-		public virtual void AddMoney(long money, string messageFormat, eChatType ct, eChatLoc cl)
-		{
-			long newMoney = GetCurrentMoney() + money;
+        public void AddMoney(DOL.GS.Finance.Money money) => Wallet.AddMoney(money);
+        public bool RemoveMoney(DOL.GS.Finance.Money money) => Wallet.RemoveMoney(money);
 
-			Copper = Money.GetCopper(newMoney);
-			Silver = Money.GetSilver(newMoney);
-			Gold = Money.GetGold(newMoney);
-			Platinum = Money.GetPlatinum(newMoney);
-			Mithril = Money.GetMithril(newMoney);
+        [Obsolete("Use CopperBalance instead.")]
+        public virtual long GetCurrentMoney() => CopperBalance;
 
-			Out.SendUpdateMoney();
+        [Obsolete("Use AddMoney(Money) instead.")]
+        public virtual void AddMoney(long copperAmount)
+        {
+            if (copperAmount >= 0) AddMoney(Currency.Copper.Mint(copperAmount));
+            else RemoveMoney(Currency.Copper.Mint(-copperAmount));
+        }
 
-			if (messageFormat != null)
-			{
-				Out.SendMessage(string.Format(messageFormat, Money.GetString(money)), ct, cl);
-			}
-		}
+        [Obsolete("Use AddMoney(Money) and SendSystemMessage(string) instead.")]
+        public virtual void AddMoney(long copperAmount, string message)
+        {
+            AddMoney(copperAmount);
+            if (message != null) SendSystemMessage(string.Format(message, Money.GetString(copperAmount)));
+        }
 
-		/// <summary>
-		/// Removes money from the player
-		/// </summary>
-		/// <param name="money">money value to subtract</param>
-		/// <returns>true if successfull, false if player doesn't have enough money</returns>
-		public virtual bool RemoveMoney(long money)
-		{
-			return RemoveMoney(money, null, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
+        [Obsolete("Use AddMoney(Money) and SendMessage(string,eChatType,eChatLoc) instead.")]
+        public virtual void AddMoney(long copperAmount, string messageFormat, eChatType ct, eChatLoc cl)
+        {
+            AddMoney(copperAmount);
+            if (messageFormat != null) SendMessage(string.Format(messageFormat, Money.GetString(copperAmount)), ct, cl);
+        }
 
-		/// <summary>
-		/// Removes money from the player
-		/// </summary>
-		/// <param name="money">money value to subtract</param>
-		/// <param name="messageFormat">null if no message or "text {0} text"</param>
-		/// <returns>true if successfull, false if player doesn't have enough money</returns>
-		public virtual bool RemoveMoney(long money, string messageFormat)
-		{
-			return RemoveMoney(money, messageFormat, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
+        [Obsolete("Use RemoveMoney(Money) and SendSystemMessage(string) instead.")]
+        public virtual bool RemoveMoney(long copperAmount)
+        {
+            if (copperAmount >= 0) return RemoveMoney(Currency.Copper.Mint(copperAmount));
+            else
+            {
+                AddMoney(Currency.Copper.Mint(-copperAmount));
+                return true;
+            }
+        }
 
-		/// <summary>
-		/// Removes money from the player
-		/// </summary>
-		/// <param name="money">money value to subtract</param>
-		/// <param name="messageFormat">null if no message or "text {0} text"</param>
-		/// <param name="ct">message chat type</param>
-		/// <param name="cl">message chat location</param>
-		/// <returns>true if successfull, false if player doesn't have enough money</returns>
-		public virtual bool RemoveMoney(long money, string messageFormat, eChatType ct, eChatLoc cl)
-		{
-			if (money > GetCurrentMoney())
-				return false;
+        [Obsolete("Use RemoveMoney(Money) and SendSystemMessage(string) instead.")]
+        public virtual bool RemoveMoney(long money, string messageFormat)
+        {
+            var hasEnoughMoney = RemoveMoney(money);
+            if (hasEnoughMoney && messageFormat != null && money != 0) SendSystemMessage(messageFormat);
+            return hasEnoughMoney;
+        }
 
-			long newMoney = GetCurrentMoney() - money;
-
-			Mithril = Money.GetMithril(newMoney);
-			Platinum = Money.GetPlatinum(newMoney);
-			Gold = Money.GetGold(newMoney);
-			Silver = Money.GetSilver(newMoney);
-			Copper = Money.GetCopper(newMoney);
-
-			Out.SendUpdateMoney();
-
-			if (messageFormat != null && money != 0)
-			{
-				Out.SendMessage(string.Format(messageFormat, Money.GetString(money)), ct, cl);
-			}
-			return true;
-		}
+        [Obsolete("Use RemoveMoney(Money) and SendMessage(string,eChatType,eChatLoc) instead.")]
+        public virtual bool RemoveMoney(long money, string messageFormat, eChatType ct, eChatLoc cl)
+        {
+			var hasEnoughMoney = RemoveMoney(money);
+            if (hasEnoughMoney && messageFormat != null && money != 0) SendMessage(messageFormat, ct, cl);
+            return hasEnoughMoney;
+        }
 		#endregion
 
 		private InventoryItem m_useItem;
@@ -12078,16 +11994,20 @@ namespace DOL.GS
 							{
 								long moneyToGuild = moneyToPlayer * eligibleMember.Guild.GetGuildDuesPercent() / 100;
 								if (eligibleMember.Guild.GetGuildDuesPercent() != 100)
-									eligibleMember.AddMoney(moneyToPlayer, LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyToPlayer)));
+								{
+									eligibleMember.AddMoney(Currency.Copper.Mint(moneyToPlayer));
+									eligibleMember.SendSystemMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyToPlayer)));
+								}
 								else
-									eligibleMember.AddMoney(moneyToPlayer);
+									eligibleMember.AddMoney(Currency.Copper.Mint(moneyToPlayer));
 
 								InventoryLogging.LogInventoryAction("(ground)", eligibleMember, eInventoryActionType.Loot, moneyToPlayer);
 								eligibleMember.Guild.SetGuildBank(eligibleMember, moneyToGuild);
 							}
 							else
 							{
-								eligibleMember.AddMoney(moneyToPlayer, LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyToPlayer)));
+								eligibleMember.AddMoney(Currency.Copper.Mint(moneyToPlayer));
+								eligibleMember.SendSystemMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.PickupObject.YourLootShare", Money.GetString(moneyToPlayer)));
 								InventoryLogging.LogInventoryAction("(ground)", eligibleMember, eInventoryActionType.Loot, moneyToPlayer);
 							}
 						}
@@ -12100,18 +12020,20 @@ namespace DOL.GS
 							long moneyToGuild = moneyObject.TotalCopper * Guild.GetGuildDuesPercent() / 100;
 							if (Guild.GetGuildDuesPercent() != 100)
 							{
-								AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
+								AddMoney(Currency.Copper.Mint(moneyObject.TotalCopper)); 
+								SendSystemMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
 							}
 							else
 							{
-								AddMoney(moneyObject.TotalCopper);
+								AddMoney(Currency.Copper.Mint(moneyObject.TotalCopper));
 							}
 							InventoryLogging.LogInventoryAction("(ground)", this, eInventoryActionType.Loot, moneyObject.TotalCopper);
 							Guild.SetGuildBank(this, moneyToGuild);
 						}
 						else
 						{
-							AddMoney(moneyObject.TotalCopper, LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
+							AddMoney(Currency.Copper.Mint(moneyObject.TotalCopper));
+							SendSystemMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.PickupObject.YouPickUp", Money.GetString(moneyObject.TotalCopper)));
 							InventoryLogging.LogInventoryAction("(ground)", this, eInventoryActionType.Loot, moneyObject.TotalCopper);
 						}
 					}
@@ -12558,13 +12480,8 @@ namespace DOL.GS
 			if (!(obj is DOLCharacters))
 				return;
 			m_dbCharacter = (DOLCharacters)obj;
-
-			// Money
-			m_Copper = DBCharacter.Copper;
-			m_Silver = DBCharacter.Silver;
-			m_Gold = DBCharacter.Gold;
-			m_Platinum = DBCharacter.Platinum;
-			m_Mithril = DBCharacter.Mithril;
+			
+			Wallet.InitializeFromDatabase();
 			
 			Model = (ushort)DBCharacter.CurrentModel;
 
@@ -12950,6 +12867,10 @@ namespace DOL.GS
 			return list;
 		}
 
+        public virtual void SendSystemMessage(string message)
+            => Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        public virtual void SendMessage(string message, eChatType chatType, eChatLoc chatLocation)
+            => Out.SendMessage(message, chatType, chatLocation);
 		#endregion
 
 		#region Stealth / Wireframe
@@ -15727,6 +15648,7 @@ namespace DOL.GS
 		public GamePlayer(GameClient client, DOLCharacters dbChar)
 			: base()
 		{
+			Wallet = new Wallet(this);
 			IsJumping = false;
 			m_steed = new WeakRef(null);
 			m_rangeAttackAmmo = new WeakRef(null);

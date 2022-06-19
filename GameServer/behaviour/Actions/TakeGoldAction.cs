@@ -17,12 +17,9 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
-using DOL.Database;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Finance;
 
 namespace DOL.GS.Behaviour.Actions
 {
@@ -44,7 +41,7 @@ namespace DOL.GS.Behaviour.Actions
         public override void Perform(DOLEvent e, object sender, EventArgs args)
         {
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-            player.RemoveMoney(P);
+            player.RemoveMoney(Currency.Copper.Mint(P));
             InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, P);
         }
     }

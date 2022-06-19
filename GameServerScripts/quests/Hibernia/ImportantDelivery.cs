@@ -38,14 +38,15 @@ using DOL.Events;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.GS.Finance;
 /* I suggest you declare yourself some namespaces for your quests
- * Like: DOL.GS.Quests.Albion
- *       DOL.GS.Quests.Midgard
- *       DOL.GS.Quests.Hibernia
- * Also this is the name that will show up in the database as QuestName
- * so setting good values here will result in easier to read and cleaner
- * Database Code
- */
+* Like: DOL.GS.Quests.Albion
+*       DOL.GS.Quests.Midgard
+*       DOL.GS.Quests.Hibernia
+* Also this is the name that will show up in the database as QuestName
+* so setting good values here will result in easier to read and cleaner
+* Database Code
+*/
 
 namespace DOL.GS.Quests.Hibernia
 {
@@ -877,7 +878,8 @@ namespace DOL.GS.Quests.Hibernia
 
 			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 12);
             long money = Money.GetMoney(0, 0, 0, 1, Util.Random(50));
-			m_questPlayer.AddMoney(money, LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.FinishQuest.RecieveReward"));
+			m_questPlayer.AddMoney(Currency.Copper.Mint(money));
+			m_questPlayer.SendSystemMessage(string.Format(LanguageMgr.GetTranslation(m_questPlayer.Client, "Hib.ImportantDelivery.FinishQuest.RecieveReward"), Money.GetString(money)));
             InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
 		}
 	}
