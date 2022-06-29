@@ -23,11 +23,11 @@ jobs:
           dotnet-version: '6.0.x'
       - name: Build
         run: |
-          dotnet build -c ${{ matrix.build_target }} "NetCore/Tests/Tests.csproj" --verbosity normal
+          dotnet build -c ${{ matrix.build_target }} "Tests/Tests.csproj" --verbosity normal
       - name: Test
         run: |
-          dotnet test ./NetCore/build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
-          dotnet test ./NetCore/build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
+          dotnet test ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
+          dotnet test ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
 
   test_netcore_windows:
     name: NetCore Tests on Windows
@@ -45,11 +45,11 @@ jobs:
           dotnet-version: '6.0.x'
       - name: Build
         run: |
-          dotnet build -c ${{ matrix.build_target }} "NetCore/DOLdotnet.sln" --verbosity normal
+          dotnet build -c ${{ matrix.build_target }} "DOLdotnet.sln" --verbosity normal
       - name: Test
         run: |
-          dotnet test .\NetCore\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
-          dotnet test .\NetCore\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
 
   test_netframework_linux:
     name: Net 4.8 Tests on Linux
@@ -61,11 +61,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
-        run: dotnet build -c ${{ matrix.build_target }} "Tests/Tests.csproj" --verbosity normal
+        run: dotnet build -c ${{ matrix.build_target }} "old/Tests/Tests.csproj" --verbosity normal
       - name: Test
         run: |
-          dotnet test ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
-          dotnet test ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
+          dotnet test ./old/build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
+          dotnet test ./old/build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
 
   test_netframework_windows:
     name: Net 4.8 Tests on windows
@@ -77,8 +77,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
-        run: dotnet build -c ${{ matrix.build_target }} "Tests\Tests.csproj" --verbosity normal
+        run: dotnet build -c ${{ matrix.build_target }} "old\Tests\Tests.csproj" --verbosity normal
       - name: Test
         run: |
-          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
-          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
+          dotnet test .\old\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
+          dotnet test .\old\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
