@@ -67,6 +67,11 @@ jobs:
         run: |
           dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" .\old\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
           dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" .\old\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
+      - name: Add DOLConfig
+        run: |
+          $dolconfig_location="$(Split-Path -Path "$(git remote get-url origin)" -Parent)/DOLConfig/releases/latest/download/DOLConfig_${{ matrix.build_target }}.zip".Replace("\", "/")
+          Invoke-WebRequest "$dolconfig_location" -OutFile .\old\DOLConfig.zip
+          Expand-Archive .\old\DOLConfig.zip -DestinationPath "old\${{ matrix.build_target }}\DOLConfig"
       - name: Compress Build Artifacts
         run: |
           Compress-Archive -Path .\old\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
@@ -102,6 +107,11 @@ jobs:
         run: |
           dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
           dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
+      - name: Add DOLConfig
+        run: |
+          $dolconfig_location="$(Split-Path -Path "$(git remote get-url origin)" -Parent)/DOLConfig/releases/latest/download/DOLConfig_${{ matrix.build_target }}.zip".Replace("\", "/")
+          Invoke-WebRequest "$dolconfig_location" -OutFile DOLConfig.zip
+          Expand-Archive DOLConfig.zip -DestinationPath "${{ matrix.build_target }}\DOLConfig"
       - name: Compress Build Artifacts
         run: Compress-Archive -Path .\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
       - name: Upload Build Output
