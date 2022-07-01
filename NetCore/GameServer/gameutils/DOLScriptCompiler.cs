@@ -55,6 +55,7 @@ namespace DOL.GS
             var syntaxTrees = sourceFiles.Where(file => file.Name != "AssemblyInfo.cs")
                 .Select(file => CSharpSyntaxTree.ParseText(File.ReadAllText(file.FullName)));
 
+            Directory.CreateDirectory(outputFile.DirectoryName);
             Compile(outputFile, syntaxTrees);
 
             if (HasErrors)
