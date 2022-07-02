@@ -1,8 +1,6 @@
 name: Test Runner
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
   workflow_dispatch:
@@ -31,7 +29,6 @@ jobs:
 
   test_netcore_windows:
     name: NetCore Tests on Windows
-    if: github.event_name == 'pull_request'
     strategy:
       matrix:
         build_target: [Debug]
@@ -55,7 +52,7 @@ jobs:
     name: Net Framework Tests on Linux
     strategy:
       matrix:
-        build_target: [Debug, Release]
+        build_target: [Debug]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -71,7 +68,7 @@ jobs:
     name: Net Framework Tests on windows
     strategy:
       matrix:
-        build_target: [Debug, Release]
+        build_target: [Debug]
     runs-on: windows-2019
     steps:
       - name: Checkout
