@@ -40,38 +40,7 @@ namespace DOL.GS
 
         static DOLScriptCompiler()
         {
-            referencedAssemblies = AppDomain.CurrentDomain
-                                .GetAssemblies()
-                                .Where(a => !a.IsDynamic)
-                                .Select(a => a.Location)
-                                .Where(s => !string.IsNullOrEmpty(s))
-                                .Select(s => MetadataReference.CreateFromFile(s))
-                                .ToList();
-            var gameServerScriptAdditionalReferences = new string[] { 
-                "System.Security.Cryptography.Algorithms", //for SHA256 in AutoXMLDatabaseUpdate
-                "System.Security.Cryptography.Primitives", //for SHA256 in AutoXMLDatabaseUpdate
-                "System.Net.Http"
-            };
-            var additionalReferences = GameServer.Instance.Configuration.AdditionalScriptAssemblies.ToList();
-            additionalReferences.AddRange(gameServerScriptAdditionalReferences);
-
-            foreach (var additionalReference in additionalReferences)
-            {
-                var dllName = additionalReference.EndsWith(".dll") ? additionalReference : additionalReference + ".dll";
-                var probingPaths = new[] { ".", "lib", Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location) };
-                var foundReference = false;
-                foreach (var probingPath in probingPaths)
-                {
-                    var potentialReferenceFilePath = Path.Combine(probingPath, dllName);
-                    if (File.Exists(potentialReferenceFilePath))
-                    {
-                        referencedAssemblies.Add(MetadataReference.CreateFromFile(potentialReferenceFilePath));
-                        foundReference = true;
-                        break;
-                    }
-                }
-                if (foundReference == false) log.Error($"Reference not found: {additionalReference}");
-            }
+            LoadDefaultAssemblies();
         }
 
         public bool HasErrors => !lastEmitResult.Success;
@@ -86,6 +55,7 @@ namespace DOL.GS
             var syntaxTrees = sourceFiles.Where(file => file.Name != "AssemblyInfo.cs")
                 .Select(file => CSharpSyntaxTree.ParseText(File.ReadAllText(file.FullName)));
 
+            Directory.CreateDirectory(outputFile.DirectoryName);
             Compile(outputFile, syntaxTrees);
 
             if (HasErrors)
@@ -155,6 +125,39 @@ namespace DOL.GS
 
         private IEnumerable<Diagnostic> ErrorDiagnostics
             => lastEmitResult.Diagnostics.Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+
+        private static void LoadDefaultAssemblies()
+        {
+            var currentDomainReferences = AppDomain.CurrentDomain
+                                .GetAssemblies()
+                                .Where(a => !a.IsDynamic)
+                                .Select(a => a.Location)
+                                .Where(s => !string.IsNullOrEmpty(s))
+                                .Select(s => MetadataReference.CreateFromFile(s));
+            var additionalReferences = new string[] { 
+                "System.Security.Cryptography.Algorithms", //for SHA256 in AutoXMLDatabaseUpdate
+                "System.Security.Cryptography.Primitives", //for SHA256 in AutoXMLDatabaseUpdate
+                "System.Net.Http"
+            }.Union(GameServer.Instance.Configuration.AdditionalScriptAssemblies)
+                .Select(r => GetPortableExecutableReference(r));
+            
+            referencedAssemblies = currentDomainReferences.Union(additionalReferences).ToList();
+        }
+
+        private static PortableExecutableReference GetPortableExecutableReference(string referenceName)
+        {
+            var dllName = referenceName.EndsWith(".dll") ? referenceName : referenceName + ".dll";
+            var probingPaths = new[] { ".", "lib", Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location) };
+            var dllPath = probingPaths.Select(path => Path.Combine(path, dllName))
+                .Where(fullPath => File.Exists(fullPath)).FirstOrDefault();
+            if(dllPath == null)
+            {
+                log.Error($"Reference {referenceName} not found.");
+                return null;
+            }
+
+            return MetadataReference.CreateFromFile(dllPath);
+        }
     }
 }
 #endif

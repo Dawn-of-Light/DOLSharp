@@ -39,23 +39,11 @@ namespace DOL.GS
         private CodeDomProvider compiler;
         private CompilerErrorCollection lastCompilationErrors;
         private bool HasErrors => lastCompilationErrors.HasErrors;
-        private static List<string> referencedAssemblies = new List<string>();
+        private static HashSet<string> referencedAssemblies = new HashSet<string>();
 
         static DOLScriptCompiler()
         {
-            var libDirectory = new DirectoryInfo(Path.Combine(GameServer.Instance.Configuration.RootDirectory, "lib"));
-            referencedAssemblies.AddRange(libDirectory.GetFiles("*.dll", SearchOption.TopDirectoryOnly).Select(f => f.Name));
-            referencedAssemblies.Add("System.dll");
-            referencedAssemblies.Add("System.Xml.dll");
-            referencedAssemblies.Add("System.Core.dll");
-            referencedAssemblies.Add("System.Net.Http.dll");
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                referencedAssemblies.Add("netstandard.dll");
-            }
-
-            referencedAssemblies.Remove("testcentric.engine.metadata.dll"); //NUnit3TestAdapter 4.x dependency conflict with mscorlib.dll
-            referencedAssemblies.AddRange(GameServer.Instance.Configuration.AdditionalScriptAssemblies);
+            LoadDefaultAssemblies();
         }
 
         public DOLScriptCompiler()
@@ -92,8 +80,9 @@ namespace DOL.GS
             if (HasErrors)
             {
                 PrintErrorMessagesToConsole();
-                throw new ApplicationException("Scripts compilation was unsuccessful. Abort startup!");
+                throw new ApplicationException("Script compilation was unsuccessful.");
             }
+            referencedAssemblies.Add(outputFile.Name);
             return compilerResults.CompiledAssembly;
         }
 
@@ -105,17 +94,22 @@ namespace DOL.GS
                 WarningLevel = 2,
                 CompilerOptions = string.Format($"/lib:{Path.Combine(".", "lib")}")
             };
-            compilerParameters.GenerateInMemory = true;
 
             var compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, code);
             lastCompilationErrors = compilerResults.Errors;
 
             if (HasErrors)
             {
+                PrintErrorMessagesToConsole();
                 PrintErrorMessagesTo(client);
                 return null;
             }
             return compilerResults.CompiledAssembly;
+        }
+
+        public static void AddReferenceAssembly(string assemblyName)
+        {
+            referencedAssemblies.Add(assemblyName);
         }
 
         private void PrintErrorMessagesToConsole()
@@ -146,6 +140,27 @@ namespace DOL.GS
             {
                 log.Debug("Error compiling code.");
             }
+        }
+
+        private static void LoadDefaultAssemblies()
+        {
+            var libraryPath = Path.Combine(GameServer.Instance.Configuration.RootDirectory, "lib");
+            if (Directory.Exists(libraryPath))
+            {
+                var defaultLibraries = new DirectoryInfo(libraryPath).GetFiles("*.dll", SearchOption.TopDirectoryOnly).Select(f => f.Name);
+                referencedAssemblies = referencedAssemblies.Union(defaultLibraries).ToHashSet();
+            }
+            referencedAssemblies.Add("System.dll");
+            referencedAssemblies.Add("System.Xml.dll");
+            referencedAssemblies.Add("System.Core.dll");
+            referencedAssemblies.Add("System.Net.Http.dll");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                referencedAssemblies.Add("netstandard.dll");
+            }
+
+            referencedAssemblies.Remove("testcentric.engine.metadata.dll"); //NUnit3TestAdapter 4.x dependency conflict with mscorlib.dll
+            referencedAssemblies = referencedAssemblies.Union(GameServer.Instance.Configuration.AdditionalScriptAssemblies).ToHashSet();
         }
     }
 }
