@@ -45,14 +45,14 @@ jobs:
           dotnet-version: '6.0.x'
       - name: Build
         run: |
-          dotnet build -c ${{ matrix.build_target }} "DOLdotnet.sln" --verbosity normal
+          dotnet build -c ${{ matrix.build_target }} "Tests\Tests.csproj" --verbosity normal
       - name: Test
         run: |
           dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
           dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
 
   test_netframework_linux:
-    name: Net 4.8 Tests on Linux
+    name: Net Framework Tests on Linux
     strategy:
       matrix:
         build_target: [Debug, Release]
@@ -68,7 +68,7 @@ jobs:
           dotnet test ./old/build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
 
   test_netframework_windows:
-    name: Net 4.8 Tests on windows
+    name: Net Framework Tests on windows
     strategy:
       matrix:
         build_target: [Debug, Release]
