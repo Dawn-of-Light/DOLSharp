@@ -271,7 +271,7 @@ namespace DOL.GS.Collections {
 					log.Warn("internalArraySize="+internalArray.Length);
 					log.Warn("checking "+i);
 					log.Error(e);
-					throw e;
+					throw;
 				}
 				return null;
 			}
