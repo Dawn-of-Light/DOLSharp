@@ -7,7 +7,7 @@ namespace DOL.PerformanceStatistics
     internal class PerSecondStatistic : IPerformanceStatistic
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        
+
         DateTime lastMeasurementTime;
         float lastTotal;
         IPerformanceStatistic totalValueStatistic;
@@ -15,17 +15,9 @@ namespace DOL.PerformanceStatistics
 
         public PerSecondStatistic(IPerformanceStatistic totalValueStatistic)
         {
-            try
-            {
-                lastMeasurementTime = DateTime.UtcNow;
-                this.totalValueStatistic = totalValueStatistic;
-                lastTotal = totalValueStatistic.GetNextValue();
-            }
-            catch (Exception ex)
-            {
-                if (log.IsWarnEnabled)
-                    log.Warn($"{ex.GetType().Name}: '{totalValueStatistic.GetType().Name}' counter won't be available: {ex.Message}");
-            }
+            lastMeasurementTime = DateTime.UtcNow;
+            this.totalValueStatistic = totalValueStatistic;
+            lastTotal = totalValueStatistic.GetNextValue();
         }
 
         public float GetNextValue()

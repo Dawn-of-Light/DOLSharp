@@ -35,10 +35,10 @@ namespace DOL.GS.GameEvents
             {
                 m_timerStatsByMgr = new Hashtable();
                 m_timer = new Timer(new TimerCallback(PrintStats), null, 10000, 0);
-                systemCpuUsagePercent = new SystemCpuUsagePercent();
-                programCpuUsagePercent = new ProgramCpuUsagePercentStatistic();
-                pageFaultsPerSecond = new PageFaultsPerSecondStatistic();
-                diskTransfersPerSecond = new DiskTransfersPerSecondStatistic();
+                systemCpuUsagePercent = TryToCreateStatistic(() => new SystemCpuUsagePercent());
+                programCpuUsagePercent = TryToCreateStatistic(() => new ProgramCpuUsagePercentStatistic());
+                diskTransfersPerSecond = TryToCreateStatistic(() => new DiskTransfersPerSecondStatistic());
+                pageFaultsPerSecond = TryToCreateStatistic(() => new PageFaultsPerSecondStatistic());
             }
         }
 
@@ -119,10 +119,10 @@ namespace DOL.GS.GameEvents
                         }
                     }
 
-                    AppendStatistic(stats, "CPU", systemCpuUsagePercent.GetNextValue(), "%");
-                    AppendStatistic(stats, "DOL", programCpuUsagePercent.GetNextValue(), "%");
-                    AppendStatistic(stats, "pg/s", pageFaultsPerSecond.GetNextValue());
-                    AppendStatistic(stats, "dsk/s", diskTransfersPerSecond.GetNextValue());
+                    AppendStatistic(stats, "CPU", systemCpuUsagePercent, "%");
+                    AppendStatistic(stats, "DOL", programCpuUsagePercent, "%");
+                    AppendStatistic(stats, "pg/s", pageFaultsPerSecond);
+                    AppendStatistic(stats, "dsk/s", diskTransfersPerSecond);
 
                     log.Info(stats);
                 }
@@ -172,10 +172,23 @@ namespace DOL.GS.GameEvents
             public long Time = -1;
         }
 
-        private static void AppendStatistic(StringBuilder stringBuilder, string shortName, float value, string unit = "")
+        private static void AppendStatistic(StringBuilder stringBuilder, string shortName, IPerformanceStatistic statistic, string unit = "")
         {
-            if (value < 0) return;
-            stringBuilder.Append($"  {shortName}={value.ToString("0.0")}{unit}");
+            if (statistic == null) return;
+            stringBuilder.Append($"  {shortName}={statistic.GetNextValue().ToString("0.0")}{unit}");
+        }
+
+        private static IPerformanceStatistic TryToCreateStatistic(Func<IPerformanceStatistic> createFunc)
+        {
+            try
+            {
+                return createFunc();
+            }
+            catch(Exception ex)
+            {
+                log.Error(ex);
+                return null;
+            }
         }
     }
 }
