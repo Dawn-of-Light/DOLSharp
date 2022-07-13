@@ -63,6 +63,7 @@ namespace DOL.GS
                 PrintErrorMessagesToConsole();
                 throw new ApplicationException("Scripts compilation was unsuccessful. Abort startup!");
             }
+            referencedAssemblies.Add(GetPortableExecutableReference(outputFile.Name));
             return Assembly.LoadFrom(outputFile.FullName);
         }
 
