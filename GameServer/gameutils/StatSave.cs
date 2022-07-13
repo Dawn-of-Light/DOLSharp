@@ -53,7 +53,7 @@ namespace DOL.GS.GameEvents
 				m_timer = new Timer(new TimerCallback(SaveStats), null, INITIAL_DELAY, Timeout.Infinite);
 			}
 
-			programCpuUsagePercent = new ProgramCpuUsagePercentStatistic();
+			programCpuUsagePercent = new CurrentProcessCpuUsagePercentStatistic();
 		}
 
 		[ScriptUnloadedEvent]

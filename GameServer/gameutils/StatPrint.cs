@@ -36,7 +36,7 @@ namespace DOL.GS.GameEvents
                 m_timerStatsByMgr = new Hashtable();
                 m_timer = new Timer(new TimerCallback(PrintStats), null, 10000, 0);
                 systemCpuUsagePercent = TryToCreateStatistic(() => new SystemCpuUsagePercent());
-                programCpuUsagePercent = TryToCreateStatistic(() => new ProgramCpuUsagePercentStatistic());
+                programCpuUsagePercent = TryToCreateStatistic(() => new CurrentProcessCpuUsagePercentStatistic());
                 diskTransfersPerSecond = TryToCreateStatistic(() => new DiskTransfersPerSecondStatistic());
                 pageFaultsPerSecond = TryToCreateStatistic(() => new PageFaultsPerSecondStatistic());
             }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -13,29 +12,17 @@ namespace DOL.PerformanceStatistics
 
         public PageFaultsPerSecondStatistic()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) performanceStatistic = new WindowsPageFaultsPerSecondStatistic();
-            else performanceStatistic = new LinuxPageFaultsPerSecondStatistic();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                performanceStatistic = new PerformanceCounterStatistic("Memory", "Pages/sec", null);
+            }
+            else 
+            {
+                performanceStatistic = new LinuxPageFaultsPerSecondStatistic();
+            }
         }
 
         public float GetNextValue() => performanceStatistic.GetNextValue();
-    }
-
-#if NET
-    [SupportedOSPlatform("Windows")]
-#endif
-    internal class WindowsPageFaultsPerSecondStatistic : IPerformanceStatistic
-    {
-        PerformanceCounter performanceCounter;
-
-        public WindowsPageFaultsPerSecondStatistic()
-        {
-            performanceCounter = new PerformanceCounter("Memory", "Pages/sec", null);
-        }
-
-        public float GetNextValue()
-        {
-            return performanceCounter.NextValue();
-        }
     }
 
 #if NET

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -12,42 +11,22 @@ namespace DOL.PerformanceStatistics
 
         public DiskTransfersPerSecondStatistic()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) performanceStatistic = new WindowsDiskTransfersPerSecondStatistic();
-            else performanceStatistic = new LinuxDiskTransfersPerSecondStatistic();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                performanceStatistic = new PerformanceCounterStatistic("PhysicalDisk", "Disk Transfers/sec", "_Total");
+            }
+            else 
+            {
+                performanceStatistic = new PerSecondStatistic(new LinuxTotalDiskTransfers());
+            }
         }
 
         public float GetNextValue() => performanceStatistic.GetNextValue();
     }
 
 #if NET
-    [SupportedOSPlatform("Windows")]
-#endif
-    internal class WindowsDiskTransfersPerSecondStatistic : IPerformanceStatistic
-    {
-        PerformanceCounter performanceCounter;
-        public WindowsDiskTransfersPerSecondStatistic()
-        {
-            performanceCounter = new PerformanceCounter("PhysicalDisk", "Disk Transfers/sec", "_Total");
-        }
-
-        public float GetNextValue() => performanceCounter.NextValue();
-    }
-
-#if NET
     [UnsupportedOSPlatform("Windows")]
 #endif
-    internal class LinuxDiskTransfersPerSecondStatistic : IPerformanceStatistic
-    {
-        private IPerformanceStatistic diskTransfersPerSecondStatistic;
-
-        public LinuxDiskTransfersPerSecondStatistic()
-        {
-            diskTransfersPerSecondStatistic = new PerSecondStatistic(new LinuxTotalDiskTransfers());
-        }
-
-        public float GetNextValue() => diskTransfersPerSecondStatistic.GetNextValue();
-    }
-    
     internal class LinuxTotalDiskTransfers : IPerformanceStatistic
     {
         public float GetNextValue()
