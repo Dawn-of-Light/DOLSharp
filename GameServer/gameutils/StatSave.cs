@@ -17,25 +17,17 @@
  *
  */
 using System;
-using System.Collections;
-using System.Diagnostics;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using DOL.Database;
-using DOL.Database.Attributes;
 using DOL.Events;
-using DOL.GS;
-using DOL.GS.PacketHandler;
+using DOL.PerformanceStatistics;
 using log4net;
 
 namespace DOL.GS.GameEvents
 {
 	class StatSave
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private static readonly int INITIAL_DELAY = 60000;
@@ -44,8 +36,7 @@ namespace DOL.GS.GameEvents
 		private static long m_lastBytesOut = 0;
 		private static long m_lastMeasureTick = DateTime.Now.Ticks;
 		private static int m_statFrequency = 60 * 1000; // 1 minute
-		private static PerformanceCounter m_systemCpuUsedCounter = null;
-		private static PerformanceCounter m_processCpuUsedCounter = null;
+        private static IPerformanceStatistic programCpuUsagePercent;
 		
 		private static volatile Timer m_timer = null;
 		
@@ -55,35 +46,14 @@ namespace DOL.GS.GameEvents
 			// Desactivated
 			if (ServerProperties.Properties.STATSAVE_INTERVAL == -1)
 				return;
-			
-			try
-			{
-				m_systemCpuUsedCounter = new PerformanceCounter("Processor", "% processor time", "_total");
-				m_systemCpuUsedCounter.NextValue();
-			}
-			catch (Exception ex)
-			{
-				m_systemCpuUsedCounter = null;
-				if (log.IsWarnEnabled)
-					log.Warn(ex.GetType().Name + " SystemCpuUsedCounter won't be available: " + ex.Message);
-			}
-			try
-			{
-				m_processCpuUsedCounter = new PerformanceCounter("Process", "% processor time", GetProcessCounterName());
-				m_processCpuUsedCounter.NextValue();
-			}
-			catch (Exception ex)
-			{
-				m_processCpuUsedCounter = null;
-				if (log.IsWarnEnabled)
-					log.Warn(ex.GetType().Name + " ProcessCpuUsedCounter won't be available: " + ex.Message);
-			}
-			// 1 min * INTERVAL
+
 			m_statFrequency *= ServerProperties.Properties.STATSAVE_INTERVAL;
 			lock (typeof(StatSave))
 			{
 				m_timer = new Timer(new TimerCallback(SaveStats), null, INITIAL_DELAY, Timeout.Infinite);
 			}
+
+			programCpuUsagePercent = new CurrentProcessCpuUsagePercentStatistic();
 		}
 
 		[ScriptUnloadedEvent]
@@ -98,24 +68,6 @@ namespace DOL.GS.GameEvents
 					m_timer = null;
 				}
 			}
-		}
-
-		/// <summary>
-		/// Find the process counter name
-		/// </summary>
-		/// <returns></returns>
-		public static string GetProcessCounterName()
-		{
-			Process process = Process.GetCurrentProcess();
-			int id = process.Id;
-			PerformanceCounterCategory perfCounterCat = new PerformanceCounterCategory("Process");
-			foreach (DictionaryEntry entry in perfCounterCat.ReadCategory()["id process"])
-			{
-				string processCounterName = (string)entry.Key;
-				if (((InstanceData)entry.Value).RawValue == id)
-					return processCounterName;
-			}
-			return "";
 		}
 		
 		public static void SaveStats(object state)
@@ -138,17 +90,12 @@ namespace DOL.GS.GameEvents
 				m_lastBytesOut = Statistics.BytesOut;
 
 				int clients = WorldMgr.GetAllPlayingClientsCount();
-
-				float cpu = 0;
-				if (m_systemCpuUsedCounter != null)
-					cpu = m_systemCpuUsedCounter.NextValue(); 
-				if (m_processCpuUsedCounter != null)
-					cpu = m_processCpuUsedCounter.NextValue();
-
+				var serverCpuUsage = programCpuUsagePercent.GetNextValue();
+				
 				long totalmem = GC.GetTotalMemory(false);
 			
 				ServerStats newstat = new ServerStats();
-				newstat.CPU = cpu;
+				newstat.CPU = serverCpuUsage >= 0 ? serverCpuUsage : 0;
 				newstat.Clients = clients;
 				newstat.Upload = (int)outRate/1024;
 				newstat.Download = (int)inRate / 1024;

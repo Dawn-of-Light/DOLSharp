@@ -63,7 +63,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns>true if item use is handled here</returns>
-		public bool Use(GamePlayer player)
+		public override bool Use(GamePlayer player)
 		{
 			// Create the siege ballista 
 			GameSiegeBallista bal = new GameSiegeBallista();
