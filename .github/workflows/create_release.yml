@@ -11,13 +11,13 @@ on:
 jobs:
   get_release_info:
     name: Get Release Info
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       version: ${{ steps.getmetadata.outputs.version }}
       date: ${{ steps.getmetadata.outputs.date }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Generate Release Info
@@ -44,68 +44,78 @@ jobs:
             patch_notes.txt
   
   netframework_build:
-    name: Create NetFramework Build
+    name: Create Legacy Build
     needs: get_release_info
-    runs-on: windows-2019
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
-        build_target: [Debug,Release]
+        build_target: [Release]
     env:
       OUTPUT_FILE_NAME: DOLServer_net45_${{ matrix.build_target }}.zip
-      OUTPUT_FILE_NAME_LINUX: DOLServer_linux_net45_${{ matrix.build_target }}.zip
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build
         run: |
-          $Env:DOTNET_CLI_TELEMETRY_OPTOUT=1
-          $assembly_version="${{ needs.get_release_info.outputs.version }}"
-          dotnet build --configuration "${{ matrix.build_target}}" -p:Version="$assembly_version" --verbosity normal "Dawn of Light.sln"
-          cp -recurse $env:USERPROFILE\.nuget\packages\sqlitepclraw.lib.e_sqlite3\*\runtimes\linux-* .\${{ matrix.build_target }}\lib\runtimes\
-          cp -recurse $env:USERPROFILE\.nuget\packages\sqlitepclraw.lib.e_sqlite3\*\runtimes\alpine-* .\${{ matrix.build_target }}\lib\runtimes\
-          cp -recurse $env:USERPROFILE\.nuget\packages\sqlitepclraw.lib.e_sqlite3\*\runtimes\osx-* .\${{ matrix.build_target }}\lib\runtimes\
+          export DOTNET_CLI_TELEMETRY_OPTOUT=1
+          assembly_version="${{ needs.get_release_info.outputs.version }}"
+          dotnet build --configuration "${{ matrix.build_target}}" -p:Version="$assembly_version" --verbosity normal "old\DOLold.sln"
+          cp -r $HOME/.nuget/packages/sqlitepclraw.lib.e_sqlite3/*/runtimes/win-* ./old/${{ matrix.build_target }}/lib/runtimes/
+          cp -r $HOME/.nuget/packages/sqlitepclraw.lib.e_sqlite3/*/runtimes/alpine-* ./old/${{ matrix.build_target }}/lib/runtimes/
+          cp -r $HOME/.nuget/packages/sqlitepclraw.lib.e_sqlite3/*/runtimes/osx-* ./old/${{ matrix.build_target }}/lib/runtimes/
       - name: Test Build
         run: |
-          dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
-          dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
+          dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" ./old/build/Tests/${{ matrix.build_target }}/lib/Tests.dll
+          dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" ./old/build/Tests/${{ matrix.build_target }}/lib/Tests.dll
+      - name: Add DOLConfig
+        run: |
+          dolconfig_location="$(dirname $(git remote get-url origin))/DOLConfig/releases/latest/download/DOLConfig_${{ matrix.build_target }}.zip"
+          wget "$dolconfig_location" -O DOLConfig.zip
+          unzip DOLConfig.zip -d old/"${{ matrix.build_target }}/DOLConfig"
       - name: Compress Build Artifacts
         run: |
-          Compress-Archive -Path .\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
+          (cd old/${{ matrix.build_target }}/ && zip -r ../../${{ env.OUTPUT_FILE_NAME }} * )
       - name: Upload Build Output
         uses: actions/upload-artifact@v2
         with:
           name: build_artifacts
           path: |
             ${{ env.OUTPUT_FILE_NAME }}
-            ${{ env.OUTPUT_FILE_NAME_LINUX }}
             
   netcore_build:
-    name: Create NetCore Build
+    name: Create Build
     needs: get_release_info
-    runs-on: windows-2019
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        build_target: [Debug]
+        build_target: [Debug, Release]
     env:
-      OUTPUT_FILE_NAME: DOLServer_NetCore_Alpha_${{ matrix.build_target }}.zip
+      OUTPUT_FILE_NAME: DOLServer_${{ matrix.build_target }}.zip
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '6.0.x'
       - name: Build
         run: |
-          $Env:DOTNET_CLI_TELEMETRY_OPTOUT=1
-          $assembly_version="${{ needs.get_release_info.outputs.version }}"
-          dotnet build --configuration "${{ matrix.build_target}}" -p:Version="$assembly_version" --verbosity normal "NetCore\DOLdotnet.sln"
+          export DOTNET_CLI_TELEMETRY_OPTOUT=1 
+          assembly_version="${{ needs.get_release_info.outputs.version }}"
+          dotnet build --configuration "${{ matrix.build_target}}" -p:Version="$assembly_version" --verbosity normal "Dawn of Light.sln"
+          echo "dotnet DOLServer.dll" > "${{ matrix.build_target }}/DOLServer.bat"
       - name: Test Build
         run: |
-          dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" .\NetCore\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
-          dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" .\NetCore\build\Tests\${{ matrix.build_target }}\lib\Tests.dll
+          dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll
+          dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll
+      - name: Add DOLConfig
+        run: |
+          dolconfig_location="$(dirname $(git remote get-url origin))/DOLConfig/releases/latest/download/DOLConfig_${{ matrix.build_target }}.zip"
+          wget "$dolconfig_location" -O DOLConfig.zip
+          unzip DOLConfig.zip -d "${{ matrix.build_target }}/DOLConfig"
       - name: Compress Build Artifacts
-        run: Compress-Archive -Path .\NetCore\${{ matrix.build_target }}\* -DestinationPath ${{ env.OUTPUT_FILE_NAME }}
+        run: |
+          (cd ${{ matrix.build_target }}/ && zip -r ../${{ env.OUTPUT_FILE_NAME }} * )
       - name: Upload Build Output
         uses: actions/upload-artifact@v2
         with:
@@ -114,16 +124,17 @@ jobs:
 
   create_release:
     name: Create Release
-    if: always() && needs.netframework_build.result == 'success'
+    if: always() && needs.netcore_build.result == 'success'
     needs: [get_release_info,netframework_build,netcore_build]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Download artifacts
         uses: actions/download-artifact@v2
       - name: Create Release
         run: |
+          set -x
           new_version_tag="${{ needs.get_release_info.outputs.version }}"
           gh release create "$new_version_tag" --title "$new_version_tag" --notes-file release_info/patch_notes.txt build_artifacts/*
         env: 

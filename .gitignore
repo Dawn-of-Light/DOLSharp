@@ -3,8 +3,8 @@
 /Release
 /.vs
 /.vscode
-/NetCore/.vs
-/NetCore/build
-/NetCore/Debug
-/NetCore/Release
+/old/.vs
+/old/build
+/old/Debug
+/old/Release
 **/*.csproj.user

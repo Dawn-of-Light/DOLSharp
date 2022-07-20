@@ -16,19 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-#if NETFRAMEWORK
+#if NET
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using Microsoft.CSharp;
-using Microsoft.VisualBasic;
-using log4net;
-using DOL.Language;
 using DOL.GS.PacketHandler;
+using DOL.Language;
+using log4net;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace DOL.GS
 {
@@ -36,94 +34,77 @@ namespace DOL.GS
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private CodeDomProvider compiler;
-        private CompilerErrorCollection lastCompilationErrors;
-        private bool HasErrors => lastCompilationErrors.HasErrors;
-        private static HashSet<string> referencedAssemblies = new HashSet<string>();
+        private Compilation compiler;
+        private Microsoft.CodeAnalysis.Emit.EmitResult lastEmitResult;
+        private static List<PortableExecutableReference> referencedAssemblies;
 
         static DOLScriptCompiler()
         {
             LoadDefaultAssemblies();
         }
 
-        public DOLScriptCompiler()
-        {
-            compiler = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v4.0" } });
-        }
+        public bool HasErrors => !lastEmitResult.Success;
 
         public void SetToVisualBasicNet()
         {
-            compiler = new VBCodeProvider();
+            throw new NotSupportedException("Please migrate your scripts to C#.");
         }
 
         public Assembly Compile(FileInfo outputFile, IEnumerable<FileInfo> sourceFiles)
         {
-            var sourceFilePaths = sourceFiles.Select(file => file.FullName).ToArray();
-            var compilerParameters = new CompilerParameters(referencedAssemblies.ToArray())
-            {
-#if DEBUG
-                IncludeDebugInformation = true,
-#else
-		        IncludeDebugInformation = false,
-#endif
-                GenerateExecutable = false,
-                GenerateInMemory = false,
-                WarningLevel = 2,
-                CompilerOptions = string.Format($"/optimize /lib:{Path.Combine(".", "lib")}")
-            };
-            compilerParameters.ReferencedAssemblies.Remove(outputFile.Name);
-            compilerParameters.OutputAssembly = outputFile.FullName;
+            var syntaxTrees = sourceFiles.Where(file => file.Name != "AssemblyInfo.cs")
+                .Select(file => CSharpSyntaxTree.ParseText(File.ReadAllText(file.FullName)));
 
-            var compilerResults = compiler.CompileAssemblyFromFile(compilerParameters, sourceFilePaths);
-            lastCompilationErrors = compilerResults.Errors;
-            GC.Collect();
+            Directory.CreateDirectory(outputFile.DirectoryName);
+            Compile(outputFile, syntaxTrees);
+
             if (HasErrors)
             {
                 PrintErrorMessagesToConsole();
-                throw new ApplicationException("Script compilation was unsuccessful.");
+                throw new ApplicationException("Scripts compilation was unsuccessful. Abort startup!");
             }
-            referencedAssemblies.Add(outputFile.Name);
-            return compilerResults.CompiledAssembly;
+            return Assembly.LoadFrom(outputFile.FullName);
         }
 
         public Assembly CompileFromText(GameClient client, string code)
         {
-            var compilerParameters = new CompilerParameters(referencedAssemblies.ToArray())
-            {
-                GenerateInMemory = true,
-                WarningLevel = 2,
-                CompilerOptions = string.Format($"/lib:{Path.Combine(".", "lib")}")
-            };
+            var outputFile = new FileInfo("code_"+Guid.NewGuid()+".dll");
+            var syntaxTrees = new List<SyntaxTree>() { CSharpSyntaxTree.ParseText(code) };
 
-            var compilerResults = compiler.CompileAssemblyFromSource(compilerParameters, code);
-            lastCompilationErrors = compilerResults.Errors;
+            Compile(outputFile, syntaxTrees);
 
             if (HasErrors)
             {
-                PrintErrorMessagesToConsole();
                 PrintErrorMessagesTo(client);
+                File.Delete(outputFile.FullName);
                 return null;
             }
-            return compilerResults.CompiledAssembly;
+            var assembly = Assembly.Load(File.ReadAllBytes(outputFile.FullName));
+            File.Delete(outputFile.FullName);
+            return assembly;
         }
 
-        public static void AddReferenceAssembly(string assemblyName)
+        private void Compile(FileInfo outputFile, IEnumerable<SyntaxTree> syntaxTrees)
         {
-            referencedAssemblies.Add(assemblyName);
+            var compilerParameters = new CSharpCompilationOptions(
+                    outputKind: OutputKind.DynamicallyLinkedLibrary,
+                    warningLevel: 2);
+            compiler = CSharpCompilation.Create(
+                outputFile.Name,
+                options: compilerParameters,
+                references: referencedAssemblies,
+                syntaxTrees: syntaxTrees);
+            var emitResult = compiler.Emit(outputFile.FullName);
+            GC.Collect();
+
+            lastEmitResult = emitResult;
         }
 
         private void PrintErrorMessagesToConsole()
         {
-            foreach (CompilerError error in lastCompilationErrors)
+            foreach (var diag in ErrorDiagnostics)
             {
-                if (error.IsWarning) continue;
-
-                var errorMessage = $"   {error.FileName} Line:{error.Line} Col:{error.Column}";
-                if (log.IsErrorEnabled)
-                {
-                    errorMessage = $"Script compilation failed because: \n{error.ErrorText}\n" + errorMessage;
-                }
-                log.Error(errorMessage);
+                log.Error($"\t{diag.Location} {diag.Id}: {diag.GetMessage()}");
             }
         }
 
@@ -133,8 +114,8 @@ namespace DOL.GS
             {
                 client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 
-                foreach (CompilerError error in lastCompilationErrors)
-                    client.Out.SendMessage(error.ErrorText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                foreach (var diag in ErrorDiagnostics)
+                    client.Out.SendMessage(diag.GetMessage(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
             }
             else
             {
@@ -142,25 +123,40 @@ namespace DOL.GS
             }
         }
 
+        private IEnumerable<Diagnostic> ErrorDiagnostics
+            => lastEmitResult.Diagnostics.Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+
         private static void LoadDefaultAssemblies()
         {
-            var libraryPath = Path.Combine(GameServer.Instance.Configuration.RootDirectory, "lib");
-            if (Directory.Exists(libraryPath))
+            var currentDomainReferences = AppDomain.CurrentDomain
+                                .GetAssemblies()
+                                .Where(a => !a.IsDynamic)
+                                .Select(a => a.Location)
+                                .Where(s => !string.IsNullOrEmpty(s))
+                                .Select(s => MetadataReference.CreateFromFile(s));
+            var additionalReferences = new string[] { 
+                "System.Security.Cryptography.Algorithms", //for SHA256 in AutoXMLDatabaseUpdate
+                "System.Security.Cryptography.Primitives", //for SHA256 in AutoXMLDatabaseUpdate
+                "System.Net.Http"
+            }.Union(GameServer.Instance.Configuration.AdditionalScriptAssemblies)
+                .Select(r => GetPortableExecutableReference(r));
+            
+            referencedAssemblies = currentDomainReferences.Union(additionalReferences).ToList();
+        }
+
+        private static PortableExecutableReference GetPortableExecutableReference(string referenceName)
+        {
+            var dllName = referenceName.EndsWith(".dll") ? referenceName : referenceName + ".dll";
+            var probingPaths = new[] { ".", "lib", Path.GetDirectoryName(typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly.Location) };
+            var dllPath = probingPaths.Select(path => Path.Combine(path, dllName))
+                .Where(fullPath => File.Exists(fullPath)).FirstOrDefault();
+            if(dllPath == null)
             {
-                var defaultLibraries = new DirectoryInfo(libraryPath).GetFiles("*.dll", SearchOption.TopDirectoryOnly).Select(f => f.Name);
-                referencedAssemblies = referencedAssemblies.Union(defaultLibraries).ToHashSet();
-            }
-            referencedAssemblies.Add("System.dll");
-            referencedAssemblies.Add("System.Xml.dll");
-            referencedAssemblies.Add("System.Core.dll");
-            referencedAssemblies.Add("System.Net.Http.dll");
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                referencedAssemblies.Add("netstandard.dll");
+                log.Error($"Reference {referenceName} not found.");
+                return null;
             }
 
-            referencedAssemblies.Remove("testcentric.engine.metadata.dll"); //NUnit3TestAdapter 4.x dependency conflict with mscorlib.dll
-            referencedAssemblies = referencedAssemblies.Union(GameServer.Instance.Configuration.AdditionalScriptAssemblies).ToHashSet();
+            return MetadataReference.CreateFromFile(dllPath);
         }
     }
 }
