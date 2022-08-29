@@ -152,6 +152,7 @@ namespace DOL.GS.Commands
 						{
 							obj.Name = objName;
 							obj.Model = modelID;
+							obj.SaveIntoDatabase();
 							DisplayMessage( client, "Object created: OID = " + obj.ObjectID );
 						}
 
