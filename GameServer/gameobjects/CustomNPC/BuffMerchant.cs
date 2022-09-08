@@ -50,6 +50,7 @@ using DOL.GS.Finance;
 
 namespace DOL.GS
 {
+	[Obsolete("Please use SpellTokenMerchant instead.")]
 	public class BuffMerchant : GameMerchant
 	{
 		#region BuffMerchant attrib/spells/casting
