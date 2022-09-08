@@ -181,54 +181,6 @@ namespace DOL.GS
 			set { m_Heading = (ushort)(value & 0xFFF); }
 		}
 
-        /// <summary>
-        /// Calculates the heading this object needs to have to face the target spot
-        /// </summary>
-        /// <param name="tx">target x</param>
-        /// <param name="ty">target y</param>
-        /// <returns>the heading towards the target spot</returns>
-        [Obsolete( "Use GetHeading" )]
-        public ushort GetHeadingToSpot( int tx, int ty )
-        {
-            return GetHeading( new Point2D( tx, ty ) );
-        }
-
-        /// <summary>
-        /// Calculates the heading this object needs to have, to face the target
-        /// </summary>
-        /// <param name="target">IPoint3D target</param>
-        /// <returns>the heading towards the target</returns>
-        [Obsolete( "Use GetHeading" )]
-        public ushort GetHeadingToTarget( IPoint3D target )
-        {
-            return GetHeading( target );
-        }
-
-        /// <summary>
-        /// Returns the angle towards a target, clockwise
-        /// </summary>
-        /// <param name="target">the target</param>
-        /// <returns>the angle towards the target</returns>
-        [Obsolete( "Use GetAngle" )]
-        public float GetAngleToTarget( GameObject target )
-        {
-            return GetAngle( target );
-        }
-
-        [Obsolete( "Use GetAngle" )]
-        public float GetAngleToSpot( int x, int y )
-        {
-            return GetAngle( new Point2D( x, y ) );
-        }
-
-        [Obsolete( "Use GetPointFromHeading" )]
-        public void GetSpotFromHeading( int distance, out int tx, out int ty )
-        {
-            Point2D point = GetPointFromHeading( this.Heading, distance );
-            tx = point.X;
-            ty = point.Y;
-        }
-
 		/// <summary>
 		/// Returns the angle towards a target spot in degrees, clockwise
 		/// </summary>
