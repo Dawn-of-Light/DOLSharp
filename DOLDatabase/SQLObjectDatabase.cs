@@ -554,22 +554,6 @@ namespace DOL.Database
 		#endregion
 
 		#region Select Implementation
-		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
-		protected void ExecuteSelectImpl(string SQLCommand, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
-			=> ExecuteSelectImpl(SQLCommand, new [] { Array.Empty<QueryParameter>() }, Reader);
-
-		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
-		protected void ExecuteSelectImpl(string SQLCommand, QueryParameter param, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
-			=> ExecuteSelectImpl(SQLCommand, new [] { new [] { param } }, Reader);
-
-		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
-		protected void ExecuteSelectImpl(string SQLCommand, IEnumerable<QueryParameter> parameter, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
-			=> ExecuteSelectImpl(SQLCommand, new [] { parameter }, Reader);
-
-		[Obsolete("Use ExecuteSelectImpl(string,IEnumerable<IEnumerable<QueryParameter>>,Action<IDataReader>) instead.")]
-		protected virtual void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
-			=> ExecuteSelectImpl(SQLCommand, parameters, Reader);
-
 		protected virtual void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader)
 		{
 			if (log.IsDebugEnabled)

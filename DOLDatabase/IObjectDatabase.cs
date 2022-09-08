@@ -116,104 +116,6 @@ namespace DOL.Database
 		/// <returns>Collection of matching DataObjects</returns>
 		IList<IList<TObject>> MultipleSelectObjects<TObject>(IEnumerable<WhereClause> whereClauseBatch)
 			where TObject : DataObject;
-
-		/// <summary>
-		/// Retrieve a Single DataObject from the database based on the Where Expression and Parameters Collection
-		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereExpression"></param>
-		/// <param name="parameters"></param>
-		/// <returns></returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
-		TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
- 			where TObject : DataObject;
-
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression and Parameters
-		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereExpression"></param>
-		/// <param name="parameter"></param>
-		/// <returns></returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
-		TObject SelectObject<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
- 			where TObject : DataObject;
- 
- 		/// <summary>
- 		/// Retrieve a Single DataObject from database based on Where Expression and Parameter
- 		/// </summary>
- 		/// <typeparam name="TObject"></typeparam>
- 		/// <param name="whereExpression"></param>
- 		/// <param name="param"></param>
- 		/// <returns></returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
- 		TObject SelectObject<TObject>(string whereExpression, QueryParameter param)
- 			where TObject : DataObject;
-
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameters Collection
-		/// </summary>
-		/// <param name="whereExpression">Parametrized Where Expression</param>
-		/// <param name="parameters">Collection of Parameters</param>
-		/// <returns>Collection of Objects Sets for each matching Parametrized Query</returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
-		IList<IList<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
-			where TObject : DataObject;
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter Collection
-		/// </summary>
-		/// <param name="whereExpression">Parametrized Where Expression</param>
-		/// <param name="parameter">Collection of Parameter</param>
-		/// <returns>Collection of Objects matching Parametrized Query</returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
-		IList<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
-			where TObject : DataObject;
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter
-		/// </summary>
-		/// <param name="whereExpression">Parametrized Where Expression</param>
-		/// <param name="param">Single Parameter</param>
-		/// <returns>Collection of Objects matching Parametrized Query</returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
-		IList<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param)
-			where TObject : DataObject;
-		#endregion
-
-		#region Select Where Clause Without Parameter
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <returns>Single Object or First Object if multiple matches</returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
-		TObject SelectObject<TObject>(string whereExpression)
-			where TObject : DataObject;
-		/// <summary>
-		/// Retrieve a Single DataObject from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Single Object or First Object if multiple matches</returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
-		TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
-			where TObject : DataObject;
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <returns>Collection of DataObjects matching filter</returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
-		IList<TObject> SelectObjects<TObject>(string whereExpression)
-			where TObject : DataObject;
-		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on Where Expression
-		/// </summary>
-		/// <param name="whereExpression">Where Expression Filter</param>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Collection of DataObjects matching filter</returns>
-		[Obsolete("Use Select Queries with WhereClause object instead.")]
-		IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
-			where TObject : DataObject;
 		#endregion
 		
 		#region Select All Object
@@ -223,15 +125,6 @@ namespace DOL.Database
 		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
 		/// <returns>Collection of all DataObject for this Type</returns>
 		IList<TObject> SelectAllObjects<TObject>()
-			where TObject : DataObject;
-		/// <summary>
-		/// Select all Objects From Table holding TObject Type
-		/// </summary>
-		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Collection of all DataObject for this Type</returns>
-		[Obsolete("Use SelectAllObjects() instead.")]
-		IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
 		#endregion
 		
