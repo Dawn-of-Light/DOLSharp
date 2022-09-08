@@ -155,12 +155,6 @@ namespace DOL.Language
             }
         }
 
-        [Obsolete("Unused and will be deleted.")]
-        public static void SetLangPath(string path)
-        {
-            soleInstance.LangPathImpl = path;
-        }
-
         /// <summary>
         /// Returns the translations collection. MODIFY AT YOUR OWN RISK!!!
         /// </summary>
