@@ -25,9 +25,6 @@ namespace DOL.GS
 	/// </summary>
 	public class Point2D : IPoint2D
 	{
-		[Obsolete("Use HEADING_TO_RADIAN and RADIAN_TO_HEADING")] public const double HEADING_CONST =
-			651.89864690440329530934789477382;
-
 		/// <summary>
 		/// The factor to convert a heading value to radians
 		/// </summary>
