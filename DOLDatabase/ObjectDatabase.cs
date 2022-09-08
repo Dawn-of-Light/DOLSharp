@@ -747,95 +747,6 @@ namespace DOL.Database
 			return objs;
 		}
 		#endregion
-
-		#region Public Object Select API With Parameters
-		public TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
-			where TObject : DataObject
-		{
-			IList<TObject> list = SelectObjects<TObject>(whereExpression, parameters).FirstOrDefault();
-			if (list != null)
-				return list.First();
-			return null;
-		}
-
-		public TObject SelectObject<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
-			where TObject : DataObject
-		{
-			return SelectObjects<TObject>(whereExpression, parameter).FirstOrDefault();
-		}
-
-		public TObject SelectObject<TObject>(string whereExpression, QueryParameter param)
-			where TObject : DataObject
-		{
-			return SelectObjects<TObject>(whereExpression, param).FirstOrDefault();
-		}
-
-		public IList<IList<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
-			where TObject : DataObject
-		{
-			if (parameters == null)
-				throw new ArgumentNullException("parameters");
-			
-			var tableHandler = GetTableOrViewHandler(typeof(TObject));
-			if (tableHandler == null)
-			{
-				if (log.IsErrorEnabled)
-					log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
-				
-				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
-			}
-			
-			var objs = SelectObjectsImpl(tableHandler, whereExpression, parameters, Transaction.IsolationLevel.DEFAULT).Select(res => res.OfType<TObject>().ToArray()).ToArray();
-			
-			FillObjectRelations(objs.SelectMany(obj => obj), false);
-			
-			return objs;
-		}
-		
-		public IList<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
-			where TObject : DataObject
-		{
-			if (parameter == null)
-				throw new ArgumentNullException("parameter");
-			
-			return SelectObjects<TObject>(whereExpression, new [] { parameter }).First();
-		}
-
-		public IList<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param)
-			where TObject : DataObject
-		{
-			if (param == null)
-				throw new ArgumentNullException("param");
-			
-			return SelectObjects<TObject>(whereExpression, new [] { new [] { param } }).First();
-		}
-		#endregion
-		
-		#region Public Object Select API Without Parameters
-		public TObject SelectObject<TObject>(string whereExpression)
-			where TObject : DataObject
-		{
-			return SelectObject<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
-		}
-
-		public TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
-			where TObject : DataObject
-		{
-			return SelectObjects<TObject>(whereExpression, isolation).FirstOrDefault();
-		}
-
-		public IList<TObject> SelectObjects<TObject>(string whereExpression)
-			where TObject : DataObject
-		{
-			return SelectObjects<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
-		}
-
-		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
-			where TObject : DataObject
-		{
-			return SelectObjects<TObject>(whereExpression, new [] { Array.Empty<QueryParameter>() } ).First().ToArray();
-		}
-		#endregion
 		
 		#region Public Object Select All API
 		public IList<TObject> SelectAllObjects<TObject>()
@@ -858,12 +769,6 @@ namespace DOL.Database
 			FillObjectRelations(dataObjects, false);
 
 			return dataObjects;
-		}
-
-		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
-			where TObject : DataObject
-		{
-			return SelectAllObjects<TObject>();
 		}
 		#endregion
 		

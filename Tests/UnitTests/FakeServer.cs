@@ -88,18 +88,6 @@ namespace DOL.UnitTests.Gameserver
         public bool SaveObject(DataObject dataObject) => true;
         public bool SaveObject(IEnumerable<DataObject> dataObjects) => throw new NotImplementedException();
         public IList<TObject> SelectAllObjects<TObject>() where TObject : DataObject => throw new NotImplementedException();
-        public IList<TObject> SelectAllObjects<TObject>(IsolationLevel isolation) where TObject : DataObject => throw new NotImplementedException();
-        public TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters) where TObject : DataObject => throw new NotImplementedException();
-        public TObject SelectObject<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter) where TObject : DataObject => throw new NotImplementedException();
-        public TObject SelectObject<TObject>(string whereExpression, QueryParameter param) where TObject : DataObject => throw new NotImplementedException();
-        public TObject SelectObject<TObject>(string whereExpression) where TObject : DataObject => throw new NotImplementedException();
-        public TObject SelectObject<TObject>(string whereExpression, IsolationLevel isolation) where TObject : DataObject => throw new NotImplementedException();
-
-        public IList<IList<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters) where TObject : DataObject => throw new NotImplementedException();
-        public IList<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter) where TObject : DataObject => (IList<TObject>)SelectObjectReturns;
-        public IList<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param) where TObject : DataObject => throw new NotImplementedException();
-        public IList<TObject> SelectObjects<TObject>(string whereExpression) where TObject : DataObject => throw new NotImplementedException();
-        public IList<TObject> SelectObjects<TObject>(string whereExpression, IsolationLevel isolation) where TObject : DataObject => throw new NotImplementedException();
 
         public TObject SelectObject<TObject>(WhereClause whereClause) where TObject : DataObject => (TObject)SelectObjectReturns.FirstOrDefault();
         public IList<TObject> SelectObjects<TObject>(WhereClause whereClause) where TObject : DataObject => new List<TObject>();
