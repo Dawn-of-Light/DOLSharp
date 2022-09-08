@@ -338,13 +338,6 @@ namespace DOL.GS.Spells
         public PaladinArmorFactorBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
-    [Obsolete("This class will be removed. Please use FlexibleSkillBuff instead!")]
-    [SpellHandler("FelxibleSkillBuff")]
-    public class FelxibleSkillBuff : FlexibleSkillBuff
-    {
-        public FelxibleSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-    }
-
     [SpellHandler("FlexibleSkillBuff")]
     public class FlexibleSkillBuff : SingleStatBuff
     {
