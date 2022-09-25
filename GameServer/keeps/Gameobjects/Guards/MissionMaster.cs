@@ -281,21 +281,10 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		protected override void SetRespawnTime()
-		{
-			if (Realm == eRealm.None && (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE ||
-			GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP))
-			{
-				// In PvE & PvP servers, lords are really just mobs farmed for seals.
-				int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
-				int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
-					(Util.Random(-iVariance, iVariance)));
-
-				RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
-			}
-			else
-				RespawnInterval = 10000; // 10 seconds
-		}
+        protected override void SetRespawnTime()
+        {
+            RespawnInterval = 120000;
+        }
 
 		protected override void SetAggression()
 		{
