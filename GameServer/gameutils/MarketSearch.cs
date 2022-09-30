@@ -148,13 +148,13 @@ namespace DOL.GS
 				if (search.power > 0 && CheckForPower(item, search.power) == false)
 					continue;
 
-				if (search.bonus >= 0 && CheckForBonus(item, search.bonus) == false)
+				if (search.bonus > 0 && CheckForBonus(item, search.bonus) == false)
 					continue;
 
-				if (search.skill >= 0 && CheckForSkill(item, search.skill) == false)
+				if (search.skill > 0 && CheckForSkill(item, search.skill) == false)
 					continue;
 
-				if (search.resist >= 0 && CheckForResist(item, search.resist) == false)
+				if (search.resist > 0 && CheckForResist(item, search.resist) == false)
 					continue;
 
 				if (search.damageType > 0 && CheckForDamageType(item, search.damageType) == false)
