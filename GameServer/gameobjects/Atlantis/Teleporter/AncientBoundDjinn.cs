@@ -235,8 +235,9 @@ namespace DOL.GS
 				return base.GetTeleportLocation(player, text);
 			}
 
+            var currentRegionRealm = GetRegionRealm(this.CurrentRegion);
 			// Find the teleport location in the database.  For Djinns use the player realm to match Interact list given.
-			Teleport port = WorldMgr.GetTeleportLocation(player.Realm, String.Format("{0}:{1}", Type, text));
+			Teleport port = WorldMgr.GetTeleportLocation(currentRegionRealm, String.Format("{0}:{1}", Type, text));
 
 			if (port != null)
 			{
@@ -253,6 +254,13 @@ namespace DOL.GS
 
 			return true;	// Needs further processing.
 		}
+
+        private eRealm GetRegionRealm(Region region)
+        {
+            if(region.ID < 73) return eRealm.Midgard;
+            else if(region.ID < 130) return eRealm.Albion;
+            else return eRealm.Hibernia;
+        }
 
 
         /// <summary>
