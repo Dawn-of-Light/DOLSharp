@@ -1101,6 +1101,16 @@ namespace DOL.GS.Keeps
 				{
 					guard.RefreshTemplate();
 				}
+				else if (guard is MissionMaster)
+				{
+					if(!guard.IsAlive)
+					{
+						guard.StopRespawn();
+						guard.AddToWorld();
+						guard.Health = guard.MaxHealth;
+					}
+					guard.RefreshTemplate();
+				}
 				else if (guard is GuardLord == false)
 				{
 					guard.Die(guard);
