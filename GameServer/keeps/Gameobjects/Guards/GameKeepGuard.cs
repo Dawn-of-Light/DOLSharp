@@ -748,6 +748,13 @@ namespace DOL.GS.Keeps
 			return true;
 		}
 
+		public override bool Spawn()
+		{
+			var result = base.Spawn();
+			RefreshTemplate();
+			return result;
+		}
+
 		/// <summary>
 		/// When we remove from world, we remove our special handler
 		/// </summary>
@@ -770,19 +777,6 @@ namespace DOL.GS.Keeps
 		{
 			if (IsRespawning)
 				m_respawnTimer.Stop();
-		}
-
-		/// <summary>
-		/// When guards respawn we refresh them, if a patrol guard respawns we
-		/// call a special function to update leadership
-		/// </summary>
-		/// <param name="respawnTimer"></param>
-		/// <returns></returns>
-		protected override int RespawnTimerCallback(RegionTimer respawnTimer)
-		{
-			int temp = base.RespawnTimerCallback(respawnTimer);
-			RefreshTemplate();
-			return temp;
 		}
 
 		/// <summary>
