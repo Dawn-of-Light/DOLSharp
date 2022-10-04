@@ -1097,19 +1097,10 @@ namespace DOL.GS.Keeps
 			//we reset the guards
 			foreach (GameKeepGuard guard in Guards.Values)
 			{
-				if (guard is GuardLord && guard.IsAlive )
-				{
-					guard.RefreshTemplate();
-				}
+				if (guard is GuardLord && guard.IsAlive) { }
 				else if (guard is MissionMaster)
 				{
-					if(!guard.IsAlive)
-					{
-						guard.StopRespawn();
-						guard.AddToWorld();
-						guard.Health = guard.MaxHealth;
-					}
-					guard.RefreshTemplate();
+					guard.Spawn();
 				}
 				else if (guard is GuardLord == false)
 				{

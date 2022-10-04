@@ -3000,7 +3000,6 @@ namespace DOL.GS
 
 			if (anyPlayer)
 				m_lastVisibleToPlayerTick = (uint)Environment.TickCount;
-
 			m_spawnPoint.X = X;
 			m_spawnPoint.Y = Y;
 			m_spawnPoint.Z = Z;
@@ -3075,6 +3074,33 @@ namespace DOL.GS
 
 			return true;
 		}
+
+        public virtual bool Spawn()
+        {
+            int dummy;
+            CurrentRegion.MobsRespawning.TryRemove(this, out dummy);
+
+            lock (m_respawnTimerLock)
+            {
+                if (m_respawnTimer != null)
+                {
+                    m_respawnTimer.Stop();
+                    m_respawnTimer = null;
+                }
+            }
+
+            if (IsAlive || ObjectState == eObjectState.Active) return false;
+
+            Health = MaxHealth;
+            Mana = MaxMana;
+            Endurance = MaxEndurance;
+            X = SpawnPoint.X;
+            Y = SpawnPoint.Y;
+            Z = SpawnPoint.Z;
+            Heading = SpawnHeading;
+
+            return AddToWorld();
+        }
 
 		/// <summary>
 		/// Fill the ambient text list for this NPC
@@ -4480,48 +4506,12 @@ namespace DOL.GS
 				}
 			}
 		}
-		/// <summary>
-		/// The callback that will respawn this mob
-		/// </summary>
-		/// <param name="respawnTimer">the timer calling this callback</param>
-		/// <returns>the new interval</returns>
-		protected virtual int RespawnTimerCallback(RegionTimer respawnTimer)
-		{
-			int dummy;
-			// remove Mob from "respawning"
-			CurrentRegion.MobsRespawning.TryRemove(this, out dummy);
 
-			lock (m_respawnTimerLock)
-			{
-				if (m_respawnTimer != null)
-				{
-					m_respawnTimer.Stop();
-					m_respawnTimer = null;
-				}
-			}
-
-			//DOLConsole.WriteLine("respawn");
-			//TODO some real respawn handling
-			if (IsAlive) return 0;
-			if (ObjectState == eObjectState.Active) return 0;
-
-			//Heal this mob, move it to the spawnlocation
-			Health = MaxHealth;
-			Mana = MaxMana;
-			Endurance = MaxEndurance;
-			int origSpawnX = m_spawnPoint.X;
-			int origSpawnY = m_spawnPoint.Y;
-			//X=(m_spawnX+Random(750)-350); //new SpawnX = oldSpawn +- 350 coords
-			//Y=(m_spawnY+Random(750)-350);	//new SpawnX = oldSpawn +- 350 coords
-			X = m_spawnPoint.X;
-			Y = m_spawnPoint.Y;
-			Z = m_spawnPoint.Z;
-			Heading = m_spawnHeading;
-			AddToWorld();
-			m_spawnPoint.X = origSpawnX;
-			m_spawnPoint.Y = origSpawnY;
-			return 0;
-		}
+        protected virtual int RespawnTimerCallback(RegionTimer respawnTimer)
+        {
+            Spawn();
+            return 0;
+        }
 
 		/// <summary>
 		/// Callback timer for health regeneration
