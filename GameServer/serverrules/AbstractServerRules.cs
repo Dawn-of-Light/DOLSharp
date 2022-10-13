@@ -1159,7 +1159,6 @@ namespace DOL.GS.ServerRules
 
 					// bounty points
 
-					int bpCap = living.BountyPointsValue * 2;
 					int bountyPoints = 0;
 
 					// Keep and Tower captures reward full RP and BP value to each player
@@ -1172,8 +1171,6 @@ namespace DOL.GS.ServerRules
 						bountyPoints = (int)(npcBPValue * damagePercent);
 					}
 
-					if (bountyPoints > bpCap && !(killedNPC is Doppelganger))
-						bountyPoints = bpCap;
 					if (bountyPoints > 0)
 						living.GainBountyPoints(bountyPoints);
 
