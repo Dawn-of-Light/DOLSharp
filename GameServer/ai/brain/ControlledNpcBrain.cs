@@ -413,7 +413,8 @@ namespace DOL.AI.Brain
 
 			// Check for buffs, heals, etc, interrupting melee if not being interrupted
 			// Only prevent casting if we are ordering pet to come to us or go to target
-			if (Owner is GameNPC || (Owner is GamePlayer && WalkState != eWalkState.ComeHere && WalkState != eWalkState.GoTarget))
+			var petIsNotOrderedElsewhere = Owner is GamePlayer && WalkState != eWalkState.ComeHere && WalkState != eWalkState.GoTarget;
+			if ((Owner is GameNPC || petIsNotOrderedElsewhere) && !Body.InCombat)
 				CheckSpells(eCheckSpellType.Defensive);
 
 			// Stop hunting player entering in steath
@@ -436,7 +437,7 @@ namespace DOL.AI.Brain
 			if (IsActive && m_aggressionState != eAggressionState.Passive)
 				CheckSpells(eCheckSpellType.Offensive);
 
-			if (!Body.AttackState && WalkState == eWalkState.Follow && Owner != null)
+			if (!Body.AttackState && WalkState == eWalkState.Follow && Owner != null && !Body.InCombat)
 				Follow(Owner);
 		}
 

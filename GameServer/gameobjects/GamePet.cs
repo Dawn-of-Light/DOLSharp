@@ -89,10 +89,13 @@ namespace DOL.GS
 			get { return base.Level; }
 			set
 			{
-				// Don't set the pet level until the owner is set
-				// This skips unnecessary calls to code in base.Level
-				if (Owner != null)
-					base.Level = value;
+                // Don't set the pet level until the owner is set
+                // This skips unnecessary calls to code in base.Level
+                if (Owner != null)
+                {
+                    base.Level = value;
+                    SortSpells();
+                }
 			}
 		}
 
