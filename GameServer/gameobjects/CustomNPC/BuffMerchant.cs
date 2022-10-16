@@ -78,7 +78,6 @@ namespace DOL.GS
 
 		private Queue m_buffs = new Queue();
 		private const int BUFFS_SPELL_DURATION = 7200;
-		private const bool BUFFS_PLAYER_PET = true;
 
 		public override bool AddToWorld()
 		{
@@ -90,15 +89,6 @@ namespace DOL.GS
 			if (m_buffs == null) m_buffs = new Queue();
 			
 			m_buffs.Enqueue(new Container(spell, spellLine, player));
-
-			//don't forget his pet !
-			if(BUFFS_PLAYER_PET && player.ControlledBrain != null) 
-			{
-				if(player.ControlledBrain.Body != null) 
-				{
-					m_buffs.Enqueue(new Container(spell, spellLine, player.ControlledBrain.Body));
-				}
-			}
 
 			CastBuffs();
 
