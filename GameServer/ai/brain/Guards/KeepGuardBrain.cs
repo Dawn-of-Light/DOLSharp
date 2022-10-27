@@ -134,7 +134,7 @@ namespace DOL.AI.Brain
 						Body.Say("Want to attack player " + player.Name);
 					}
 
-					AddToAggroList(player, player.EffectiveLevel << 1);
+					AddToAggroList(player, 1);
 					return;
 				}
 			}
@@ -171,7 +171,7 @@ namespace DOL.AI.Brain
 						Body.Say("Want to attack player " + player.Name + " pet " + npc.Name);
 					}
 
-					AddToAggroList(npc, (npc.Level + 1) << 1);
+					AddToAggroList(npc, 1);
 					return;
 				}
 			}

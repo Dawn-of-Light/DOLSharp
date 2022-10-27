@@ -247,9 +247,9 @@ namespace DOL.AI.Brain
 				if (CalculateAggroLevelToTarget(npc) > 0)
 				{
 					if (npc.Brain is ControlledNpcBrain) // This is a pet or charmed creature, checkLOS
-						AddToAggroList(npc, (npc.Level + 1) << 1, true);
+						AddToAggroList(npc, 1, true);
 					else
-						AddToAggroList(npc, (npc.Level + 1) << 1);
+						AddToAggroList(npc, 1);
 				}
 			}
 		}
@@ -290,7 +290,7 @@ namespace DOL.AI.Brain
 
 				if (CalculateAggroLevelToTarget(player) > 0)
 				{
-					AddToAggroList(player, player.EffectiveLevel << 1, true);
+					AddToAggroList(player, 1, true);
 				}
 			}
 		}

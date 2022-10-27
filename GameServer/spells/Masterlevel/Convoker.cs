@@ -933,7 +933,7 @@ public class MLBrain : GuardBrain
 			if (!(npc.Brain is IControlledBrain || npc is GameGuard))
 				continue;
 
-			AddToAggroList(npc, npc.Level << 1);
+			AddToAggroList(npc, 1);
 			return;
 		}
 	}

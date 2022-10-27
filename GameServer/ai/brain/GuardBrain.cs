@@ -55,7 +55,7 @@ namespace DOL.AI.Brain
 				if (!Body.IsWithinRadius(player, AggroRange))
 					continue;
 
-				AddToAggroList(player, player.EffectiveLevel << 1);
+				AddToAggroList(player, 1);
 				return;
 			}
 		}
@@ -75,7 +75,7 @@ namespace DOL.AI.Brain
 				if (!npc.IsWithinRadius(Body, AggroRange))
 					continue;
 
-				AddToAggroList(npc, npc.Level << 1);
+				AddToAggroList(npc, 1);
 				return;
 			}
 		}
