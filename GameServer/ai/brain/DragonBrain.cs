@@ -112,8 +112,7 @@ namespace DOL.AI.Brain
 
 		protected override void CheckNPCAggro()
 		{
-			if (Body.AttackState)
-				return;
+			if (HasAggro) return;
 
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
