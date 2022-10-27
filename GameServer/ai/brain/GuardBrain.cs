@@ -40,9 +40,7 @@ namespace DOL.AI.Brain
 
 		protected override void CheckPlayerAggro()
 		{
-			//Check if we are already attacking, return if yes
-			if (Body.AttackState)
-				return;
+			if (HasAggro) return;
 
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
@@ -64,9 +62,7 @@ namespace DOL.AI.Brain
 
 		protected override void CheckNPCAggro()
 		{
-			//Check if we are already attacking, return if yes
-			if (Body.AttackState)
-				return;
+			if (HasAggro) return;
 
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{

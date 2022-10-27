@@ -232,8 +232,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected virtual void CheckNPCAggro()
 		{
-			if (Body.AttackState)
-				return;
+			if (HasAggro) return;
 
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange, Body.CurrentRegion.IsDungeon ? false : true))
 			{
@@ -260,9 +259,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected virtual void CheckPlayerAggro()
 		{
-			//Check if we are already attacking, return if yes
-			if (Body.AttackState)
-				return;
+			if (HasAggro) return;
 
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange, Body.CurrentZone.IsDungeon ? false : true))
 			{
@@ -373,17 +370,7 @@ namespace DOL.AI.Brain
 		/// Checks whether living has someone on its aggrolist
 		/// </summary>
 		public virtual bool HasAggro
-		{
-			get
-			{
-				bool hasAggro = false;
-				lock ((m_aggroTable as ICollection).SyncRoot)
-				{
-					hasAggro = (m_aggroTable.Count > 0);
-				}
-				return hasAggro;
-			}
-		}
+			=> AggroTable.Count > 0;
 
 		/// <summary>
 		/// Add aggro table of this brain to that of another living.

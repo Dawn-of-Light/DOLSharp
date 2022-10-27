@@ -15,9 +15,7 @@ namespace DOL.AI.Brain
 
 		protected override void CheckPlayerAggro()
 		{
-			//Check if we are already attacking, return if yes
-			if (Body.AttackState)
-				return;
+			if (HasAggro) return;
 
 			if(m_spellHandler!=null)
 			{

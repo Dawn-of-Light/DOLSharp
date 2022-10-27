@@ -1,9 +1,7 @@
-using System;
 using log4net;
 using System.Reflection;
 using DOL.GS;
 using DOL.GS.Keeps;
-using DOL.GS.Movement;
 
 namespace DOL.AI.Brain
 {
@@ -115,10 +113,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override void CheckPlayerAggro()
 		{
-			if (Body.AttackState || Body.CurrentSpellHandler != null)
-			{
-				return;
-			}
+			if (HasAggro || Body.CurrentSpellHandler != null) return;
 
 			foreach (GamePlayer player in Body.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -150,8 +145,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override void CheckNPCAggro()
 		{
-			if (Body.AttackState || Body.CurrentSpellHandler != null)
-				return;
+			if (HasAggro || Body.CurrentSpellHandler != null) return;
 
 			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
