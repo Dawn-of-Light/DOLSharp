@@ -129,7 +129,7 @@ namespace DOL.AI.Brain
 				{
 					if (CalculateAggroLevelToTarget(npc) > 0)
 					{
-						AddToAggroList(npc, (npc.Level + 1) << 1);
+						AddToAggroList(npc, 1);
 					}
 				}
 			}
