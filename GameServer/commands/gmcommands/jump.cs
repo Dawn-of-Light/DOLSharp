@@ -59,6 +59,15 @@ namespace DOL.GS.Commands
 					return;
 				}
 				#endregion Refresh
+				#region Jump to Target
+				if (args.Length == 3 && args[1].ToLower() == "to" && args[2].ToLower() == "target")
+				{
+					var target = client.Player.TargetObject;
+					var player = client.Player;
+					player.MoveTo(target.CurrentRegionID, target.X, target.Y, target.Z, target.Heading);
+					return;
+				}
+				#endregion
 				#region Jump to GT
 				if (args.Length == 3 && args[1].ToLower() == "to" && args[2].ToLower() == "gt")
 				{
