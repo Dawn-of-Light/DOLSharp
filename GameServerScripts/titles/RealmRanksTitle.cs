@@ -49,7 +49,7 @@ namespace GameServerScripts.Titles
 			{
 				string realm = string.Empty;
 				if (Realm == eRealm.Albion)
-					realm = "Ablion";
+					realm = "Albion";
 				else if (Realm == eRealm.Midgard)
 					realm = "Midgard";
 				else
