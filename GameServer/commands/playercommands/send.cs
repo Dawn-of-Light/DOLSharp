@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -38,8 +39,8 @@ namespace DOL.GS.Commands
 
 			if (IsSpammingCommand(client.Player, "send", 500))
 			{
-				DisplayMessage(client, "Slow down! Think before you say each word!");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.Spamming.Say"));
+                return;
 			}
 
 			string targetName = args[1];
@@ -54,9 +55,9 @@ namespace DOL.GS.Commands
 
 			if (targetClient == null)
 			{
-				// nothing found
-				client.Out.SendMessage(targetName + " is not in the game, or in another realm.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                // nothing found
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Send.NotInGame", targetName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
             // prevent to send an anon GM a message to find him - but send the message to the GM - thx to Sumy
@@ -64,8 +65,8 @@ namespace DOL.GS.Commands
             {
 				if (client.Account.PrivLevel == (uint)ePrivLevel.Player)
 				{
-					client.Out.SendMessage(targetName + " is not in the game, or in another realm.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					targetClient.Player.Out.SendMessage(string.Format("You're anon but {0} tried to send: {1}", client.Player.Name, message), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
+                    client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Send.NotInGame", targetName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    targetClient.Player.Out.SendMessage(string.Format("You're anon but {0} tried to send: {1}", client.Player.Name, message), eChatType.CT_Send, eChatLoc.CL_ChatWindow);
 				}
 				else
 				{
@@ -78,14 +79,14 @@ namespace DOL.GS.Commands
 			switch (result)
 			{
 				case 2: // name not unique
-					client.Out.SendMessage("Character name is not unique.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Send.NotUnique"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				case 3: // exact match
 				case 4: // guessed name
 					if (targetClient == client)
 					{
-						client.Out.SendMessage("You can't /send to yourself!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Send.Yourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
 					else
 					{
 						client.Player.SendPrivateMessage(targetClient.Player, message);

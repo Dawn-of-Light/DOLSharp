@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -32,14 +33,14 @@ namespace DOL.GS.Commands
 		{
 			if (client.Player.Group == null)
 			{
-				DisplayMessage(client, "You are not part of a group");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Group.NoGroup"));
+                return;
 			}
 
 			if (IsSpammingCommand(client.Player, "group", 500))
 			{
-				DisplayMessage(client, "Slow down! Think before you say each word!");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.Spamming.Say"));
+                return;
 			}
 
 			if (args.Length >= 2)
