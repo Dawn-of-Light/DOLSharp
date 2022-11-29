@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -30,8 +31,8 @@ namespace DOL.GS.Commands
 		{
 			if (client.Player.Group != null && client.Player.Group.Leader != client.Player)
 			{
-				client.Out.SendMessage("You are not the leader of your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.NotLeader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			if (IsSpammingCommand(client.Player, "invite"))
@@ -44,14 +45,14 @@ namespace DOL.GS.Commands
 			{ // Inviting by target
 				if (client.Player.TargetObject == null || client.Player.TargetObject == client.Player)
 				{
-					client.Out.SendMessage("You have not selected a valid player as your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.TargetInvalid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 
 				if (!(client.Player.TargetObject is GamePlayer))
 				{
-					client.Out.SendMessage("You have not selected a valid player as your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.TargetInvalid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 				target = (GamePlayer) client.Player.TargetObject;
 				if (!GameServer.ServerRules.IsAllowedToGroup(client.Player, target, false))
@@ -68,27 +69,27 @@ namespace DOL.GS.Commands
 					target = targetClient.Player;
 				if (target == null || !GameServer.ServerRules.IsAllowedToGroup(client.Player, target, true))
 				{ // Invalid target or realm restriction
-					client.Out.SendMessage("No players online with that name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.NotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 				if (target == client.Player)
 				{
-					client.Out.SendMessage("You can't invite yourself.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.Yourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 			}
 
 			if (target.Group != null)
 			{
-				client.Out.SendMessage("The player is still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.PlayerHasGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP &&
 				target.IsStealthed)
 			{
-				client.Out.SendMessage("You can't find the player around here.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.NotAround"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			if (client.Account.PrivLevel > target.Client.Account.PrivLevel)
@@ -107,15 +108,15 @@ namespace DOL.GS.Commands
 					client.Player.Group.AddMember(target);
 				}
 
-				client.Out.SendMessage("(GM) You have added " + target.Name + " to your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				target.Out.SendMessage("GM " + client.Player.Name + " has added you to " + client.Player.GetPronoun(1, false) + " group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.GMAdded", target.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                target.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.AddedByGM", client.Player.Name, client.Player.GetPronoun(1, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
 			else
 			{
-				client.Out.SendMessage("You have invited " + target.Name + " to join your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				target.Out.SendGroupInviteCommand(client.Player, client.Player.Name + " has invited you to join\n" + client.Player.GetPronoun(1, false) + " group. Do you wish to join?");
-				target.Out.SendMessage(client.Player.Name + " has invited you to join " + client.Player.GetPronoun(1, false) + " group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.Invite", target.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                target.Out.SendGroupInviteCommand(client.Player, LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.Invited", client.Player.Name, client.Player.GetPronoun(1, false)));
+                target.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Invite.HasInvited", client.Player.Name, client.Player.GetPronoun(1, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
 		}
 	}
 }

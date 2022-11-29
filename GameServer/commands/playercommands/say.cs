@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -34,8 +35,8 @@ namespace DOL.GS.Commands
 
 			if (args.Length < 2)
 			{
-				client.Out.SendMessage("You must say something...", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Say.Something"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			string message = string.Join(" ", args, 1, args.Length - 1);
 
@@ -48,12 +49,12 @@ namespace DOL.GS.Commands
 			long changeTime = client.Player.CurrentRegion.Time - SayTick;
 			if (changeTime < 500 && SayTick > 0)
 			{
-				client.Player.Out.SendMessage("Slow down! Think before you say each word!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.Spamming.Say"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
             if (client.Player.IsMuted)
             {
-                client.Player.Out.SendMessage("You have been muted. You cannot talk.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Say.Muted"), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
                 return;
             }
 

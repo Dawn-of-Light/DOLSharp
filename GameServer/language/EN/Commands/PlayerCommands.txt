@@ -6,3 +6,60 @@ PLCommands.FreeLevel.FreeLevelIn2:	You will be eligible for a free level after y
 PLCommands.FreeLevel.FreeLevelSoon:	You will be eligible for a free level as soon as you obtain a level.
 PLCommands.FreeLevel.NoFreeLevel:	You don't have any FreeLevel !
 PLCommands.FreeLevel.Removed:		Your FreeLevel has been removed.
+
+# /Broadcast
+Scripts.Players.Broadcast.Muted:	You have been muted. You cannot broadcast.
+
+# /Group
+Scripts.Players.Group.NoGroup:	You are not part of a group.
+
+# /Guildchat
+Scripts.Players.Guildchat.AllianceMuted:		You have been muted and are not allowed to speak in this channel.
+Scripts.Players.Guildchat.NoAlliance:			Your guild doesn't belong to any alliance.
+Scripts.Players.Guildchat.NoAlliancePermission:	You can not speak on alliance channel.
+Scripts.Players.Guildchat.NoGuild:				You don't belong to a player guild.
+Scripts.Players.Guildchat.NoGuildPermission:	You don't have permission to speak on the guild line.
+Scripts.Players.Guildchat.NoOfficerPermission:	You don't have permission to speak on the officer line.
+
+# /Invite
+Scripts.Players.Invite.AddedByGM:		GM {0} has added you to {1} group.
+Scripts.Players.Invite.GMAdded:			(GM) You have added {0} to your group.
+Scripts.Players.Invite.HasInvited:		{0} has invited you to join {1} group.
+Scripts.Players.Invite.Invite:			You have invited {0} to join your group.
+Scripts.Players.Invite.Invited:			{0} has invited you to join {1} group. Do you wish to join?
+Scripts.Players.Invite.NotAround:		You can't find the player around here.
+Scripts.Players.Invite.NotFound:		No players online with that name.
+Scripts.Players.Invite.NotLeader:		You are not the leader of your group.
+Scripts.Players.Invite.PlayerHasGroup:	The player is still in a group.
+Scripts.Players.Invite.TargetInvalid:	You have not selected a valid player as your target.
+Scripts.Players.Invite.Yourself:		You can't invite yourself.
+
+# /Say
+Scripts.Players.Say.Muted:				You have been muted. You cannot talk.
+Scripts.Players.Say.Something:			You must say something...
+
+# /Send
+Scripts.Players.Send.NotInGame:			{0} is not in the game, or in another realm.
+Scripts.Players.Send.NotUnique:			Character name is not unique.
+Scripts.Players.Send.Yourself:			You can't /send to yourself!
+
+# /Whisper
+Scripts.Players.Whisper.NoTarget:		Select the target you want to whisper to!
+Scripts.Players.Whisper.Self:			Hmmmm...you shouldn't talk to yourself!
+
+# /Yell
+Scripts.Players.Yell.East:				east
+Scripts.Players.Yell.FromDirection:		{0} yells for help from the {1} direction!
+Scripts.Players.Yell.Muted:				You have been muted. You cannot yell.
+Scripts.Players.Yell.North:				north
+Scripts.Players.Yell.NorthEast:			north east
+Scripts.Players.Yell.NorthWest:			north west
+Scripts.Players.Yell.South:				south
+Scripts.Players.Yell.SouthEast:			south east
+Scripts.Players.Yell.SouthWest:			south west
+Scripts.Players.Yell.West:				west
+Scripts.Players.Yell.YouYell:			You yell for help!
+
+# General
+GamePlayer.Spamming.Say:	Slow down! Think before you say each word!
+GamePlayer.SlowDown:		Slow down!

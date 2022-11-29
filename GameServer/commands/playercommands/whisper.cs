@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -38,15 +39,15 @@ namespace DOL.GS.Commands
 
 			if (IsSpammingCommand(client.Player, "whisper", 500))
 			{
-				DisplayMessage(client, "Slow down! Think before you say each word!");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.Spamming.Say"));
+                return;
 			}
 
 			GameObject obj = client.Player.TargetObject;
 			if (obj == null)
 			{
-				DisplayMessage(client, "Select the target you want to whisper to!");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Whisper.NoTarget"));
+                return;
 			}
 
 			/*if (obj is GameLiving == false)
@@ -57,8 +58,8 @@ namespace DOL.GS.Commands
 
 			if (obj == client.Player)
 			{
-				DisplayMessage(client, "Hmmmm...you shouldn't talk to yourself!");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Whisper.Self"));
+                return;
 			}
 			client.Player.Whisper(obj, string.Join(" ", args, 1, args.Length - 1));
 		}

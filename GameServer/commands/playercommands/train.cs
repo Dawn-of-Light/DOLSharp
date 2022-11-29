@@ -25,6 +25,7 @@ using System.Linq;
 using DOL.Database;
 using DOL.GS.Commands;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -69,8 +70,8 @@ namespace DOL.GS.Commands
 			// Make sure the player is at a trainer.
 			if (!DOL.GS.ServerProperties.Properties.ALLOW_TRAIN_ANYWHERE && client.Account.PrivLevel == (int)ePrivLevel.Player && (trainer == null || trainer.CanTrain(client.Player) == false))
 			{
-				client.Out.SendMessage("You have to be at your trainer to use this command.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerCommands.Train.MissingTrainer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			// Make sure the user gave us atleast the specialization line and the level to train it to.
@@ -108,9 +109,9 @@ namespace DOL.GS.Commands
 
 			if (spec == null)
 			{
-				client.Out.SendMessage("The provided skill could not be found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerCommands.Train.SkillNotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-				return;
+                return;
 			}
 
 			// Make sure the player can actually train the given specialization.
@@ -125,8 +126,8 @@ namespace DOL.GS.Commands
 
 			if (level <= currentSpecLevel)
 			{
-				client.Out.SendMessage("You have already trained the skill to this amount!", eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerCommands.Train.SkillAlreadyTrained"), eChatType.CT_System,
+                                       eChatLoc.CL_SystemWindow);
 
 				return;
 			}
@@ -164,8 +165,8 @@ namespace DOL.GS.Commands
 				else
 				{
 					var sb = new StringBuilder();
-					sb.AppendLine("That specialization costs " + (spec.Level + 1) + " specialization points!");
-					sb.AppendLine(NotEnoughPointsLeft);
+                    sb.AppendLine(LanguageMgr.GetTranslation(client, "PlayerCommands.Train.SpecCosts", (spec.Level + 1)));
+                    sb.AppendLine(NotEnoughPointsLeft);
 
 					client.Out.SendMessage(sb.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					break;
@@ -184,13 +185,13 @@ namespace DOL.GS.Commands
 					client.Out.SendUpdatePoints();
 					client.Out.SendTrainerWindow();
 
-					client.Out.SendMessage("Training complete!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
+                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerCommands.Train.Complete"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                }
 				else
 				{
 					var sb = new StringBuilder();
-					sb.AppendLine("That specialization costs " + (spec.Level + 1) + " specialization points!");
-					sb.AppendLine(NotEnoughPointsLeft);
+                    sb.AppendLine(LanguageMgr.GetTranslation(client, "PlayerCommands.Train.SpecCosts", (spec.Level + 1)));
+                    sb.AppendLine(NotEnoughPointsLeft);
 
 					client.Out.SendMessage(sb.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}

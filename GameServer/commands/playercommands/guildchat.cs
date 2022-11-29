@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -32,20 +33,20 @@ namespace DOL.GS.Commands
 		{
 			if (client.Player.Guild == null)
 			{
-				DisplayMessage(client, "You don't belong to a player guild.");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Guildchat.NoGuild"));
+                return;
 			}
 
 			if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.GcSpeak))
 			{
-				DisplayMessage(client, "You don't have permission to speak on the on guild line.");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Guildchat.NoGuildPermission"));
+                return;
 			}
 
 			if (IsSpammingCommand(client.Player, "guildchat", 500))
 			{
-				DisplayMessage(client, "Slow down! Think before you say each word!");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.Spamming.Say"));
+                return;
 			}
 
 			string message = "[Guild] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
@@ -65,20 +66,20 @@ namespace DOL.GS.Commands
 		{
 			if (client.Player.Guild == null)
 			{
-				DisplayMessage(client, "You don't belong to a player guild.");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Guildchat.NoGuild"));
+                return;
 			}
 
 			if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.OcSpeak))
 			{
-				DisplayMessage(client, "You don't have permission to speak on the officer line.");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Guildchat.NoOfficerPermission"));
+                return;
 			}
 
 			if (IsSpammingCommand(client.Player, "osend", 500))
 			{
-				DisplayMessage(client, "Slow down! Think before you say each word!");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.Spamming.Say"));
+                return;
 			}
 
 			string message = "[Officers] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";
@@ -105,26 +106,26 @@ namespace DOL.GS.Commands
 		{
 			if (client.Player.Guild == null)
 			{
-				DisplayMessage(client, "You don't belong to a player guild.");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Guildchat.NoGuild"));
 				return;
 			}
 
 			if (client.Player.Guild.alliance == null)
 			{
-				DisplayMessage(client, "Your guild doesn't belong to any alliance.");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Guildchat.NoAlliance"));
+                return;
 			}
 
 			if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.AcSpeak))
 			{
-				DisplayMessage(client, "You can not speak on alliance chan.");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Guildchat.NoAlliancePermission"));
+                return;
 			}
 
 			if (client.Player.IsMuted)
 			{
-				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
-				return;
+                client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Guildchat.AllianceMuted"), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			string message = "[Alliance] " + client.Player.Name + ": \"" + string.Join(" ", args, 1, args.Length - 1) + "\"";

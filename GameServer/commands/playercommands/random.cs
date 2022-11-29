@@ -28,6 +28,7 @@
 
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -49,8 +50,8 @@ namespace DOL.GS.Commands
 		{
 			if (IsSpammingCommand(client.Player, "random", 500))
 			{
-				DisplayMessage(client, "Slow down!");
-				return;
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.SlowDown"));
+                return;
 			}
 
 			// no args - display usage
