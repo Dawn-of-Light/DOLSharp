@@ -11,14 +11,14 @@ jobs:
     name: Get Release Info
     runs-on: ubuntu-22.04
     outputs:
-      version: ${{ steps.getmetadata.outputs.version }}
-      date: ${{ steps.getmetadata.outputs.date }}
+      version: ${{ steps.release_info.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Generate Release Info
+        id: release_info
         run: |
           version="1.9.7"
           last_version_tag=$(git tag -l --sort=creatordate | grep -E '^([0-9]+\.){3}[0-9]+$' | tail -n1)
@@ -28,14 +28,9 @@ jobs:
           sed -i '1s/^/```\n/' patch_notes.txt
           new_build_number=$((1+$(echo "$last_version_tag" | grep -oE "[0-9]+$")))
           new_version_tag="$version"."$new_build_number"
-          echo -n $new_version_tag > version.txt
-      - name: Get Metadata Outputs
-        id: getmetadata
-        run: |
-          echo "::set-output name=version::$(cat version.txt)"
-          echo "::set-output name=date::$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          echo "version=$new_version_tag" >> $GITHUB_OUTPUT
       - name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: release_info
           path: |
@@ -74,7 +69,7 @@ jobs:
         run: |
           (cd old/${{ matrix.build_target }}/ && zip -r ../../${{ env.OUTPUT_FILE_NAME }} * )
       - name: Upload Build Output
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: build_artifacts
           path: |
@@ -93,7 +88,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Dotnet
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
       - name: Build
@@ -115,7 +110,7 @@ jobs:
         run: |
           (cd ${{ matrix.build_target }}/ && zip -r ../${{ env.OUTPUT_FILE_NAME }} * )
       - name: Upload Build Output
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: build_artifacts
           path: ${{ env.OUTPUT_FILE_NAME }}
@@ -129,7 +124,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
       - name: Create Release
         run: |
           set -x

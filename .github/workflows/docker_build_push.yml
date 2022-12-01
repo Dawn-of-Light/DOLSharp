@@ -18,9 +18,9 @@ jobs:
       - name: Get Date
         id: getdate
         run: |
-          echo "::set-output name=date::$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          echo "date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up QEMU for Docker
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
