@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -73,31 +74,31 @@ namespace DOL.GS.Commands
 			byte webDisplay = client.Player.NotDisplayedInHerald;
 			byte webDisplayFlag;
 
-			string state = "/webdisplay <position|template|equipment|craft> [on|off]\n";
+			string state = LanguageMgr.GetTranslation(client, "Scripts.Players.Webdisplay.Usage", "\n");
 			
 			webDisplayFlag = (byte)GlobalConstants.eWebDisplay.equipment;
 			if ((webDisplay & webDisplayFlag) == webDisplayFlag)
-				state += "Your equipment is not displayed.\n";
+				state += LanguageMgr.GetTranslation(client, "Scripts.Players.Webdisplay.EquipOff", "\n");
 			else
-				state += "Your equipment is displayed.\n";
+				state += LanguageMgr.GetTranslation(client, "Scripts.Players.Webdisplay.EquipOn", "\n");
 			
 			webDisplayFlag = (byte)GlobalConstants.eWebDisplay.position;
 			if ((webDisplay & webDisplayFlag) == webDisplayFlag)
-				state += "Your position is not displayed.\n";
+				state += LanguageMgr.GetTranslation(client, "Scripts.Players.Webdisplay.PositionOff", "\n");
 			else
-				state += "Your position is displayed.\n";
+				state += LanguageMgr.GetTranslation(client, "Scripts.Players.Webdisplay.PositionOn", "\n");
 			
 			webDisplayFlag = (byte)GlobalConstants.eWebDisplay.template;
 			if ((webDisplay & webDisplayFlag) == webDisplayFlag)
-				state += "Your template is not displayed.\n";
+				state += LanguageMgr.GetTranslation(client, "Scripts.Players.Webdisplay.TemplateOff", "\n");
 			else
-				state += "Your template is displayed.\n";
+				state += LanguageMgr.GetTranslation(client, "Scripts.Players.Webdisplay.TemplateOn", "\n");
 	
 			webDisplayFlag = (byte)GlobalConstants.eWebDisplay.craft;
 			if ((webDisplay & webDisplayFlag) == webDisplayFlag)
-				state += "Your crafting skill is not displayed.\n";
+				state += LanguageMgr.GetTranslation(client, "Scripts.Players.Webdisplay.CraftOff", "\n");
 			else
-				state += "Your crafting skill is displayed.\n";		
+				state += LanguageMgr.GetTranslation(client, "Scripts.Players.Webdisplay.CraftOn", "\n");		
 			
 			DisplayMessage(client, state);
 		}

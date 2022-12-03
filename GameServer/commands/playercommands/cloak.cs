@@ -17,6 +17,7 @@
 *
 */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 
 namespace DOL.GS.Commands
@@ -50,12 +51,12 @@ namespace DOL.GS.Commands
 				if(client.Player.IsCloakInvisible)
 				{
 					client.Player.IsCloakInvisible = false;
-					client.Out.SendMessage("Your cloak will no longer be hidden from view.", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cloak.Visible"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				else
 				{
-					client.Out.SendMessage("Your cloak is already visible.", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cloak.AlreadyVisible"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 			}
@@ -64,13 +65,13 @@ namespace DOL.GS.Commands
 			{
 				if (client.Player.IsCloakInvisible)
 				{
-					client.Out.SendMessage("Your cloak is already invisible.", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cloak.AlreadyInvisible"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				else
 				{
 					client.Player.IsCloakInvisible = true;
-					client.Out.SendMessage("Your cloak will now be hidden from view.", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Cloak.Invisible"), eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 			}

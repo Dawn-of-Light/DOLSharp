@@ -29,6 +29,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -61,20 +62,20 @@ namespace DOL.GS.Commands
 				if (task != null && task.TaskActive)
 				{
 					var messages = new List<string>();
-					messages.Add("You are on " + task.Name);
-					messages.Add("What to do: " + task.Description);
+					messages.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Task.YouAreOn", task.Name));
+					messages.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Task.ToDo", task.Description));
 					messages.Add(" ");
-					messages.Add("Task will expire at " + task.TimeOut.ToShortTimeString());
-					messages.Add("You have done " + task.TasksDone + " tasks out of " + AbstractTask.MaxTasksDone(player.Level) + " until now.");
-					player.Out.SendCustomTextWindow("Tasks (Snapshot)", messages);
+					messages.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Task.ExpireAt", task.TimeOut.ToShortTimeString()));
+					messages.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Task.Done", task.TasksDone, AbstractTask.MaxTasksDone(player.Level)));
+					player.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Task.Snapshot"), messages);
 				}
 				else if (task != null && task.TasksDone >= AbstractTask.MaxTasksDone(player.Level))
 				{
-					player.Out.SendMessage("You can do no more tasks at your current level", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Task.NoMore"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					player.Out.SendMessage("You have currently no pending task", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Task.NoPending"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 		}

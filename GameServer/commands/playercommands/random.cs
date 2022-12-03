@@ -50,14 +50,14 @@ namespace DOL.GS.Commands
 		{
 			if (IsSpammingCommand(client.Player, "random", 500))
 			{
-                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.SlowDown"));
+                DisplayMessage(client, LanguageMgr.GetTranslation(client, "GamePlayer.SlowDown"));
                 return;
 			}
 
 			// no args - display usage
 			if (args.Length < 2)
 			{
-				SystemMessage(client, MESSAGE_HELP);
+				SystemMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Random.Help"));
 				return;
 			}
 
@@ -66,7 +66,7 @@ namespace DOL.GS.Commands
 			// trying to convert number
 			try
 			{
-				thrownMax = System.Convert.ToInt32(args[1]);
+				thrownMax = Convert.ToInt32(args[1]);
 			}
 			catch (OverflowException)
 			{
@@ -74,13 +74,13 @@ namespace DOL.GS.Commands
 			}
 			catch (Exception)
 			{
-				SystemMessage(client, MESSAGE_HELP);
+				SystemMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Random.Help"));
 				return;
 			}
 
 			if (thrownMax < 2)
 			{
-				SystemMessage(client, MESSAGE_LOW_NUMBER);
+				SystemMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Random.LowNumber"));
 				return;
 			}
 
@@ -88,8 +88,8 @@ namespace DOL.GS.Commands
 			int thrown = Util.Random(1, thrownMax);
 
 			// building result messages
-			string selfMessage = String.Format(MESSAGE_RESULT_SELF, thrownMax, thrown);
-			string otherMessage = String.Format(MESSAGE_RESULT_OTHER, client.Player.Name, thrownMax, thrown);
+			string selfMessage = LanguageMgr.GetTranslation(client, "Scripts.Players.Random.ResultSelf", thrownMax, thrown);
+			string otherMessage = LanguageMgr.GetTranslation(client, "Scripts.Players.Random.ResultOther", client.Player.Name, thrownMax, thrown);
 
 			// sending msg to player
 			EmoteMessage(client, selfMessage);

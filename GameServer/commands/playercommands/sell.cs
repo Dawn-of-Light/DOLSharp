@@ -19,6 +19,7 @@
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -51,12 +52,12 @@ namespace DOL.GS.Commands
                     }
 					break;
 				default:
-					client.Out.SendMessage("Use: /sell <item> or /sell <first> <last>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Sell.Usage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 			}
 
 			if (firstItem < 1 || firstItem > 40 || lastItem < 1 || lastItem > 40)
-				client.Out.SendMessage("Valid item numbers must be between 1 and 40", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Sell.Invalid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			else if (client.Player is GamePlayer player && player.Inventory != null)
             {
 				if (player.TargetObject is GameMerchant merchant)
@@ -72,7 +73,7 @@ namespace DOL.GS.Commands
                     }
 				}
 				else
-					client.Out.SendMessage("You must target a merchant.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Sell.Merchant"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 	}

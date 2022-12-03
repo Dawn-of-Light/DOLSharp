@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -34,11 +35,11 @@ namespace DOL.GS.Commands
 
 			if (client.Player.SpellQueue)
 			{
-				DisplayMessage(client, "You are now using the queuing option! To disable queuing use '/noqueue'.");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Noqueue.Enabled"));
 			}
 			else
 			{
-				DisplayMessage(client, "You are no longer using the queuing option! To enable queuing use '/noqueue'.");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Noqueue.Disabled"));
 
 			}
 		}

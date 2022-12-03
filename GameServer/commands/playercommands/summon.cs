@@ -1,5 +1,6 @@
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -17,7 +18,7 @@ namespace DOL.GS.Commands
 			}
 			catch
 			{
-				DisplayMessage(client, "Incorrect format of the command");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Summon.Incorrect"));
 			}
 			finally
 			{

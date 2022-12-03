@@ -18,9 +18,11 @@
  */
 using System;
 using System.Collections;
+using System.Text;
 using DOL.Database;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -47,15 +49,15 @@ namespace DOL.GS.Commands
 
 					if (client.Account.PrivLevel >= (int)ePrivLevel.GM)
 					{
-						DisplayMessage(client, "GM: info - Display house info for a nearby house");
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.House.GMInfo"));
 					}
 
 					if (client.Account.PrivLevel == (int)ePrivLevel.Admin)
 					{
-						DisplayMessage(client, "Admin: model <1 - 12> - change house model");
-						DisplayMessage(client, "Admin: restart - restart the housing manager");
-						DisplayMessage(client, "Admin: addhookpoints - allow adding of missing hookpoints");
-						DisplayMessage(client, "Admin: remove <YES> - remove this house!");
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.House.AdminInfo1"));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.House.AdminInfo2"));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.House.AdminInfo3"));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.House.AdminInfo4"));
 					}
 				}
 
@@ -91,7 +93,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					DisplayMessage(client, "You do not own a house.");
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.House.NoHouse"));
 				}
 
 				// now check for a guild house and update emblem if needed, then force update
@@ -136,12 +138,12 @@ namespace DOL.GS.Commands
 					if (player.TempProperties.getProperty<bool>(HousingConstants.AllowAddHouseHookpoint, false))
 					{
 						player.TempProperties.removeProperty(HousingConstants.AllowAddHouseHookpoint);
-						DisplayMessage(player.Client, "Add hookpoints turned off!");
+						DisplayMessage(player.Client, LanguageMgr.GetTranslation(player.Client, "Scripts.Players.House.HookPointOff"));
 					}
 					else
 					{
 						player.TempProperties.setProperty(HousingConstants.AllowAddHouseHookpoint, true);
-						DisplayMessage(player.Client, "Add hookpoints turned on!");
+						DisplayMessage(player.Client, LanguageMgr.GetTranslation(player.Client, "Scripts.Players.House.HookPointOn"));
 					}
 
 					return;
@@ -151,7 +153,7 @@ namespace DOL.GS.Commands
 			ArrayList houses = (ArrayList)HouseMgr.GetHousesCloseToSpot(player.CurrentRegionID, player.X, player.Y, 700);
 			if (houses.Count != 1)
 			{
-				DisplayMessage(player.Client, "You need to stand closer to a house!");
+				DisplayMessage(player.Client, LanguageMgr.GetTranslation(player.Client, "Scripts.Players.House.FarAway"));
 				return;
 			}
 
@@ -172,7 +174,7 @@ namespace DOL.GS.Commands
 
 				if (newModel < 1 || newModel > 12)
 				{
-					DisplayMessage(player.Client, "Valid house models are 1 - 12!");
+					DisplayMessage(player.Client, LanguageMgr.GetTranslation(player.Client, "Scripts.Players.House.ModelInvalid"));
 					return;
 				}
 
@@ -183,7 +185,7 @@ namespace DOL.GS.Commands
 					(houses[0] as House).SaveIntoDatabase();
 					(houses[0] as House).SendUpdate();
 
-					DisplayMessage(player.Client, "House model changed to " + newModel + "!");
+					DisplayMessage(player.Client, LanguageMgr.GetTranslation(player.Client, "Scripts.Players.House.ModelChanged", newModel));
 					GameServer.Instance.LogGMAction(player.Name + " changed house #" + (houses[0] as House).HouseNumber + " model to " + newModel);
 				}
 
@@ -199,14 +201,14 @@ namespace DOL.GS.Commands
 
 				if (confirm != "YES")
 				{
-					DisplayMessage(player.Client, "You must confirm this removal with 'YES'");
+					DisplayMessage(player.Client, LanguageMgr.GetTranslation(player.Client, "Scripts.Players.House.ConfirmYES"));
 					return;
 				}
 
 				if (houses.Count == 1)
 				{
 					HouseMgr.RemoveHouse(houses[0] as House);
-					DisplayMessage(player.Client, "House removed!");
+					DisplayMessage(player.Client, LanguageMgr.GetTranslation(player.Client, "Scripts.Players.House.Removed"));
 					GameServer.Instance.LogGMAction(player.Name + " removed house #" + (houses[0] as House).HouseNumber);
 				}
 

@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -59,7 +60,7 @@ namespace DOL.GS.Commands
                 else
                 {
                     // nothing found
-                    DisplayMessage(client, "No players online with that name.");
+                    DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Friend.NotFound"));
                     return;
                 }
             }
@@ -69,7 +70,7 @@ namespace DOL.GS.Commands
                 case 2:
                     {
                         // name not unique
-                        DisplayMessage(client, "Character name is not unique.");
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Friend.NotUnique"));
                         break;
                     }
                 case 3: // exact match
@@ -77,7 +78,7 @@ namespace DOL.GS.Commands
                     {
                         if (fclient == client)
                         {
-                            DisplayMessage(client, "You can't add yourself!");
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Friend.Yourself"));
                             return;
                         }
 

@@ -33,15 +33,15 @@ namespace DOL.GS.Commands
 		{
 			if (client.Player.IsMuted)
 			{
-				client.Player.Out.SendMessage("You have been muted and are not allowed to speak in this channel.", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Advice.Muted"), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			client.Player.Advisor = !client.Player.Advisor;
 			if (client.Player.Advisor)
-				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Advisor.On"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Advisor.On"));
 			else
-				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Advisor.Off"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Advisor.Off"));
 		}
 	}
 }

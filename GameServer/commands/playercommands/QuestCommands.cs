@@ -18,6 +18,7 @@
  */
 
 using DOL.GS.Quests;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -69,7 +70,7 @@ namespace DOL.GS.Commands
 
 			if (searched == false)
 			{
-				player.Out.SendMessage("You can't do that here!", DOL.GS.PacketHandler.eChatType.CT_Important, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Questcommands.Cannot"), PacketHandler.eChatType.CT_Important, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
 		}
 	}

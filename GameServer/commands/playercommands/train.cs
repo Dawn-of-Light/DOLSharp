@@ -38,9 +38,6 @@ namespace DOL.GS.Commands
 		"e.g. /train Dual Wield 50")]
 	public class TrainCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		private const string CantTrainSpec = "You can't train in this specialization again this level!";
-		private const string NotEnoughPointsLeft = "You don't have that many specialization points left for this level.";
-
 		// Allow to automate this command: no checks for spam command
 		private bool automated = false;
 		public TrainCommandHandler() {}
@@ -119,7 +116,7 @@ namespace DOL.GS.Commands
 
 			if (currentSpecLevel >= client.Player.BaseLevel)
 			{
-				client.Out.SendMessage(CantTrainSpec, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Train.CantTrainSpec"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				return;
 			}
@@ -144,7 +141,7 @@ namespace DOL.GS.Commands
 			{
 				if (spec.Level + specLevel >= client.Player.BaseLevel)
 				{
-					client.Out.SendMessage(CantTrainSpec, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Train.CantTrainSpec"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 					break;
 				}
@@ -166,7 +163,7 @@ namespace DOL.GS.Commands
 				{
 					var sb = new StringBuilder();
                     sb.AppendLine(LanguageMgr.GetTranslation(client, "PlayerCommands.Train.SpecCosts", (spec.Level + 1)));
-                    sb.AppendLine(NotEnoughPointsLeft);
+                    sb.AppendLine(LanguageMgr.GetTranslation(client, "Scripts.Players.Train.NotEnoughPoints"));
 
 					client.Out.SendMessage(sb.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					break;
@@ -191,7 +188,7 @@ namespace DOL.GS.Commands
 				{
 					var sb = new StringBuilder();
                     sb.AppendLine(LanguageMgr.GetTranslation(client, "PlayerCommands.Train.SpecCosts", (spec.Level + 1)));
-                    sb.AppendLine(NotEnoughPointsLeft);
+                    sb.AppendLine(LanguageMgr.GetTranslation(client, "Scripts.Players.Train.NotEnoughPoints"));
 
 					client.Out.SendMessage(sb.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}

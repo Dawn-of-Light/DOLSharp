@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -52,7 +53,7 @@ namespace DOL.GS.Commands
 				}
 				catch
 				{
-					client.Out.SendMessage("ADMIN Usage: /time <speed> (24 is normal, higher numbers make faster days) <time> (1 - 1000) - Reset days with new length, starting at the given time.",
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Time.Usage"),
 											eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
@@ -79,8 +80,8 @@ namespace DOL.GS.Commands
 					hour -= 12;
 					pm = true;
 				}
-
-				client.Out.SendMessage("It is " + hour.ToString() + ":" + minute.ToString("00") + ":" + seconds.ToString("00") + (pm ? " pm" : ""),
+                
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Time.ItIs", hour.ToString(), minute.ToString("00"), seconds.ToString("00"), pm == true && client.Account.Language == "EN" ? " pm" : ""),
 									   eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}

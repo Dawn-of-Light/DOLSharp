@@ -22,6 +22,7 @@ using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
 using DOL.GS.Commands;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -45,7 +46,7 @@ namespace DOL.GS.Commands
 
 				IPlayerTitle current = client.Player.CurrentTitle;
 				if (current != null && current.IsForced(client.Player))
-					client.Out.SendMessage("You cannot change the current title.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Settitle.CannotChange"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				else
 				{
 					var titles = client.Player.Titles.ToArray();

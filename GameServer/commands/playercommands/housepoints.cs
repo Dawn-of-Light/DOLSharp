@@ -1,6 +1,7 @@
 using DOL.GS;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -16,13 +17,13 @@ namespace DOL.GS.Commands
             House house = client.Player.CurrentHouse;
 			if (!client.Player.InHouse || house == null)
 			{
-                DisplayMessage(client, "You need to be in a House to use this command!");
+                DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Housepoint.NotInHouse"));
 				return;
 			}
 
             if (!house.HasOwnerPermissions(client.Player))
             {
-                DisplayMessage(client, "You do not have permissions to do that!");
+                DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Housepoint.NoPermission"));
                 return;
             }
 
