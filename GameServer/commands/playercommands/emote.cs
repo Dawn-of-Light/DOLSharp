@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -43,26 +44,24 @@ namespace DOL.GS.Commands
 			// no emotes if dead
 			if (!client.Player.IsAlive)
 			{
-				client.Out.SendMessage("You can't emote while dead!", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Emote.Dead"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (args.Length < 2)
 			{
-				client.Out.SendMessage("You need something to emote.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Emote.Missing"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (client.Player.IsMuted)
 			{
-				client.Player.Out.SendMessage("You have been muted and cannot emote!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Emote.Muted"), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			string ownRealm = string.Join(" ", args, 1, args.Length - 1);
 			ownRealm = "<" + client.Player.Name + " " + ownRealm + " >";
-
-			string diffRealm = "<" + client.Player.Name + " makes strange motions.>";
 
 			foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
 			{
@@ -72,8 +71,11 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-                    if (!player.IsIgnoring(client.Player as GameLiving))
-					player.Out.SendMessage(diffRealm, eChatType.CT_Emote, eChatLoc.CL_ChatWindow);
+					if (!player.IsIgnoring(client.Player as GameLiving))
+					{
+                        string diffRealm = LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Emote.OtherRealm", client.Player.Name);
+                        player.Out.SendMessage(diffRealm, eChatType.CT_Emote, eChatLoc.CL_ChatWindow);
+					}
 				}
 			}
 		}

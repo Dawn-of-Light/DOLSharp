@@ -7,11 +7,73 @@ PLCommands.FreeLevel.FreeLevelSoon:	You will be eligible for a free level as soo
 PLCommands.FreeLevel.NoFreeLevel:	You don't have any FreeLevel !
 PLCommands.FreeLevel.Removed:		Your FreeLevel has been removed.
 
+# /Advice
+Scripts.Players.Advice.Muted:		You have been muted and are not allowed to speak in this channel.
+
+# /Boot
+Scripts.Players.Boot.NoPermission:	You do not have permissions to do that.
+
 # /Broadcast
 Scripts.Players.Broadcast.Muted:	You have been muted. You cannot broadcast.
 
+# /Cloak
+Scripts.Players.Cloak.Visible:			Your cloak will no longer be hidden from view.
+Scripts.Players.Cloak.AlreadyVisible:	Your cloak is already visible.
+Scripts.Players.Cloak.Invisible:		Your cloak will now be hidden from view.
+Scripts.Players.Cloak.AlreadyInvisible:	Your cloak is already invisible.
+
+# /Emote
+Scripts.Players.Emote.Dead:			You can't emote while dead!
+Scripts.Players.Emote.Missing:		You need something to emote.
+Scripts.Players.Emote.Muted:		You have been muted and cannot emote!
+Scripts.Players.Emote.OtherRealm:	<{0} makes strange motions.>
+
+# /Emotes
+Scripts.Players.Emotes.Dead:		You can't do that, you're dead!
+Scripts.Players.Emotes.Busy:		You can't do that, you're busy!
+Scripts.Players.Emotes.Muted:		You have been muted and cannot emote!
+Scripts.Players.Emotes.Target:		You don't see your target around here.
+
+# /Facegloc
+Scripts.Players.Facegloc.Coordinates:	Please enter X and Y coordinates.
+
+# /Faceloc
+Scripts.Players.Faceloc.Coordinates:	Please enter X and Y coordinates.
+Scripts.Players.Faceloc.Disabled:		You can't use this command now!
+Scripts.Players.Faceloc.Invalid:		Please enter a valid X and Y location.
+
+# /Formation
+Scripts.Players.Formation.BonedancerOnly:	Only Bonedancers can use this command!
+Scripts.Players.Formation.Commands:			Formation commands:
+Scripts.Players.Formation.Triangle:			'/formation triangle' Place the pets in a triangle formation.
+Scripts.Players.Formation.Line:				'/formation line' Place the pets in a line formation.
+Scripts.Players.Formation.Protect:			'/formation protect' Place the pets in a protect formation that surrounds the commander.
+Scripts.Players.Formation.NoCommander:		You don't have a commander!
+Scripts.Players.Formation.NoMinions:		You don't have any minions!
+Scripts.Players.Formation.Unrecognized:		Unrecognized argument: {0}
+
+# /Friend
+Scripts.Players.Friend.Removed:		{0} was removed from your friend list!
+Scripts.Players.Friend.NotFound:	No players online with that name.
+Scripts.Players.Friend.NotUnique:	Character name is not unique.
+Scripts.Players.Friend.Yourself:	You can't add yourself!
+Scripts.Players.Friend.Added:		{0} was added to your friend list!
+
+# /Gloc
+Scripts.Players.Gloc.At:	You are at X:{0} Y:{1} Z:{2} Heading:{3} Region:{4} {5}
+
+# /Groundassist
+Scripts.Players.Groundassist.NoPlayer:	No player with this name in game.
+Scripts.Players.Groundassist.Yourself:	You can't groundassist yourself.
+Scripts.Players.Groundassist.NotAround:	You don't see {0} around here!
+Scripts.Players.Groundassist.NoTarget:	{0} doesn't currently have a ground target.
+
 # /Group
 Scripts.Players.Group.NoGroup:	You are not part of a group.
+
+# /Gtrange
+Scripts.Players.Gtrange.NoTarget:	Range to target: You don't have a ground target set.
+Scripts.Players.Gtrange.Range:		Range to target: {0} units.
 
 # /Guildchat
 Scripts.Players.Guildchat.AllianceMuted:		You have been muted and are not allowed to speak in this channel.
@@ -20,6 +82,37 @@ Scripts.Players.Guildchat.NoAlliancePermission:	You can not speak on alliance ch
 Scripts.Players.Guildchat.NoGuild:				You don't belong to a player guild.
 Scripts.Players.Guildchat.NoGuildPermission:	You don't have permission to speak on the guild line.
 Scripts.Players.Guildchat.NoOfficerPermission:	You don't have permission to speak on the officer line.
+
+# /House
+Scripts.Players.House.NoHouse:		You do not own a house.
+Scripts.Players.House.GMInfo:		GM: info - Display house info for a nearby house
+Scripts.Players.House.AdminInfo1:	Admin: model <1 - 12> - change house model
+Scripts.Players.House.AdminInfo2:	Admin: restart - restart the housing manager
+Scripts.Players.House.AdminInfo3:	Admin: addhookpoints - allow adding of missing hookpoints
+Scripts.Players.House.AdminInfo4:	Admin: remove <YES> - remove this house!
+Scripts.Players.House.HookPointOff:	Add hookpoints turned off!
+Scripts.Players.House.HookPointOn:	Add hookpoints turned on!
+Scripts.Players.House.FarAway:		You need to stand closer to a house!
+Scripts.Players.House.ModelInvalid:	Valid house models are 1 - 12!
+Scripts.Players.House.ModelChanged:	House model changed to {0}!
+Scripts.Players.House.ConfirmYES:	You must confirm this removal with 'YES'
+Scripts.Players.House.Removed:		House removed!
+
+# /Houseface
+Scripts.Players.Houseface.NotFound:	No house found.
+Scripts.Players.Houseface.Faced:	You face house {0}.
+
+# /Housefriend
+Scripts.Players.Housefriend.NotInHouse:		You need to be in your House to use this command.
+Scripts.Players.Housefriend.NotOnline:		No players online with that name.
+Scripts.Players.Housefriend.Added:			You added {0}.
+Scripts.Players.Housefriend.AddedAccount:	You added {0}'s account.
+Scripts.Players.Housefriend.NoGuild:		A guild with that name was not found. Don't forget to put longer names in quotes eg: \"My Guild\".
+Scripts.Players.Housefriend.AddedAll:		You added everybody!
+
+# /Housepoint
+Scripts.Players.Housepoint.NotInHouse:		You need to be in a House to use this command!
+Scripts.Players.Housepoint.NoPermission:	You do not have permissions to do that!
 
 # /Invite
 Scripts.Players.Invite.AddedByGM:		GM {0} has added you to {1} group.
@@ -34,18 +127,259 @@ Scripts.Players.Invite.PlayerHasGroup:	The player is still in a group.
 Scripts.Players.Invite.TargetInvalid:	You have not selected a valid player as your target.
 Scripts.Players.Invite.Yourself:		You can't invite yourself.
 
+# /Knock
+Scripts.Players.Knock.InHouse:			You can't knock while your in a house!
+Scripts.Players.Knock.Wait:				You must wait {0} more seconds before knocking again!
+Scripts.Players.Knock.IsKnocking:		{0} is at your door!
+Scripts.Players.Knock.YouKnock:			You knock on the door.
+Scripts.Players.Knock.GoToDoor:			You must go to the house you wish to knock on!
+
+# /Lastname
+Scripts.Players.Lastname.Level:			You must be {0}th level or {1} in your primary trade skill to register a last name!
+Scripts.Players.Lastname.Costs:			Changing your last name costs {0}!
+Scripts.Players.Lastname.NoRegistrar:	You must select a name registrar to set your last name with!
+Scripts.Players.Lastname.TooFar:		You are too far away to interact with {0}.
+Scripts.Players.Lastname.Clear:			Would you like to clear your last name?
+Scripts.Players.Lastname.TooLong:		Last names can be no longer than {0} characters!
+Scripts.Players.Lastname.InvalidUcase:	Your lastname must start with a valid, uppercase character!
+Scripts.Players.Lastname.Invalid:		Your lastname must consist of valid characters!
+Scripts.Players.Lastname.NotLegal:		{0} is not a legal last name! Choose another.
+Scripts.Players.Lastname.Set:			Would you like to set your last name to {0}{1}?
+Scripts.Players.Lastname.DeclineName:	You decline to take {0} as your last name.
+Scripts.Players.Lastname.DeclineClear:	You decline to clear your last name.
+Scripts.Players.Lastname.OkName:		Your last name has been set to {0}!
+Scripts.Players.Lastname.OkClear:		Your last name has been cleared!
+
+# /Level
+Scripts.Players.Level.Disabled:			/level is disabled on this server.
+Scripts.Players.Level.Trainer:			You need to be at your trainer to use this command.
+Scripts.Players.Level.WrongClass:		Your class cannot use /level command.
+Scripts.Players.Level.WrongLevel:		You don't have a level {0} on your account!
+Scripts.Players.Level.MaxLevel:			/level only allows you to level to {0}.
+Scripts.Players.Level.NextLevel:		You have been rewarded enough Experience to reach level {0}, right click on your trainer to gain levels!
+
+# /Makeleader
+Scripts.Players.Makeleader.NoGroup:			You are not part of a group.
+Scripts.Players.Makeleader.NotLeader:		You are not the leader of your group.
+Scripts.Players.Makeleader.TargetInvalid:	You have not selected a valid player as your target.
+Scripts.Players.Makeleader.NoPlayer:		No players in group with that name.
+Scripts.Players.Makeleader.AlreadyLeader:	You are the group leader already.
+
+# /Nohelp
+Scripts.Players.Nohelp.ReceiveHelp:		You will once again receive help from members of your realm, type /nohelp again to stop receiving help.
+Scripts.Players.Nohelp.StopHelp:		You will no longer receive help from members of your realm, type /nohelp again to receive help again.
+
+# /Noqueue
+Scripts.Players.Noqueue.Enabled:		You are now using the queuing option! To disable queuing use '/noqueue'.
+Scripts.Players.Noqueue.Disabled:		You are no longer using the queuing option! To enable queuing use '/noqueue'.
+
+# /Password
+Scripts.Players.Password.Usage:			Usage: /password <current_password> <new_password>
+Scripts.Players.Password.Confirm:		Do you wish to change your password to {0}{1}
+Scripts.Players.Password.Incorrect:		Your current password was incorrect.
+Scripts.Players.Password.Changed:		Your password has been changed.
+
+# /Played
+Scripts.Players.Played.Playtime:		You have played for {0} Years, {1} Months, {2} Days, {3} Hours and {4} Minutes.
+
+# /Quest
+Scripts.Players.Quest.NoPendingQuest:	You have no currently pending quests.{0}
+Scripts.Players.Quest.WorkingOn:		You are currently working on the following quests:{0}
+Scripts.Players.Quest.Step:				On step {0} of quest '{1}'{2}
+Scripts.Players.Quest.ToDo:				What to do: {0}
+Scripts.Players.Quest.NothingComplete:	{0}You have not yet completed any quests.{1}
+Scripts.Players.Quest.QuestCompleted:	{0}You have completed the following quests:{1}
+Scripts.Players.Quest.Completed:		{0}, completed.{1}
+
+# /Questcommands
+Scripts.Players.Questcommands.Cannot:	You can't do that here!
+
+# /Random
+Scripts.Players.Random.Help:			You must select a maximum number for your random selection!
+Scripts.Players.Random.ResultSelf:		You pick a random number between 1 and {0}: {1}
+Scripts.Players.Random.ResultOther:		{0} picks a random number between 1 and {1}: {2}
+Scripts.Players.Random.LowNumber:		You must select a maximum number greater than 1!
+
+# /Rearrange
+Scripts.Players.Rearrange.Empty:		The given source slot ({0}) is empty.
+Scripts.Players.Rearrange.Invalid:		Invalid character slot{0}: {1}
+Scripts.Players.Rearrange.DiffRealm:	You cannot set a slot to a different realm! (source realm = {0}, target realm = {1})
+Scripts.Players.Rearrange.Success:		The character slot for {0} has been successfully changed. (old slot = {1}, new slot = {2})
+
+# /Repair
+Scripts.Players.Repair.ObjectAttack:	You can't repair object while it is under attack!
+Scripts.Players.Repair.DoorAttack:		You can't repair the keep door while keep is under attack!
+Scripts.Players.Repair.CompAttack:		You can't repair the keep component while it is under attack!
+Scripts.Players.Repair.Full:			The component is already at full health!
+Scripts.Players.Repair.Raized:			You cannot repair a raized tower!
+Scripts.Players.Repair.EndAction:		You must end your current action before you repair anything!
+Scripts.Players.Repair.Moving:			You can't repair while moving.
+Scripts.Players.Repair.Dead:			You can't repair while dead.
+Scripts.Players.Repair.Sitting:			You can't repair while sitting.
+Scripts.Players.Repair.Combat:			You can't repair while in combat.
+Scripts.Players.Repair.TooFar:			You are too far away to repair this component.
+Scripts.Players.Repair.MoreWood:		You need another {0} units of wood!
+Scripts.Players.Repair.MissingSkill:	You need woodworking skill to repair.
+Scripts.Players.Repair.TimerWindow:		Repairing: {0}
+Scripts.Players.Repair.Success:			You successfully repair the component by 15%!
+Scripts.Players.Repair.Fail:			You fail to repair the component!
+
+# /Report
+Scripts.Players.Report.Disabled:		Bug reporting has been disabled for this server!
+Scripts.Players.Report.Muted:			You have been muted and are not allowed to submit bug reports.
+Scripts.Players.Report.TooMany:			There are too many reports, please contact a GM or wait until they are cleaned.
+Scripts.Players.Report.Submitted:		Report submitted, if this is not a bug report it will be ignored!
+Scripts.Players.Report.Email:			If you enter your email address for your account with /email command, your bug reports will send an email to the staff!
+
+# /Respec
+Scripts.Players.Respec.Info1:				Target any trainer and use:
+Scripts.Players.Respec.Info2:				/respec ALL or /respec DOL to respec all skills.
+Scripts.Players.Respec.Info3:				/respec <line name> to respec a single skill line.
+Scripts.Players.Respec.Info4:				/respec REALM to respec realm abilities.
+Scripts.Players.Respec.Info5:				/respec CHAMPION to respec champion abilities.
+Scripts.Players.Respec.NotAvailable:		You don't seem to have any respecs available.
+Scripts.Players.Respec.Buy:					Use /respec buy to buy an single-line respec.
+Scripts.Players.Respec.AvailableFull:		You have {0} full skill respecs available.
+Scripts.Players.Respec.TrainerAll:			Target any trainer and use /respec ALL.
+Scripts.Players.Respec.AvailableSingle:		You have {0} single-line respecs available.
+Scripts.Players.Respec.TrainerSingle:		Target any trainer and use /respec <line name>.
+Scripts.Players.Respec.AvailableRealm:		You have {0} realm skill respecs available.
+Scripts.Players.Respec.TrainerRealm:		Target any trainer and use /respec REALM.
+Scripts.Players.Respec.AvailableDOL:		You have {0} DOL ( full skill ) respecs available.
+Scripts.Players.Respec.TrainerDOL:			Target any trainer and use /respec DOL.
+Scripts.Players.Respec.NoTrainer:			You must be speaking with your trainer to respec.
+Scripts.Players.Respec.BuyLevel:			You can't buy a respec on this level again.
+Scripts.Players.Respec.Money:				You don't have enough money! You need {0} gold!
+Scripts.Players.Respec.ConfirmBuy:			It costs {0} gold. Want you really buy?
+Scripts.Players.Respec.NoFullAvailable:		You don't seem to have any full skill respecs available.
+Scripts.Players.Respec.ConfirmRespec:		CAUTION: All respec changes are final with no second chance. Proceed carefully!
+Scripts.Players.Respec.NoDOLAvailable:		You don't seem to have any DOL respecs available.
+Scripts.Players.Respec.NoRealmAvailable:	You don't seem to have any realm skill respecs available.
+Scripts.Players.Respec.NoLineAvailable:		You don't seem to have any single-line respecs available.
+Scripts.Players.Respec.LineNotFound:		No line with name '{0}' found.
+Scripts.Players.Respec.LineTooLow:			Level of {0} line is less than 2.
+Scripts.Players.Respec.RespecBought:		You bought a single line respec!
+Scripts.Players.Respec.PointsRegain:		You regain {0} specialization points!
+Scripts.Players.Respec.RealmPointsRegain:	You regain {0} realm specialization points!
+
+# /Roleplay
+Scripts.Players.Roleplay.On:			Your roleplay flag is ON. You will now be flagged as a roleplayer. Use '/roleplay off' to turn the flag off.
+Scripts.Players.Roleplay.Off:			Your roleplay flag is OFF. You will be flagged as a roleplayer. Use '/roleplay on' to turn the flag back on.
+
+# /Roll
+Scripts.Players.Roll.Help:				You must select the number of dice to roll!
+Scripts.Players.Roll.ResultSelf:		You roll {0} dice and come up with: {1}"
+Scripts.Players.Roll.ResultOther:		{0} rolls {1} dice and comes up with: {2}
+Scripts.Players.Roll.WrongNumber:		You must number of dice between 1 and {0}!
+
+# /Rp
+Scripts.Players.Rp.On:					Your rp flag is ON. You will gain realm points. Use '/rp off' to stop gaining realm points.
+Scripts.Players.Rp.Off:					Your rp flag is OFF. You will no longer gain realm points. Use '/rp on' to start gaining realm points again.
+
+# /Safety
+Scripts.Players.Safety.Off:				Your safety flag is now set to OFF! You can now attack non allied players, as well as be attacked.
+Scripts.Players.Safety.Info1:			The safety flag keeps your character from participating in combat
+Scripts.Players.Safety.Info2:			with non allied players in designated zones when you are below level 10.
+Scripts.Players.Safety.Info3:			Type /safety off to begin participating in PvP combat in these zones, though once it is off it can NOT be turned back on!
+Scripts.Players.Safety.AlreadyOff:		Your safety flag is already off.
+
 # /Say
 Scripts.Players.Say.Muted:				You have been muted. You cannot talk.
 Scripts.Players.Say.Something:			You must say something...
+
+# /Sell
+Scripts.Players.Sell.Usage:				Use: /sell <item> or /sell <first> <last>
+Scripts.Players.Sell.Invalid:			Valid item numbers must be between 1 and 40.
+Scripts.Players.Sell.Merchant:			You must target a merchant.
 
 # /Send
 Scripts.Players.Send.NotInGame:			{0} is not in the game, or in another realm.
 Scripts.Players.Send.NotUnique:			Character name is not unique.
 Scripts.Players.Send.Yourself:			You can't /send to yourself!
+Scripts.Players.Send.Anon:				You're anon but {0} tried to send: {1}
+
+# /Settitle
+Scripts.Players.Settitle.CannotChange:	You cannot change the current title.
+
+# /Setwho
+Scripts.Players.Setwho.Specify:			You need to specify if you want to change to class or trade.
+Scripts.Players.Setwho.Profession:		You need a profession to enable it in for who messages.
+Scripts.Players.Setwho.CraftingOff:		/who will no longer show your crafting title.
+Scripts.Players.Setwho.CraftingOn:		/who will now show your crafting title.
+
+# /Spacing
+Scripts.Players.Spacing.BonedancerOnly:	Only Bonedancers can use this command!
+Scripts.Players.Spacing.Info1:			Spacing commands:
+Scripts.Players.Spacing.Info2:			'/spacing normal' Use normal spacing between minions.
+Scripts.Players.Spacing.Info3:			'/spacing big' Use a larger spacing between minions.
+Scripts.Players.Spacing.Info4:			'/spacing huge' Use a very large spacing between minions.
+Scripts.Players.Spacing.NoCommander:	You don't have a commander!
+Scripts.Players.Spacing.NoMinions:		You don't have any minions!
+Scripts.Players.Spacing.Unrecognized:	Unrecognized argument: {0}
+
+# /Sprint
+Scripts.Players.Sprint.NotAvailable:	You do not have a sprint ability.
+
+# /Statsanon
+Scripts.Players.Statsanon.On:			Your stats are now visible to other players.
+Scripts.Players.Statsanon.Off:			Your stats are no longer visible to other players.
+
+# /Summon
+Scripts.Players.Summon.Incorrect:		Incorrect format of the command.
+
+# /Target
+Scripts.Players.Target.NotAvailable:	You don't see {0} around here!
+Scripts.Players.Target.YouTarget:		You target {0}.
+Scripts.Players.Target.YouTargetGM:		[GM] You target {0}.
+Scripts.Players.Target.PlayerMob:		/target <player/mobname>
+Scripts.Players.Target.Playername:		/target <playername>
+
+# /Task
+Scripts.Players.Task.YouAreOn:			You are on {0}.
+Scripts.Players.Task.ToDo:				What to do: {0}.
+Scripts.Players.Task.ExpireAt:			Task will expire at {0}.
+Scripts.Players.Task.Done:				You have done {0} tasks out of {1} until now.
+Scripts.Players.Task.Snapshot:			Tasks (Snapshot).
+Scripts.Players.Task.NoMore:			You can do no more tasks at your current level.
+Scripts.Players.Task.NoPending:			You have currently no pending task.
+
+# /Time
+Scripts.Players.Time.Usage:				ADMIN Usage: /time <speed> (24 is normal, higher numbers make faster days) <time> (1 - 1000) - Reset days with new length, starting at the given time.
+Scripts.Players.Time.ItIs:				It is {0}:{1}:{2}{3}
+
+# /Train
+Scripts.Players.Train.CantTrainSpec:	You can't train in this specialization again this level!
+Scripts.Players.Train.NotEnoughPoints:	You don't have that many specialization points left for this level.
+
+# /Webdisplay
+Scripts.Players.Webdisplay.Usage:		/webdisplay <position|template|equipment|craft> [on|off]{0}
+Scripts.Players.Webdisplay.EquipOff:	Your equipment is not displayed.{0}
+Scripts.Players.Webdisplay.EquipOn:		Your equipment is displayed.{0}
+Scripts.Players.Webdisplay.PositionOff:	Your position is not displayed.{0}
+Scripts.Players.Webdisplay.PositionOn:	Your position is displayed.{0}
+Scripts.Players.Webdisplay.TemplateOff:	Your template is not displayed.{0}
+Scripts.Players.Webdisplay.TemplateOn:	Your template is displayed.{0}
+Scripts.Players.Webdisplay.CraftOff:	Your crafting skill is not displayed.{0}
+Scripts.Players.Webdisplay.CraftOn:		Your crafting skill is displayed.{0}
+
+# /Where
+Scripts.Players.Where.Unknown:			Sorry, I do not know this person.
+Scripts.Players.Where.Found:			{0} is in the {1}.
 
 # /Whisper
 Scripts.Players.Whisper.NoTarget:		Select the target you want to whisper to!
 Scripts.Players.Whisper.Self:			Hmmmm...you shouldn't talk to yourself!
+
+# /Who
+Scripts.Players.Who.NoMatch:			No Matches.
+Scripts.Players.Who.OfLevel:			{0}the Level{1}
+Scripts.Players.Who.PlayersOnline:		{0} player{1} currently online.
+Scripts.Players.Who.Truncated:			(Too many matches ({0}).  List truncated.)
+Scripts.Players.Who.NoArgs:				Type /WHO HELP for variations on the WHO command.
+
+# /Xp
+Scripts.Players.Xp.On:					Your xp flag is ON. You will gain experience points. Use '/xp off' to stop gaining experience points.
+Scripts.Players.Xp.Off:					Your xp flag is OFF. You will no longer gain experience points. Use '/xp on' to start gaining experience points again.
 
 # /Yell
 Scripts.Players.Yell.East:				east

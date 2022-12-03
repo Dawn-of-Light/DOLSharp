@@ -1,5 +1,6 @@
 using System;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -17,7 +18,7 @@ namespace DOL.GS.Commands
 
 			if (args.Length < 2)
 			{
-				DisplayMessage(client, "You need to specify if you want to change to class or trade");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Setwho.Specify"));
 				return;
 			}
 
@@ -27,7 +28,7 @@ namespace DOL.GS.Commands
 			{
 				if (client.Player.CraftingPrimarySkill == eCraftingSkill.NoCrafting)
 				{
-					DisplayMessage(client, "You need a profession to enable it in for who messages");
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Setwho.Profession"));
 					return;
 				}
 
@@ -35,14 +36,14 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				DisplayMessage(client, "You need to specify if you want to change to class or trade");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Setwho.Specify"));
 				return;
 			}
 
 			if (client.Player.ClassNameFlag)
-				DisplayMessage(client, "/who will no longer show your crafting title");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Setwho.CraftingOff"));
 			else
-				DisplayMessage(client, "/who will now show your crafting title");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Setwho.CraftingOn"));
 		}
 	}
 }

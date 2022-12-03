@@ -23,6 +23,7 @@ using log4net;
 
 using DOL.GS;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -45,9 +46,9 @@ namespace DOL.GS.Commands
 
 			client.Player.StatsAnonFlag = !client.Player.StatsAnonFlag;
 			if (client.Player.StatsAnonFlag)
-				msg = "Your stats are no longer visible to other players.";
+				msg = LanguageMgr.GetTranslation(client, "Scripts.Players.Statsanon.Off");
 			else
-				msg = "Your stats are now visible to other players.";
+				msg = LanguageMgr.GetTranslation(client, "Scripts.Players.Statsanon.On");
 
 			client.Player.Out.SendMessage(msg, eChatType.CT_System, eChatLoc.CL_ChatWindow);
 		}

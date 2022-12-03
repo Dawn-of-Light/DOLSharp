@@ -13,6 +13,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -27,7 +28,7 @@ namespace DOL.GS.Commands
 
 		public void OnCommand(GameClient client, string[] args)
 		{
-			string usage = "Usage: /password <current_password> <new_password>";
+			string usage = LanguageMgr.GetTranslation(client, "Scripts.Players.Password.Usage");
 
 			if (args.Length < 3)
 			{
@@ -44,11 +45,11 @@ namespace DOL.GS.Commands
 					// TODO: Add confirmation dialog
 					// TODO: If user has set their email address, mail them the change notification
 					client.Player.TempProperties.setProperty(this, newPassword);
-					client.Out.SendCustomDialog("Do you wish to change your password to \n" + newPassword, PasswordCheckCallback);
+					client.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Players.Password.Confirm", "\n", newPassword), PasswordCheckCallback);
 				}
 				else
 				{
-					client.Out.SendMessage("Your current password was incorrect.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Password.Incorrect"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 					if (log.IsInfoEnabled)
 						log.Info(client.Player.Name + " (" + client.Account.Name + ") attempted to change password but failed!");
@@ -74,7 +75,7 @@ namespace DOL.GS.Commands
 				return;
 
 			player.TempProperties.removeProperty(this);
-			player.Out.SendMessage("Your password has been changed.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Password.Changed"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			player.Client.Account.Password = LoginRequestHandler.CryptPassword(newPassword);
 
 			GameServer.Database.SaveObject(player.Client.Account);

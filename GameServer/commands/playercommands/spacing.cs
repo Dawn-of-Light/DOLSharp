@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -36,24 +37,24 @@ namespace DOL.GS.Commands
 			//No one else needs to use this spell
 			if (player.CharacterClass.ID != (int)eCharacterClass.Bonedancer)
 			{
-				DisplayMessage(player, "Only Bonedancers can use this command!");
+				DisplayMessage(player, LanguageMgr.GetTranslation(client, "Scripts.Players.Spacing.BonedancerOnly"));
 				return;
 			}
 
 			//Help display
 			if (args.Length == 1)
 			{
-				DisplayMessage(player, "Spacing commands:");
-				DisplayMessage(player, "'/spacing normal' Use normal spacing between minions.");
-				DisplayMessage(player, "'/spacing big' Use a larger spacing between minions.");
-				DisplayMessage(player, "'/spacing huge' Use a very large spacing between minions.");
+				DisplayMessage(player, LanguageMgr.GetTranslation(client, "Scripts.Players.Spacing.Info1"));
+				DisplayMessage(player, LanguageMgr.GetTranslation(client, "Scripts.Players.Spacing.Info2"));
+				DisplayMessage(player, LanguageMgr.GetTranslation(client, "Scripts.Players.Spacing.Info3"));
+				DisplayMessage(player, LanguageMgr.GetTranslation(client, "Scripts.Players.Spacing.Info4"));
 				return;
 			}
 
 			//Check to see if the BD has a commander and minions
 			if (player.ControlledBrain == null)
 			{
-				DisplayMessage(player, "You don't have a commander!");
+				DisplayMessage(player, LanguageMgr.GetTranslation(client, "Scripts.Players.Spacing.NoCommander"));
 				return;
 			}
 			bool haveminion = false;
@@ -64,7 +65,7 @@ namespace DOL.GS.Commands
 			}
 			if (!haveminion)
 			{
-				DisplayMessage(player, "You don't have any minions!");
+				DisplayMessage(player, LanguageMgr.GetTranslation(client, "Scripts.Players.Spacing.NoMinions"));
 				return;
 			}
 
@@ -83,7 +84,7 @@ namespace DOL.GS.Commands
 					player.ControlledBrain.Body.FormationSpacing = 3;
 					break;
 				default:
-					DisplayMessage(player, "Unrecognized argument: " + args[1]);
+					DisplayMessage(player, LanguageMgr.GetTranslation(client, "Scripts.Players.Spacing.Unrecognized", args[1]));
 					break;
 			}
 		}

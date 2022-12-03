@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -37,7 +38,7 @@ namespace DOL.GS.Commands
 				}
 				else
 				{
-					client.Out.SendMessage("You do not have a sprint ability.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Sprint.NotAvailable"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 		}

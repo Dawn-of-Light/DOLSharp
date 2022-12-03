@@ -90,20 +90,20 @@ namespace DOL.GS.Commands
 			// no emotes if dead
 			if (!client.Player.IsAlive)
 			{
-				DisplayMessage(client, "You can't do that, you're dead!");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Emotes.Dead"));
 				return;
 			}
 
 			// no emotes in combat / mez / stun
 			if (client.Player.AttackState || client.Player.IsMezzed || client.Player.IsStunned)
 			{
-				DisplayMessage(client, "You can't do that, you're busy!");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Emotes.Busy"));
 				return;
 			}
 
 			if (client.Player.IsMuted)
 			{
-				client.Player.Out.SendMessage("You have been muted and cannot emote!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Emotes.Muted"), eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -112,7 +112,7 @@ namespace DOL.GS.Commands
 				// target not in range
 				if( client.Player.IsWithinRadius( client.Player.TargetObject, EMOTE_RANGE_TO_TARGET ) == false )
 				{
-					DisplayMessage(client, "You don't see your target around here.");
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Emotes.Target"));
 					return;
 				}
 			}
@@ -126,7 +126,7 @@ namespace DOL.GS.Commands
 			long changeTime = client.Player.CurrentRegion.Time - Tick;
 			if (changeTime < ServerProperties.Properties.EMOTE_DELAY && Tick > 0)
 			{
-				string message = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Emotes.Message" + Util.Random(1,4).ToString());
+				string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Emotes.Message" + Util.Random(1,4).ToString());
 				client.Player.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}

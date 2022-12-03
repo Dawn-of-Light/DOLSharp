@@ -17,6 +17,7 @@
  *
  */
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -31,7 +32,7 @@ namespace DOL.GS.Commands
 			if (IsSpammingCommand(client.Player, "gloc"))
 				return;
 
-			DisplayMessage(client, string.Format("You are at X:{0} Y:{1} Z:{2} Heading:{3} Region:{4} {5}",
+			DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Gloc.At",
 				client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading, client.Player.CurrentRegionID,
 				client.Player.CurrentRegion is BaseInstance ? string.Format("Skin:{0}", client.Player.CurrentRegion.Skin) : ""));
 		}

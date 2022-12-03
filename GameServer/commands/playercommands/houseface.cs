@@ -1,6 +1,7 @@
 using DOL.GS;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -29,7 +30,7 @@ namespace DOL.GS.Commands
 
 			if (housenumber == 0)
 			{
-				DisplayMessage(client, "No house found.");
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Houseface.NotFound"));
 				return;
 			}
 
@@ -38,7 +39,7 @@ namespace DOL.GS.Commands
 			ushort direction = client.Player.GetHeading(house);
 			client.Player.Heading = direction;
 			client.Out.SendPlayerJump(true);
-			DisplayMessage(client, "You face house " + housenumber);
+			DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Houseface.Faced", housenumber));
 		}
 	}
 }

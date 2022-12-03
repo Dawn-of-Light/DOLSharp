@@ -39,6 +39,8 @@ please note that /who CSR will not show hidden CSRs
 
  */
 
+using DOL.Database;
+using DOL.Language;
 using System;
 using System.Collections;
 using System.Text;
@@ -70,9 +72,6 @@ namespace DOL.GS.Commands
 
 		public const int MAX_LIST_SIZE = 26;
 		public const string MESSAGE_LIST_TRUNCATED = "(Too many matches ({0}).  List truncated.)";
-		private const string MESSAGE_NO_MATCHES = "No Matches.";
-		private const string MESSAGE_NO_ARGS = "Type /WHO HELP for variations on the WHO command.";
-		private const string MESSAGE_PLAYERS_ONLINE = "{0} player{1} currently online.";
 
 		public void OnCommand(GameClient client, string[] args)
 		{
@@ -109,8 +108,8 @@ namespace DOL.GS.Commands
 				int playing = clientsList.Count;
 
 				// including anon?
-				DisplayMessage(client, string.Format(MESSAGE_PLAYERS_ONLINE, playing, playing > 1 ? "s" : ""));
-				DisplayMessage(client, MESSAGE_NO_ARGS);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Command.Who.PlayersOnline", playing, playing > 1 && client.Account.Language.ToUpper() != "DE" ? "s" : ""));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Who.NoArgs"));
 				return;
 			}
 
@@ -194,11 +193,11 @@ namespace DOL.GS.Commands
 
 			if (resultCount == 0)
 			{
-				DisplayMessage(client, MESSAGE_NO_MATCHES);
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Who.NoMatch"));
 			}
 			else if (resultCount > MAX_LIST_SIZE)
 			{
-				DisplayMessage(client, string.Format(MESSAGE_LIST_TRUNCATED, resultCount));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Who.Truncated", resultCount));
 			}
 
 			filters = null;
@@ -235,12 +234,12 @@ namespace DOL.GS.Commands
 			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP && PrivLevel == 1)
 				return result.ToString();
 
-			result.Append(" the Level ");
+			result.Append(LanguageMgr.GetTranslation(source.Account.Language, "Scripts.Players.Who.OfLevel", " ", " "));
 			result.Append(player.Level);
 			if (player.ClassNameFlag)
 			{
 				result.Append(" ");
-				result.Append(player.CharacterClass.Name);
+				result.Append(LanguageMgr.GetTranslation(source, "PlayerClass.Name." + player.CharacterClass.Name));
 			}
 			else if (player.CharacterClass != null)
 			{
@@ -255,9 +254,26 @@ namespace DOL.GS.Commands
 			}
 			if (player.CurrentZone != null)
 			{
-				result.Append(" in ");
-				result.Append(player.CurrentZone.Description);
-			}
+                if (source.Account.Language == "EN")
+                {
+                    result.Append(" in ");
+                    result.Append(player.CurrentZone.Description);
+                }
+                else
+                {
+                    DBLanguageZone translation = LanguageMgr.GetTranslation(source, player.CurrentZone) as DBLanguageZone;
+                    if (translation != null)
+                    {
+                        result.Append(" ");
+                        result.Append(translation.Description);
+                    }
+                    else
+                    {
+                        result.Append(" in ");
+                        result.Append(player.CurrentZone.Description);
+                    }
+                }
+            }
 			else
 			{
 				if (log.IsErrorEnabled)

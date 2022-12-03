@@ -19,6 +19,7 @@
 using System.Linq;
 
 using DOL.GS.Friends;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -56,13 +57,13 @@ namespace DOL.GS.Commands
 				name = args[1];
 				if (client.Player.GetFriends().Contains(name) && client.Player.RemoveFriend(name))
 				{
-					DisplayMessage(client, name + " was removed from your friend list!");
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Friend.Removed", name));
 					return;
 				}
 				else
 				{
 					// nothing found
-					DisplayMessage(client, "No players online with that name.");
+					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Friend.NotFound"));
 					return;
 				}
 			}
@@ -72,7 +73,7 @@ namespace DOL.GS.Commands
 				case 2:
 					{
 						// name not unique
-						DisplayMessage(client, "Character name is not unique.");
+						DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Friend.NotUnique"));
 						break;
 					}
 				case 3: // exact match
@@ -80,18 +81,18 @@ namespace DOL.GS.Commands
 					{
 						if (fclient == client)
 						{
-							DisplayMessage(client, "You can't add yourself!");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Friend.Yourself"));
 							return;
 						}
 
 						name = fclient.Player.Name;
 						if (client.Player.GetFriends().Contains(name) && client.Player.RemoveFriend(name))
 						{
-							DisplayMessage(client, name + " was removed from your friend list!");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Friend.Removed", name));
 						}
 						else if (client.Player.AddFriend(name))
 						{
-							DisplayMessage(client, name + " was added to your friend list!");
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Friend.Added", name));
 						}
 						break;
 					}

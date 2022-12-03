@@ -18,6 +18,7 @@
  */
 using DOL.GS.PacketHandler;
 using DOL.GS.Housing;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -41,7 +42,7 @@ namespace DOL.GS.Commands
 
             if (!client.Player.InHouse)
             {
-                client.Out.SendMessage("You need to be in your House to use this command", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Housefriend.NotInHouse"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
@@ -58,13 +59,13 @@ namespace DOL.GS.Commands
 						GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(args[2], 0, true);
 						if (targetClient == null)
 						{
-							client.Out.SendMessage("No players online with that name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Housefriend.NotOnline"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 
 						if (client.Player.CurrentHouse.AddPermission(targetClient.Player, PermissionType.Player, HousingConstants.MinPermissionLevel))
 						{
-							client.Out.SendMessage("You added " + targetClient.Player.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Housefriend.Added", targetClient.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
 					}
@@ -80,13 +81,13 @@ namespace DOL.GS.Commands
                         GameClient targetClient = WorldMgr.GetClientByPlayerNameAndRealm(args[2], 0, true);
                         if (targetClient == null)
                         {
-                            client.Out.SendMessage("No players online with that name.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Housefriend.NotOnline"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return;
                         }
 
 						if (client.Player.CurrentHouse.AddPermission(targetClient.Player, PermissionType.Account, HousingConstants.MinPermissionLevel))
 						{
-							client.Out.SendMessage("You added " + targetClient.Player.Name + "'s account.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Housefriend.AddedAccount", targetClient.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
                         break;
                     }
@@ -99,13 +100,13 @@ namespace DOL.GS.Commands
                         Guild targetGuild = GuildMgr.GetGuildByName(args[2]);
                         if (targetGuild == null)
                         {
-                            client.Out.SendMessage("A guild with that name was not found. Don't forget to put longer names in quotes eg: \"My Guild\".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Housefriend.NoGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return;
                         }
 
 						if (client.Player.CurrentHouse.AddPermission(targetGuild.Name, PermissionType.Guild, HousingConstants.MinPermissionLevel))
 						{
-							client.Out.SendMessage("You added " + targetGuild.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Housefriend.Added", targetGuild.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
                         break;
                     
@@ -114,7 +115,7 @@ namespace DOL.GS.Commands
 					{
 						if (client.Player.CurrentHouse.AddPermission("All", PermissionType.All, HousingConstants.MinPermissionLevel))
 						{
-							client.Out.SendMessage("You added everybody!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Housefriend.AddedAll"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
 					}

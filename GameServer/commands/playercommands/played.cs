@@ -22,7 +22,9 @@
 	  with thanks to Smallhorse for guidance.*/
 
 using System;
+using System.Numerics;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Commands
 {
@@ -54,8 +56,7 @@ namespace DOL.GS.Commands
 				monthsPlayed = daysPlayed/30;
 				daysPlayed -= monthsPlayed*30;
 			}
-
-			client.Out.SendMessage("You have played for " + yearsPlayed + " Years, " + monthsPlayed + " Months, " + daysPlayed + " Days, " + showPlayed.Hours + " Hours and " + showPlayed.Minutes + " Minutes.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-		}
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Played.Playtime", yearsPlayed, monthsPlayed, daysPlayed, showPlayed.Hours, showPlayed.Minutes), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        }
 	}
 }
