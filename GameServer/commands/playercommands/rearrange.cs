@@ -24,7 +24,6 @@ using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using log4net;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace DOL.GS.Commands
 {
