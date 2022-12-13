@@ -1674,7 +1674,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.
 		/// </summary>
-		[ServerProperty("keeps", "use_new_keeps", "Appearance Keeps Components to load. 0 for Old Appearance Keeps Components, 1 for New Appearance Keeps Components. 2 is no longer used but load 0 for compatibility.", 0)]
+		[ServerProperty("keeps", "use_new_keeps", "Appearance Keeps Components to load. 0 for Old Appearance Keeps Components, 1 for New Appearance Keeps Components. 2 is no longer used but load 0 for compatibility.", 1)]
 		public static int USE_NEW_KEEPS;
 
 		/// <summary>
