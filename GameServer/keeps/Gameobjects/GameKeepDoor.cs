@@ -408,10 +408,13 @@ namespace DOL.GS.Keeps
 				int keepz = Z, distance = 0;
 
 				//calculate distance
-				//normal door
+				//normal door 
 				if (DoorIndex == 1)
 					distance = 150;
-				//side or internal door
+				// side door
+				else if (DoorIndex == 3 || DoorIndex == 4 || DoorIndex == 5 || DoorIndex == 6)
+					distance = 175;
+				//other internal door
 				else
 					distance = 100;
 
