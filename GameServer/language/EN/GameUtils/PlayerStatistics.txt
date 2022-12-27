@@ -1,0 +1,36 @@
+﻿Player.Statistics.Deathblows:					Deathblows: {0}
+Player.Statistics.Deaths:						Deaths: {0}
+Player.Statistics.Header:						Statistics for {0} this Session:
+Player.Statistics.Healed:						HP healed: {0} and {1} RP gained from this heal
+Player.Statistics.KillsperDeath:				Kills per death: {0}
+Player.Statistics.KillsThatHaveEarnedRPs:		Kills that have earned RP: {0}
+Player.Statistics.OnlineTime:					Online time: {0} hours, {1} minutes, {2} seconds
+Player.Statistics.OnlineTimeDays:				Online time: {0} days, {1} hours, {2} minutes, {3} seconds
+Player.Statistics.Options:						Options: /stats [ top | rp | kills | deathblows | irs | heal | rez | player <name|target> ]
+Player.Statistics.PlayerIsAnon:					{0} doesn't want you to show his stats.
+Player.Statistics.PlayerNotFound:				No player with name "{0}" found!
+Player.Statistics.RealmPointsEarnedFromKills:	RP earned from kills: {0}
+Player.Statistics.RemainStanding:				"I Remain Standing...": {0}
+Player.Statistics.RessurectionsPerformed:		Resurrections performed: {0}
+Player.Statistics.RPperHour:					RP/hour: {0}
+Player.Statistics.RPperKill:					RP per kill: {0}
+Player.Statistics.Top20Deathblows:				Top 20 Deathblows
+Player.Statistics.Top20DeathblowsEntry:			{0}. {1} with {2} deathblows
+Player.Statistics.Top20Healers:					Top 20 Healers
+Player.Statistics.Top20HealersEntry:			{0}. {1} with {2} HP and {3} RP gained from heal
+Player.Statistics.Top20IRS:						Top 20 "I remain standing"
+Player.Statistics.Top20IRSEntry:				{0}. {1} with {2} RP/death
+Player.Statistics.Top20Killers:					Top 20 Killers
+Player.Statistics.Top20KillersEntry:			{0}. {1} with {2} kills
+Player.Statistics.Top20Players:					Top 20 Players
+Player.Statistics.Top20Resurrectors:			Top 20 Resurrectors
+Player.Statistics.Top20ResurrectorsEntry:		{0}. {1} with {2} res
+Player.Statistics.Top20RP:						Top 20 for Realm Points
+Player.Statistics.Top20RPEntry:					{0}. {1} with {2} RP
+Player.Statistics.Top20RPHour:					Top 20 for RP/hour
+Player.Statistics.Top20RPHourEntry:				{0}. {1} with {2} RP/hour
+Player.Statistics.TotalRP:						Total RP: {0}
+Player.Statistics.NoPlayer:						No player with name '{0}' found!
+Player.Statistics.Statsanon:					{0} doesn't want you to view his stats.
+Player.Statistics.NoneFound:					None found!
+Player.Statistics.Top20GeneralEntry:			{0} - [ {1} ] with {2} RP - [ {3}L{4} ]

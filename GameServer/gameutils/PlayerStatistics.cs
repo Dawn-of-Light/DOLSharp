@@ -29,6 +29,7 @@ using DOL.GS.PacketHandler;
 using DOL.Events;
 
 using log4net;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -199,7 +200,7 @@ namespace DOL.GS
 
                     if (account != null && account.PrivLevel == 1)
                     {
-                        toplist.Add("\n" + count.ToString() + " - [ " + chr.Name + " ] with " + String.Format("{0:0,0}", chr.RealmPoints) + " RP - [ " + (((chr.RealmLevel + 10) / 10) + "L" + ((chr.RealmLevel + 10) % 10)) + " ]");
+                        toplist.Add("\n" + LanguageMgr.GetTranslation(client, "Player.Statistics.Top20GeneralEntry", count.ToString(), chr.Name, string.Format("{0:0,0}", chr.RealmPoints), (chr.RealmLevel + 10) / 10, (chr.RealmLevel + 10) % 10));
                         if (++count > 20)
                             break;
                     }
@@ -208,7 +209,7 @@ namespace DOL.GS
 
             if (count == 1)
             {
-                toplist.Add("None found!");
+                toplist.Add(LanguageMgr.GetTranslation(client, "Player.Statistics.NoneFound"));
             }
             #endregion /stats top
 
@@ -254,13 +255,13 @@ namespace DOL.GS
             allstatsrpearnedfromheal.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsrpearnedfromheal.Reverse();
 
             statsrp = ""; statslrp = ""; statskills = ""; statsdeath = ""; statsirs = ""; statsheal = ""; statsres = "";
-            for (int c = 0; c < allstatsrp.Count; c++) { if (c > 19 || allstatsrp[c].count < 1) break; statsrp += (c + 1) + ". " + allstatsrp[c].name + " with " + allstatsrp[c].count.ToString() + " RP\n"; }
-            for (int c = 0; c < allstatslrp.Count; c++) { if (c > 19 || allstatslrp[c].count < 1) break; statslrp += (c + 1) + ". " + allstatslrp[c].name + " with " + allstatslrp[c].count.ToString() + " RP/hour\n"; }
-            for (int c = 0; c < allstatskills.Count; c++) { if (c > 19 || allstatskills[c].count < 1) break; statskills += (c + 1) + ". " + allstatskills[c].name + " with " + allstatskills[c].count.ToString() + " kills\n"; }
-            for (int c = 0; c < allstatsdeath.Count; c++) { if (c > 19 || allstatsdeath[c].count < 1) break; statsdeath += (c + 1) + ". " + allstatsdeath[c].name + " with " + allstatsdeath[c].count.ToString() + " deathblows\n"; }
-            for (int c = 0; c < allstatsirs.Count; c++) { if (c > 19 || allstatsirs[c].count < 1) break; statsirs += (c + 1) + ". " + allstatsirs[c].name + " with " + allstatsirs[c].count.ToString() + " RP/death\n"; }
-            for (int c = 0; c < allstatsheal.Count; c++) { if (c > 19 || allstatsheal[c].count < 1) break; statsheal += (c + 1) + ". " + allstatsheal[c].name + " with " + allstatsheal[c].count.ToString() + " HP and " + allstatsrpearnedfromheal[c].count.ToString() + " RP gained from heal\n"; }
-            for (int c = 0; c < allstatsres.Count; c++) { if (c > 19 || allstatsres[c].count < 1) break; statsres += (c + 1) + ". " + allstatsres[c].name + " with " + allstatsres[c].count.ToString() + " res\n"; }
+            for (int c = 0; c < allstatsrp.Count; c++) { if (c > 19 || allstatsrp[c].count < 1) break; statsrp += LanguageMgr.GetTranslation(client, "Player.Statistics.Top20RPEntry", c + 1, allstatsrp[c].name, allstatsrp[c].count.ToString()) + "\n"; }
+            for (int c = 0; c < allstatslrp.Count; c++) { if (c > 19 || allstatslrp[c].count < 1) break; statslrp += LanguageMgr.GetTranslation(client, "Player.Statistics.Top20RPHourEntry", c + 1, allstatslrp[c].name, allstatslrp[c].count.ToString()) + "\n"; }
+            for (int c = 0; c < allstatskills.Count; c++) { if (c > 19 || allstatskills[c].count < 1) break; statskills += LanguageMgr.GetTranslation(client, "Player.Statistics.Top20KillersEntry", c + 1, allstatskills[c].name, allstatskills[c].count.ToString()) + "\n"; }
+            for (int c = 0; c < allstatsdeath.Count; c++) { if (c > 19 || allstatsdeath[c].count < 1) break; statsdeath += LanguageMgr.GetTranslation(client, "Player.Statistics.Top20DeathblowsEntry", c + 1, allstatsdeath[c].name, allstatsdeath[c].count.ToString()) + "\n"; }
+            for (int c = 0; c < allstatsirs.Count; c++) { if (c > 19 || allstatsirs[c].count < 1) break; statsirs += LanguageMgr.GetTranslation(client, "Player.Statistics.Top20IRSEntry", c + 1, allstatsirs[c].name, allstatsirs[c].count.ToString()) + "\n"; }
+            for (int c = 0; c < allstatsheal.Count; c++) { if (c > 19 || allstatsheal[c].count < 1) break; statsheal += LanguageMgr.GetTranslation(client, "Player.Statistics.Top20HealersEntry", c + 1, allstatsheal[c].name, allstatsheal[c].count.ToString(), allstatsrpearnedfromheal[c].count.ToString()) + "\n"; }
+            for (int c = 0; c < allstatsres.Count; c++) { if (c > 19 || allstatsres[c].count < 1) break; statsres += LanguageMgr.GetTranslation(client, "Player.Statistics.Top20ResurrectorsEntry", c + 1, allstatsres[c].name, allstatsres[c].count.ToString()) + "\n"; }
 
             m_lastUpdatedTime = player.CurrentRegion.Time;
             m_hasBeenRun = true;
@@ -274,25 +275,25 @@ namespace DOL.GS
         {
             TimeSpan onlineTime = DateTime.Now.Subtract(LoginTime);
 
-            string stringOnlineTime = "Online time: " + onlineTime.Days + " days, " + onlineTime.Hours + " hours, " + onlineTime.Minutes + " minutes, " + onlineTime.Seconds + " seconds\n";
+            string stringOnlineTime = LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.OnlineTimeDays", onlineTime.Days, onlineTime.Hours, onlineTime.Minutes, onlineTime.Seconds) + "\n";
             if (onlineTime.Days < 1)
-                stringOnlineTime = "Online time: " + onlineTime.Hours + " hours, " + onlineTime.Minutes + " minutes, " + onlineTime.Seconds + " seconds\n";
+                stringOnlineTime = LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.OnlineTime", onlineTime.Hours, onlineTime.Minutes, onlineTime.Seconds) + "\n";
 
             // First line should include all the options available for the stats command
-            string message = "Options: /stats [ top | rp | kills | deathblows | irs | heal | rez | player <name|target> ]\n" +
-                                    "Statistics for " + Player.Name + " this Session:\n" +
-                                    "Total RP: " + TotalRP + "\n" +
-                                    "RP earned from kills: " + RealmPointsEarnedFromKills + "\n" +
-                                    "Kills that have earned RP: " + KillsThatHaveEarnedRPs + "\n" +
-                                    "Deathblows: " + Deathblows + "\n" +
-                                    "Deaths: " + Deaths + "\n" +
-                                    "HP healed: " + HitPointsHealed + " and " + RPEarnedFromHitPointsHealed + " RP gained from this heal\n" +
-                                    "Resurrections performed: " + RessurectionsPerformed + "\n" +
-                                    stringOnlineTime +
-                                    "RP/hour: " + RPsPerHour(TotalRP, onlineTime) + "\n" +
-                                    "Kills per death: " + Divide((uint)KillsThatHaveEarnedRPs, (uint)Deaths) + "\n" +
-                                    "RP per kill: " + Divide(RealmPointsEarnedFromKills, (uint)KillsThatHaveEarnedRPs) + "\n" +
-                                    "\"I Remain Standing...\": " + Divide(RealmPointsEarnedFromKills, (uint)Deaths) + "\n";
+            string message = LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.Options") + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.Header", Player.Name) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.TotalRP", TotalRP) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.RealmPointsEarnedFromKills", RealmPointsEarnedFromKills) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.KillsThatHaveEarnedRPs", KillsThatHaveEarnedRPs) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.Deathblows", Deathblows) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.Deaths", Deaths) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.Healed", HitPointsHealed, RPEarnedFromHitPointsHealed) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.RessurectionsPerformed", RessurectionsPerformed) + "\n" +
+                             stringOnlineTime +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.RPperHour", RPsPerHour(TotalRP, onlineTime)) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.KillsperDeath", Divide((uint)KillsThatHaveEarnedRPs, (uint)Deaths)) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.RPperKill", Divide(RealmPointsEarnedFromKills, (uint)KillsThatHaveEarnedRPs)) + "\n" +
+                             LanguageMgr.GetTranslation(Player.Client, "Player.Statistics.RemainStanding", Divide(RealmPointsEarnedFromKills, (uint)Deaths)) + "\n";
             return message;
         }
 
@@ -310,40 +311,40 @@ namespace DOL.GS
             switch (command)
             {
                 case "top":
-                    client.Out.SendCustomTextWindow("Top 20 Players", toplist);
+                    client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "Player.Statistics.Top20Players"), toplist);
                     break;
                 case "rp":
-                    client.Player.Out.SendMessage("Top 20 for Realm Points\n" + statsrp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.Top20RP") + "\n" + statsrp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     break;
                 case "lrp":
-                    client.Player.Out.SendMessage("Top 20 for RP / Hour\n" + statslrp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.Top20RPHour") + "\n" + statslrp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     break;
                 case "kills":
-                    client.Player.Out.SendMessage("Top 20 Killers\n" + statskills, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.Top20Killers") + "\n" + statskills, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     break;
                 case "deathblows":
-                    client.Player.Out.SendMessage("Top 20 Deathblows\n" + statsdeath, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.Top20Deathblows") + "\n" + statsdeath, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     break;
                 case "irs":
-                    client.Player.Out.SendMessage("Top 20 \"I Remain Standing\"\n" + statsirs, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.Top20IRS") + "\n" + statsirs, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     break;
                 case "heal":
-                    client.Player.Out.SendMessage("Top 20 Healers\n" + statsheal, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.Top20Healers") + "\n" + statsheal, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     break;
                 case "rez":
-                    client.Player.Out.SendMessage("Top 20 Resurrectors\n" + statsres, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.Top20Resurrectors") + "\n" + statsres, eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     break;
                 case "player":
                     GameClient clientc = WorldMgr.GetClientByPlayerName(playerName, false, true);
                     if (clientc == null)
                     {
-                        client.Player.Out.SendMessage("No player with name '" + playerName + "' found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.NoPlayer", playerName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         return;
                     }
 
                     if (clientc.Player.StatsAnonFlag)
                     {
-                        client.Player.Out.SendMessage(playerName + " doesn't want you to view his stats.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.Statsanon", playerName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         return;
                     }
 
@@ -351,7 +352,7 @@ namespace DOL.GS
                     break;
 
                 default:
-                    client.Player.Out.SendMessage("Options: /stats [ top | rp | kills | deathblows | irs | heal | rez | player <name|target> ]", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Player.Statistics.Options"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     break;
             }
 
