@@ -38,7 +38,6 @@ namespace DOL.Database.Handlers
 			Config.AddDefaultOption("Treat Tiny As Boolean", "False");
 			Config.AddDefaultOption("Allow User Variables", "True");
 			Config.AddDefaultOption("Convert Zero Datetime", "True");
-			Config.AddDefaultOption("SslMode", "None");
 			this.ConnectionString = Config.ConnectionString;
 		}
 		
