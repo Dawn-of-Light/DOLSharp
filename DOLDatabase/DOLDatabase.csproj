@@ -38,9 +38,9 @@
     <RegisterForComInterop>False</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.14" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.17" />
-    <PackageReference Include="MySqlConnector" Version="2.1.10" />
+    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.1" />
+    <PackageReference Include="MySqlConnector" Version="2.2.4" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

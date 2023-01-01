@@ -49,7 +49,7 @@ namespace DOL.Database.Handlers
 			Config.AddDefaultOption("Synchronous", "Off");
 			Config.AddDefaultOption("Foreign Keys", "True");
 			Config.AddDefaultOption("Default Timeout", "60");
-			Config.SuppressFromConnectionString("Version", "Pooling", "Cache Size", "Journal Mode", "Synchronous", "Default Timeout");
+			Config.SuppressFromConnectionString("Version", "Cache Size", "Journal Mode", "Synchronous", "Default Timeout");
 			this.ConnectionString = Config.ConnectionString;
 		}
 		

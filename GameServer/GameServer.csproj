@@ -37,10 +37,10 @@
     <RegisterForComInterop>False</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.14" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" />
-    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="2.1.327703" />
-    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="6.0.1" />
+    <PackageReference Include="log4net" Version="2.0.15" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
+    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="2.2.343001" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="7.0.0" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj" Name="DOLBase" />
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj" Name="DOLDatabase" />
   </ItemGroup>
