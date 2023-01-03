@@ -1,0 +1,10 @@
+name: PR Test Runner
+
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test_netcore_linux:
+    uses: ./.github/workflows/test_netcore_linux.yml
