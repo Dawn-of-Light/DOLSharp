@@ -1,0 +1,22 @@
+name: Tests on NetFramework/Linux
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  test_netframework_linux:
+    name: Net Framework Tests on Linux
+    strategy:
+      matrix:
+        build_target: [Debug]
+    runs-on: ubuntu-20.04 # Tests fail on 22.04 because of an incompatible libc
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: dotnet build -c ${{ matrix.build_target }} "old/Tests/Tests.csproj" --verbosity normal
+      - name: Test
+        run: |
+          dotnet test ./old/build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
+          dotnet test ./old/build/Tests/${{ matrix.build_target }}/lib/Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"

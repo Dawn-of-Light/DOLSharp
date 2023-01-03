@@ -1,0 +1,27 @@
+name: Tests on NetCore/Windows
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  test_netcore_windows:
+    name: NetCore Tests on Windows
+    strategy:
+      matrix:
+        build_target: [Debug]
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+      - name: Build
+        run: |
+          dotnet build -c ${{ matrix.build_target }} "Tests\Tests.csproj" --verbosity normal
+      - name: Test
+        run: |
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"

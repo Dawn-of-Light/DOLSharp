@@ -1,9 +1,8 @@
-name: Test Runner
+name: Tests on NetCore/Linux
 
 on:
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   test_netcore_linux:
@@ -11,7 +10,7 @@ jobs:
     strategy:
       matrix:
         build_target: [Debug]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
