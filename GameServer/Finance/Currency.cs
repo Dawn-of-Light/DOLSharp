@@ -1,10 +1,10 @@
 using System;
+using DOL.Database;
 
 namespace DOL.GS.Finance
 {
     public abstract class Currency
     {
-        public virtual string Name { get; }
         public bool IsItemCurrency => this is ItemCurrency;
 
         protected Currency() { }
@@ -12,11 +12,21 @@ namespace DOL.GS.Finance
         public static Currency Copper { get; } = new CopperCurrency();
         public static Currency BountyPoints { get; } = new BountyPointsCurrency();
         public static Currency Mithril { get; } = new MithrilCurrency();
-        public static Currency Item(string currencyId) => new ItemCurrency(currencyId);
+        public static Currency Item(string currencyId, string textRepresentation = "") => new ItemCurrency(currencyId, textRepresentation);
 
         public Money Mint(long value) => Money.Mint(value, this);
 
-        public virtual string ToText() => Name;
+        public abstract string ToText();
+
+        public bool IsSameCurrencyItem(ItemTemplate item){
+            if (this is ItemCurrency itemCurrency)
+            {
+                var isEquivalentItem = item.ClassType.ToLower() == $"currency.{itemCurrency.ID.ToLower()}";
+                var isOriginalItem = item.Id_nb.ToLower() == itemCurrency.ID.ToLower();
+                return isEquivalentItem || isOriginalItem;
+            }
+            return false;
+        }
 
         public override bool Equals(object obj)
             => obj.GetType().Equals(this.GetType());
@@ -26,32 +36,34 @@ namespace DOL.GS.Finance
         #region Currency implementations
         private class CopperCurrency : Currency
         {
-            public override string Name => "money";
+            public override string ToText() => "money";
         }
 
         private class BountyPointsCurrency : Currency
         {
-            public override string Name => "bounty points";
+            public override string ToText() => "bounty points";
         }
 
         private class MithrilCurrency : Currency
         {
-            public override string Name => "Mithril";
+            public override string ToText() => "Mithril";
         }
 
         private class ItemCurrency : Currency
         {
             private readonly string id;
+            private readonly string textRepresentation;
 
-            public override string Name => id;
+            public string ID => id;
 
-            public ItemCurrency(string id)
+            public ItemCurrency(string id, string textRepresentation)
             {
                 if (string.IsNullOrEmpty(id)) throw new ArgumentException("The ID of an ItemCurrency may not be null nor empty.");
                 this.id = id.ToLower();
+                this.textRepresentation = textRepresentation;
             }
 
-            public override string ToText() => $"units of {Name}";
+            public override string ToText() => textRepresentation == "" ? id : textRepresentation;
 
             public override bool Equals(object obj)
             {
