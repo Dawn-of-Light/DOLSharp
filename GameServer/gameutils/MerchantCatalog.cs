@@ -29,7 +29,7 @@ namespace DOL.GS.Profession
         public byte SlotPosition { get; } = 0;
         public byte Page { get; } = 0;
         public ItemTemplate Item { get; }
-        public long CurrencyAmount {get; } = 0;
+        public long CurrencyAmount { get; } = 0;
 
         public MerchantCatalogEntry(byte slotPosition, byte page, ItemTemplate itemTemplate, long currencyAmount)
         {
@@ -140,10 +140,7 @@ namespace DOL.GS.Profession
                 var page = catalog.GetPage(dbMerchantItem.PageNumber);
                 if (dbMerchantItem.SlotPosition == currencySlotPosition)
                 {
-                    var currencyId = (byte)dbMerchantItem.Price;
-                    var itemTemplateId = dbMerchantItem.ItemTemplateID;
-                    var pageCurrency = CreateCurrencyFromId(currencyId, itemTemplateId);
-                    page.SetCurrency(pageCurrency);
+                    page.SetCurrency(GetCurrencyFrom(dbMerchantItem));
                 }
                 var itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(dbMerchantItem.ItemTemplateID);
                 if (itemTemplate == null) continue;
@@ -154,12 +151,17 @@ namespace DOL.GS.Profession
             return catalog;
         }
 
-        private static Currency CreateCurrencyFromId(byte currencyId, string itemCurrencyId = null)
+        private static Currency GetCurrencyFrom(MerchantItem merchantItem)
         {
+            var currencyId = (byte)merchantItem.Price;
+            var itemCurrencyId = merchantItem.ItemTemplateID;
             switch (currencyId)
             {
                 case 1: return Currency.Copper;
-                case 2: return Currency.Item(itemCurrencyId);
+                case 2: 
+                    var itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(itemCurrencyId);
+                    if (itemTemplate == null) return Currency.Item(itemCurrencyId, $"units of {itemCurrencyId}");
+                    else return Currency.Item(itemCurrencyId, itemTemplate.Name);
                 case 3: return Currency.BountyPoints;
                 case 4: return Currency.Mithril;
                 default: throw new System.NotImplementedException($"Currency with id {currencyId} is not implemented.");

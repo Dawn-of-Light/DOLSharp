@@ -500,48 +500,48 @@ namespace DOL.GS
 	public class GameBloodSealsMerchant : GameItemCurrencyMerchant
 	{
         protected override Currency Currency 
-            => Currency.Item("BloodSeal");
+            => Currency.Item("BloodSeal", "Blood Seals");
 	}
 
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameDiamondSealsMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => Currency.Item("DiamondSeal");
+            => Currency.Item("DiamondSeal", "Diamond Seals");
 	}
 
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameSapphireSealsMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => Currency.Item("SapphireSeal");
+            => Currency.Item("SapphireSeal", "Sapphire Seals");
 	}
 
 	[Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
     public class GameEmeraldSealsMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => Currency.Item("EmeraldSeal");
+            => Currency.Item("EmeraldSeal", "Emerald Seals");
 	}
 
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameAuruliteMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => Currency.Item("aurulite");
+            => Currency.Item("aurulite", "units of aurulite");
 	}
 	
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameAtlanteanGlassMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => Currency.Item("atlanteanglass");
+            => Currency.Item("atlanteanglass", "Atlantean Glass");
 	}
 	
     [Obsolete("This is going to be removed. See GameItemCurrencyMerchant's obsolete message for more details.")]
 	public class GameDragonMerchant : GameItemCurrencyMerchant
 	{
 		protected override Currency Currency 
-            => Currency.Item("dragonscales");
+            => Currency.Item("dragonscales", "Dragon Scales");
 	}
 }
