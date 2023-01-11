@@ -395,14 +395,20 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("log", "log_inventory_other", "Enable other logging in inventory log (log_inventory must be enabled)", true)]
 		public static bool LOG_INVENTORY_OTHER;
-		#endregion
+        #endregion
 
-		#region SERVER
+        #region SERVER
 
-		/// <summary>
-		/// Enable/Disable Autokick Timer
-		/// </summary>
-		[ServerProperty("server", "player idle kick", "Enable auto kick for inactive players", false)]
+        /// <summary>
+        /// Gain Champion Levels when  you gain CLXP, without having to visit the king
+        /// </summary>
+        [ServerProperty("server", "auto champion levelup", "Gain champion levels automatically, without having to visit the king", false)]
+        public static bool AUTO_CHAMPION_LEVELUP;
+
+        /// <summary>
+        /// Enable/Disable Autokick Timer
+        /// </summary>
+        [ServerProperty("server", "player idle kick", "Enable auto kick for inactive players", false)]
 		public static bool KICK_IDLE_PLAYER_STATUS;
 
 		/// <summary>
