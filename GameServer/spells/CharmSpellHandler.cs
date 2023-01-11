@@ -131,7 +131,7 @@ namespace DOL.GS.Spells
         	
         	// This prevent most of type casting errors
         	if(target is GameNPC == false) {
-        		MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
+        		MessageToCaster("This target cannot be charmed!", eChatType.CT_SpellResisted);
                 return;
         	}
         	
@@ -156,87 +156,64 @@ namespace DOL.GS.Spells
             	// Body Type None (0) is used to make mobs un-charmable , Realm Guards or NPC cannot be charmed.
             	if (target.Realm != 0 || ((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.None)
                 {
-                    MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
+                    MessageToCaster("This creature cannot be charmed!", eChatType.CT_SpellResisted);
                     return;
                 }
                 
             	// If server properties prevent Named charm.
             	if(ServerProperties.Properties.SPELL_CHARM_NAMED_CHECK != 0 && !target.Name[0].ToString().ToLower().Equals(target.Name[0].ToString()))
                 {
-                    MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
+                    MessageToCaster("This creature cannot be charmed!", eChatType.CT_SpellResisted);
                     return;
                 }
                             		
             	
                 // Check if Body type applies
-                if (m_spell.AmnesiaChance != (ushort)eCharmType.All)
+                if (m_spell.AmnesiaChance != (int)eCharmType.All)
                 {
-                	
                 	bool charmable = false;
                 	
                 	// gets true only for charm-able mobs for this spell type
-                	switch((eCharmType)m_spell.AmnesiaChance) {
-                 		
-                		case eCharmType.HumanoidAnimalInsectMagicalUndead :
-                			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Undead)
-                				charmable = true;
-                			
-                		goto case eCharmType.HumanoidAnimalInsectMagical;
-                			
-                		case eCharmType.HumanoidAnimalInsectMagical :
-                 			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Magical)
-                				charmable = true;
-                 			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Plant)
-                				charmable = true;
-                 			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Elemental)
-                				charmable = true;
-                 			
-               			goto case eCharmType.HumanoidAnimalInsect;
-               				
-  	             		case eCharmType.HumanoidAnimalInsect :
-                			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Insect)
-                				charmable = true;
-                			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Reptile)
-                				charmable = true;
-                			
-                		goto case eCharmType.HumanoidAnimal;
-
- 	                	case eCharmType.HumanoidAnimal :
-                  			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Animal)
-                				charmable = true;
-                  			
-                  		goto case eCharmType.Humanoid;
-              			
-                		case eCharmType.Humanoid :
-                			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Humanoid)
-                				charmable = true;
-                			
-                		break;
-                		
-	                	case eCharmType.Animal :
-                			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Animal)
-                				charmable = true;
-                			
-                		break;
-                		
-                		case eCharmType.Insect :
-                			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Insect)
-                				charmable = true;
-                			
-                		break;
-                		
-                		case eCharmType.Reptile :
-                			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Reptile)
-                				charmable = true;
-                			
-                		break;
-                	}
+                    switch(((GameNPC)target).BodyType)
+                    {
+                        case (ushort)NpcTemplateMgr.eBodyType.Humanoid:
+                            charmable = m_spell.AmnesiaChance == (int)eCharmType.Humanoid
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimal
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsect
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsectMagical
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsectMagicalUndead;
+                            break;
+                        case (ushort)NpcTemplateMgr.eBodyType.Animal:
+                            charmable = m_spell.AmnesiaChance == (int)eCharmType.Animal
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimal
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsect
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsectMagical
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsectMagicalUndead;
+                            break;
+                        case (ushort)NpcTemplateMgr.eBodyType.Insect:
+                            charmable = m_spell.AmnesiaChance == (int)eCharmType.Insect
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsect
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsectMagical
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsectMagicalUndead;
+                            break;
+                        case (ushort)NpcTemplateMgr.eBodyType.Magical:
+                        case (ushort)NpcTemplateMgr.eBodyType.Plant:
+                        case (ushort)NpcTemplateMgr.eBodyType.Elemental:
+                            charmable = m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsectMagical
+                                || m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsectMagicalUndead;
+                            break;
+                        case (ushort)NpcTemplateMgr.eBodyType.Undead:
+                            charmable = m_spell.AmnesiaChance == (int)eCharmType.HumanoidAnimalInsectMagicalUndead;
+                            break;
+                        case (ushort)NpcTemplateMgr.eBodyType.Reptile:
+                            charmable = m_spell.AmnesiaChance == (int)eCharmType.Reptile;
+                            break;
+                    }
                 	
                 	// The NPC type doesn't match spell charm types.
                 	if(!charmable) 
                 	{
-                		
-            		   	MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
+                        MessageToCaster("This spell does not charm this type of creature!", eChatType.CT_SpellResisted);
                         return;
                 	}
 
