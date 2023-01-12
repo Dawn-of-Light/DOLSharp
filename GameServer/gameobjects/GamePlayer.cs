@@ -5138,6 +5138,15 @@ namespace DOL.GS
 
 			if (Level == MaxLevel)
 			{
+				if (ServerProperties.Properties.AUTO_CHAMPION_LEVELUP && !Champion)
+				{
+                    RemoveChampionLevels();
+                    Champion = true;
+                    Out.SendUpdatePlayer();
+                    SaveIntoDatabase();
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "KingNPC.WhisperReceive.IsNowChampion"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                }
+
 				if (CanGenerateNews)
 				{
 					string message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
