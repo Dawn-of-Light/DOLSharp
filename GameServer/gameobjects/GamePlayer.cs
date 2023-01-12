@@ -15281,7 +15281,10 @@ namespace DOL.GS
 
 			ChampionExperience += experience;
 			Out.SendUpdatePoints();
-		}
+
+            if (ChampionExperience >= ChampionExperienceForNextLevel)
+                ChampionLevelUp();
+        }
 
 
 		/// <summary>
