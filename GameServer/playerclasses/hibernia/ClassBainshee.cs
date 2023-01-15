@@ -172,11 +172,11 @@ namespace DOL.GS.PlayerClass
 			Player.Model = (ushort)Player.Client.Account.Characters[Player.Client.ActiveCharIndex].CreationModel;
 			
 		}
+		#endregion
 
 		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
 		{
 			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen,
 		};
 	}
-	#endregion
 }

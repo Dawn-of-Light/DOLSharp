@@ -59,7 +59,7 @@ namespace DOL.GS.PlayerClass
 
 		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
 		{
-			 PlayerRace.Kobold, PlayerRace.Deifrang, PlayerRace.Norseman,
+			 PlayerRace.Kobold, PlayerRace.Deifrang, PlayerRace.Norseman, PlayerRace.Troll,
 		};
 	}
 }

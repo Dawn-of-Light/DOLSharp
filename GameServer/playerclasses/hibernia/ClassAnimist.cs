@@ -50,7 +50,7 @@ namespace DOL.GS.PlayerClass
 
 		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
 		{
-			 PlayerRace.Celt, PlayerRace.Firbolg, PlayerRace.Sylvan,
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Firbolg, PlayerRace.Sylvan
 		};
 	}
 }
