@@ -15636,7 +15636,7 @@ namespace DOL.GS
 		public static GamePlayer CreateDummy() 
 		{
 			var player = new GamePlayer();
-			player.m_characterClass = new DefaultCharacterClass();
+			player.m_characterClass = new CharacterClassBase();
 			player.m_dbCharacter = new DOLCharacters();
 			return player; 
 		}
@@ -15676,7 +15676,7 @@ namespace DOL.GS
 			m_customDialogCallback = null;
 			m_sitting = false;
 			m_isWireframe = false;
-			m_characterClass = new DefaultCharacterClass();
+			m_characterClass = new CharacterClassBase();
 			m_groupIndex = 0xFF;
 
 			m_saveInDB = true;

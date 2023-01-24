@@ -12,7 +12,7 @@ namespace DOL.GS.Keeps
 			if (ModelRealm == eRealm.Albion) return new ClassCleric();
 			else if (ModelRealm == eRealm.Midgard) return new ClassHealer();
 			else if (ModelRealm == eRealm.Hibernia) return new ClassDruid();
-			return new DefaultCharacterClass();
+			return new CharacterClassBase();
 		}
 
 		protected override void SetBlockEvadeParryChance()

@@ -507,7 +507,7 @@ namespace DOL.UnitTests.Gameserver
 
             public FakePlayerSpy() : base()
             {
-                fakeCharacterClass = new DefaultCharacterClass();
+                fakeCharacterClass = new CharacterClassBase();
                 fakeRegion.fakeElapsedTime = 0;
             }
 
