@@ -184,6 +184,7 @@ namespace DOL.GS
 		/// </summary>
 		static private void LoadClassOverrideDictionary()
 		{
+			GameServer.Database.RegisterDataObject(typeof(CharacterClassOverride));
 			var dbClassOverrideTable = GameServer.Database.SelectAllObjects<CharacterClassOverride>();
 
 			if (dbClassOverrideTable != null)
