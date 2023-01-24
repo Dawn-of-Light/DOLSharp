@@ -62,6 +62,17 @@ namespace DOL.GS.Realm
 			{ eRace.Graoch, new PlayerRace(eRace.Graoch, eRealm.Hibernia, eDAoCExpansion.LabyrinthOfTheMinotaur, eLivingModel.MinotaurMaleHib, eLivingModel.None) } ,
 		};
 
+		/// <summary>
+		/// Try to retrieve a PlayerRace based on eRace
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="playerRace"></param>
+		/// <returns></returns>
+		public static bool TryGetRace(eRace key, out PlayerRace playerRace)
+		{
+			return races.TryGetValue(key, out playerRace);
+		}
+
 		public eLivingModel GetModel(eGender gender)
         {
 			if (gender == eGender.Male) return MaleModel;
