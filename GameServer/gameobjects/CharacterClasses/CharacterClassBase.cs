@@ -24,13 +24,18 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.Realm;
+using DOLDatabase;
+using log4net;
+using ICSharpCode.SharpZipLib.Tar;
 
 namespace DOL.GS
 {
+	
+
 	/// <summary>
 	/// The Base class for all Character Classes in DOL
 	/// </summary>
-	public abstract class CharacterClassBase : ICharacterClass
+	public class CharacterClassBase : ICharacterClass
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -62,53 +67,76 @@ namespace DOL.GS
 		/// <summary>
 		/// multiplier for specialization points per level in 10th
 		/// </summary>
-		protected int m_specializationMultiplier = 10;
+		protected int m_specializationMultiplier;
 
 		/// <summary>
 		/// BaseHP for hp calculation
 		/// </summary>
-		protected int m_baseHP = 600;
+		protected int m_baseHP;
 
 		/// <summary>
 		/// Stat gained every level.
 		///	see eStat consts
 		/// </summary>
-		protected eStat m_primaryStat = eStat.UNDEFINED;
+		protected eStat m_primaryStat;
 
 		/// <summary>
 		/// Stat gained every second level.
 		/// see eStat consts
 		/// </summary>
-		protected eStat m_secondaryStat = eStat.UNDEFINED;
+		protected eStat m_secondaryStat;
 
 		/// <summary>
 		/// Stat gained every third level.
 		/// see eStat consts
 		/// </summary>
-		protected eStat m_tertiaryStat = eStat.UNDEFINED;
+		protected eStat m_tertiaryStat;
 
 		/// <summary>
 		/// Stat that affects the power/mana pool.
 		/// Do not set if they do not have a power pool/spells
 		/// </summary>
-		protected eStat m_manaStat = eStat.UNDEFINED;
+		protected eStat m_manaStat;
 
 		/// <summary>
 		/// Weapon Skill Base value to influence weapon skill calc
 		/// </summary>
-		protected int m_wsbase = 400;
+		protected int m_baseWeaponSkill;
 
 		/// <summary>
 		/// Weapon Skill Base value to influence ranged weapon skill calc
 		/// </summary>
-		protected int m_wsbaseRanged = 440;
+		protected int m_baseWeaponSkillRanged;
+
+		/// <summary>
+		/// How many chants can be run at once
+		/// </summary>
+		protected ushort m_maxPulsingSpells;
 
 		/// <summary>
 		/// The GamePlayer for this character
 		/// </summary>
 		public GamePlayer Player { get; private set; }
 
-		private static readonly string[] AutotrainableSkills = Array.Empty<string>();
+		private static readonly List<string> DefaultAutoTrainableSkills = new() { };
+
+		protected List<string> m_autotrainableSkills;
+
+		protected List<PlayerRace> m_eligibleRaces;
+
+		protected struct ClassOverride
+		{
+			public byte ClassID;
+			public int SpecializationMultiplier;
+			public int BaseHP;
+			public int BaseWeaponSkill;
+			public int BaseWeaponSkillRanged;
+			public ushort MaxPulsingSpells;
+			public List<string> AutotrainableSkills;
+			public List<PlayerRace> EligibleRaces;
+		}
+
+		protected static Dictionary<byte, ClassOverride> m_classOverride = new Dictionary<byte, ClassOverride>(0);
 
 		public CharacterClassBase()
 		{
@@ -116,7 +144,18 @@ namespace DOL.GS
 			m_name = "Unknown Class";
 			m_basename = "Unknown Base Class";
 			m_profession = "";
-
+			m_specializationMultiplier = 10;
+			m_baseHP = 600;
+			m_primaryStat = eStat.UNDEFINED;
+			m_secondaryStat = eStat.UNDEFINED;
+			m_tertiaryStat = eStat.UNDEFINED;
+			m_manaStat = eStat.UNDEFINED;
+			m_baseWeaponSkill = 400;
+			m_baseWeaponSkillRanged = 440;
+			m_autotrainableSkills = DefaultAutoTrainableSkills;
+			m_eligibleRaces = PlayerRace.AllRaces;
+			m_maxPulsingSpells = 1;
+			
 			// initialize members from attributes
 			Attribute[] attrs = Attribute.GetCustomAttributes(this.GetType(), typeof(CharacterClassAttribute));
 			foreach (Attribute attr in attrs)
@@ -131,6 +170,93 @@ namespace DOL.GS
 					break;
 				}
 			}
+
+			LoadClassOverride(eCharacterClass.Unknown);
+		}
+
+		static CharacterClassBase()
+		{
+			LoadClassOverrideDictionary();
+		}
+
+		/// <summary>
+		/// Load class override data from the DB
+		/// </summary>
+		static private void LoadClassOverrideDictionary()
+		{
+			var dbClassOverrideTable = GameServer.Database.SelectAllObjects<CharacterClassOverride>();
+
+			if (dbClassOverrideTable != null)
+				foreach (var dbClassOverride in dbClassOverrideTable)
+				{
+					if (dbClassOverride.ClassID < 0 || dbClassOverride.ClassID > byte.MaxValue
+						|| !Enum.IsDefined(typeof(eCharacterClass), (byte)dbClassOverride.ClassID))
+					{
+						log.Error($"LoadClassOverrideDictionary(): ClassID {dbClassOverride.ClassID} in table CharacterClass is out of range ({eCharacterClass.Unknown}-{eCharacterClass.MaulerHib}");
+						continue;
+					}
+
+					ClassOverride classOverride = new()
+					{
+						ClassID = (byte)dbClassOverride.ClassID,
+						SpecializationMultiplier = dbClassOverride.SpecializationMultiplier,
+						BaseHP = dbClassOverride.BaseHP,
+						BaseWeaponSkill = dbClassOverride.BaseWeaponSkill,
+						BaseWeaponSkillRanged = dbClassOverride.BaseWeaponSkillRanged
+					};
+
+					if (dbClassOverride.MaxPulsingSpells < 0 || dbClassOverride.MaxPulsingSpells > ushort.MaxValue)
+					{
+						classOverride.MaxPulsingSpells = 0;
+						log.Error($"LoadClassOverrideDictionary(): MaxPulsingSpell {dbClassOverride.MaxPulsingSpells} for ClassID {dbClassOverride.ClassID} is out of range");
+					}
+					else
+						classOverride.MaxPulsingSpells = (ushort)dbClassOverride.MaxPulsingSpells;
+
+					classOverride.AutotrainableSkills = new(0);
+					if (!String.IsNullOrEmpty(dbClassOverride.AutoTrainableSkills))
+						foreach (string s in dbClassOverride.AutoTrainableSkills.Split(';',','))
+							if (!String.IsNullOrEmpty(s))
+								classOverride.AutotrainableSkills.Add(s);
+
+					classOverride.EligibleRaces = new(0);
+					if (!String.IsNullOrEmpty(dbClassOverride.EligibleRaces))
+						foreach (string s in dbClassOverride.EligibleRaces.Split(';',','))
+							if (!String.IsNullOrEmpty(s) && Enum.TryParse<eRace>(s, out eRace race) && PlayerRace.TryGetRace(race, out  PlayerRace pRace))
+								classOverride.EligibleRaces.Add(pRace);
+
+					m_classOverride.Add(classOverride.ClassID, classOverride);
+				}
+		}
+
+		/// <summary>
+		/// Replace class data with values in the DB
+		/// </summary>
+		protected void LoadClassOverride(eCharacterClass charClass)
+		{
+			if (m_classOverride.TryGetValue((byte)charClass, out ClassOverride cOverride))
+			{
+				if (cOverride.SpecializationMultiplier > 0)
+					m_specializationMultiplier = cOverride.SpecializationMultiplier;
+
+				if (cOverride.BaseHP > 0)
+					m_baseHP = cOverride.BaseHP;
+
+				if (cOverride.BaseWeaponSkill > 0)
+					m_baseWeaponSkill = cOverride.BaseWeaponSkill;
+
+				if (cOverride.BaseWeaponSkillRanged > 0)
+					m_baseWeaponSkillRanged = cOverride.BaseWeaponSkillRanged;
+
+				if (cOverride.MaxPulsingSpells > 0)
+					m_maxPulsingSpells = cOverride.MaxPulsingSpells;
+
+				if (cOverride.AutotrainableSkills.Count > 0)
+					m_autotrainableSkills = cOverride.AutotrainableSkills;
+
+				if (cOverride.EligibleRaces.Count > 0)
+					m_eligibleRaces = cOverride.EligibleRaces;
+			}
 		}
 
 		public virtual void Init(GamePlayer player)
@@ -142,7 +268,7 @@ namespace DOL.GS
 			Player = player;
 		}
 
-		public abstract List<PlayerRace> EligibleRaces { get; }
+		public List<PlayerRace> EligibleRaces => m_eligibleRaces;
 
 		public string FemaleName
 		{
@@ -216,20 +342,20 @@ namespace DOL.GS
 
 		public int WeaponSkillBase
 		{
-			get { return m_wsbase; }
+			get { return m_baseWeaponSkill; }
 		}
 
 		public int WeaponSkillRangedBase
 		{
-			get { return m_wsbaseRanged; }
+			get { return m_baseWeaponSkillRanged; }
 		}
 
 		/// <summary>
 		/// Maximum number of pulsing spells that can be active simultaneously
 		/// </summary>
-		public virtual ushort MaxPulsingSpells
+		public ushort MaxPulsingSpells
 		{
-			get { return 1; }
+			get { return m_maxPulsingSpells; }
 		}
 
 		public virtual string GetTitle(GamePlayer player, int level)
@@ -256,9 +382,9 @@ namespace DOL.GS
 		/// can train in.  Added by Echostorm for RAs
 		/// </summary>
 		/// <returns></returns>
-		public virtual IList<string> GetAutotrainableSkills()
+		public IList<string> GetAutotrainableSkills()
 		{
-			return AutotrainableSkills;
+			return m_autotrainableSkills;
 		}
 
 		/// <summary>
@@ -459,22 +585,4 @@ namespace DOL.GS
 			return true;
 		}
 	}
-
-	/// <summary>
-	/// Usable default Character Class, if not other can be found or used
-	/// just for getting things valid in problematic situations
-	/// </summary>
-	public class DefaultCharacterClass : CharacterClassBase
-	{
-		public DefaultCharacterClass()
-			: base()
-		{
-			m_id = 0;
-			m_name = "Unknown";
-			m_basename = "Unknown Class";
-			m_profession = "None";
-		}
-
-        public override List<PlayerRace> EligibleRaces => PlayerRace.AllRaces;
-    }
 }
