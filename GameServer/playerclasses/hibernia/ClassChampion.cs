@@ -24,6 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Champion, "Champion", "Guardian")]
 	public class ClassChampion : ClassGuardian
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Graoch, PlayerRace.Lurikeen, PlayerRace.Shar,
+		};
+
 		public ClassChampion()
 			: base()
 		{
@@ -33,8 +38,11 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.INT;
 			m_tertiaryStat = eStat.DEX;
 			m_manaStat = eStat.INT; //TODO: not sure
-			m_wsbase = 380;
+			m_baseWeaponSkill = 380;
 			m_baseHP = 760;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Champion);
 		}
 
 		public override eClassType ClassType
@@ -46,10 +54,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar,
-		};
 	}
 }

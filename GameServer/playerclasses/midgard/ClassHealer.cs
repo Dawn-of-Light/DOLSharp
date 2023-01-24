@@ -24,25 +24,26 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Healer, "Healer", "Seer")]
 	public class ClassHealer : ClassSeer
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Norseman,
+		};
+
 		public ClassHealer()
 			: base()
 		{
 			m_profession = "PlayerClass.Profession.HouseofEir";
-			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.STR;
-			m_manaStat = eStat.PIE;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Healer);
 		}
 
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Norseman,
-		};
 	}
 }

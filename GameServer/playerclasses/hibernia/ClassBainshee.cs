@@ -29,15 +29,21 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Bainshee, "Bainshee", "Magician")]
 	public class ClassBainshee : ClassMagician
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen,
+		};
+
 		public ClassBainshee()
 			: base()
 		{
 			m_profession = "PlayerClass.Profession.PathofAffinity";
-			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.INT;
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.CON;
-			m_manaStat = eStat.INT;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Bainshee);
 		}
 
 		public override bool HasAdvancedFromBaseClass()
@@ -172,11 +178,6 @@ namespace DOL.GS.PlayerClass
 			Player.Model = (ushort)Player.Client.Account.Characters[Player.Client.ActiveCharIndex].CreationModel;
 			
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen,
-		};
+		#endregion
 	}
-	#endregion
 }

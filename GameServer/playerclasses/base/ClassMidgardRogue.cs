@@ -24,12 +24,19 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.MidgardRogue, "Rogue", "Rogue")]
 	public class ClassMidgardRogue : CharacterClassBase
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Valkyn,
+		};
+
 		public ClassMidgardRogue()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 360; //higher than alb/hib stealthers
+			m_baseWeaponSkill = 360; //higher than alb/hib stealthers
 			m_baseHP = 720;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.MidgardRogue);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)
@@ -51,10 +58,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Valkyn,
-		};
 	}
 }

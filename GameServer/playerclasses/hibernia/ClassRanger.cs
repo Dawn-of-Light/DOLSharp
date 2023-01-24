@@ -24,7 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Ranger, "Ranger", "Stalker")]
 	public class ClassRanger : ClassStalker
 	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery, Specs.RecurveBow };
+		private static readonly List<string> DefaultAutoTrainableSkills = new() { Specs.Archery, Specs.RecurveBow };
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar, PlayerRace.Sylvan
+		};
 
 		public ClassRanger()
 			: base()
@@ -35,6 +39,10 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.QUI;
 			m_tertiaryStat = eStat.STR;
 			m_manaStat = eStat.DEX;
+			m_autotrainableSkills = DefaultAutoTrainableSkills;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Ranger);
 		}
 
 		public override bool CanUseLefthandedWeapon
@@ -45,11 +53,6 @@ namespace DOL.GS.PlayerClass
 		public override eClassType ClassType
 		{
 			get { return eClassType.Hybrid; }
-		}
-
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
 		}
 
 		/// <summary>
@@ -143,10 +146,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar,
-		};
 	}
 }

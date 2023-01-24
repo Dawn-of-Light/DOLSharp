@@ -24,13 +24,20 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Mystic, "Mystic", "Mystic")]
 	public class ClassMystic : CharacterClassBase
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Troll, PlayerRace.Valkyn,
+		};
+
 		public ClassMystic()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 280;
+			m_baseWeaponSkill = 280;
 			m_baseHP = 560;
-			m_manaStat = eStat.INT;
+			m_manaStat = eStat.PIE;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Mystic);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)
@@ -52,10 +59,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Troll, PlayerRace.Valkyn,
-		};
 	}
 }

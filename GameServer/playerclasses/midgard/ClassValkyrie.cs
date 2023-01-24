@@ -24,6 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Valkyrie, "Valkyrie", "Viking")]
 	public class ClassValkyrie : ClassViking
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Norseman, PlayerRace.Valkyn
+		};
+
 		public ClassValkyrie()
 			: base()
 		{
@@ -33,8 +38,11 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.STR;
 			m_tertiaryStat = eStat.DEX;
 			m_manaStat = eStat.PIE;
-			m_wsbase = 360;
+			m_baseWeaponSkill = 360;
 			m_baseHP = 720;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Valkyrie);
 		}
 
 		public override eClassType ClassType
@@ -46,10 +54,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Norseman,
-		};
 	}
 }

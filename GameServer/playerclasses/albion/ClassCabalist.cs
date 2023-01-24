@@ -24,26 +24,26 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Cabalist, "Cabalist", "Mage")]
 	public class ClassCabalist : ClassMage
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new List<PlayerRace>()
+		{
+			PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.HalfOgre, PlayerRace.Inconnu, PlayerRace.Saracen,
+		};
+
 		public ClassCabalist()
 			: base()
 		{
 			m_profession = "PlayerClass.Profession.GuildofShadows";
-			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.INT;
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.QUI;
-			m_manaStat = eStat.INT;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Cabalist);
 		}
 
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.HalfOgre, PlayerRace.Inconnu, PlayerRace.Saracen,
-		};
-
 	}
 }

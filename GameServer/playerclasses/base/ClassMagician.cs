@@ -24,13 +24,21 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Magician, "Magician", "Magician")]
 	public class ClassMagician : CharacterClassBase
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar,
+		};
+
+
 		public ClassMagician()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 280;
+			m_baseWeaponSkill = 280;
 			m_baseHP = 560;
 			m_manaStat = eStat.INT;
+			m_eligibleRaces = DefaultEligibleRaces; ;
+
+			LoadClassOverride(eCharacterClass.Magician);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)
@@ -52,10 +60,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen, PlayerRace.Shar,
-		};
 	}
 }

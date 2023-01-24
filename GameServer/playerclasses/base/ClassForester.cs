@@ -24,13 +24,20 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Forester, "Forester", "Forester")]
 	public class ClassForester : CharacterClassBase
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Firbolg, PlayerRace.Sylvan,
+		};
+
 		public ClassForester()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 280;
+			m_baseWeaponSkill = 280;
 			m_baseHP = 560;
 			m_manaStat = eStat.INT;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Forester);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)
@@ -52,10 +59,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Firbolg, PlayerRace.Sylvan,
-		};
 	}
 }

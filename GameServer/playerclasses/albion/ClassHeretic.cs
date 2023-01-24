@@ -24,6 +24,10 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Heretic, "Heretic", "Acolyte")]
 	public class ClassHeretic : ClassAcolyte
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new List<PlayerRace>()
+		{
+			PlayerRace.Korazh, PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.Inconnu, PlayerRace.Saracen
+		};
 		public ClassHeretic()
 			: base()
 		{
@@ -33,18 +37,15 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.CON;
 			m_manaStat = eStat.PIE;
-			m_wsbase = 360;
-			m_baseHP = 720;
+			m_baseWeaponSkill = 360;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Heretic);
 		}
 
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Korazh, PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.Inconnu,
-		};
 	}
 }

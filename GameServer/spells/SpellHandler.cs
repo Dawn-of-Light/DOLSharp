@@ -343,7 +343,7 @@ namespace DOL.GS.Spells
 			// will prevent us from knowing which spell is the oldest and should be canceled - we can go ahead and simply
 			// cancel the last spell in the list (which will result in inconsistent behavior) or change the code that adds
 			// spells to ConcentrationEffects so that it enforces predictable ordering.
-			if (pulsingSpells.Count > 1)
+			if (pulsingSpells.Count > 1 && (player == null || pulsingSpells.Count >= player.CharacterClass.MaxPulsingSpells))
 			{
 				pulsingSpells[pulsingSpells.Count - 1].Cancel(false);
 			}

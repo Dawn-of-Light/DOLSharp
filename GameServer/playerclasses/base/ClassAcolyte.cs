@@ -24,13 +24,20 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Acolyte, "Acolyte", "Acolyte")]
 	public class ClassAcolyte : CharacterClassBase
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			PlayerRace.Korazh, PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.Highlander, PlayerRace.Inconnu,
+		};
+
 		public ClassAcolyte()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 320;
+			m_baseWeaponSkill = 320;
 			m_baseHP = 720;
 			m_manaStat = eStat.PIE;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Acolyte);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)
@@ -43,7 +50,7 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-        public override GameTrainer.eChampionTrainerType ChampionTrainerType()
+		public override GameTrainer.eChampionTrainerType ChampionTrainerType()
 		{
 			return GameTrainer.eChampionTrainerType.Acolyte;
 		}
@@ -52,10 +59,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			PlayerRace.Korazh, PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.Highlander, PlayerRace.Inconnu,
-		};
 	}
 }

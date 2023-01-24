@@ -24,17 +24,24 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.MaulerMid, "Mauler", "Viking")]
 	public class ClassMaulerMid : ClassViking
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Kobold, PlayerRace.Deifrang, PlayerRace.Norseman,
+		};
+
 		public ClassMaulerMid()
 			: base()
 		{
 			m_profession = "PlayerClass.Profession.TempleofIronFist";
 			m_specializationMultiplier = 15;
-			m_wsbase = 440;
 			m_baseHP = 600;
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.QUI;
             m_manaStat = eStat.STR;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.MaulerMid);
 		}
 
 		public override bool CanUseLefthandedWeapon
@@ -56,10 +63,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Kobold, PlayerRace.Deifrang, PlayerRace.Norseman,
-		};
 	}
 }

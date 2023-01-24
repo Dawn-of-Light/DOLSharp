@@ -24,13 +24,20 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Disciple, "Disciple", "Disciple")]
 	public class ClassDisciple : CharacterClassBase
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Briton, PlayerRace.Inconnu, PlayerRace.Saracen,
+		};
+
 		public ClassDisciple()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 280;
+			m_baseWeaponSkill = 280;
 			m_baseHP = 560;
 			m_manaStat = eStat.INT;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Disciple);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)
@@ -51,11 +58,6 @@ namespace DOL.GS.PlayerClass
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;
-		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Briton, PlayerRace.Inconnu, PlayerRace.Saracen,
-		};
+		}		
 	}
 }

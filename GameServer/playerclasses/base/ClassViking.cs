@@ -24,12 +24,19 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Viking, "Viking", "Viking")]
 	public class ClassViking : CharacterClassBase
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Deifrang, PlayerRace.Norseman, PlayerRace.Troll, PlayerRace.Valkyn,
+		};
+
 		public ClassViking()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 440;
+			m_baseWeaponSkill = 440;
 			m_baseHP = 880;
+			m_eligibleRaces = DefaultEligibleRaces;
+
+			LoadClassOverride(eCharacterClass.Viking);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)
@@ -51,10 +58,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Deifrang, PlayerRace.Norseman, PlayerRace.Troll, PlayerRace.Valkyn,
-		};
 	}
 }
