@@ -190,47 +190,46 @@ namespace DOL.GS
 			GameServer.Database.RegisterDataObject(typeof(CharacterClassOverride));
 			var dbClassOverrideTable = GameServer.Database.SelectAllObjects<CharacterClassOverride>();
 
-			if (dbClassOverrideTable != null)
-				foreach (var dbClassOverride in dbClassOverrideTable)
-				{
-					if (dbClassOverride.ClassID < 0 || dbClassOverride.ClassID > byte.MaxValue
-						|| !Enum.IsDefined(typeof(eCharacterClass), (byte)dbClassOverride.ClassID))
-					{
-						log.Error($"LoadClassOverrideDictionary(): ClassID {dbClassOverride.ClassID} in table CharacterClass is out of range ({eCharacterClass.Unknown}-{eCharacterClass.MaulerHib}");
-						continue;
-					}
+            foreach (var dbClassOverride in dbClassOverrideTable)
+            {
+                if (dbClassOverride.ClassID < 0 || dbClassOverride.ClassID > byte.MaxValue
+                    || !Enum.IsDefined(typeof(eCharacterClass), (byte)dbClassOverride.ClassID))
+                {
+                    log.Error($"LoadClassOverrideDictionary(): ClassID {dbClassOverride.ClassID} in table CharacterClass is out of range ({eCharacterClass.Unknown}-{eCharacterClass.MaulerHib}");
+                    continue;
+                }
 
-					ClassOverride classOverride = new()
-					{
-						ClassID = (byte)dbClassOverride.ClassID,
-						SpecializationMultiplier = dbClassOverride.SpecializationMultiplier,
-						BaseHP = dbClassOverride.BaseHP,
-						BaseWeaponSkill = dbClassOverride.BaseWeaponSkill,
-						BaseWeaponSkillRanged = dbClassOverride.BaseWeaponSkillRanged
-					};
+                ClassOverride classOverride = new()
+                {
+                    ClassID = (byte)dbClassOverride.ClassID,
+                    SpecializationMultiplier = dbClassOverride.SpecializationMultiplier,
+                    BaseHP = dbClassOverride.BaseHP,
+                    BaseWeaponSkill = dbClassOverride.BaseWeaponSkill,
+                    BaseWeaponSkillRanged = dbClassOverride.BaseWeaponSkillRanged
+                };
 
-					if (dbClassOverride.MaxPulsingSpells < 0 || dbClassOverride.MaxPulsingSpells > ushort.MaxValue)
-					{
-						classOverride.MaxPulsingSpells = 0;
-						log.Error($"LoadClassOverrideDictionary(): MaxPulsingSpell {dbClassOverride.MaxPulsingSpells} for ClassID {dbClassOverride.ClassID} is out of range");
-					}
-					else
-						classOverride.MaxPulsingSpells = (ushort)dbClassOverride.MaxPulsingSpells;
+                if (dbClassOverride.MaxPulsingSpells < 0 || dbClassOverride.MaxPulsingSpells > ushort.MaxValue)
+                {
+                    classOverride.MaxPulsingSpells = 0;
+                    log.Error($"LoadClassOverrideDictionary(): MaxPulsingSpell {dbClassOverride.MaxPulsingSpells} for ClassID {dbClassOverride.ClassID} is out of range");
+                }
+                else
+                    classOverride.MaxPulsingSpells = (ushort)dbClassOverride.MaxPulsingSpells;
 
-					classOverride.AutotrainableSkills = new(0);
-					if (!String.IsNullOrEmpty(dbClassOverride.AutoTrainableSkills))
-						foreach (string s in dbClassOverride.AutoTrainableSkills.Split(';',','))
-							if (!String.IsNullOrEmpty(s))
-								classOverride.AutotrainableSkills.Add(s);
+                classOverride.AutotrainableSkills = new(0);
+                if (!String.IsNullOrEmpty(dbClassOverride.AutoTrainableSkills))
+                    foreach (string s in dbClassOverride.AutoTrainableSkills.Split(';', ','))
+                        if (!String.IsNullOrEmpty(s))
+                            classOverride.AutotrainableSkills.Add(s);
 
-					classOverride.EligibleRaces = new(0);
-					if (!String.IsNullOrEmpty(dbClassOverride.EligibleRaces))
-						foreach (string s in dbClassOverride.EligibleRaces.Split(';',','))
-							if (!String.IsNullOrEmpty(s) && Enum.TryParse<eRace>(s, out eRace race) && PlayerRace.TryGetRace(race, out  PlayerRace pRace))
-								classOverride.EligibleRaces.Add(pRace);
+                classOverride.EligibleRaces = new(0);
+                if (!String.IsNullOrEmpty(dbClassOverride.EligibleRaces))
+                    foreach (string s in dbClassOverride.EligibleRaces.Split(';', ','))
+                        if (!String.IsNullOrEmpty(s) && Enum.TryParse<eRace>(s, out eRace race) && PlayerRace.TryGetRace(race, out PlayerRace pRace))
+                            classOverride.EligibleRaces.Add(pRace);
 
-					m_classOverride.Add(classOverride.ClassID, classOverride);
-				}
+                m_classOverride.Add(classOverride.ClassID, classOverride);
+            }
 		}
 
 		/// <summary>
