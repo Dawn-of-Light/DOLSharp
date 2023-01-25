@@ -6,6 +6,12 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_GamePlayer
     {
+        [OneTimeSetUp]
+        public void LoadCalculators()
+        {
+            GameLiving.LoadCalculators();
+        }
+
         [Test]
         public void Constitution_Level50PlayerWith100ConstBaseBuff_Return62()
         {

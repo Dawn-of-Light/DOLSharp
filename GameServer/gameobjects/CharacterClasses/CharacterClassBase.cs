@@ -184,8 +184,8 @@ namespace DOL.GS
 		static private void LoadClassOverrideDictionary()
 		{
 			// Make sure we aren't using a FakeDatabase used in testing
-			if (GameServer.Database is not ObjectDatabase)
-				return;
+			if (GameServer.Instance == null) return;
+			if (GameServer.Database is not ObjectDatabase) return;
 
 			GameServer.Database.RegisterDataObject(typeof(CharacterClassOverride));
 			var dbClassOverrideTable = GameServer.Database.SelectAllObjects<CharacterClassOverride>();
