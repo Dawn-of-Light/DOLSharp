@@ -25,8 +25,7 @@ using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.Realm;
 using DOLDatabase;
-using log4net;
-using ICSharpCode.SharpZipLib.Tar;
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -184,6 +183,10 @@ namespace DOL.GS
 		/// </summary>
 		static private void LoadClassOverrideDictionary()
 		{
+			// Make sure we aren't using a FakeDatabase used in testing
+			if (GameServer.Database is not ObjectDatabase)
+				return;
+
 			GameServer.Database.RegisterDataObject(typeof(CharacterClassOverride));
 			var dbClassOverrideTable = GameServer.Database.SelectAllObjects<CharacterClassOverride>();
 
