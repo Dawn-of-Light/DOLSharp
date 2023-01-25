@@ -129,8 +129,6 @@ namespace DOL.GS
 			public int SpecializationMultiplier;
 			public int BaseHP;
 			public int BaseWeaponSkill;
-			public int BaseWeaponSkillRanged;
-			public ushort MaxPulsingSpells;
 			public List<string> AutotrainableSkills;
 			public List<PlayerRace> EligibleRaces;
 		}
@@ -187,8 +185,8 @@ namespace DOL.GS
 			if (GameServer.Instance == null) return;
 			if (GameServer.Database is not ObjectDatabase) return;
 
-			GameServer.Database.RegisterDataObject(typeof(CharacterClassOverride));
-			var dbClassOverrideTable = GameServer.Database.SelectAllObjects<CharacterClassOverride>();
+            GameServer.Database.RegisterDataObject(typeof(DOLDatabase.CharacterClass));
+			var dbClassOverrideTable = GameServer.Database.SelectAllObjects<DOLDatabase.CharacterClass>();
 
             foreach (var dbClassOverride in dbClassOverrideTable)
             {
@@ -204,21 +202,12 @@ namespace DOL.GS
                     ClassID = (byte)dbClassOverride.ClassID,
                     SpecializationMultiplier = dbClassOverride.SpecializationMultiplier,
                     BaseHP = dbClassOverride.BaseHP,
-                    BaseWeaponSkill = dbClassOverride.BaseWeaponSkill,
-                    BaseWeaponSkillRanged = dbClassOverride.BaseWeaponSkillRanged
+                    BaseWeaponSkill = dbClassOverride.BaseWeaponSkill
                 };
 
-                if (dbClassOverride.MaxPulsingSpells < 0 || dbClassOverride.MaxPulsingSpells > ushort.MaxValue)
-                {
-                    classOverride.MaxPulsingSpells = 0;
-                    log.Error($"LoadClassOverrideDictionary(): MaxPulsingSpell {dbClassOverride.MaxPulsingSpells} for ClassID {dbClassOverride.ClassID} is out of range");
-                }
-                else
-                    classOverride.MaxPulsingSpells = (ushort)dbClassOverride.MaxPulsingSpells;
-
                 classOverride.AutotrainableSkills = new(0);
-                if (!String.IsNullOrEmpty(dbClassOverride.AutoTrainableSkills))
-                    foreach (string s in dbClassOverride.AutoTrainableSkills.Split(';', ','))
+                if (!String.IsNullOrEmpty(dbClassOverride.AutoTrainSkills))
+                    foreach (string s in dbClassOverride.AutoTrainSkills.Split(';', ','))
                         if (!String.IsNullOrEmpty(s))
                             classOverride.AutotrainableSkills.Add(s);
 
@@ -247,12 +236,6 @@ namespace DOL.GS
 
 				if (cOverride.BaseWeaponSkill > 0)
 					m_baseWeaponSkill = cOverride.BaseWeaponSkill;
-
-				if (cOverride.BaseWeaponSkillRanged > 0)
-					m_baseWeaponSkillRanged = cOverride.BaseWeaponSkillRanged;
-
-				if (cOverride.MaxPulsingSpells > 0)
-					m_maxPulsingSpells = cOverride.MaxPulsingSpells;
 
 				if (cOverride.AutotrainableSkills.Count > 0)
 					m_autotrainableSkills = cOverride.AutotrainableSkills;

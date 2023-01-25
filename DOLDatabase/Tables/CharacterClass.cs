@@ -21,22 +21,15 @@ using DOL.Database;
 
 namespace DOLDatabase
 {
-	/// <summary>
-	/// Values which override hardcoded class default properties
-	/// </summary>
-	[DataTable(TableName = "CharacterClassOverride")]
-	public class CharacterClassOverride : DataObject
+	[DataTable(TableName = "CharacterClass")]
+	public class CharacterClass : DataObject
 	{
-		// TEGS Rename CharacterClassOverride?
-
 		private int m_classID;
 		private int m_specializationMultiplier;
 		private int m_baseHP;
 		private int m_baseWeaponSkill;
-		private int m_baseWeaponSkillRanged;
 		private string m_autoTrainableSkills;
 		private string m_eligibleRaces;
-		private int m_maxPulsingSpells;
 
 		[PrimaryKey]
 		public int ClassID
@@ -92,24 +85,10 @@ namespace DOLDatabase
 		}
 
 		/// <summary>
-		/// Base ranged weapon skill
-		/// </summary>
-		[DataElement]
-		public int BaseWeaponSkillRanged
-		{
-			get { return m_baseWeaponSkillRanged; }
-			set
-			{
-				Dirty = true;
-				m_baseWeaponSkillRanged = value;
-			}
-		}
-
-		/// <summary>
 		/// Skills which are auto trained
 		/// </summary>
 		[DataElement]
-		public string AutoTrainableSkills
+		public string AutoTrainSkills
 		{
 			get { return m_autoTrainableSkills; }
 			set
@@ -130,20 +109,6 @@ namespace DOLDatabase
 			{
 				Dirty = true;
 				m_eligibleRaces = value;
-			}
-		}
-
-		/// <summary>
-		/// How many pulsing spells a class can have running at once
-		/// </summary>
-		[DataElement]
-		public int MaxPulsingSpells
-		{
-			get { return m_maxPulsingSpells; }
-			set
-			{
-				Dirty = true;
-				m_maxPulsingSpells = value;
 			}
 		}
 	}
