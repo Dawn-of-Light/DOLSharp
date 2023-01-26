@@ -185,8 +185,7 @@ namespace DOL.GS
 			if (GameServer.Instance == null) return;
 			if (GameServer.Database is not ObjectDatabase) return;
 
-            GameServer.Database.RegisterDataObject(typeof(DOLDatabase.CharacterClass));
-			var dbClassOverrideTable = GameServer.Database.SelectAllObjects<DOLDatabase.CharacterClass>();
+			var dbClassOverrideTable = DOLDB<DBCharacterClass>.SelectAllObjects();
 
             foreach (var dbClassOverride in dbClassOverrideTable)
             {

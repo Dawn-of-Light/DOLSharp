@@ -22,7 +22,7 @@ using DOL.Database;
 namespace DOLDatabase
 {
 	[DataTable(TableName = "CharacterClass")]
-	public class CharacterClass : DataObject
+	public class DBCharacterClass : DataObject
 	{
 		private int m_classID;
 		private int m_specializationMultiplier;
