@@ -41,8 +41,6 @@ namespace DOL.GS.PlayerClass
 			m_baseWeaponSkill = 380;
 			m_baseHP = 760;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Champion);
 		}
 
 		public override eClassType ClassType

@@ -37,8 +37,6 @@ namespace DOL.GS.PlayerClass
 			m_baseHP = 560;
 			m_manaStat = eStat.INT;
 			m_eligibleRaces = DefaultEligibleRaces; ;
-
-			LoadClassOverride(eCharacterClass.Magician);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)

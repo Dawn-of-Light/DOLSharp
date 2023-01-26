@@ -42,8 +42,6 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.CON;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Bainshee);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

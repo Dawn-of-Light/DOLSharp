@@ -41,8 +41,6 @@ namespace DOL.GS.PlayerClass
 			m_baseWeaponSkill = 460;
 			m_autotrainableSkills = DefaultAutoTrainableSkills;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Warrior);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

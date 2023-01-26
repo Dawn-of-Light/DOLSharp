@@ -40,8 +40,6 @@ namespace DOL.GS.PlayerClass
 			m_tertiaryStat = eStat.STR;
 			m_autotrainableSkills = DefaultAutoTrainableSkills;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Infiltrator);
 		}
 
 		public override bool CanUseLefthandedWeapon

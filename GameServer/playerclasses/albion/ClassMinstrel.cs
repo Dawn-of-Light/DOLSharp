@@ -43,8 +43,6 @@ namespace DOL.GS.PlayerClass
 			m_autotrainableSkills = DefaultAutotrainableSkills;
 			m_eligibleRaces = DefaultEligibleRaces;
 			m_maxPulsingSpells = 2;
-
-			LoadClassOverride(eCharacterClass.Minstrel);
 		}
 
 		public override eClassType ClassType

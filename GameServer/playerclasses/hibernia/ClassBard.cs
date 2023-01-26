@@ -40,8 +40,6 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.CHR;
 			m_eligibleRaces = DefaultEligibleRaces;
 			m_maxPulsingSpells = 2;
-
-			LoadClassOverride(eCharacterClass.Bard);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

@@ -41,8 +41,6 @@ namespace DOL.GS.PlayerClass
 			m_tertiaryStat = eStat.QUI;
             m_manaStat = eStat.STR;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.MaulerHib);
 		}
 
 		public override bool CanUseLefthandedWeapon

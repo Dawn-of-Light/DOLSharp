@@ -36,8 +36,6 @@ namespace DOL.GS.PlayerClass
 			m_baseHP = 720;
 			m_manaStat = eStat.PIE;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Seer);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)

@@ -144,6 +144,8 @@ namespace DOL.GS
 		bool CanChangeCastingSpeed(SpellLine line, Spell spell);
 		GameTrainer.eChampionTrainerType ChampionTrainerType();
 		List<PlayerRace> EligibleRaces { get; }
+
+		void LoadClassOverride(eCharacterClass characterClass);
 	}
 
 	/// <summary>

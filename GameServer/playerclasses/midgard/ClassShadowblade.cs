@@ -41,8 +41,6 @@ namespace DOL.GS.PlayerClass
 			m_baseHP = 760;
 			m_autotrainableSkills = DefaultAutoTrainableSkills;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Shadowblade);
 		}
 
 		/// <summary>

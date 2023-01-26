@@ -39,8 +39,6 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.INT;
 			m_baseWeaponSkill = 240; // yes, lower that for other casters for some reason
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Wizard);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

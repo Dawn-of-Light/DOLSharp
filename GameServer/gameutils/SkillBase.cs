@@ -132,6 +132,7 @@ namespace DOL.GS
 					// Need Spell, SpellLines, Abilities Loaded (including RealmAbilities...) !
 					LoadSpecializations();
 					LoadClassSpecializations();
+					CharacterClassBase.LoadClassOverrideDictionary();
 					LoadAbilityHandlers();
 					LoadSkillHandlers();
 					m_loaded = true;

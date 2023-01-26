@@ -39,8 +39,6 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.PIE;
 			m_baseWeaponSkill = 360;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Heretic);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

@@ -44,8 +44,6 @@ namespace DOL.GS.PlayerClass
 			m_autotrainableSkills = DefaultAutoTrainableSkills;
 			m_eligibleRaces = DefaultEligibleRaces;
 			m_maxPulsingSpells = 2;
-
-			LoadClassOverride(eCharacterClass.Paladin);
 		}
 
 		public override eClassType ClassType

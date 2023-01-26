@@ -38,8 +38,6 @@ namespace DOL.GS.PlayerClass
 			m_tertiaryStat = eStat.QUI;
 			m_manaStat = eStat.INT;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Theurgist);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

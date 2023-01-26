@@ -166,8 +166,6 @@ namespace DOL.GS
 					break;
 				}
 			}
-
-			LoadClassOverride(eCharacterClass.Unknown);
 		}
 
 		/// <summary>
@@ -217,7 +215,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Replace class data with values in the DB
 		/// </summary>
-		protected void LoadClassOverride(eCharacterClass charClass)
+		public void LoadClassOverride(eCharacterClass charClass)
 		{
 			if (m_classOverride.TryGetValue((byte)charClass, out ClassOverride cOverride))
 			{

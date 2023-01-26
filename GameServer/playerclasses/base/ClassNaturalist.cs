@@ -36,8 +36,6 @@ namespace DOL.GS.PlayerClass
 			m_baseHP = 720;
 			m_manaStat = eStat.EMP;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Naturalist);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)

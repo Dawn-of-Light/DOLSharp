@@ -40,8 +40,6 @@ namespace DOL.GS.PlayerClass
 			m_tertiaryStat = eStat.STR;
 			m_baseWeaponSkill = 400;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Savage);
 		}
 
 		public override bool CanUseLefthandedWeapon

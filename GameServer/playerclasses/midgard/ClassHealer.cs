@@ -37,8 +37,6 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.STR;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Healer);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

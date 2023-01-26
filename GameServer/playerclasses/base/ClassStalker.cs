@@ -35,8 +35,6 @@ namespace DOL.GS.PlayerClass
 			m_baseWeaponSkill = 360;
 			m_baseHP = 720;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Stalker);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)

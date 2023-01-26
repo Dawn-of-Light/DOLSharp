@@ -42,8 +42,6 @@ namespace DOL.GS.PlayerClass
 			m_baseWeaponSkill = 400;
 			m_baseHP = 720;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Valewalker);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

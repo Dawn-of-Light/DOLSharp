@@ -39,8 +39,6 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.EMP;
 			m_baseWeaponSkill = 320;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Druid);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

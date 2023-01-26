@@ -38,8 +38,6 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.DEX;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Animist);
 		}
 
 		public override eClassType ClassType

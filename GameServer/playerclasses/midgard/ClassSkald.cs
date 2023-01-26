@@ -42,8 +42,6 @@ namespace DOL.GS.PlayerClass
 			m_baseHP = 760;
 			m_eligibleRaces = DefaultEligibleRaces;
 			m_maxPulsingSpells = 2;
-
-			LoadClassOverride(eCharacterClass.Skald);
 		}
 
 		public override eClassType ClassType

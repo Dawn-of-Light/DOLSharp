@@ -41,8 +41,6 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.DEX;
 			m_autotrainableSkills = DefaultAutoTrainableSkills;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Scout);
 		}
 
         public override eClassType ClassType

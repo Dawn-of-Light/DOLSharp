@@ -39,8 +39,6 @@ namespace DOL.GS.PlayerClass
 			m_tertiaryStat = eStat.DEX;
 			m_baseWeaponSkill = 440;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Hero);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

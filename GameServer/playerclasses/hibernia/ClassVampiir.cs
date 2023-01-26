@@ -43,8 +43,6 @@ namespace DOL.GS.PlayerClass
             m_baseWeaponSkill = 440;
             m_baseHP = 878;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Vampiir);
 		}
 
         public override eClassType ClassType

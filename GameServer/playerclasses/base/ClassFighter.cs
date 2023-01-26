@@ -35,8 +35,6 @@ namespace DOL.GS.PlayerClass
 			m_baseWeaponSkill = 440;
 			m_baseHP = 880;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Fighter);
 		}
 
 		public override string GetTitle(GamePlayer player, int level)

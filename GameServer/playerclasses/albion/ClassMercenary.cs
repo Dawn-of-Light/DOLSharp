@@ -40,8 +40,6 @@ namespace DOL.GS.PlayerClass
 			m_tertiaryStat = eStat.CON;
 			m_autotrainableSkills = DefaultAutotrainableSkills;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Mercenary);
 		}
 
 		public override bool CanUseLefthandedWeapon

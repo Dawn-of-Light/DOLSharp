@@ -40,8 +40,6 @@ namespace DOL.GS.PlayerClass
 			m_tertiaryStat = eStat.DEX;
 			m_autotrainableSkills = DefaultAutoTrainableSkills;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Armsman);
 		}
 
 		public override bool HasAdvancedFromBaseClass()

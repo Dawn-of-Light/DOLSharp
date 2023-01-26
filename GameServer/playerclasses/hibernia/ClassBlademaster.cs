@@ -39,8 +39,6 @@ namespace DOL.GS.PlayerClass
 			m_tertiaryStat = eStat.CON;
 			m_baseWeaponSkill = 440;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Blademaster);
 		}
 
 		public override bool CanUseLefthandedWeapon

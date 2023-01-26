@@ -37,8 +37,6 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.QUI;
 			m_eligibleRaces = DefaultEligibleRaces;
-
-			LoadClassOverride(eCharacterClass.Mentalist);
 		}
 
 		public override bool HasAdvancedFromBaseClass()
