@@ -24,7 +24,6 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.Realm;
-using DOLDatabase;
 using DOL.Database;
 
 namespace DOL.GS
@@ -171,15 +170,10 @@ namespace DOL.GS
 			LoadClassOverride(eCharacterClass.Unknown);
 		}
 
-		static CharacterClassBase()
-		{
-			LoadClassOverrideDictionary();
-		}
-
 		/// <summary>
 		/// Load class override data from the DB
 		/// </summary>
-		static private void LoadClassOverrideDictionary()
+		static public void LoadClassOverrideDictionary()
 		{
 			// Make sure we aren't using a FakeDatabase used in testing
 			if (GameServer.Instance == null) return;

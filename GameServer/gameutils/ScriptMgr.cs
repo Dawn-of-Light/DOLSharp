@@ -686,6 +686,7 @@ namespace DOL.GS
 		/// <returns>ClassSpec that was found or null if not found</returns>
 		public static ICharacterClass FindCharacterClass(int id)
 		{
+			CharacterClassBase.LoadClassOverrideDictionary();
 			foreach (Assembly asm in GameServerScripts)
 			{
 				foreach (Type type in asm.GetTypes())

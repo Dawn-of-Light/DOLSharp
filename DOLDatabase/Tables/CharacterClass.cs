@@ -17,9 +17,8 @@
  *
  */
 using DOL.Database.Attributes;
-using DOL.Database;
 
-namespace DOLDatabase
+namespace DOL.Database
 {
 	[DataTable(TableName = "CharacterClass")]
 	public class DBCharacterClass : DataObject
