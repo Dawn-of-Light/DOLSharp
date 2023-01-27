@@ -335,9 +335,10 @@ namespace DOL.GS
 			get { return m_maxPulsingSpells; }
 		}
 
-		public virtual string GetTitle(GamePlayer player, int level)
+		public string GetTitle(GamePlayer player, int level)
 		{
-			
+			if (!HasAdvancedFromBaseClass()) level = 0;
+
 			// Clamp level in 5 by 5 steps - 50 is the max available translation for now
 			int clamplevel = Math.Min(50, (level / 5) * 5);
 			

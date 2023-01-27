@@ -37,11 +37,6 @@ namespace DOL.GS.PlayerClass
 			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
-		public override string GetTitle(GamePlayer player, int level)
-		{
-			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
-		}
-
 		public override eClassType ClassType
 		{
 			get { return eClassType.PureTank; }
