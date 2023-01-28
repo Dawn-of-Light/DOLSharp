@@ -23,91 +23,76 @@ namespace DOL.Database
 	[DataTable(TableName = "CharacterClass")]
 	public class DBCharacterClass : DataObject
 	{
-		private int m_classID;
-		private int m_specializationMultiplier;
-		private int m_baseHP;
-		private int m_baseWeaponSkill;
-		private string m_autoTrainableSkills;
-		private string m_eligibleRaces;
+		private int id;
+		private int specPointMultiplier;
+		private int baseHP;
+		private int baseWeaponSkill;
+		private string autoTrainableSkills;
+		private string eligibleRaces;
 
 		[PrimaryKey]
-		public int ClassID
+		public int ID
 		{
-			get => m_classID; 
+			get => id; 
 			set
 			{
 				Dirty = true;
-				m_classID = value;
+				id = value;
 			}
 		}
 
-		/// <summary>
-		/// Spec points gained per level
-		/// </summary>
 		[DataElement]
-		public int SpecializationMultiplier
+		public int SpecPointMultiplier
 		{
-			get { return m_specializationMultiplier; }
+			get { return specPointMultiplier; }
 			set
 			{
 				Dirty = true;
-				m_specializationMultiplier = value;
+				specPointMultiplier = value;
 			}
 		}
 
-		/// <summary>
-		/// Base hits
-		/// </summary>
 		[DataElement]
 		public int BaseHP
 		{
-			get { return m_baseHP; }
+			get { return baseHP; }
 			set
 			{
 				Dirty = true;
-				m_baseHP = value;
+				baseHP = value;
 			}
 		}
 
-		/// <summary>
-		/// Base melee weapon skill
-		/// </summary>
 		[DataElement]
 		public int BaseWeaponSkill
 		{
-			get { return m_baseWeaponSkill; }
+			get { return baseWeaponSkill; }
 			set
 			{
 				Dirty = true;
-				m_baseWeaponSkill = value;
+				baseWeaponSkill = value;
 			}
 		}
 
-		/// <summary>
-		/// Skills which are auto trained
-		/// </summary>
 		[DataElement]
 		public string AutoTrainSkills
 		{
-			get { return m_autoTrainableSkills; }
+			get { return autoTrainableSkills; }
 			set
 			{
 				Dirty = true;
-				m_autoTrainableSkills = value;
+				autoTrainableSkills = value;
 			}
 		}
 
-		/// <summary>
-		/// Which races are eligible for this class
-		/// </summary>
 		[DataElement]
 		public string EligibleRaces
 		{
-			get { return m_eligibleRaces; }
+			get { return eligibleRaces; }
 			set
 			{
 				Dirty = true;
-				m_eligibleRaces = value;
+				eligibleRaces = value;
 			}
 		}
 	}

@@ -181,17 +181,17 @@ namespace DOL.GS
 
             foreach (var dbClassOverride in dbClassOverrideTable)
             {
-                if (dbClassOverride.ClassID < 0 || dbClassOverride.ClassID > byte.MaxValue
-                    || !Enum.IsDefined(typeof(eCharacterClass), (byte)dbClassOverride.ClassID))
+                if (dbClassOverride.ID < 0 || dbClassOverride.ID > byte.MaxValue
+                    || !Enum.IsDefined(typeof(eCharacterClass), (byte)dbClassOverride.ID))
                 {
-                    log.Error($"LoadClassOverrideDictionary(): ClassID {dbClassOverride.ClassID} in table CharacterClass is out of range ({eCharacterClass.Unknown}-{eCharacterClass.MaulerHib}");
+                    log.Error($"LoadClassOverrideDictionary(): ClassID {dbClassOverride.ID} in table CharacterClass is out of range ({eCharacterClass.Unknown}-{eCharacterClass.MaulerHib}");
                     continue;
                 }
 
                 ClassOverride classOverride = new()
                 {
-                    ClassID = (byte)dbClassOverride.ClassID,
-                    SpecializationMultiplier = dbClassOverride.SpecializationMultiplier,
+                    ClassID = (byte)dbClassOverride.ID,
+                    SpecializationMultiplier = dbClassOverride.SpecPointMultiplier,
                     BaseHP = dbClassOverride.BaseHP,
                     BaseWeaponSkill = dbClassOverride.BaseWeaponSkill
                 };
