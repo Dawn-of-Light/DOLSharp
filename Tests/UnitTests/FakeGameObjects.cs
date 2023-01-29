@@ -8,7 +8,7 @@ namespace DOL.UnitTests.Gameserver
 {
     public class FakePlayer : GamePlayer
     {
-        public ICharacterClass fakeCharacterClass = new DefaultCharacterClass();
+        public ICharacterClass fakeCharacterClass = new CharacterClassBase();
         public int modifiedSpecLevel;
         public int modifiedIntelligence;
         public int modifiedToHitBonus;

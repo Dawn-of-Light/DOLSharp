@@ -24,7 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Reaver, "Reaver", "Fighter")]
 	public class ClassReaver : ClassFighter
 	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Flexible };
+		private static readonly List<string> DefaultAutoTrainableSkills = new() { Specs.Slash, Specs.Flexible };
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Briton, PlayerRace.Inconnu, PlayerRace.Saracen,
+		};
 
 		public ClassReaver()
 			: base()
@@ -35,8 +39,10 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.PIE;
 			m_manaStat = eStat.PIE;
-			m_wsbase = 380;
+			m_baseWeaponSkill = 380;
 			m_baseHP = 760;
+			m_autotrainableSkills = DefaultAutoTrainableSkills;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override eClassType ClassType
@@ -44,19 +50,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Briton, PlayerRace.Inconnu, PlayerRace.Saracen,
-		};
 	}
 }

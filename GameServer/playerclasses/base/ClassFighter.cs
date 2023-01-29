@@ -24,17 +24,17 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Fighter, "Fighter", "Fighter")]
 	public class ClassFighter : CharacterClassBase
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Korazh, PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.HalfOgre, PlayerRace.Highlander, PlayerRace.Inconnu, PlayerRace.Saracen,
+		};
+
 		public ClassFighter()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 440;
+			m_baseWeaponSkill = 440;
 			m_baseHP = 880;
-		}
-
-		public override string GetTitle(GamePlayer player, int level)
-		{
-			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override eClassType ClassType
@@ -51,10 +51,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return false;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Korazh, PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.HalfOgre, PlayerRace.Highlander, PlayerRace.Inconnu, PlayerRace.Saracen,
-		};
 	}
 }

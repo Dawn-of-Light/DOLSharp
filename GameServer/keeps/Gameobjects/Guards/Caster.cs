@@ -78,7 +78,7 @@ namespace DOL.GS.Keeps
 			if (ModelRealm == eRealm.Albion) return new ClassWizard();
 			else if (ModelRealm == eRealm.Midgard) return new ClassRunemaster();
 			else if (ModelRealm == eRealm.Hibernia) return new ClassEldritch();
-			return new DefaultCharacterClass();
+			return new CharacterClassBase();
 		}
 
 		protected override KeepGuardBrain GetBrain() => new CasterBrain();

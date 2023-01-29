@@ -24,7 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Minstrel, "Minstrel", "Rogue")]
 	public class ClassMinstrel : ClassAlbionRogue
 	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Instruments };
+		private static readonly List<string> DefaultAutotrainableSkills = new() { Specs.Instruments };
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Briton, PlayerRace.Highlander, PlayerRace.Saracen,
+		};
 
 		public ClassMinstrel()
 			: base()
@@ -35,8 +39,10 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.STR;
 			m_manaStat = eStat.CHR;
-			m_wsbase = 380;
-			m_baseHP = 720;
+			m_baseWeaponSkill = 380;
+			m_autotrainableSkills = DefaultAutotrainableSkills;
+			m_eligibleRaces = DefaultEligibleRaces;
+			m_maxPulsingSpells = 2;
 		}
 
 		public override eClassType ClassType
@@ -44,24 +50,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override ushort MaxPulsingSpells
-		{
-			get { return 2; }
-		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Briton, PlayerRace.Highlander, PlayerRace.Saracen,
-		};
 	}
 }

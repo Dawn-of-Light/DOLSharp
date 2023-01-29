@@ -24,6 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Skald, "Skald", "Viking")]
 	public class ClassSkald : ClassViking
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Troll,
+		};
+
 		public ClassSkald()
 			: base()
 		{
@@ -33,8 +38,10 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.STR;
 			m_tertiaryStat = eStat.CON;
 			m_manaStat = eStat.CHR;
-			m_wsbase = 380;
+			m_baseWeaponSkill = 380;
 			m_baseHP = 760;
+			m_eligibleRaces = DefaultEligibleRaces;
+			m_maxPulsingSpells = 2;
 		}
 
 		public override eClassType ClassType
@@ -46,15 +53,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override ushort MaxPulsingSpells
-		{
-			get { return 2; }
-		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Dwarf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Troll,
-		};
 	}
 }

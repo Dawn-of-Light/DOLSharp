@@ -24,6 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Berserker, "Berserker", "Viking")]
 	public class ClassBerserker : ClassViking
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Deifrang, PlayerRace.Norseman, PlayerRace.Troll, PlayerRace.Valkyn,
+		};
+
 		public ClassBerserker()
 			: base()
 		{
@@ -32,7 +37,7 @@ namespace DOL.GS.PlayerClass
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.CON;
-			m_wsbase = 440;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override bool CanUseLefthandedWeapon
@@ -44,10 +49,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Dwarf, PlayerRace.Deifrang, PlayerRace.Norseman, PlayerRace.Troll, PlayerRace.Valkyn,
-		};
 	}
 }

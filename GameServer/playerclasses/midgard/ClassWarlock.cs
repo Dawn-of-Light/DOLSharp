@@ -24,15 +24,19 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Warlock, "Warlock", "Mystic")]
 	public class ClassWarlock : ClassMystic
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman,
+		};
+
 		public ClassWarlock()
 			: base()
 		{
 			m_profession = "PlayerClass.Profession.HouseofHel";
-			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.DEX;
-			m_manaStat = eStat.PIE;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override bool HasAdvancedFromBaseClass()
@@ -76,10 +80,5 @@ namespace DOL.GS.PlayerClass
 
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman,
-		};
 	}
 }

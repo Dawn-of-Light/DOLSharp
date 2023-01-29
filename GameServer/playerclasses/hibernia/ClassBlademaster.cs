@@ -24,6 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Blademaster, "Blademaster", "Guardian")]
 	public class ClassBlademaster : ClassGuardian
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Firbolg, PlayerRace.Graoch, PlayerRace.Shar,
+		};
+
 		public ClassBlademaster()
 			: base()
 		{
@@ -32,7 +37,8 @@ namespace DOL.GS.PlayerClass
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.CON;
-			m_wsbase = 440;
+			m_baseWeaponSkill = 440;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override bool CanUseLefthandedWeapon
@@ -44,10 +50,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Firbolg, PlayerRace.Graoch, PlayerRace.Shar,
-		};
 	}
 }

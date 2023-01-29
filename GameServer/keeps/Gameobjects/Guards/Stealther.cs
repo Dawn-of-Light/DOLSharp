@@ -16,7 +16,7 @@ namespace DOL.GS.Keeps
 			if (ModelRealm == eRealm.Albion) return new ClassInfiltrator();
 			else if (ModelRealm == eRealm.Midgard) return new ClassShadowblade();
 			else if (ModelRealm == eRealm.Hibernia) return new ClassNightshade();
-			return new DefaultCharacterClass();
+			return new CharacterClassBase();
 		}
 
 		protected override void SetBlockEvadeParryChance()

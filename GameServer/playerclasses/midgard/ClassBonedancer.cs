@@ -24,18 +24,19 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Bonedancer, "Bonedancer", "Mystic")]
 	public class ClassBonedancer : CharacterClassBoneDancer
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			PlayerRace.Kobold, PlayerRace.Troll, PlayerRace.Valkyn,
+		};
+
 		public ClassBonedancer()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 280;
-			m_baseHP = 560;
-			m_manaStat = eStat.PIE;
-
 			m_profession = "PlayerClass.Profession.HouseofBodgar";
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.QUI;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override eClassType ClassType
@@ -47,10 +48,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Kobold, PlayerRace.Troll, PlayerRace.Valkyn,
-		};
 	}
 }

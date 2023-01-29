@@ -24,6 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Warden, "Warden", "Naturalist")]
 	public class ClassWarden : ClassNaturalist
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Firbolg, PlayerRace.Graoch, PlayerRace.Sylvan,
+		};
+
 		public ClassWarden()
 			: base()
 		{
@@ -33,22 +38,13 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.STR;
 			m_tertiaryStat = eStat.CON;
 			m_manaStat = eStat.EMP;
-			m_wsbase = 360;
+			m_eligibleRaces = DefaultEligibleRaces;
+			m_maxPulsingSpells = 2;
 		}
 
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override ushort MaxPulsingSpells
-		{
-			get { return 2; }
-		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Firbolg, PlayerRace.Graoch, PlayerRace.Sylvan,
-		};
 	}
 }

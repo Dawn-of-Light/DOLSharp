@@ -24,7 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Hunter, "Hunter", "MidgardRogue", "Huntress")]
 	public class ClassHunter : ClassMidgardRogue
 	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery, Specs.CompositeBow };
+		private static readonly List<string> DefaultAutoTrainableSkills = new() { Specs.Archery, Specs.CompositeBow };
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Valkyn,
+		};
 
 		public ClassHunter()
 			: base()
@@ -34,13 +38,10 @@ namespace DOL.GS.PlayerClass
 			m_primaryStat = eStat.DEX;
 			m_secondaryStat = eStat.QUI;
 			m_tertiaryStat = eStat.STR;
-			m_wsbase = 380;
-			m_manaStat = eStat.DEX; 
-		}
-
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
+			m_baseWeaponSkill = 380;
+			m_manaStat = eStat.DEX;
+			m_autotrainableSkills = DefaultAutoTrainableSkills;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override eClassType ClassType
@@ -139,10 +140,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Dwarf, PlayerRace.Frostalf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Valkyn,
-		};
 	}
 }

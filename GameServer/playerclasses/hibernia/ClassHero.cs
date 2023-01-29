@@ -24,6 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Hero, "Hero", "Guardian", "Heroine")]
 	public class ClassHero : ClassGuardian
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Firbolg, PlayerRace.Graoch, PlayerRace.Lurikeen, PlayerRace.Shar, PlayerRace.Sylvan,
+		};
+
 		public ClassHero()
 			: base()
 		{
@@ -32,17 +37,13 @@ namespace DOL.GS.PlayerClass
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.DEX;
-			m_wsbase = 440;
+			m_baseWeaponSkill = 440;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Firbolg, PlayerRace.Graoch, PlayerRace.Lurikeen, PlayerRace.Shar, PlayerRace.Sylvan,
-		};
 	}
 }

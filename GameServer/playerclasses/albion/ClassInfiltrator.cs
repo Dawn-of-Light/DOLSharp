@@ -24,7 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Infiltrator, "Infiltrator", "Rogue")]
 	public class ClassInfiltrator : ClassAlbionRogue
 	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };
+		private static readonly List<string> DefaultAutoTrainableSkills = new List<string>() { Specs.Stealth };
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new List<PlayerRace>()
+		{
+			PlayerRace.Briton, PlayerRace.Highlander, PlayerRace.Inconnu, PlayerRace.Saracen,
+		};
 
 		public ClassInfiltrator()
 			: base()
@@ -34,7 +38,8 @@ namespace DOL.GS.PlayerClass
 			m_primaryStat = eStat.DEX;
 			m_secondaryStat = eStat.QUI;
 			m_tertiaryStat = eStat.STR;
-			m_baseHP = 720;
+			m_autotrainableSkills = DefaultAutoTrainableSkills;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override bool CanUseLefthandedWeapon
@@ -42,19 +47,9 @@ namespace DOL.GS.PlayerClass
 			get { return true; }
 		}
 
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Briton, PlayerRace.Inconnu, PlayerRace.Saracen,
-		};
 	}
 }

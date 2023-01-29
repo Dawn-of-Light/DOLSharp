@@ -24,7 +24,12 @@ namespace DOL.GS.PlayerClass
     [CharacterClass((int)eCharacterClass.Vampiir, "Vampiir", "Stalker")]
     public class ClassVampiir : ClassStalker
     {
-        public ClassVampiir()
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Lurikeen, PlayerRace.Shar,
+		};
+
+		public ClassVampiir()
             : base()
         {
             m_profession = "PlayerClass.Profession.PathofAffinity";
@@ -35,9 +40,10 @@ namespace DOL.GS.PlayerClass
             //Vampiirs do not have a mana stat
             //Special handling is need in the power pool calculator
             //m_manaStat = eStat.STR;
-            m_wsbase = 440;
+            m_baseWeaponSkill = 440;
             m_baseHP = 878;
-        }
+			m_eligibleRaces = DefaultEligibleRaces;
+		}
 
         public override eClassType ClassType
         {
@@ -48,10 +54,5 @@ namespace DOL.GS.PlayerClass
         {
             return true;
         }
-
-        public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-        {
-             PlayerRace.Celt, PlayerRace.Lurikeen, PlayerRace.Shar,
-        };
     }
 }

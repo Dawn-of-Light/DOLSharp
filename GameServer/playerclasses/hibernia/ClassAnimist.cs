@@ -24,18 +24,20 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Animist, "Animist", "Forester")]
 	public class ClassAnimist : CharacterClassAnimist
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Firbolg, PlayerRace.Sylvan,
+		};
+
 		public ClassAnimist()
 			: base()
 		{
 			m_specializationMultiplier = 10;
-			m_wsbase = 280;
-			m_baseHP = 560;
-			m_manaStat = eStat.INT;
-
 			m_profession = "PlayerClass.Profession.PathofAffinity";
 			m_primaryStat = eStat.INT;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.DEX;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override eClassType ClassType
@@ -47,10 +49,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Firbolg, PlayerRace.Sylvan,
-		};
 	}
 }

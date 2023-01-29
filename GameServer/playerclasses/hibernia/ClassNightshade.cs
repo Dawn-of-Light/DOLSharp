@@ -24,7 +24,12 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Nightshade, "Nightshade", "Stalker")]
 	public class ClassNightshade : ClassStalker
 	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };
+		private static readonly List<string> DefaultAutoTrainableSkills = new() { Specs.Stealth };
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen,
+		};
+
 
 		public ClassNightshade()
 			: base()
@@ -35,6 +40,8 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.QUI;
 			m_tertiaryStat = eStat.STR;
 			m_manaStat = eStat.DEX;
+			m_autotrainableSkills = DefaultAutoTrainableSkills;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override bool CanUseLefthandedWeapon
@@ -47,19 +54,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Celt, PlayerRace.Elf, PlayerRace.Lurikeen,
-		};
 	}
 }

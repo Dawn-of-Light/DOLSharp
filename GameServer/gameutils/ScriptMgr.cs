@@ -702,7 +702,9 @@ namespace DOL.GS
 						{
 							if (attrib.ID == id)
 							{
-								return (ICharacterClass)Activator.CreateInstance(type);
+								var charClass = (ICharacterClass)Activator.CreateInstance(type);
+								charClass.LoadClassOverride((eCharacterClass)id);
+								return charClass;
 							}
 						}
 					}

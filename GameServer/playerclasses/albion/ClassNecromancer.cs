@@ -24,25 +24,25 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Necromancer, "Necromancer", "Disciple")]
 	public class ClassNecromancer : CharacterClassNecromancer
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Briton, PlayerRace.Inconnu, PlayerRace.Saracen,
+		};
+
 		public ClassNecromancer()
 			: base()
 		{
 			m_profession = "PlayerClass.Profession.TempleofArawn";
-			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.INT;
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.QUI;
 			m_manaStat = eStat.INT;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
-		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Briton, PlayerRace.Inconnu, PlayerRace.Saracen,
-		};
+		}		
 	}
 }

@@ -24,6 +24,11 @@ namespace DOL.GS.PlayerClass
 	[CharacterClassAttribute((int)eCharacterClass.Savage, "Savage", "Viking")]
 	public class ClassSavage : ClassViking
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Dwarf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Troll, PlayerRace.Valkyn,
+		};
+
 
 		public ClassSavage()
 			: base()
@@ -33,7 +38,8 @@ namespace DOL.GS.PlayerClass
 			m_primaryStat = eStat.DEX;
 			m_secondaryStat = eStat.QUI;
 			m_tertiaryStat = eStat.STR;
-			m_wsbase = 400;
+			m_baseWeaponSkill = 400;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override bool CanUseLefthandedWeapon
@@ -45,10 +51,5 @@ namespace DOL.GS.PlayerClass
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Dwarf, PlayerRace.Kobold, PlayerRace.Norseman, PlayerRace.Troll, PlayerRace.Valkyn,
-		};
 	}
 }

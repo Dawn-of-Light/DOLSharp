@@ -24,18 +24,18 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Elementalist, "Elementalist", "Elementalist")]
 	public class ClassElementalist : CharacterClassBase
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new()
+		{
+			 PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.HalfOgre,
+		};
+
 		public ClassElementalist()
 			: base()
 		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 280;
+			m_baseWeaponSkill = 280;
 			m_baseHP = 560;
 			m_manaStat = eStat.INT;
-		}
-
-		public override string GetTitle(GamePlayer player, int level)
-		{
-			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override eClassType ClassType
@@ -51,11 +51,6 @@ namespace DOL.GS.PlayerClass
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;
-		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.HalfOgre,
-		};
+		}		
 	}
 }

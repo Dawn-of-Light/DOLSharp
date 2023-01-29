@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using DOL.GS.Realm;
 using System.Collections.Generic;
 
@@ -25,6 +24,10 @@ namespace DOL.GS.PlayerClass
 	[CharacterClass((int)eCharacterClass.Friar, "Friar", "Acolyte")]
 	public class ClassFriar : ClassAcolyte
 	{
+		private static readonly List<PlayerRace> DefaultEligibleRaces = new List<PlayerRace>()
+		{
+			PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.Highlander,
+		};
 		public ClassFriar()
 			: base()
 		{
@@ -34,18 +37,13 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.STR;
 			m_manaStat = eStat.PIE;
-			m_wsbase = 360;
-			m_baseHP = 720;
+			m_baseWeaponSkill = 360;
+			m_eligibleRaces = DefaultEligibleRaces;
 		}
 
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
-
-		public override List<PlayerRace> EligibleRaces => new List<PlayerRace>()
-		{
-			 PlayerRace.Avalonian, PlayerRace.Briton, PlayerRace.Highlander,
-		};
 	}
 }
