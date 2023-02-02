@@ -160,8 +160,8 @@ namespace DOL.AI.Brain
 
 			//Mob will now always walk on their path
 			if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving
-			    && !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
-			    && Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
+				&& !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
+				&& Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
 			{
 				PathPoint path = MovementMgr.LoadPath(Body.PathID);
 				if (path != null)
@@ -224,6 +224,22 @@ namespace DOL.AI.Brain
 
 					Body.TargetObject = null;
 				}
+			}
+
+			CheckStealth();
+		}
+
+		/// <summary>
+		/// Check if the NPC needs to be stealthed or unstealthed
+		/// </summary>
+		public virtual void CheckStealth()
+		{
+			if (Body.CanStealth)
+			{
+				bool oldStealth = Body.IsStealthed;
+				bool newStealth = !Body.InCombat && !Body.IsCasting && !Body.IsAttacking;
+				if (oldStealth != newStealth)
+					Body.Stealth(newStealth);
 			}
 		}
 
