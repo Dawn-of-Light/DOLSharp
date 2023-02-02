@@ -361,7 +361,7 @@ namespace DOL.GS.Spells
 		{
 			GameNPC npc = target as GameNPC;
 			if (Spell.Target.ToUpper() == "REALM" && Caster is GamePlayer &&
-				(npc == null || npc.Realm != Caster.Realm || (npc.Flags & GameNPC.eFlags.PEACE) != 0))
+				(npc == null || npc.Realm != Caster.Realm || npc.IsPeaceful))
 				target = Caster;
 		}
 

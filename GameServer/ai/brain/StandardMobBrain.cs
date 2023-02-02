@@ -824,7 +824,7 @@ namespace DOL.AI.Brain
 					// first check to see if the healer is in our aggrolist so we don't go attacking anyone who heals
 					if (m_aggroTable.ContainsKey(eArgs.HealSource as GameLiving))
 					{
-						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & GameNPC.eFlags.PEACE) == 0))
+						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && !((GameNPC)eArgs.HealSource).IsPeaceful))
 						{
 							AddToAggroList((GameLiving)eArgs.HealSource, eArgs.HealAmount);
 						}

@@ -923,7 +923,7 @@ public class MLBrain : GuardBrain
 		{
 			if (m_aggroTable.ContainsKey(npc))
 				continue; // add only new npcs
-			if ((npc.Flags & GameNPC.eFlags.FLYING) != 0)
+			if (npc.IsFlying)
 				continue; // let's not try to attack flying mobs
 			if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
 				continue;

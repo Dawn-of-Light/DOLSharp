@@ -390,11 +390,11 @@ namespace DOL.GS.ServerRules
 
 			//Peace flag NPCs are same realm
 			if (target is GameNPC)
-				if ((((GameNPC)target).Flags & GameNPC.eFlags.PEACE) != 0)
+				if (((GameNPC)target).IsPeaceful)
 					return true;
 
 			if (source is GameNPC)
-				if ((((GameNPC)source).Flags & GameNPC.eFlags.PEACE) != 0)
+				if (((GameNPC)source).IsPeaceful)
 					return true;
 
 			if (source is GamePlayer && target is GamePlayer)
