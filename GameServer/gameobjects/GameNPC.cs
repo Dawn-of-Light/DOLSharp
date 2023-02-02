@@ -741,6 +741,10 @@ namespace DOL.GS
 			{
 				eFlags oldflags = m_flags;
 				m_flags = value;
+
+				if (IsStealthed)
+					CanStealth = true;
+
 				if (ObjectState == eObjectState.Active)
 				{
 					if (oldflags != m_flags)
@@ -756,12 +760,58 @@ namespace DOL.GS
 			}
 		}
 
+		public bool IsGhost
+		{ get => (m_flags & eFlags.GHOST) != 0; }
+
+		public override bool IsStealthed
+		{ get => (m_flags & eFlags.STEALTH) != 0; }
+
+		public bool IsDontShowName
+		{ get => (m_flags & eFlags.DONTSHOWNAME) != 0; }
+
+		public bool IsCannotTarget
+		{ get => (m_flags & eFlags.CANTTARGET) != 0; }
+
+		public bool IsPeaceful
+		{ get => (m_flags & eFlags.PEACE) != 0; }
+
+		public bool IsFlying
+		{ get => (m_flags & eFlags.FLYING) != 0; }
+
+		public bool IsTorchLit
+		{ get => (m_flags & eFlags.TORCH) != 0; }
+
+		public bool IsStatue
+		{ get => (m_flags & eFlags.STATUE) != 0; }
 
 		public override bool IsUnderwater
 		{
 			get { return (m_flags & eFlags.SWIMMING) == eFlags.SWIMMING || base.IsUnderwater; }
 		}
 
+		/// <summary>
+		/// Is this NPC able to stealth?
+		/// </summary>
+		public bool CanStealth
+		{
+			get;
+			protected set;
+		}
+
+		/// <summary>
+		/// Set the NPC to stealth or unstealth
+		/// </summary>
+		/// <param name="goStealth">True to stealth, false to unstealth</param>
+		public virtual void Stealth(bool goStealth)
+		{
+			if (goStealth != IsStealthed)
+			{
+				if (goStealth)
+					Flags |= eFlags.STEALTH;
+				else
+					Flags &= ~eFlags.STEALTH;
+			}
+		}
 
 		/// <summary>
 		/// Shows wether any player sees that mob
@@ -936,17 +986,6 @@ namespace DOL.GS
 						return TargetPosition.Z;
 				}
 				return base.Z;
-			}
-		}
-
-		/// <summary>
-		/// The stealth state of this NPC
-		/// </summary>
-		public override bool IsStealthed
-		{
-			get
-			{
-				return (Flags & eFlags.STEALTH) != 0;
 			}
 		}
 
