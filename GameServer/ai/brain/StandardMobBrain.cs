@@ -235,12 +235,7 @@ namespace DOL.AI.Brain
 		public virtual void CheckStealth()
 		{
 			if (Body.CanStealth)
-			{
-				bool oldStealth = Body.IsStealthed;
-				bool newStealth = !Body.InCombat && !Body.IsCasting && !Body.IsAttacking;
-				if (oldStealth != newStealth)
-					Body.Stealth(newStealth);
-			}
+				Body.Stealth(!Body.InCombat && !Body.IsCasting);
 		}
 
 		/// <summary>
