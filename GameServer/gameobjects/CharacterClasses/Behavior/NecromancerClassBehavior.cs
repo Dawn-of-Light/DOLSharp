@@ -70,11 +70,7 @@ namespace DOL.GS
             }
         }
 
-        /// <summary>
-        /// Create a necromancer shade effect for this player.
-        /// </summary>
-        /// <returns></returns>
-        public override ShadeEffect CreateShadeEffect()
+        protected override ShadeEffect CreateShadeEffect()
         {
             return new NecromancerShadeEffect();
         }

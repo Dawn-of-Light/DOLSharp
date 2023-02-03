@@ -143,7 +143,7 @@ namespace DOL.GS
         /// Create a shade effect for this player.
         /// </summary>
         /// <returns></returns>
-        public virtual ShadeEffect CreateShadeEffect()
+        protected virtual ShadeEffect CreateShadeEffect()
         {
             return new ShadeEffect();
         }

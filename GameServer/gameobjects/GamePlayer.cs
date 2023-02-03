@@ -14281,15 +14281,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Create a shade effect for this player.
-		/// </summary>
-		/// <returns></returns>
-		protected virtual ShadeEffect CreateShadeEffect()
-		{
-			return CharacterClass.CreateShadeEffect();
-		}
-
-		/// <summary>
 		/// The model ID used on character creation.
 		/// </summary>
 		public ushort CreationModel
