@@ -6,7 +6,7 @@ namespace DOL.GS.Keeps
 {
 	public class GuardHealer : GameKeepGuard
 	{
-		protected override ICharacterClass GetClass()
+		protected override CharacterClass GetClass()
 		{
 			if (ModelRealm == eRealm.Albion) return CharacterClass.Cleric;
 			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Healer;

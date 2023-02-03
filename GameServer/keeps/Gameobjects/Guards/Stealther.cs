@@ -10,7 +10,7 @@ namespace DOL.GS.Keeps
             Flags = eFlags.STEALTH;
         }
 
-		protected override ICharacterClass GetClass()
+		protected override CharacterClass GetClass()
 		{
 			if (ModelRealm == eRealm.Albion) return CharacterClass.Infiltrator;
 			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Shadowblade;

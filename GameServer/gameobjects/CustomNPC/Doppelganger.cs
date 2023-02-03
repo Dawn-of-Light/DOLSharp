@@ -143,7 +143,7 @@ namespace DOL.GS
             else
                 Gender = eGender.Female;
 
-            ICharacterClass characterClass = CharacterClass.None;
+            var characterClass = CharacterClass.None;
 
             switch (Util.Random(2))
             {

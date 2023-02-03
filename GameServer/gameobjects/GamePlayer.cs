@@ -2805,18 +2805,7 @@ namespace DOL.GS
 			set { if (DBCharacter != null) DBCharacter.Race = value; }
 		}
 
-		/// <summary>
-		/// Players class
-		/// </summary>
-		protected ICharacterClass m_characterClass;
-
-		/// <summary>
-		/// Gets the player's character class
-		/// </summary>
-		public virtual ICharacterClass CharacterClass
-		{
-			get { return m_characterClass; }
-		}
+		public virtual CharacterClass CharacterClass { get; protected set; }
 
 		/// <summary>
 		/// Set the character class to a specific one
@@ -2835,8 +2824,8 @@ namespace DOL.GS
 				return false;
 			}
 
-			m_characterClass = cl;
-			DBCharacter.Class = m_characterClass.ID;
+			CharacterClass = cl;
+			DBCharacter.Class = CharacterClass.ID;
 
 			if (Group != null)
 			{
@@ -15594,7 +15583,7 @@ namespace DOL.GS
 		public static GamePlayer CreateDummy() 
 		{
 			var player = new GamePlayer();
-			player.m_characterClass = GS.CharacterClass.None;
+			player.CharacterClass = GS.CharacterClass.None;
 			player.m_dbCharacter = new DOLCharacters();
 			return player; 
 		}
@@ -15634,7 +15623,7 @@ namespace DOL.GS
 			m_customDialogCallback = null;
 			m_sitting = false;
 			m_isWireframe = false;
-			m_characterClass = GS.CharacterClass.None;
+			CharacterClass = GS.CharacterClass.None;
 			m_groupIndex = 0xFF;
 
 			m_saveInDB = true;

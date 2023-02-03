@@ -1211,7 +1211,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		protected virtual ICharacterClass GetClass()
+		protected virtual CharacterClass GetClass()
         {
 			return CharacterClass.None;
 		}

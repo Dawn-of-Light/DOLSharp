@@ -72,7 +72,7 @@ namespace DOL.GS.Keeps
 			return base.GetArmorAbsorb(slot) - 0.05;
 		}
 
-		protected override ICharacterClass GetClass()
+		protected override CharacterClass GetClass()
 		{
 			if (ModelRealm == eRealm.Albion) return CharacterClass.Wizard;
 			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Runemaster;

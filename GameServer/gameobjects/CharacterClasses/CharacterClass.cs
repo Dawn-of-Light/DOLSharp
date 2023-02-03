@@ -7,7 +7,7 @@ using DOL.Language;
 
 namespace DOL.GS
 {
-    public class CharacterClass : ICharacterClass
+    public class CharacterClass
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -167,57 +167,57 @@ namespace DOL.GS
             => ID;
 
         #region CharacterClass(Base) creation shortcuts
-        public static ICharacterClass None => CharacterClass.GetClass((int)eCharacterClass.Unknown);
+        public static CharacterClass None => CharacterClass.GetClass((int)eCharacterClass.Unknown);
         //alb
-        public static ICharacterClass Armsman => CharacterClass.GetClass((int)eCharacterClass.Armsman);
-        public static ICharacterClass Cabalist => CharacterClass.GetClass((int)eCharacterClass.Cabalist);
-        public static ICharacterClass Cleric => CharacterClass.GetClass((int)eCharacterClass.Cleric);
-        public static ICharacterClass Friar => CharacterClass.GetClass((int)eCharacterClass.Friar);
-        public static ICharacterClass Heretic => CharacterClass.GetClass((int)eCharacterClass.Heretic);
-        public static ICharacterClass Infiltrator => CharacterClass.GetClass((int)eCharacterClass.Infiltrator);
-        public static ICharacterClass Mercenary => CharacterClass.GetClass((int)eCharacterClass.Mercenary);
-        public static ICharacterClass Minstrel => CharacterClass.GetClass((int)eCharacterClass.Minstrel);
-        public static ICharacterClass Necromancer => CharacterClass.GetClass((int)eCharacterClass.Necromancer);
-        public static ICharacterClass Paladin => CharacterClass.GetClass((int)eCharacterClass.Paladin);
-        public static ICharacterClass Reaver => CharacterClass.GetClass((int)eCharacterClass.Reaver);
-        public static ICharacterClass Scout => CharacterClass.GetClass((int)eCharacterClass.Scout);
-        public static ICharacterClass Sorcerer => CharacterClass.GetClass((int)eCharacterClass.Sorcerer);
-        public static ICharacterClass Theurgist => CharacterClass.GetClass((int)eCharacterClass.Theurgist);
-        public static ICharacterClass Wizard => CharacterClass.GetClass((int)eCharacterClass.Wizard);
-        public static ICharacterClass MaulerAlb => CharacterClass.GetClass((int)eCharacterClass.MaulerAlb);
+        public static CharacterClass Armsman => CharacterClass.GetClass((int)eCharacterClass.Armsman);
+        public static CharacterClass Cabalist => CharacterClass.GetClass((int)eCharacterClass.Cabalist);
+        public static CharacterClass Cleric => CharacterClass.GetClass((int)eCharacterClass.Cleric);
+        public static CharacterClass Friar => CharacterClass.GetClass((int)eCharacterClass.Friar);
+        public static CharacterClass Heretic => CharacterClass.GetClass((int)eCharacterClass.Heretic);
+        public static CharacterClass Infiltrator => CharacterClass.GetClass((int)eCharacterClass.Infiltrator);
+        public static CharacterClass Mercenary => CharacterClass.GetClass((int)eCharacterClass.Mercenary);
+        public static CharacterClass Minstrel => CharacterClass.GetClass((int)eCharacterClass.Minstrel);
+        public static CharacterClass Necromancer => CharacterClass.GetClass((int)eCharacterClass.Necromancer);
+        public static CharacterClass Paladin => CharacterClass.GetClass((int)eCharacterClass.Paladin);
+        public static CharacterClass Reaver => CharacterClass.GetClass((int)eCharacterClass.Reaver);
+        public static CharacterClass Scout => CharacterClass.GetClass((int)eCharacterClass.Scout);
+        public static CharacterClass Sorcerer => CharacterClass.GetClass((int)eCharacterClass.Sorcerer);
+        public static CharacterClass Theurgist => CharacterClass.GetClass((int)eCharacterClass.Theurgist);
+        public static CharacterClass Wizard => CharacterClass.GetClass((int)eCharacterClass.Wizard);
+        public static CharacterClass MaulerAlb => CharacterClass.GetClass((int)eCharacterClass.MaulerAlb);
         //mid
-        public static ICharacterClass Berserker => CharacterClass.GetClass((int)eCharacterClass.Berserker);
-        public static ICharacterClass Bonedancer => CharacterClass.GetClass((int)eCharacterClass.Bonedancer);
-        public static ICharacterClass Healer => CharacterClass.GetClass((int)eCharacterClass.Healer);
-        public static ICharacterClass Hunter => CharacterClass.GetClass((int)eCharacterClass.Hunter);
-        public static ICharacterClass Runemaster => CharacterClass.GetClass((int)eCharacterClass.Runemaster);
-        public static ICharacterClass Savage => CharacterClass.GetClass((int)eCharacterClass.Savage);
-        public static ICharacterClass Shadowblade => CharacterClass.GetClass((int)eCharacterClass.Shadowblade);
-        public static ICharacterClass Shaman => CharacterClass.GetClass((int)eCharacterClass.Shaman);
-        public static ICharacterClass Skald => CharacterClass.GetClass((int)eCharacterClass.Skald);
-        public static ICharacterClass Spiritmaster => CharacterClass.GetClass((int)eCharacterClass.Spiritmaster);
-        public static ICharacterClass Thane => CharacterClass.GetClass((int)eCharacterClass.Thane);
-        public static ICharacterClass Valkyrie => CharacterClass.GetClass((int)eCharacterClass.Valkyrie);
-        public static ICharacterClass Warlock => CharacterClass.GetClass((int)eCharacterClass.Warlock);
-        public static ICharacterClass Warrior => CharacterClass.GetClass((int)eCharacterClass.Warrior);
-        public static ICharacterClass MaulerMid => CharacterClass.GetClass((int)eCharacterClass.MaulerMid);
+        public static CharacterClass Berserker => CharacterClass.GetClass((int)eCharacterClass.Berserker);
+        public static CharacterClass Bonedancer => CharacterClass.GetClass((int)eCharacterClass.Bonedancer);
+        public static CharacterClass Healer => CharacterClass.GetClass((int)eCharacterClass.Healer);
+        public static CharacterClass Hunter => CharacterClass.GetClass((int)eCharacterClass.Hunter);
+        public static CharacterClass Runemaster => CharacterClass.GetClass((int)eCharacterClass.Runemaster);
+        public static CharacterClass Savage => CharacterClass.GetClass((int)eCharacterClass.Savage);
+        public static CharacterClass Shadowblade => CharacterClass.GetClass((int)eCharacterClass.Shadowblade);
+        public static CharacterClass Shaman => CharacterClass.GetClass((int)eCharacterClass.Shaman);
+        public static CharacterClass Skald => CharacterClass.GetClass((int)eCharacterClass.Skald);
+        public static CharacterClass Spiritmaster => CharacterClass.GetClass((int)eCharacterClass.Spiritmaster);
+        public static CharacterClass Thane => CharacterClass.GetClass((int)eCharacterClass.Thane);
+        public static CharacterClass Valkyrie => CharacterClass.GetClass((int)eCharacterClass.Valkyrie);
+        public static CharacterClass Warlock => CharacterClass.GetClass((int)eCharacterClass.Warlock);
+        public static CharacterClass Warrior => CharacterClass.GetClass((int)eCharacterClass.Warrior);
+        public static CharacterClass MaulerMid => CharacterClass.GetClass((int)eCharacterClass.MaulerMid);
         //hib
-        public static ICharacterClass Animist => CharacterClass.GetClass((int)eCharacterClass.Animist);
-        public static ICharacterClass Bainshee => CharacterClass.GetClass((int)eCharacterClass.Bainshee);
-        public static ICharacterClass Bard => CharacterClass.GetClass((int)eCharacterClass.Bard);
-        public static ICharacterClass Blademaster => CharacterClass.GetClass((int)eCharacterClass.Blademaster);
-        public static ICharacterClass Champion => CharacterClass.GetClass((int)eCharacterClass.Champion);
-        public static ICharacterClass Druid => CharacterClass.GetClass((int)eCharacterClass.Druid);
-        public static ICharacterClass Eldritch => CharacterClass.GetClass((int)eCharacterClass.Eldritch);
-        public static ICharacterClass Enchanter => CharacterClass.GetClass((int)eCharacterClass.Enchanter);
-        public static ICharacterClass Hero => CharacterClass.GetClass((int)eCharacterClass.Hero);
-        public static ICharacterClass Mentalist => CharacterClass.GetClass((int)eCharacterClass.Mentalist);
-        public static ICharacterClass Nightshade => CharacterClass.GetClass((int)eCharacterClass.Nightshade);
-        public static ICharacterClass Ranger => CharacterClass.GetClass((int)eCharacterClass.Ranger);
-        public static ICharacterClass Valewalker => CharacterClass.GetClass((int)eCharacterClass.Valewalker);
-        public static ICharacterClass Vampiir => CharacterClass.GetClass((int)eCharacterClass.Vampiir);
-        public static ICharacterClass Warden => CharacterClass.GetClass((int)eCharacterClass.Warden);
-        public static ICharacterClass MaulerHib => CharacterClass.GetClass((int)eCharacterClass.MaulerHib);
+        public static CharacterClass Animist => CharacterClass.GetClass((int)eCharacterClass.Animist);
+        public static CharacterClass Bainshee => CharacterClass.GetClass((int)eCharacterClass.Bainshee);
+        public static CharacterClass Bard => CharacterClass.GetClass((int)eCharacterClass.Bard);
+        public static CharacterClass Blademaster => CharacterClass.GetClass((int)eCharacterClass.Blademaster);
+        public static CharacterClass Champion => CharacterClass.GetClass((int)eCharacterClass.Champion);
+        public static CharacterClass Druid => CharacterClass.GetClass((int)eCharacterClass.Druid);
+        public static CharacterClass Eldritch => CharacterClass.GetClass((int)eCharacterClass.Eldritch);
+        public static CharacterClass Enchanter => CharacterClass.GetClass((int)eCharacterClass.Enchanter);
+        public static CharacterClass Hero => CharacterClass.GetClass((int)eCharacterClass.Hero);
+        public static CharacterClass Mentalist => CharacterClass.GetClass((int)eCharacterClass.Mentalist);
+        public static CharacterClass Nightshade => CharacterClass.GetClass((int)eCharacterClass.Nightshade);
+        public static CharacterClass Ranger => CharacterClass.GetClass((int)eCharacterClass.Ranger);
+        public static CharacterClass Valewalker => CharacterClass.GetClass((int)eCharacterClass.Valewalker);
+        public static CharacterClass Vampiir => CharacterClass.GetClass((int)eCharacterClass.Vampiir);
+        public static CharacterClass Warden => CharacterClass.GetClass((int)eCharacterClass.Warden);
+        public static CharacterClass MaulerHib => CharacterClass.GetClass((int)eCharacterClass.MaulerHib);
         #endregion
 
         #region Default Database
@@ -1844,5 +1844,12 @@ namespace DOL.GS
             },
         };
         #endregion
+    }
+
+    public enum eClassType : int
+    {
+        ListCaster, // access to all spells
+        Hybrid, // access to best two spells
+        PureTank, // no spells
     }
 }

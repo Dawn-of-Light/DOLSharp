@@ -352,7 +352,7 @@ namespace DOL.GS
 
 			if (player == null) return false;
 
-			ICharacterClass oldClass = player.CharacterClass;
+			var oldClass = player.CharacterClass;
 
 			// Player was promoted
 			if (player.SetCharacterClass(classid))

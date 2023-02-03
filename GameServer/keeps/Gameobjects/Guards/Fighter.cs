@@ -5,7 +5,7 @@ namespace DOL.GS.Keeps
 {
 	public class GuardFighter : GameKeepGuard
 	{
-		protected override ICharacterClass GetClass()
+		protected override CharacterClass GetClass()
 		{
 			if (ModelRealm == eRealm.Albion) return CharacterClass.Armsman;
 			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Warrior;

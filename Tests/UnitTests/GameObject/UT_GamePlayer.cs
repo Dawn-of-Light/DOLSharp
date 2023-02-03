@@ -148,13 +148,13 @@ namespace DOL.UnitTests.Gameserver
             return GamePlayer.CreateDummy();
         }
 
-        private static GamePlayer CreatePlayer(ICharacterClass charClass)
+        private static GamePlayer CreatePlayer(CharacterClass charClass)
         {
             var player = CreatePlayer();
             player.SetCharacterClass(charClass.ID);
             return player;
         }
 
-        private ICharacterClass Animist => CharacterClass.Animist;
+        private CharacterClass Animist => CharacterClass.Animist;
     }
 }
