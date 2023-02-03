@@ -2505,7 +2505,7 @@ namespace DOL.GS.Commands
 
             //reset before, and after changing the class.
             target.Reset();
-            target.SetCharacterClass(classID);
+            target.SetCharacterClass(CharacterClass.GetClass(classID));
             target.Reset();
 
             //this is just for additional updates

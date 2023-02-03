@@ -9,8 +9,6 @@ namespace DOL.GS
 {
     public class CharacterClass
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private static Dictionary<int, CharacterClass> allClasses = new Dictionary<int, CharacterClass>();
 
         private GamePlayer player;
@@ -49,11 +47,36 @@ namespace DOL.GS
 
         private CharacterClass() { }
 
-        public static CharacterClass Create(GamePlayer player, int classID)
+        public static CharacterClass Create(DBCharacterClass dbCharClass)
         {
-            var characterClass = GetClass(classID);
-            characterClass.player = player;
-            return characterClass;
+            var charClass = new CharacterClass();
+            charClass.ID = dbCharClass.ID;
+            charClass.baseClassID = dbCharClass.BaseClassID;
+            charClass.name = dbCharClass.Name;
+            charClass.femaleName = dbCharClass.FemaleName;
+            charClass.ClassType = (eClassType)dbCharClass.ClassType;
+            charClass.SpecPointsMultiplier = dbCharClass.SpecPointMultiplier;
+            charClass.BaseHP = dbCharClass.BaseHP;
+            charClass.WeaponSkillBase = dbCharClass.BaseWeaponSkill;
+            charClass.ManaStat = (eStat)dbCharClass.ManaStat;
+            charClass.PrimaryStat = (eStat)dbCharClass.PrimaryStat;
+            charClass.SecondaryStat = (eStat)dbCharClass.SecondaryStat;
+            charClass.TertiaryStat = (eStat)dbCharClass.TertiaryStat;
+            charClass.CanUseLefthandedWeapon = dbCharClass.CanUseLeftHandedWeapon;
+            charClass.ProfessionTranslationID = dbCharClass.ProfessionTranslationID;
+
+            charClass.AutoTrainSkills = dbCharClass.AutoTrainSkills
+                    .Split(';', ',').Where(s => !string.IsNullOrEmpty(s));
+
+            var newElibibleRaces = dbCharClass.EligibleRaces
+                .Split(';', ',').Where(s => !string.IsNullOrEmpty(s))
+                .Select(s => Convert.ToInt32(s))
+                .Select(i => PlayerRace.GetRace(i));
+            charClass.eligibleRaces = newElibibleRaces;
+
+            charClass.MaxPulsingSpells = dbCharClass.MaxPulsingSpells == 0 ? (byte)2 : dbCharClass.MaxPulsingSpells;
+
+            return charClass;
         }
 
         public string GetSalutation(eGender gender)
@@ -86,47 +109,19 @@ namespace DOL.GS
             return characterClass;
         }
 
+        public static CharacterClass GetClass(GamePlayer player, int classID)
+        {
+            var charClass = GetClass(classID);
+            charClass.player = player;
+            return charClass;
+        }
+
         public CharacterClass GetBaseClass()
             => GetClass(baseClassID);
 
-        public static bool Load(DBCharacterClass dbCharClass)
+        public static void AddOrReplace(CharacterClass charClass)
         {
-            var charClass = new CharacterClass();
-            charClass.ID = dbCharClass.ID;
-            charClass.baseClassID = dbCharClass.BaseClassID;
-            charClass.name = dbCharClass.Name;
-            charClass.femaleName = dbCharClass.FemaleName;
-            charClass.ClassType = (eClassType)dbCharClass.ClassType;
-            charClass.SpecPointsMultiplier = dbCharClass.SpecPointMultiplier;
-            charClass.BaseHP = dbCharClass.BaseHP;
-            charClass.WeaponSkillBase = dbCharClass.BaseWeaponSkill;
-            charClass.ManaStat = (eStat)dbCharClass.ManaStat;
-            charClass.PrimaryStat = (eStat)dbCharClass.PrimaryStat;
-            charClass.SecondaryStat = (eStat)dbCharClass.SecondaryStat;
-            charClass.TertiaryStat = (eStat)dbCharClass.TertiaryStat;
-            charClass.CanUseLefthandedWeapon = dbCharClass.CanUseLeftHandedWeapon;
-            charClass.ProfessionTranslationID = dbCharClass.ProfessionTranslationID;
-
-            charClass.AutoTrainSkills = dbCharClass.AutoTrainSkills
-                    .Split(';', ',').Where(s => !string.IsNullOrEmpty(s));
-            try
-            {
-                var newElibibleRaces = dbCharClass.EligibleRaces
-                    .Split(';', ',').Where(s => !string.IsNullOrEmpty(s))
-                    .Select(s => Convert.ToInt32(s))
-                    .Select(i => PlayerRace.GetRace(i));
-                charClass.eligibleRaces = newElibibleRaces;
-            }
-            catch (Exception e)
-            {
-                log.Error($"Failed to load EligibleRaces for class with id {dbCharClass.ID} with error:\n{e}");
-                return false;
-            }
-
-            charClass.MaxPulsingSpells = dbCharClass.MaxPulsingSpells == 0 ? (byte)2 : dbCharClass.MaxPulsingSpells;
-
             allClasses[charClass.ID] = charClass;
-            return true;
         }
 
         public static CharacterClass Unknown

@@ -2807,24 +2807,24 @@ namespace DOL.GS
 
 		public virtual CharacterClass CharacterClass { get; protected set; }
 
-		/// <summary>
-		/// Set the character class to a specific one
-		/// </summary>
-		/// <param name="id">id of the character class</param>
-		/// <returns>success</returns>
+		[Obsolete("Use SetCharacterClass(CharacterClass) instead.")]
 		public virtual bool SetCharacterClass(int id)
 		{
-			var cl = GS.CharacterClass.Create(this, id);
-			if(cl.Equals(GS.CharacterClass.Bainshee)) new BainsheeMorphEffect(this);
+			var cl = GS.CharacterClass.GetClass(this, id);
 
-			if (cl.Equals(GS.CharacterClass.None))
+			return SetCharacterClass(cl);
+		}
+
+        public bool SetCharacterClass(CharacterClass charClass)
+        {
+            if (charClass.Equals(GS.CharacterClass.None))
 			{
-				if (log.IsErrorEnabled)
-					log.ErrorFormat("No CharacterClass with ID {0} found", id);
+				if (log.IsErrorEnabled) log.ErrorFormat($"Unknown CharacterClass has been set for Player {Name}.");
 				return false;
 			}
+			if(charClass.Equals(GS.CharacterClass.Bainshee)) new BainsheeMorphEffect(this);
 
-			CharacterClass = cl;
+			CharacterClass = charClass;
 			DBCharacter.Class = CharacterClass.ID;
 
 			if (Group != null)
@@ -2832,7 +2832,7 @@ namespace DOL.GS
 				Group.UpdateMember(this, false, true);
 			}
 			return true;
-		}
+        }
 
 		/// <summary>
 		/// Hold all player face custom attibutes
@@ -12478,7 +12478,7 @@ namespace DOL.GS
 			m_charStat[eStat.EMP - eStat._First] = (short)DBCharacter.Empathy;
 			m_charStat[eStat.CHR - eStat._First] = (short)DBCharacter.Charisma;
 
-			SetCharacterClass(DBCharacter.Class);
+			SetCharacterClass(CharacterClass.GetClass(DBCharacter.Class));
 
 			m_currentSpeed = 0;
 			if (MaxSpeedBase == 0)

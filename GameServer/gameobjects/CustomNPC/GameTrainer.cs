@@ -378,7 +378,7 @@ namespace DOL.GS
 			var oldClass = player.CharacterClass;
 
 			// Player was promoted
-			if (player.SetCharacterClass(classid))
+			if (player.SetCharacterClass(CharacterClass.GetClass(classid)))
 			{
 				player.RemoveAllStyles();
 				player.RemoveAllAbilities();

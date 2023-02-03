@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DOL.Database;
@@ -7,25 +8,38 @@ namespace DOL.GS
 {
     public class CharacterClassDB
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public static void Load()
         {
-            var dbClasses = DOLDB<DBCharacterClass>.SelectAllObjects().ToDictionary(c => c.ID,c=>c);
-            foreach (var k in defaultClasses.Keys.ToList().Union(dbClasses.Keys))
+            var dbClasses = DOLDB<DBCharacterClass>.SelectAllObjects().ToDictionary(c => c.ID, c => c);
+            foreach (var classID in defaultClasses.Keys.ToList().Union(dbClasses.Keys))
             {
-                if(dbClasses.TryGetValue(k,out var dbClass))
+                DBCharacterClass dbClass;
+                if (dbClasses.TryGetValue(classID, out var databaseEntry))
                 {
-                    CharacterClass.Load(dbClass);
+                    dbClass = databaseEntry;
                 }
-                else if(defaultClasses.TryGetValue(k, out dbClass))
+                else
                 {
-                    CharacterClass.Load(dbClass);
+                    dbClass = defaultClasses[classID];
                     dbClass.AllowAdd = true;
                     GameServer.Database.AddObject(dbClass);
+                }
+
+                try
+                {
+                    var charClass = CharacterClass.Create(dbClass);
+                    CharacterClass.AddOrReplace(charClass);
+                }
+                catch (Exception e)
+                {
+                    log.Error($"CharacterClass with ID {classID} could not be loaded:\n{e}");
                 }
             }
         }
 
-        private static Dictionary<byte,DBCharacterClass> defaultClasses = new Dictionary<byte,DBCharacterClass>()
+        private static Dictionary<byte, DBCharacterClass> defaultClasses = new Dictionary<byte, DBCharacterClass>()
         {
             {
                 (byte)eCharacterClass.Paladin,
