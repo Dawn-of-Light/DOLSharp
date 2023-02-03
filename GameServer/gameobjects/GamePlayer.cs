@@ -2822,9 +2822,9 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public virtual bool SetCharacterClass(int id)
 		{
-			ICharacterClass cl = ScriptMgr.FindCharacterClass(id);
+			var cl = CharacterClassBase.Create(this, id);
 
-			if (cl == null)
+			if (cl.Equals(GS.CharacterClass.None))
 			{
 				if (log.IsErrorEnabled)
 					log.ErrorFormat("No CharacterClass with ID {0} found", id);
@@ -2832,8 +2832,6 @@ namespace DOL.GS
 			}
 
 			m_characterClass = cl;
-			m_characterClass.Init(this);
-
 			DBCharacter.Class = m_characterClass.ID;
 
 			if (Group != null)

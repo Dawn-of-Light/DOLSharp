@@ -18,9 +18,6 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.AI.Brain;
-using DOL.GS.Effects;
-using DOL.Events;
 using DOL.Language;
 using DOL.GS.Realm;
 using System.Linq;
@@ -68,31 +65,21 @@ namespace DOL.GS
         public virtual bool HasAdvancedFromBaseClass()
             => characterClass.HasAdvancedFromBaseClass;
 
-        private CharacterClassBase()
+        private CharacterClassBase() { }
+
+        public static CharacterClassBase Create(GamePlayer player, int classID)
         {
-            characterClass = CharacterClass.Unknown;
-            Behavior = DefaultClassBehavior.Create(null, characterClass.ID);
+            var characterClass = new CharacterClassBase();
+            characterClass.characterClass = CharacterClass.GetClass(classID);
+            characterClass.Behavior = DefaultClassBehavior.Create(player, characterClass.ID);
+            return characterClass;
         }
 
         public static CharacterClassBase GetClass(int classID)
-        {
-            return new CharacterClassBase()
-            {
-                characterClass = CharacterClass.GetClass(classID)
-            };
-        }
+            => Create(null, classID);
 
         public string GetTitle(GamePlayer player, int level)
             => characterClass.GetTitle(player,level);
-
-        public void Init(GamePlayer player)
-        {
-            // TODO : Should Throw Exception Here.
-            if (Behavior != null && log.IsWarnEnabled)
-                log.WarnFormat("Character Class initializing Player when it was already initialized ! Old Player : {0} New Player : {1}", Behavior.Player, player);
-
-            Behavior = DefaultClassBehavior.Create(player, characterClass.ID);
-        }
 
         public override bool Equals(object obj)
         {

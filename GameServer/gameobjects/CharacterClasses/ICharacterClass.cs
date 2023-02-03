@@ -122,8 +122,6 @@ namespace DOL.GS
 		bool HasAdvancedFromBaseClass();
 		GameTrainer.eChampionTrainerType ChampionTrainerType();
 		List<PlayerRace> EligibleRaces { get; }
-
-		void Init(GamePlayer player);
 	}
 
 	/// <summary>
