@@ -26,9 +26,6 @@ namespace DOL.GS
                 case eCharacterClass.Warlock: behavior = new WarlockClassBehavior(); break;
                 case eCharacterClass.Bainshee: behavior = new BainsheeClassBehavior(); break;
                 case eCharacterClass.Animist: behavior = new AnimistClassBehavior(); break;
-                case eCharacterClass.Scout:
-                case eCharacterClass.Hunter:
-                case eCharacterClass.Ranger: behavior = new ArcherClassBehavior(); break;
                 default: behavior = new DefaultClassBehavior(); break;
             }
             behavior.Player = player;
