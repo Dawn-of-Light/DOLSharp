@@ -24,7 +24,6 @@ namespace DOL.GS
             DefaultClassBehavior behavior;
             switch ((eCharacterClass)classID)
             {
-                case eCharacterClass.Necromancer: behavior = new NecromancerClassBehavior(player); break;
                 case eCharacterClass.Bonedancer: behavior = new BonedancerClassBehavior(player); break;
                 case eCharacterClass.Warlock: behavior = new WarlockClassBehavior(player); break;
                 case eCharacterClass.Bainshee: behavior = new BainsheeClassBehavior(player); break;
@@ -67,17 +66,6 @@ namespace DOL.GS
             }
 
             Player.ControlledBrain = controlledBrain;
-        }
-
-        /// <summary>
-        /// Return the health percent of this character
-        /// </summary>
-        public virtual byte HealthPercentGroupWindow
-        {
-            get
-            {
-                return Player.HealthPercent;
-            }
         }
 
         public virtual bool CanChangeCastingSpeed(SpellLine line, Spell spell)

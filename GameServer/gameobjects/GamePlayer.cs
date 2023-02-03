@@ -2576,13 +2576,16 @@ namespace DOL.GS
 			return Math.Max(1, (int)hp4);
 		}
 
-		public override byte HealthPercentGroupWindow
-		{
-			get
-			{
-				return CharacterClass.Behavior.HealthPercentGroupWindow;
-			}
-		}
+        public override byte HealthPercentGroupWindow
+        {
+            get
+            {
+				var necroWithPet = CharacterClass.Equals(GS.CharacterClass.Necromancer) && ControlledBrain != null;
+                if (necroWithPet) return ControlledBrain.Body.HealthPercent;
+
+                return HealthPercent;
+            }
+        }
 
 		/// <summary>
 		/// Calculate max mana for this player based on level and mana stat level
