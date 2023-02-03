@@ -70,17 +70,6 @@ namespace DOL.GS
         }
 
         /// <summary>
-        /// Can this character start an attack?
-        /// </summary>
-        /// <param name="attackTarget"></param>
-        /// <returns></returns>
-        public virtual bool StartAttack(GameObject attackTarget)
-        {
-            return true;
-        }
-
-
-        /// <summary>
         /// Return the health percent of this character
         /// </summary>
         public virtual byte HealthPercentGroupWindow

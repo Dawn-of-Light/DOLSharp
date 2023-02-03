@@ -5665,10 +5665,6 @@ namespace DOL.GS
 		/// <param name="attackTarget">the target to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
-			if (CharacterClass.Behavior.StartAttack(attackTarget) == false)
-			{
-				return;
-			}
 
 			if (!IsAlive)
 			{

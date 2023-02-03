@@ -17,19 +17,6 @@ namespace DOL.GS
             Player.Model = (ushort)Player.Client.Account.Characters[Player.Client.ActiveCharIndex].CreationModel;
         }
 
-        public override bool StartAttack(GameObject attackTarget)
-        {
-            if (!Player.IsShade)
-            {
-                return true;
-            }
-            else
-            {
-                Player.Out.SendMessage("You cannot enter combat while in shade form!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                return false;
-            }
-        }
-
         public override byte HealthPercentGroupWindow
         {
             get
