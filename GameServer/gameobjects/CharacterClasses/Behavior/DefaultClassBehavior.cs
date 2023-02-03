@@ -46,16 +46,6 @@ namespace DOL.GS
         }
 
         /// <summary>
-        /// Add various skills as the player levels his realm rank up
-        /// </summary>
-        public virtual void OnRealmLevelUp(GamePlayer player)
-        {
-            //we dont want to add things when players arent using their advanced class
-            if (player.CharacterClass.BaseName == player.CharacterClass.Name)
-                return;
-        }
-
-        /// <summary>
         /// Add all spell-lines and other things that are new when this skill is trained
         /// </summary>
         public virtual void OnSkillTrained(GamePlayer player, Specialization skill)

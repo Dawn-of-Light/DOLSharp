@@ -4164,9 +4164,7 @@ namespace DOL.GS
 			get { return DBCharacter != null ? DBCharacter.RealmLevel : 0; }
 			set
 			{
-				if (DBCharacter != null)
-					DBCharacter.RealmLevel = value;
-				CharacterClass.Behavior.OnRealmLevelUp(this);
+				if (DBCharacter != null) DBCharacter.RealmLevel = value;
 			}
 		}
 
@@ -12372,7 +12370,6 @@ namespace DOL.GS
 			}
 						
 			CharacterClass.Behavior.OnLevelUp(this, Level); // load all skills from DB first to keep the order
-			CharacterClass.Behavior.OnRealmLevelUp(this);
 		}
 
 		/// <summary>
