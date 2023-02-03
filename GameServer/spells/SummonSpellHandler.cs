@@ -222,14 +222,8 @@ namespace DOL.GS.Spells
 			GameEventMgr.RemoveAllHandlersForObject(m_pet);
 		}
 
-		/// <summary>
-		/// Called when owner release NPC
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
-		protected virtual void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
-		{
+        protected virtual void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
+        {
             if (!(sender is GameNPC) || !((sender as GameNPC).Brain is IControlledBrain))
                 return;
 
@@ -243,7 +237,7 @@ namespace DOL.GS.Spells
             GameSpellEffect effect = FindEffectOnTarget(pet, this);
             if (effect != null)
                 effect.Cancel(false);
-		}
+        }
 
 		/// <summary>
 		/// Delve Info

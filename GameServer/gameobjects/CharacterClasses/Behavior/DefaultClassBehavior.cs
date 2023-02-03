@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.Effects;
@@ -14,10 +13,10 @@ namespace DOL.GS
 
         public GamePlayer Player { get; private set; }
 
-        protected DefaultClassBehavior(GamePlayer player) 
+        protected DefaultClassBehavior(GamePlayer player)
         {
             Player = player;
-            if(Player != null) Init();
+            if (Player != null) Init();
         }
 
         public static DefaultClassBehavior Create(GamePlayer player, int classID)
@@ -29,7 +28,6 @@ namespace DOL.GS
                 case eCharacterClass.Bonedancer: behavior = new BonedancerClassBehavior(player); break;
                 case eCharacterClass.Warlock: behavior = new WarlockClassBehavior(player); break;
                 case eCharacterClass.Bainshee: behavior = new BainsheeClassBehavior(player); break;
-                case eCharacterClass.Animist: behavior = new AnimistClassBehavior(player); break;
                 default: behavior = new DefaultClassBehavior(player); break;
             }
             return behavior;
@@ -69,33 +67,6 @@ namespace DOL.GS
             }
 
             Player.ControlledBrain = controlledBrain;
-
-        }
-
-        /// <summary>
-        /// Releases controlled object
-        /// </summary>
-        public virtual void CommandNpcRelease()
-        {
-            IControlledBrain controlledBrain = Player.ControlledBrain;
-            if (controlledBrain == null)
-                return;
-
-            GameNPC npc = controlledBrain.Body;
-            if (npc == null)
-                return;
-
-            if (npc is GamePet pet)
-                pet.StripBuffs();
-
-            Player.Notify(GameLivingEvent.PetReleased, npc);
-        }
-
-        /// <summary>
-        /// Invoked when pet is released.
-        /// </summary>
-        public virtual void OnPetReleased()
-        {
         }
 
         /// <summary>

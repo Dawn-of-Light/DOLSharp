@@ -17,37 +17,6 @@ namespace DOL.GS
             Player.Model = (ushort)Player.Client.Account.Characters[Player.Client.ActiveCharIndex].CreationModel;
         }
 
-        private int m_savedPetHealthPercent = 0;
-
-        public override void SetControlledBrain(IControlledBrain controlledNpcBrain)
-        {
-            m_savedPetHealthPercent = (Player.ControlledBrain != null)
-                ? (int)Player.ControlledBrain.Body.HealthPercent : 0;
-
-            base.SetControlledBrain(controlledNpcBrain);
-
-            if (controlledNpcBrain == null)
-            {
-                OnPetReleased();
-            }
-        }
-
-        public override void CommandNpcRelease()
-        {
-            m_savedPetHealthPercent = (Player.ControlledBrain != null) ? (int)Player.ControlledBrain.Body.HealthPercent : 0;
-
-            base.CommandNpcRelease();
-            OnPetReleased();
-        }
-
-        public override void OnPetReleased()
-        {
-            if (Player.IsShade)
-                Player.Shade(false);
-
-            Player.InitControlledBrainArray(0);
-        }
-
         public override bool StartAttack(GameObject attackTarget)
         {
             if (!Player.IsShade)
@@ -125,8 +94,6 @@ namespace DOL.GS
 
                 if (Player.ControlledBrain != null)
                     (Player.ControlledBrain as ControlledNpcBrain).Stop();
-
-                Player.Health = Math.Min(Player.Health, Player.MaxHealth * Math.Max(10, m_savedPetHealthPercent) / 100);
             }
         }
 

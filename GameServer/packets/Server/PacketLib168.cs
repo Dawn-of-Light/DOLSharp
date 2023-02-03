@@ -4076,7 +4076,7 @@ namespace DOL.GS.PacketHandler
                 player = living as GamePlayer;
 
                 if (player != null)
-                    pak.WriteByte(player.CharacterClass.Behavior.HealthPercentGroupWindow);
+                    pak.WriteByte(player.HealthPercentGroupWindow);
                 else
                     pak.WriteByte(living.HealthPercent);
 

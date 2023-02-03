@@ -23,6 +23,7 @@ using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
 using DOL.Language;
+using DOL.Events;
 
 namespace DOL.GS.Spells
 {
@@ -80,14 +81,12 @@ namespace DOL.GS.Spells
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
 
-			if (Caster is GamePlayer)
-				(Caster as GamePlayer).Shade(true);
+			if (Caster is GamePlayer) (Caster as GamePlayer).Shade(true);
 
 			// Cancel RR5 Call of Darkness if on caster.
 
 			IGameEffect callOfDarkness = FindStaticEffectOnTarget(Caster, typeof(CallOfDarknessEffect));
-			if (callOfDarkness != null)
-				callOfDarkness.Cancel(false);
+			if (callOfDarkness != null) callOfDarkness.Cancel(false);
 		}
 
 		public override IList<string> DelveInfo
@@ -115,5 +114,20 @@ namespace DOL.GS.Spells
 		{
 			return new NecromancerPet(template, m_summonConBonus, m_summonHitsBonus);
 		}
+
+        protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
+        {
+            var ownerHealthPointsAfterRelease = (Caster.ControlledBrain != null) ? (int)Caster.ControlledBrain.Body.HealthPercent : 0;
+
+            if (Caster is GamePlayer playerCaster && playerCaster.IsShade)
+            {
+                playerCaster.Health = Math.Min(playerCaster.Health, playerCaster.MaxHealth * Math.Max(10, ownerHealthPointsAfterRelease) / 100);
+                playerCaster.Shade(false);
+            }
+
+            base.OnNpcReleaseCommand(e, sender, arguments);
+
+            Caster.InitControlledBrainArray(0);
+        }
 	}
 }

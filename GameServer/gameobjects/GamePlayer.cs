@@ -14058,15 +14058,20 @@ namespace DOL.GS
 		{
 			CharacterClass.Behavior.SetControlledBrain(controlledBrain);
 		}
-		
-		/// <summary>
-		/// Releases controlled object
-		/// (delegates to CharacterClass)
-		/// </summary>
-		public virtual void CommandNpcRelease()
-		{
-			CharacterClass.Behavior.CommandNpcRelease();
-		}
+
+        public virtual void CommandNpcRelease()
+        {
+            var targetIsPet = TargetObject is GameNPC npc && IsControlledNPC(npc);
+            if (targetIsPet)
+            {
+                Notify(GameLivingEvent.PetReleased, TargetObject);
+            }
+            else
+            {
+                var hasMainPet = ControlledBrain != null && ControlledBrain.Body != null;
+                if (hasMainPet) Notify(GameLivingEvent.PetReleased, ControlledBrain.Body);
+            }
+        }
 		
 		/// <summary>
 		/// Commands controlled object to attack
