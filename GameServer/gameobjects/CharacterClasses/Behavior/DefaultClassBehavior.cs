@@ -80,10 +80,6 @@ namespace DOL.GS
             }
         }
 
-        public virtual void Notify(DOLEvent e, object sender, EventArgs args)
-        {
-        }
-
         public virtual bool CanChangeCastingSpeed(SpellLine line, Spell spell)
         {
             return true;

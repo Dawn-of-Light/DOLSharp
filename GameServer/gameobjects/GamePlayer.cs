@@ -13499,7 +13499,6 @@ namespace DOL.GS
 		#region Notify
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
-			CharacterClass.Behavior.Notify(e, sender, args);
 			base.Notify(e, sender, args);
 
 			// events will only fire for currently active quests.
