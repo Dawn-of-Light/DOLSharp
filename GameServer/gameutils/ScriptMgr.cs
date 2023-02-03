@@ -678,32 +678,6 @@ namespace DOL.GS
 			return specHandler;
 		}
 
-
-		/// <summary>
-		/// Searches for ClassSpec's by id in a given assembly
-		/// </summary>
-		/// <param name="id">the classid to search</param>
-		/// <returns>ClassSpec that was found or null if not found</returns>
-		public static ICharacterClass FindCharacterClass(int id)
-		{
-			return CharacterClassBase.GetClass(id);
-		}
-
-		/// <summary>
-		/// Return a CharacterClass "Base" Class (or current Class if already base)
-		/// </summary>
-		/// <param name="id">the classid to search</param>
-		/// <returns>Base ClassSpec that was found or null if not found</returns>
-		public static ICharacterClass FindCharacterBaseClass(int id)
-		{
-			var charClass = FindCharacterClass(id);
-			if(id != 0 && charClass.Equals(CharacterClass.Unknown))
-			{
-				log.Error($"Could not find character class with id {id}.");
-			}
-			return charClass;
-		}
-
 		/// <summary>
 		/// Searches for NPC guild scripts
 		/// </summary>

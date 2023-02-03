@@ -78,6 +78,9 @@ namespace DOL.GS
         public static CharacterClassBase GetClass(int classID)
             => Create(null, classID);
 
+        public static CharacterClassBase GetBaseClass(int classID)
+            => Create(null, CharacterClass.GetClass(classID).GetBaseClass().ID);
+
         public string GetTitle(GamePlayer player, int level)
             => characterClass.GetTitle(player,level);
 

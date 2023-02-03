@@ -61,6 +61,13 @@ namespace DOL.GS
             return characterClass;
         }
 
+        public CharacterClass GetBaseClass()
+        {
+            if(Equals(CharacterClass.Unknown)) return CharacterClass.Unknown;
+
+            return allClasses.Values.Where(c => c.Name == BaseName).First();
+        }
+
         public static void LoadCustomizationsFromDatabase()
         {
             var customClasses = DOLDB<DBCharacterClass>.SelectAllObjects();

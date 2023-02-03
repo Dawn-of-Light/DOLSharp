@@ -320,11 +320,11 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual bool CanPromotePlayer(GamePlayer player)
 		{
-			var baseClass = ScriptMgr.FindCharacterBaseClass((int)TrainedClass);
+			var baseClass = CharacterClassBase.GetBaseClass((int)TrainedClass);
 			var pickedClass = CharacterClassBase.GetClass((int)TrainedClass);
 
 			// Error or Base Trainer...
-			if (baseClass == null || baseClass.ID == (int)TrainedClass)
+			if (baseClass.Equals(pickedClass))
 				return false;
 			
 			if (player.Level < 5 || player.CharacterClass.ID != baseClass.ID)
