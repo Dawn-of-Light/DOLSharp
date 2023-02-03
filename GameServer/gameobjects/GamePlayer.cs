@@ -3273,7 +3273,7 @@ namespace DOL.GS
 
 			// If BD subpet spells scaled and capped by BD spec, respecing a spell line
 			//	requires re-scaling the spells for all subpets from that line.
-			if (CharacterClass is CharacterClassBoneDancer
+			if (CharacterClass.Equals(GS.CharacterClass.Bonedancer)
 				&& DOL.GS.ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0
 				&& DOL.GS.ServerProperties.Properties.PET_CAP_BD_MINION_SPELL_SCALING_BY_SPEC
 				&& ControlledBrain is IControlledBrain brain && brain.Body is GamePet pet
@@ -5831,7 +5831,7 @@ namespace DOL.GS
                     }
 			}
 
-			if (CharacterClass is PlayerClass.ClassVampiir)
+			if (CharacterClass.Equals(GS.CharacterClass.Vampiir))
 			{
 				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
 				if (removeEffect != null)
@@ -6340,7 +6340,7 @@ namespace DOL.GS
 							ad.StyleDamage += keepstyle;
 						}
 						// vampiir
-						if (CharacterClass is PlayerClass.ClassVampiir
+						if (CharacterClass.Equals(GS.CharacterClass.Vampiir)
 						    && target is GameKeepComponent == false
 						    && target is GameKeepDoor == false
 						    && target is GameSiegeWeapon == false)
@@ -6675,7 +6675,7 @@ namespace DOL.GS
 					}
 			}
 			// vampiir
-			if (CharacterClass is PlayerClass.ClassVampiir)
+			if (CharacterClass.Equals(GS.CharacterClass.Vampiir))
 			{
 				GameSpellEffect removeEffect = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
 				if (removeEffect != null)
@@ -7230,13 +7230,12 @@ namespace DOL.GS
 			if (spell == null || spell.IsInstantCast)
 				return true;
 
-			switch (CharacterClass)
+			if( (CharacterClass.Equals(GS.CharacterClass.Vampiir)
+					|| CharacterClass.Equals(GS.CharacterClass.MaulerAlb)
+					|| CharacterClass.Equals(GS.CharacterClass.MaulerHib)
+					|| CharacterClass.Equals(GS.CharacterClass.MaulerMid)))
 			{
-				case PlayerClass.ClassVampiir vampiir:
-				case PlayerClass.ClassMaulerAlb maulerAlb:
-				case PlayerClass.ClassMaulerMid maulerMid:
-				case PlayerClass.ClassMaulerHib maulerHib:
-					return true;
+				return true;
 			}
 
 			return false;

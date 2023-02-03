@@ -1,4 +1,3 @@
-using DOL.GS.PlayerClass;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
@@ -16,9 +15,9 @@ namespace DOL.GS.Keeps
 
 		protected override ICharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return new ClassScout();
-			else if (ModelRealm == eRealm.Midgard) return new ClassHunter();
-			else if (ModelRealm == eRealm.Hibernia) return new ClassRanger();
+			if (ModelRealm == eRealm.Albion) return CharacterClassBase.GetClass((int)eCharacterClass.Scout);
+			else if (ModelRealm == eRealm.Midgard) return CharacterClassBase.GetClass((int)eCharacterClass.Hunter);
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClassBase.GetClass((int)eCharacterClass.Ranger);
 			return new CharacterClassBase();
 		}
 

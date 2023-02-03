@@ -1,5 +1,4 @@
 using DOL.AI.Brain;
-using DOL.GS.PlayerClass;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
@@ -9,9 +8,9 @@ namespace DOL.GS.Keeps
 	{
 		protected override ICharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return new ClassCleric();
-			else if (ModelRealm == eRealm.Midgard) return new ClassHealer();
-			else if (ModelRealm == eRealm.Hibernia) return new ClassDruid();
+			if (ModelRealm == eRealm.Albion) return CharacterClass.Cleric;
+			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Healer;
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClass.Druid;
 			return new CharacterClassBase();
 		}
 

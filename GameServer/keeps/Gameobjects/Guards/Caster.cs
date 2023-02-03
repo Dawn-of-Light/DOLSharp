@@ -17,7 +17,6 @@
  */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using DOL.GS.PlayerClass;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
@@ -75,9 +74,9 @@ namespace DOL.GS.Keeps
 
 		protected override ICharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return new ClassWizard();
-			else if (ModelRealm == eRealm.Midgard) return new ClassRunemaster();
-			else if (ModelRealm == eRealm.Hibernia) return new ClassEldritch();
+			if (ModelRealm == eRealm.Albion) return CharacterClassBase.GetClass((int)eCharacterClass.Wizard);
+			else if (ModelRealm == eRealm.Midgard) return CharacterClassBase.GetClass((int)eCharacterClass.Runemaster);
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClassBase.GetClass((int)eCharacterClass.Eldritch);
 			return new CharacterClassBase();
 		}
 

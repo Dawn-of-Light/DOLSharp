@@ -2,7 +2,6 @@ using System;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using log4net;
-using DOL.GS.PlayerClass;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
@@ -336,9 +335,9 @@ namespace DOL.GS.Keeps
 
 		protected override ICharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return new ClassArmsman();
-			else if (ModelRealm == eRealm.Midgard) return new ClassWarrior();
-			else if (ModelRealm == eRealm.Hibernia) return new ClassHero();
+			if (ModelRealm == eRealm.Albion) return CharacterClass.Armsman;
+			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Warrior;
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClass.Hero;
 			return new CharacterClassBase();
 		}
 

@@ -686,36 +686,7 @@ namespace DOL.GS
 		/// <returns>ClassSpec that was found or null if not found</returns>
 		public static ICharacterClass FindCharacterClass(int id)
 		{
-			foreach (Assembly asm in GameServerScripts)
-			{
-				foreach (Type type in asm.GetTypes())
-				{
-					// Pick up a class
-					if (type.IsClass != true) continue;
-					if (type.IsAbstract) continue;
-					if (type.GetInterface("DOL.GS.ICharacterClass") == null) continue;
-
-					try
-					{
-						object[] objs = type.GetCustomAttributes(typeof(CharacterClassAttribute), false);
-						foreach (CharacterClassAttribute attrib in objs)
-						{
-							if (attrib.ID == id)
-							{
-								var charClass = (ICharacterClass)Activator.CreateInstance(type);
-								charClass.LoadClassOverride((eCharacterClass)id);
-								return charClass;
-							}
-						}
-					}
-					catch (Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("FindCharacterClass", e);
-					}
-				}
-			}
-			return null;
+			return CharacterClassBase.GetClass(id);
 		}
 
 		/// <summary>
@@ -726,33 +697,11 @@ namespace DOL.GS
 		public static ICharacterClass FindCharacterBaseClass(int id)
 		{
 			var charClass = FindCharacterClass(id);
-			
-			if (charClass == null)
-				return null;
-			
-			if (!charClass.HasAdvancedFromBaseClass())
-				return charClass;
-			
-			try
+			if(id != 0 && charClass.Equals(CharacterClass.Unknown))
 			{
-				object[] objs = charClass.GetType().BaseType.GetCustomAttributes(typeof(CharacterClassAttribute), true);
-				foreach (CharacterClassAttribute attrib in objs)
-				{
-					if (attrib.Name.Equals(charClass.BaseName, StringComparison.OrdinalIgnoreCase))
-					{
-						var baseClass = FindCharacterClass(attrib.ID);
-						if (baseClass != null && !baseClass.HasAdvancedFromBaseClass())
-							return baseClass;
-					}
-				}
+				log.Error($"Could not find character class with id {id}.");
 			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("FindCharacterBaseClass", e);
-			}
-			
-			return null;
+			return charClass;
 		}
 
 		/// <summary>

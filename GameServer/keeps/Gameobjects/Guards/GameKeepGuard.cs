@@ -25,8 +25,6 @@ using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.ServerProperties;
 using System.Collections.Generic;
-using DOL.GS.Realm;
-using DOL.GS.PlayerClass;
 
 namespace DOL.GS.Keeps
 {

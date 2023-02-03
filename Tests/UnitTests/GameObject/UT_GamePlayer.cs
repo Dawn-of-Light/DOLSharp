@@ -54,7 +54,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void Intelligence_Level50AnimistWith50AcuityFromItems_Return50()
         {
-            var player = CreatePlayer(new CharacterClassAnimist());
+            var player = CreatePlayer(Animist);
             player.Level = 50;
             player.ItemBonus[eProperty.Acuity] = 50;
 
@@ -93,7 +93,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_GetIntelligenceFromLevel50AnimistWith50Acuity_Return50()
         {
-            var player = CreatePlayer(new CharacterClassAnimist());
+            var player = CreatePlayer(Animist);
             player.Level = 50;
             player.BaseBuffBonusCategory[(int)eProperty.Acuity] = 50;
 
@@ -105,7 +105,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void Intelligence_Level50AnimistWith200AcuityAnd30AcuCapEachFromItems_Return127()
         {
-            var player = CreatePlayer(new CharacterClassAnimist());
+            var player = CreatePlayer(Animist);
             player.Level = 50;
             player.ItemBonus[eProperty.Acuity] = 200;
             player.ItemBonus[eProperty.AcuCapBonus] = 30;
@@ -119,7 +119,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void Intelligence_Level50AnimistWith30AcuityAnd30IntelligenceFromItems_Return60()
         {
-            var player = CreatePlayer(new CharacterClassAnimist());
+            var player = CreatePlayer(Animist);
             player.Level = 50;
             player.ItemBonus[eProperty.Acuity] = 30;
             player.ItemBonus[eProperty.Intelligence] = 30;
@@ -132,7 +132,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void Constitution_Level30AnimistWith200ConAnd20ConCapEachViaItems_Return81()
         {
-            var player = CreatePlayer(new CharacterClassAnimist());
+            var player = CreatePlayer(Animist);
             player.Level = 30;
             player.ItemBonus[eProperty.Constitution] = 200;
             player.ItemBonus[eProperty.ConCapBonus] = 20;
@@ -154,5 +154,7 @@ namespace DOL.UnitTests.Gameserver
             player.SetCharacterClass(charClass.ID);
             return player;
         }
+
+        private ICharacterClass Animist => CharacterClass.Animist;
     }
 }

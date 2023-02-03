@@ -301,7 +301,7 @@ namespace DOL.UnitTests.Gameserver
             var spell = NewFakeSpell();
             spell.Damage = 100;
             var source = NewFakePlayer();
-            source.fakeCharacterClass = new CharacterClassAnimist();
+            source.fakeCharacterClass = CharacterClass.Animist;
             source.modifiedIntelligence = 100;
             var target = NewFakePlayer();
             var spellLine = NewSpellLine();
@@ -319,7 +319,7 @@ namespace DOL.UnitTests.Gameserver
             var spell = NewFakeSpell();
             spell.Damage = 100;
             var owner = NewFakePlayer();
-            owner.fakeCharacterClass = new CharacterClassAnimist();
+            owner.fakeCharacterClass = CharacterClass.Animist;
             owner.modifiedIntelligence = 100;
             owner.Level = 50; 
             var brain = new FakeControlledBrain();

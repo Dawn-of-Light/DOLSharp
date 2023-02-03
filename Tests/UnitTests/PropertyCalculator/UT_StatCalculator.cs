@@ -104,7 +104,7 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
         public void CalcValueFromItems_IntelligenceOfLevel50AnimistWith50AcuityFromItems_50()
         {
             var player = NewPlayer();
-            player.fakeCharacterClass = new CharacterClassAnimist();
+            player.fakeCharacterClass = CharacterClass.Animist;
             player.Level = 50;
             player.ItemBonus[eProperty.Acuity] = 50;
 
@@ -213,7 +213,7 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
         public void CalcValue_GetIntelligenceFromLevel50AnimistWith50Acuity_50()
         {
             var player = NewPlayer();
-            player.fakeCharacterClass = new CharacterClassAnimist();
+            player.fakeCharacterClass = CharacterClass.Animist;
             player.Level = 50;
             player.BaseBuffBonusCategory[(int)eProperty.Acuity] = 50;
 
