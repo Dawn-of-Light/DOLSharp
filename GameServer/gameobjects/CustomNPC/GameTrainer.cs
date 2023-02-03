@@ -180,8 +180,31 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool CanTrainChampionLevels(GamePlayer player)
 		{
-			return player.Level >= player.MaxLevel && player.Champion && m_championTrainerType != eChampionTrainerType.None && m_championTrainerType != player.CharacterClass.ChampionTrainerType();
+			return player.Level >= player.MaxLevel && player.Champion && m_championTrainerType != eChampionTrainerType.None && m_championTrainerType != GetChampionTrainerTypeID(player.CharacterClass);
 		}
+
+        private eChampionTrainerType GetChampionTrainerTypeID(CharacterClass charClass)
+        {
+            switch (charClass.ID)
+            {
+                case (int)eCharacterClass.Acolyte: return eChampionTrainerType.Acolyte;
+                case (int)eCharacterClass.AlbionRogue: return eChampionTrainerType.AlbionRogue;
+                case (int)eCharacterClass.Disciple: return eChampionTrainerType.Disciple;
+                case (int)eCharacterClass.Elementalist: return eChampionTrainerType.Elementalist;
+                case (int)eCharacterClass.Fighter: return eChampionTrainerType.Fighter;
+                case (int)eCharacterClass.Forester: return eChampionTrainerType.Forester;
+                case (int)eCharacterClass.Guardian: return eChampionTrainerType.Guardian;
+                case (int)eCharacterClass.Mage: return eChampionTrainerType.Mage;
+                case (int)eCharacterClass.Magician: return eChampionTrainerType.Magician;
+                case (int)eCharacterClass.MidgardRogue: return eChampionTrainerType.MidgardRogue;
+                case (int)eCharacterClass.Mystic: return eChampionTrainerType.Mystic;
+                case (int)eCharacterClass.Naturalist: return eChampionTrainerType.Naturalist;
+                case (int)eCharacterClass.Seer: return eChampionTrainerType.Seer;
+                case (int)eCharacterClass.Stalker: return eChampionTrainerType.Stalker;
+                case (int)eCharacterClass.Viking: return eChampionTrainerType.Viking;
+                default: return eChampionTrainerType.None;
+            }
+        }
 
 		/// <summary>
 		/// Talk to trainer
