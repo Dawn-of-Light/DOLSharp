@@ -80,23 +80,6 @@ namespace DOL.GS
             }
         }
 
-        /// <summary>
-        /// Called when player is removed from world.
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool RemoveFromWorld()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// What to do when this character dies
-        /// </summary>
-        /// <param name="killer"></param>
-        public virtual void Die(GameObject killer)
-        {
-        }
-
         public virtual void Notify(DOLEvent e, object sender, EventArgs args)
         {
         }

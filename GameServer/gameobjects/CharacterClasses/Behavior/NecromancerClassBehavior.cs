@@ -27,24 +27,6 @@ namespace DOL.GS
             }
         }
 
-        public override bool RemoveFromWorld()
-        {
-            if (Player.IsShade)
-                Player.Shade(false);
-
-            return base.RemoveFromWorld();
-        }
-
-        /// <summary>
-        /// Drop shade first, this in turn will release the pet.
-        /// </summary>
-        public override void Die(GameObject killer)
-        {
-            Player.Shade(false);
-
-            base.Die(killer);
-        }
-
         public override void Notify(DOLEvent e, object sender, EventArgs args)
         {
             if (Player.ControlledBrain != null)

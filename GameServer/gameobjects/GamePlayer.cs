@@ -7504,8 +7504,6 @@ namespace DOL.GS
 			// ambiant talk
 			if (killer is GameNPC)
 				(killer as GameNPC).FireAmbientSentence(GameNPC.eAmbientTrigger.killing, this);
-			
-			CharacterClass.Behavior.Die(killer);
 
 			bool realmDeath = killer != null && killer.Realm != eRealm.None;
 
@@ -9929,11 +9927,6 @@ namespace DOL.GS
 		/// <returns>true if removed, false if removing failed</returns>
 		public override bool RemoveFromWorld()
 		{
-			if (CharacterClass.Behavior.RemoveFromWorld() == false)
-			{
-				return false;
-			}
-
 			if (ObjectState == eObjectState.Active)
 			{
 				DismountSteed(true);
