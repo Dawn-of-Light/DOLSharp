@@ -169,6 +169,13 @@ namespace DOL.GS
         #region CharacterClass(Base) creation shortcuts
         public static CharacterClass None => CharacterClass.GetClass((int)eCharacterClass.Unknown);
         //alb
+        public static CharacterClass Fighter => CharacterClass.GetClass((int)eCharacterClass.Fighter);
+        public static CharacterClass Acolyte => CharacterClass.GetClass((int)eCharacterClass.Acolyte);
+        public static CharacterClass Elementalist => CharacterClass.GetClass((int)eCharacterClass.Elementalist);
+        public static CharacterClass Mage => CharacterClass.GetClass((int)eCharacterClass.Mage);
+        public static CharacterClass Disciple => CharacterClass.GetClass((int)eCharacterClass.Disciple);
+        public static CharacterClass AlbionRogue => CharacterClass.GetClass((int)eCharacterClass.AlbionRogue);
+
         public static CharacterClass Armsman => CharacterClass.GetClass((int)eCharacterClass.Armsman);
         public static CharacterClass Cabalist => CharacterClass.GetClass((int)eCharacterClass.Cabalist);
         public static CharacterClass Cleric => CharacterClass.GetClass((int)eCharacterClass.Cleric);
@@ -186,6 +193,11 @@ namespace DOL.GS
         public static CharacterClass Wizard => CharacterClass.GetClass((int)eCharacterClass.Wizard);
         public static CharacterClass MaulerAlb => CharacterClass.GetClass((int)eCharacterClass.MaulerAlb);
         //mid
+        public static CharacterClass Viking => CharacterClass.GetClass((int)eCharacterClass.Viking);
+        public static CharacterClass Seer => CharacterClass.GetClass((int)eCharacterClass.Seer);
+        public static CharacterClass Mystic => CharacterClass.GetClass((int)eCharacterClass.Mystic);
+        public static CharacterClass MidgardRogue => CharacterClass.GetClass((int)eCharacterClass.MidgardRogue);
+
         public static CharacterClass Berserker => CharacterClass.GetClass((int)eCharacterClass.Berserker);
         public static CharacterClass Bonedancer => CharacterClass.GetClass((int)eCharacterClass.Bonedancer);
         public static CharacterClass Healer => CharacterClass.GetClass((int)eCharacterClass.Healer);
@@ -202,6 +214,12 @@ namespace DOL.GS
         public static CharacterClass Warrior => CharacterClass.GetClass((int)eCharacterClass.Warrior);
         public static CharacterClass MaulerMid => CharacterClass.GetClass((int)eCharacterClass.MaulerMid);
         //hib
+        public static CharacterClass Guardian => CharacterClass.GetClass((int)eCharacterClass.Guardian);
+        public static CharacterClass Naturalist => CharacterClass.GetClass((int)eCharacterClass.Naturalist);
+        public static CharacterClass Magician => CharacterClass.GetClass((int)eCharacterClass.Magician);
+        public static CharacterClass Forester => CharacterClass.GetClass((int)eCharacterClass.Forester);
+        public static CharacterClass Stalker => CharacterClass.GetClass((int)eCharacterClass.Stalker);
+
         public static CharacterClass Animist => CharacterClass.GetClass((int)eCharacterClass.Animist);
         public static CharacterClass Bainshee => CharacterClass.GetClass((int)eCharacterClass.Bainshee);
         public static CharacterClass Bard => CharacterClass.GetClass((int)eCharacterClass.Bard);
