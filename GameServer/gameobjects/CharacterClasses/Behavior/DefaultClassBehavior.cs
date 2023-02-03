@@ -24,7 +24,6 @@ namespace DOL.GS
             DefaultClassBehavior behavior;
             switch ((eCharacterClass)classID)
             {
-                case eCharacterClass.Bonedancer: behavior = new BonedancerClassBehavior(player); break;
                 case eCharacterClass.Bainshee: behavior = new BainsheeClassBehavior(player); break;
                 default: behavior = new DefaultClassBehavior(player); break;
             }
@@ -32,13 +31,6 @@ namespace DOL.GS
         }
 
         public virtual void Init() { }
-
-        /// <summary>
-        /// Add all spell-lines and other things that are new when this skill is trained
-        /// </summary>
-        public virtual void OnSkillTrained(GamePlayer player, Specialization skill)
-        {
-        }
 
         public virtual void SetControlledBrain(IControlledBrain controlledBrain)
         {
