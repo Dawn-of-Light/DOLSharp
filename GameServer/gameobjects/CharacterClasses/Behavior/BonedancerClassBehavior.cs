@@ -6,6 +6,8 @@ namespace DOL.GS
 {
     public class BonedancerClassBehavior : DefaultClassBehavior
     {
+        public BonedancerClassBehavior(GamePlayer player) : base(player) { }
+
         public override void CommandNpcRelease()
         {
             BDPet subpet = Player.TargetObject as BDPet;

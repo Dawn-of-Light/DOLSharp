@@ -6,6 +6,8 @@ namespace DOL.GS
 {
     public class AnimistClassBehavior : DefaultClassBehavior
 	{
+        public AnimistClassBehavior(GamePlayer player) : base(player) { }
+
 		public override void CommandNpcRelease()
 		{
 			TurretPet turretFnF = Player.TargetObject as TurretPet;

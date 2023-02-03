@@ -11,6 +11,8 @@ namespace DOL.GS
         protected RegionTimerAction<GamePlayer> m_WraithTimerAction;
         protected DOLEventHandler m_WraithTriggerEvent;
 
+        public BainsheeClassBehavior(GamePlayer player) : base(player) { }
+
         // Bainshee Transform While Casting.
         public override void Init()
         {

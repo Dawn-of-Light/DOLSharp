@@ -2,6 +2,8 @@ namespace DOL.GS
 {
     public class WarlockClassBehavior : DefaultClassBehavior
     {
+        public WarlockClassBehavior(GamePlayer player) : base(player) { }
+
         /// <summary>
         /// FIXME this has nothing to do here !
         /// </summary>

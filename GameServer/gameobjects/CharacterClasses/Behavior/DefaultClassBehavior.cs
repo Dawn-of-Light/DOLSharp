@@ -14,21 +14,24 @@ namespace DOL.GS
 
         public GamePlayer Player { get; private set; }
 
-        protected DefaultClassBehavior() { }
+        protected DefaultClassBehavior(GamePlayer player) 
+        {
+            Player = player;
+            if(Player != null) Init();
+        }
 
         public static DefaultClassBehavior Create(GamePlayer player, int classID)
         {
             DefaultClassBehavior behavior;
             switch ((eCharacterClass)classID)
             {
-                case eCharacterClass.Necromancer: behavior = new NecromancerClassBehavior(); break;
-                case eCharacterClass.Bonedancer: behavior = new BonedancerClassBehavior(); break;
-                case eCharacterClass.Warlock: behavior = new WarlockClassBehavior(); break;
-                case eCharacterClass.Bainshee: behavior = new BainsheeClassBehavior(); break;
-                case eCharacterClass.Animist: behavior = new AnimistClassBehavior(); break;
-                default: behavior = new DefaultClassBehavior(); break;
+                case eCharacterClass.Necromancer: behavior = new NecromancerClassBehavior(player); break;
+                case eCharacterClass.Bonedancer: behavior = new BonedancerClassBehavior(player); break;
+                case eCharacterClass.Warlock: behavior = new WarlockClassBehavior(player); break;
+                case eCharacterClass.Bainshee: behavior = new BainsheeClassBehavior(player); break;
+                case eCharacterClass.Animist: behavior = new AnimistClassBehavior(player); break;
+                default: behavior = new DefaultClassBehavior(player); break;
             }
-            behavior.Player = player;
             return behavior;
         }
 

@@ -10,6 +10,8 @@ namespace DOL.GS
 {
     public class NecromancerClassBehavior : DefaultClassBehavior
     {
+        public NecromancerClassBehavior(GamePlayer player) : base(player) { }
+
         public override void Init()
         {
             Player.Model = (ushort)Player.Client.Account.Characters[Player.Client.ActiveCharIndex].CreationModel;
@@ -171,4 +173,4 @@ namespace DOL.GS
             base.Notify(e, sender, args);
         }
     }
-    }
+}
