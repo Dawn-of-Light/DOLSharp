@@ -92,19 +92,7 @@ namespace DOL.GS
         }
 
         public string GetTitle(GamePlayer player, int level)
-        {
-            if (!HasAdvancedFromBaseClass()) level = 0;
-
-            // Clamp level in 5 by 5 steps - 50 is the max available translation for now
-            int clamplevel = Math.Min(50, (level / 5) * 5);
-
-            string none = LanguageMgr.TryTranslateOrDefault(player, "!None!", "PlayerClass.GetTitle.none");
-
-            if (clamplevel > 0)
-                return LanguageMgr.TryTranslateOrDefault(player, string.Format("!{0}!", characterClass.Name), string.Format("PlayerClass.{0}.GetTitle.{1}", characterClass.Name, clamplevel));
-
-            return none;
-        }
+            => characterClass.GetTitle(player,level);
 
         public virtual void Init(GamePlayer player)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DOL.Database;
 using DOL.GS.Realm;
+using DOL.Language;
 
 namespace DOL.GS
 {
@@ -29,6 +30,21 @@ namespace DOL.GS
         public int ChampionTrainerID { get; protected set; }
 
         public ushort MaxPulsingSpells { get; protected set; } = 2;
+
+        public string GetTitle(GamePlayer player, int level)
+        {
+            if (!HasAdvancedFromBaseClass) level = 0;
+
+            // Clamp level in 5 by 5 steps - 50 is the max available translation for now
+            int clamplevel = Math.Min(50, (level / 5) * 5);
+
+            string none = LanguageMgr.TryTranslateOrDefault(player, "!None!", "PlayerClass.GetTitle.none");
+
+            if (clamplevel > 0)
+                return LanguageMgr.TryTranslateOrDefault(player, string.Format("!{0}!", Name), string.Format("PlayerClass.{0}.GetTitle.{1}", Name, clamplevel));
+
+            return none;
+        }
 
         public static CharacterClass GetClass(int classID)
         {
