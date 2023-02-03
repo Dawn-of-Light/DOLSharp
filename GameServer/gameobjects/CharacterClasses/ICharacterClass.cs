@@ -101,11 +101,6 @@ namespace DOL.GS
 		eClassType ClassType { get; }
 
 		/// <summary>
-		/// Instance Attached GamePlayer
-		/// </summary>
-		GamePlayer Player { get; }
-
-		/// <summary>
 		/// The maximum number of pulsing spells the class can have active simultaneously
 		/// </summary>
 		ushort MaxPulsingSpells { get; }
@@ -114,8 +109,6 @@ namespace DOL.GS
 		/// Wether this class can use Left Handed Weapon
 		/// </summary>
 		bool CanUseLefthandedWeapon { get; }
-
-		public DefaultClassBehavior Behavior { get; }
 
 		string GetTitle(GamePlayer player, int level);
 		IList<string> GetAutotrainableSkills();

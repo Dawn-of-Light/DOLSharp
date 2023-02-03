@@ -5,28 +5,33 @@ using DOL.GS.Effects;
 
 namespace DOL.GS
 {
-    public class BainsheeClassBehavior : DefaultClassBehavior
+    public class BainsheeMorphEffect
     {
         protected const int WRAITH_FORM_RESET_DELAY = 30000;
         protected RegionTimerAction<GamePlayer> m_WraithTimerAction;
         protected DOLEventHandler m_WraithTriggerEvent;
+        private GamePlayer player;
 
-        public BainsheeClassBehavior(GamePlayer player) : base(player) { }
+        public BainsheeMorphEffect(GamePlayer player) 
+        {
+            this.player = player;
+            Init();
+        }
 
-        // Bainshee Transform While Casting.
-        public override void Init()
+        //Bainshee Transform While Casting.
+        public void Init()
         {
             // Add Cast Listener.
-            m_WraithTimerAction = new RegionTimerAction<GamePlayer>(Player, pl => { if (pl.CharacterClass.Equals(CharacterClass.Bainshee)) TurnOutOfWraith(); });
+            m_WraithTimerAction = new RegionTimerAction<GamePlayer>(player, pl => { if (pl.CharacterClass.Equals(CharacterClass.Bainshee)) TurnOutOfWraith(); });
             m_WraithTriggerEvent = new DOLEventHandler(TriggerUnWraithForm);
-            GameEventMgr.AddHandler(Player, GamePlayerEvent.CastFinished, new DOLEventHandler(TriggerWraithForm));
+            GameEventMgr.AddHandler(player, GamePlayerEvent.CastFinished, new DOLEventHandler(TriggerWraithForm));
         }
 
         protected virtual void TriggerWraithForm(DOLEvent e, object sender, EventArgs arguments)
         {
             var player = sender as GamePlayer;
 
-            if (player != Player)
+            if (player != this.player)
                 return;
 
             var args = arguments as CastingEventArgs;
@@ -42,14 +47,14 @@ namespace DOL.GS
         protected virtual void TriggerUnWraithForm(DOLEvent e, object sender, EventArgs arguments)
         {
             GamePlayer player = sender as GamePlayer;
-            if (player != Player)
+            if (player != this.player)
                 return;
             TurnOutOfWraith(true);
         }
 
         public virtual void TurnInWraith()
         {
-            if (Player == null) return;
+            if (player == null) return;
 
             if (m_WraithTimerAction.IsAlive)
             {
@@ -57,15 +62,15 @@ namespace DOL.GS
             }
             else
             {
-                switch (Player.Race)
+                switch (player.Race)
                 {
-                    case 11: Player.Model = 1885; break; //Elf
-                    case 12: Player.Model = 1884; break; //Lurikeen
+                    case 11: player.Model = 1885; break; //Elf
+                    case 12: player.Model = 1884; break; //Lurikeen
                     case 9:
-                    default: Player.Model = 1883; break; //Celt
+                    default: player.Model = 1883; break; //Celt
                 }
 
-                GameEventMgr.AddHandler(Player, GamePlayerEvent.RemoveFromWorld, m_WraithTriggerEvent);
+                GameEventMgr.AddHandler(player, GamePlayerEvent.RemoveFromWorld, m_WraithTriggerEvent);
             }
 
             m_WraithTimerAction.Start(WRAITH_FORM_RESET_DELAY);
@@ -78,11 +83,11 @@ namespace DOL.GS
 
         public virtual void TurnOutOfWraith(bool forced)
         {
-            if (Player == null)
+            if (player == null)
                 return;
 
             // Keep Wraith Form if Pulsing Offensive Spell Running
-            if (!forced && Player.ConcentrationEffects.OfType<PulsingSpellEffect>().Any(pfx => pfx.SpellHandler != null && !pfx.SpellHandler.HasPositiveEffect))
+            if (!forced && player.ConcentrationEffects.OfType<PulsingSpellEffect>().Any(pfx => pfx.SpellHandler != null && !pfx.SpellHandler.HasPositiveEffect))
             {
                 TurnInWraith();
                 return;
@@ -91,9 +96,9 @@ namespace DOL.GS
             if (m_WraithTimerAction.IsAlive)
                 m_WraithTimerAction.Stop();
 
-            GameEventMgr.RemoveHandler(Player, GamePlayerEvent.RemoveFromWorld, m_WraithTriggerEvent);
+            GameEventMgr.RemoveHandler(player, GamePlayerEvent.RemoveFromWorld, m_WraithTriggerEvent);
 
-            Player.Model = (ushort)Player.Client.Account.Characters[Player.Client.ActiveCharIndex].CreationModel;
+            player.Model = (ushort)player.Client.Account.Characters[player.Client.ActiveCharIndex].CreationModel;
 
         }
     }

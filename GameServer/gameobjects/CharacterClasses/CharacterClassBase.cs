@@ -31,17 +31,16 @@ namespace DOL.GS
         private CharacterClass characterClass;
 
         public int ID => characterClass.ID;
-        public GamePlayer Player => Behavior.Player;
-        public DefaultClassBehavior Behavior { get; private set; }
+        private GamePlayer player;
 
-        public string Name => characterClass.GetSalutation(Player);
+        public string Name => characterClass.GetSalutation(player);
 
         public List<PlayerRace> EligibleRaces => characterClass.EligibleRaces.ToList();
         public string FemaleName => characterClass.FemaleName;
         public int BaseHP => characterClass.BaseHP;
         public string BaseName => characterClass.BaseName;
         public string Profession
-            => LanguageMgr.TryTranslateOrDefault(Player, characterClass.ProfessionTranslationId, characterClass.ProfessionTranslationId);
+            => LanguageMgr.TryTranslateOrDefault(player, characterClass.ProfessionTranslationId, characterClass.ProfessionTranslationId);
         public int SpecPointsMultiplier => characterClass.SpecPointsMultiplier;
         /// <summary>
         /// This is specifically used for adjusting spec points as needed for new training window
@@ -70,8 +69,8 @@ namespace DOL.GS
         public static CharacterClassBase Create(GamePlayer player, int classID)
         {
             var characterClass = new CharacterClassBase();
+            characterClass.player = player;
             characterClass.characterClass = CharacterClass.GetClass(classID);
-            characterClass.Behavior = DefaultClassBehavior.Create(player, characterClass.ID);
             return characterClass;
         }
 
@@ -82,7 +81,7 @@ namespace DOL.GS
             => Create(null, CharacterClass.GetClass(classID).GetBaseClass().ID);
 
         public string GetTitle(GamePlayer player, int level)
-            => characterClass.GetTitle(player,level);
+            => characterClass.GetTitle(player, level);
 
         public override bool Equals(object obj)
         {

@@ -770,9 +770,9 @@ namespace DOL.GS
 				log.InfoFormat("Player {0}({1}) went linkdead!", Name, Client.Account.Name);
 
 			// LD Necros need to be "Unshaded"
-			if (Client.Player.CharacterClass.Player.IsShade)
+			if (IsShade)
 			{
-				Client.Player.CharacterClass.Player.Shade(false);
+				Shade(false);
 			}
 
 			// Dead link-dead players release on live servers
@@ -2826,6 +2826,7 @@ namespace DOL.GS
 		public virtual bool SetCharacterClass(int id)
 		{
 			var cl = CharacterClassBase.Create(this, id);
+			if(cl.Equals(GS.CharacterClass.Bainshee)) new BainsheeMorphEffect(this);
 
 			if (cl.Equals(GS.CharacterClass.None))
 			{
@@ -13992,15 +13993,31 @@ namespace DOL.GS
 		#endregion
 
 		#region ControlledNpc
-
-		/// <summary>
-		/// Sets the controlled object for this player
-		/// (delegates to CharacterClass)
-		/// </summary>
-		/// <param name="controlledNpc"></param>
 		public override void SetControlledBrain(IControlledBrain controlledBrain)
 		{
-			CharacterClass.Behavior.SetControlledBrain(controlledBrain);
+			if (controlledBrain == ControlledBrain) return;
+            if (controlledBrain == null)
+            {
+                Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.SetControlledNpc.ReleaseTarget2", ControlledBrain.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.SetControlledNpc.ReleaseTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            else
+            {
+                if (controlledBrain.Owner != this)
+                    throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledBrain.Owner.Name + ")", "controlledNpc");
+                if (ControlledBrain == null)
+                    InitControlledBrainArray(1);
+                Out.SendPetWindow(controlledBrain.Body, ePetWindowAction.Open, controlledBrain.AggressionState, controlledBrain.WalkState);
+                if (controlledBrain.Body != null)
+                {
+                    Out.SendNPCCreate(controlledBrain.Body); // after open pet window again send creation NPC packet
+                    if (controlledBrain.Body.Inventory != null)
+                        Out.SendLivingEquipmentUpdate(controlledBrain.Body);
+                }
+            }
+
+            ControlledBrain = controlledBrain;
 		}
 
         public virtual void CommandNpcRelease()
