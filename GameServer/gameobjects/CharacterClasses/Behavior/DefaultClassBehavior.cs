@@ -80,50 +80,6 @@ namespace DOL.GS
             }
         }
 
-
-        /// <summary>
-        /// Create a shade effect for this player.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual ShadeEffect CreateShadeEffect()
-        {
-            return new ShadeEffect();
-        }
-
-        /// <summary>
-        /// Changes shade state of the player.
-        /// </summary>
-        /// <param name="state">The new state.</param>
-        public virtual void Shade(bool makeShade)
-        {
-            if (Player.IsShade == makeShade)
-            {
-                if (makeShade && (Player.ObjectState == GameObject.eObjectState.Active))
-                    Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client.Account.Language, "GamePlayer.Shade.AlreadyShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return;
-            }
-
-            if (makeShade)
-            {
-                // Turn into a shade.
-                Player.Model = Player.ShadeModel;
-                Player.ShadeEffect = CreateShadeEffect();
-                Player.ShadeEffect.Start(Player);
-            }
-            else
-            {
-                if (Player.ShadeEffect != null)
-                {
-                    // Drop shade form.
-                    Player.ShadeEffect.Stop();
-                    Player.ShadeEffect = null;
-                }
-                // Drop shade form.
-                Player.Model = Player.CreationModel;
-                Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client.Account.Language, "GamePlayer.Shade.NoLongerShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            }
-        }
-
         /// <summary>
         /// Called when player is removed from world.
         /// </summary>

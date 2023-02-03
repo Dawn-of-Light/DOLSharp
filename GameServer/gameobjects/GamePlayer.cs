@@ -14326,13 +14326,23 @@ namespace DOL.GS
 			}
 		}
 
-		/// <summary>
-		/// Changes shade state of the player.
-		/// </summary>
-		/// <param name="state">The new state.</param>
-		public virtual void Shade(bool state)
+		public virtual void Shade(bool makeShade)
 		{
-			CharacterClass.Behavior.Shade(state);
+			if (IsShade == makeShade)
+            {
+                if (makeShade && (ObjectState == GameObject.eObjectState.Active))
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Shade.AlreadyShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            if (makeShade)
+			{
+				var isNecro = CharacterClass.Equals(GS.CharacterClass.Necromancer);
+				if(isNecro) ShadeEffect = new NecromancerShadeEffect();
+				else ShadeEffect = new ShadeEffect();
+				ShadeEffect.Start(this);
+			}
+            else ShadeEffect.Cancel(false);
 		}
 		#endregion
 

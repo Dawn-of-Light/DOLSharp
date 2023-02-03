@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 
 namespace DOL.GS
@@ -25,62 +24,6 @@ namespace DOL.GS
                     return Player.HealthPercent;
 
                 return Player.ControlledBrain.Body.HealthPercent;
-            }
-        }
-
-        protected override ShadeEffect CreateShadeEffect()
-        {
-            return new NecromancerShadeEffect();
-        }
-
-        // Changes shade state of the player
-        public override void Shade(bool makeShade)
-        {
-            bool wasShade = Player.IsShade;
-            base.Shade(makeShade);
-
-            if (wasShade == makeShade)
-                return;
-
-            if (makeShade)
-            {
-                // Necromancer has become a shade. Have any previous NPC 
-                // attackers aggro on pet now, as they can't attack the 
-                // necromancer any longer.
-
-                if (Player.ControlledBrain != null && Player.ControlledBrain.Body != null)
-                {
-                    GameNPC pet = Player.ControlledBrain.Body;
-                    List<GameObject> attackerList;
-                    lock (Player.Attackers)
-                        attackerList = new List<GameObject>(Player.Attackers);
-
-                    foreach (GameObject obj in attackerList)
-                    {
-                        if (obj is GameNPC)
-                        {
-                            GameNPC npc = (GameNPC)obj;
-                            if (npc.TargetObject == Player && npc.AttackState)
-                            {
-                                IOldAggressiveBrain brain = npc.Brain as IOldAggressiveBrain;
-                                if (brain != null)
-                                {
-                                    npc.AddAttacker(pet);
-                                    npc.StopAttack();
-                                    brain.AddToAggroList(pet, (int)(brain.GetAggroAmountForLiving(Player) + 1));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // Necromancer has lost shade form, release the pet if it
-                // isn't dead already and update necromancer's current health.
-
-                if (Player.ControlledBrain != null)
-                    (Player.ControlledBrain as ControlledNpcBrain).Stop();
             }
         }
 
