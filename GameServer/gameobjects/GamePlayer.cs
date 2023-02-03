@@ -2580,7 +2580,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return CharacterClass.HealthPercentGroupWindow;
+				return CharacterClass.Behavior.HealthPercentGroupWindow;
 			}
 		}
 
@@ -3185,7 +3185,7 @@ namespace DOL.GS
 				}
 			}
 
-			CharacterClass.OnLevelUp(this, originalLevel);
+			CharacterClass.Behavior.OnLevelUp(this, originalLevel);
 		}
 
 		public virtual bool RespecAll()
@@ -4088,7 +4088,7 @@ namespace DOL.GS
 			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnSkillTrained.YouSpend", skill.Level, skill.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnSkillTrained.YouHave", SkillSpecialtyPoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnSkillTrained.TrainsInVarious", GetName(0, true)), eChatType.CT_System);
-			CharacterClass.OnSkillTrained(this, skill);
+			CharacterClass.Behavior.OnSkillTrained(this, skill);
 			RefreshSpecDependantSkills(true);
 
 			Out.SendUpdatePlayerSkills();
@@ -4168,7 +4168,7 @@ namespace DOL.GS
 			{
 				if (DBCharacter != null)
 					DBCharacter.RealmLevel = value;
-				CharacterClass.OnRealmLevelUp(this);
+				CharacterClass.Behavior.OnRealmLevelUp(this);
 			}
 		}
 
@@ -5180,7 +5180,7 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.StatRaise"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			CharacterClass.OnLevelUp(this, previouslevel);
+			CharacterClass.Behavior.OnLevelUp(this, previouslevel);
 			GameServer.ServerRules.OnPlayerLevelUp(this, previouslevel);
 			RefreshSpecDependantSkills(true);
 
@@ -5672,7 +5672,7 @@ namespace DOL.GS
 		/// <param name="attackTarget">the target to attack</param>
 		public override void StartAttack(GameObject attackTarget)
 		{
-			if (CharacterClass.StartAttack(attackTarget) == false)
+			if (CharacterClass.Behavior.StartAttack(attackTarget) == false)
 			{
 				return;
 			}
@@ -7516,7 +7516,7 @@ namespace DOL.GS
 			if (killer is GameNPC)
 				(killer as GameNPC).FireAmbientSentence(GameNPC.eAmbientTrigger.killing, this);
 			
-			CharacterClass.Die(killer);
+			CharacterClass.Behavior.Die(killer);
 
 			bool realmDeath = killer != null && killer.Realm != eRealm.None;
 
@@ -8386,7 +8386,7 @@ namespace DOL.GS
 				return ticks;
 			}
 
-			if (CharacterClass.CanChangeCastingSpeed(line, spell) == false)
+			if (CharacterClass.Behavior.CanChangeCastingSpeed(line, spell) == false)
 				return ticks;
 
 			if (EffectList.GetOfType<QuickCastEffect>() != null)
@@ -9940,7 +9940,7 @@ namespace DOL.GS
 		/// <returns>true if removed, false if removing failed</returns>
 		public override bool RemoveFromWorld()
 		{
-			if (CharacterClass.RemoveFromWorld() == false)
+			if (CharacterClass.Behavior.RemoveFromWorld() == false)
 			{
 				return false;
 			}
@@ -12373,8 +12373,8 @@ namespace DOL.GS
 				}
 			}
 						
-			CharacterClass.OnLevelUp(this, Level); // load all skills from DB first to keep the order
-			CharacterClass.OnRealmLevelUp(this);
+			CharacterClass.Behavior.OnLevelUp(this, Level); // load all skills from DB first to keep the order
+			CharacterClass.Behavior.OnRealmLevelUp(this);
 		}
 
 		/// <summary>
@@ -13520,7 +13520,7 @@ namespace DOL.GS
 		#region Notify
 		public override void Notify(DOLEvent e, object sender, EventArgs args)
 		{
-			CharacterClass.Notify(e, sender, args);
+			CharacterClass.Behavior.Notify(e, sender, args);
 			base.Notify(e, sender, args);
 
 			// events will only fire for currently active quests.
@@ -14066,7 +14066,7 @@ namespace DOL.GS
 		/// <param name="controlledNpc"></param>
 		public override void SetControlledBrain(IControlledBrain controlledBrain)
 		{
-			CharacterClass.SetControlledBrain(controlledBrain);
+			CharacterClass.Behavior.SetControlledBrain(controlledBrain);
 		}
 		
 		/// <summary>
@@ -14075,7 +14075,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CommandNpcRelease()
 		{
-			CharacterClass.CommandNpcRelease();
+			CharacterClass.Behavior.CommandNpcRelease();
 		}
 		
 		/// <summary>
@@ -14350,7 +14350,7 @@ namespace DOL.GS
 		/// <param name="state">The new state.</param>
 		public virtual void Shade(bool state)
 		{
-			CharacterClass.Shade(state);
+			CharacterClass.Behavior.Shade(state);
 		}
 		#endregion
 

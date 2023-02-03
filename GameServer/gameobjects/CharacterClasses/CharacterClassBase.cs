@@ -32,10 +32,10 @@ namespace DOL.GS
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private CharacterClass characterClass;
-        private DefaultClassBehavior behavior;
 
         public int ID => characterClass.ID;
-        public GamePlayer Player { get; private set; }
+        public GamePlayer Player => Behavior.Player;
+        public DefaultClassBehavior Behavior { get; private set; }
 
         public string Name
         {
@@ -80,7 +80,7 @@ namespace DOL.GS
         public CharacterClassBase()
         {
             characterClass = CharacterClass.Unknown;
-            behavior = DefaultClassBehavior.Create(null, characterClass.ID);
+            Behavior = DefaultClassBehavior.Create(null, characterClass.ID);
         }
 
         public static CharacterClassBase GetClass(int classID)
@@ -109,53 +109,11 @@ namespace DOL.GS
         public virtual void Init(GamePlayer player)
         {
             // TODO : Should Throw Exception Here.
-            if (behavior != null && log.IsWarnEnabled)
-                log.WarnFormat("Character Class initializing Player when it was already initialized ! Old Player : {0} New Player : {1}", behavior.Player, player);
+            if (Behavior != null && log.IsWarnEnabled)
+                log.WarnFormat("Character Class initializing Player when it was already initialized ! Old Player : {0} New Player : {1}", Behavior.Player, player);
 
-            behavior = DefaultClassBehavior.Create(player, characterClass.ID);
+            Behavior = DefaultClassBehavior.Create(player, characterClass.ID);
         }
-
-        public virtual void OnLevelUp(GamePlayer player, int previousLevel)
-            => behavior.OnLevelUp(player, previousLevel);
-
-        public virtual void OnRealmLevelUp(GamePlayer player)
-            => behavior.OnRealmLevelUp(player);
-
-        public virtual void OnSkillTrained(GamePlayer player, Specialization skill)
-            => behavior.OnSkillTrained(player, skill);
-
-        public virtual void SetControlledBrain(IControlledBrain controlledBrain)
-            => behavior.SetControlledBrain(controlledBrain);
-
-        public virtual void CommandNpcRelease()
-            => behavior.CommandNpcRelease();
-
-        public virtual void OnPetReleased()
-            => behavior.OnPetReleased();
-
-        public virtual bool StartAttack(GameObject attackTarget)
-            => behavior.StartAttack(attackTarget);
-
-        public virtual byte HealthPercentGroupWindow
-            => behavior.HealthPercentGroupWindow;
-
-        public virtual ShadeEffect CreateShadeEffect()
-            => behavior.CreateShadeEffect();
-
-        public virtual void Shade(bool makeShade)
-            => behavior.Shade(makeShade);
-
-        public virtual bool RemoveFromWorld()
-            => behavior.RemoveFromWorld();
-
-        public virtual void Die(GameObject killer)
-            => behavior.Die(killer);
-
-        public virtual void Notify(DOLEvent e, object sender, EventArgs args)
-            => behavior.Notify(e, sender, args);
-
-        public virtual bool CanChangeCastingSpeed(SpellLine line, Spell spell)
-            => behavior.CanChangeCastingSpeed(line, spell);
 
         public override bool Equals(object obj)
         {

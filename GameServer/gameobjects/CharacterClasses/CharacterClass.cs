@@ -154,7 +154,6 @@ namespace DOL.GS
 		public static ICharacterClass Vampiir => CharacterClassBase.GetClass((int)eCharacterClass.Vampiir);
 		public static ICharacterClass Warden => CharacterClassBase.GetClass((int)eCharacterClass.Warden);
 		public static ICharacterClass MaulerHib => CharacterClassBase.GetClass((int)eCharacterClass.MaulerHib);
-
         #endregion
 
         #region Default Database

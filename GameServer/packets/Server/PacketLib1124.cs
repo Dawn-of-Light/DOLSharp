@@ -741,7 +741,7 @@ namespace DOL.GS.PacketHandler
 			}
 			var player = living as GamePlayer;
 
-			pak.WriteByte(player?.CharacterClass?.HealthPercentGroupWindow ?? living.HealthPercent);
+			pak.WriteByte(player?.CharacterClass?.Behavior.HealthPercentGroupWindow ?? living.HealthPercent);
 			pak.WriteByte(living.ManaPercent);
 			pak.WriteByte(living.EndurancePercent); // new in 1.69
 

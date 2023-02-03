@@ -114,31 +114,16 @@ namespace DOL.GS
 		/// Wether this class can use Left Handed Weapon
 		/// </summary>
 		bool CanUseLefthandedWeapon { get; }
-		
-		/// <summary>
-		/// Group Health Percent Window Override
-		/// </summary>
-		byte HealthPercentGroupWindow { get; }
+
+		public DefaultClassBehavior Behavior { get; }
 
 		string GetTitle(GamePlayer player, int level);
-		void OnLevelUp(GamePlayer player, int previousLevel);
-		void OnRealmLevelUp(GamePlayer player);
-		void OnSkillTrained(GamePlayer player, Specialization skill);
 		IList<string> GetAutotrainableSkills();
 		bool HasAdvancedFromBaseClass();
-		void Init(GamePlayer player);
-		void SetControlledBrain(IControlledBrain controlledBrain);
-		void CommandNpcRelease();
-		void OnPetReleased();
-		bool StartAttack(GameObject attackTarget);
-		ShadeEffect CreateShadeEffect();
-		void Shade(bool state);
-		bool RemoveFromWorld();
-		void Die(GameObject killer);
-		void Notify(DOLEvent e, object sender, EventArgs args);
-		bool CanChangeCastingSpeed(SpellLine line, Spell spell);
 		GameTrainer.eChampionTrainerType ChampionTrainerType();
 		List<PlayerRace> EligibleRaces { get; }
+
+		void Init(GamePlayer player);
 	}
 
 	/// <summary>
