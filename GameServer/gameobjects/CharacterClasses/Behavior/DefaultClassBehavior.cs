@@ -25,7 +25,6 @@ namespace DOL.GS
             switch ((eCharacterClass)classID)
             {
                 case eCharacterClass.Bonedancer: behavior = new BonedancerClassBehavior(player); break;
-                case eCharacterClass.Warlock: behavior = new WarlockClassBehavior(player); break;
                 case eCharacterClass.Bainshee: behavior = new BainsheeClassBehavior(player); break;
                 default: behavior = new DefaultClassBehavior(player); break;
             }
@@ -66,11 +65,6 @@ namespace DOL.GS
             }
 
             Player.ControlledBrain = controlledBrain;
-        }
-
-        public virtual bool CanChangeCastingSpeed(SpellLine line, Spell spell)
-        {
-            return true;
         }
     }
 }
