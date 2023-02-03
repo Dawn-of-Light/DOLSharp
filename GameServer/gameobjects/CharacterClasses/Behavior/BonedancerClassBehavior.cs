@@ -20,8 +20,6 @@ namespace DOL.GS
 
         public override void OnSkillTrained(GamePlayer player, Specialization skill)
         {
-            base.OnSkillTrained(player, skill);
-
             // BD subpet spells can be scaled with the BD's spec as a cap, so when a BD
             //	trains, we have to re-scale spells for subpets from that spec.
             if (DOL.GS.ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0

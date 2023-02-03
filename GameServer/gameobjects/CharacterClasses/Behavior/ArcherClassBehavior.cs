@@ -6,8 +6,6 @@ namespace DOL.GS
     {
         public override void OnSkillTrained(GamePlayer player, Specialization skill)
         {
-            base.OnSkillTrained(player, skill);
-
             var isArcherSkill = new[] { Specs.RecurveBow, Specs.CompositeBow, Specs.Longbow }.Contains(skill.KeyName);
 
             if (isArcherSkill && ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)

@@ -38,14 +38,6 @@ namespace DOL.GS
         public virtual void Init() { }
 
         /// <summary>
-        /// Add things that are required for current level
-        /// Skills and other things are handled through player specs... (on Refresh Specs)
-        /// </summary>
-        public virtual void OnLevelUp(GamePlayer player, int previousLevel)
-        {
-        }
-
-        /// <summary>
         /// Add all spell-lines and other things that are new when this skill is trained
         /// </summary>
         public virtual void OnSkillTrained(GamePlayer player, Specialization skill)

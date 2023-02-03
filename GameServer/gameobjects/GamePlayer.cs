@@ -3182,8 +3182,6 @@ namespace DOL.GS
 					}
 				}
 			}
-
-			CharacterClass.Behavior.OnLevelUp(this, originalLevel);
 		}
 
 		public virtual bool RespecAll()
@@ -5176,7 +5174,6 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.StatRaise"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			CharacterClass.Behavior.OnLevelUp(this, previouslevel);
 			GameServer.ServerRules.OnPlayerLevelUp(this, previouslevel);
 			RefreshSpecDependantSkills(true);
 
@@ -12368,8 +12365,6 @@ namespace DOL.GS
 					}
 				}
 			}
-						
-			CharacterClass.Behavior.OnLevelUp(this, Level); // load all skills from DB first to keep the order
 		}
 
 		/// <summary>
