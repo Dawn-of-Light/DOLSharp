@@ -31,6 +31,14 @@ namespace DOL.GS
 
         public ushort MaxPulsingSpells { get; protected set; } = 2;
 
+        public string GetSalutation(GamePlayer player)
+        {
+                var femaleName = FemaleName;
+                var useFemaleName = (player != null && player.Gender == eGender.Female && !Util.IsEmpty(femaleName));
+                if (useFemaleName) return femaleName;
+                else return Name;
+        }
+
         public string GetTitle(GamePlayer player, int level)
         {
             if (!HasAdvancedFromBaseClass) level = 0;

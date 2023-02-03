@@ -37,16 +37,7 @@ namespace DOL.GS
         public GamePlayer Player => Behavior.Player;
         public DefaultClassBehavior Behavior { get; private set; }
 
-        public string Name
-        {
-            get
-            {
-                var femaleName = characterClass.FemaleName;
-                var useFemaleName = (Player != null && Player.Gender == eGender.Female && !Util.IsEmpty(femaleName));
-                if (useFemaleName) return femaleName;
-                else return characterClass.Name;
-            }
-        }
+        public string Name => characterClass.GetSalutation(Player);
 
         public List<PlayerRace> EligibleRaces => characterClass.EligibleRaces.ToList();
         public string FemaleName => characterClass.FemaleName;
