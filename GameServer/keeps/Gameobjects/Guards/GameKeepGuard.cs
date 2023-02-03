@@ -1213,7 +1213,7 @@ namespace DOL.GS.Keeps
 
 		protected virtual ICharacterClass GetClass()
         {
-			return new CharacterClassBase();
+			return CharacterClass.None;
 		}
 
 		protected virtual void SetModel()

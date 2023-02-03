@@ -126,7 +126,7 @@ namespace DOL.UnitTests.Gameserver
         private FakePlayer NewL50Player()
         {
             var player = new FakePlayer();
-            player.fakeCharacterClass = new CharacterClassBase();
+            player.fakeCharacterClass = CharacterClass.None;
             player.Level = 50;
             return player;
         }

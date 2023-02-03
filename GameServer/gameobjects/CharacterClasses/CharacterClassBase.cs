@@ -68,7 +68,7 @@ namespace DOL.GS
         public virtual bool HasAdvancedFromBaseClass()
             => characterClass.HasAdvancedFromBaseClass;
 
-        public CharacterClassBase()
+        private CharacterClassBase()
         {
             characterClass = CharacterClass.Unknown;
             Behavior = DefaultClassBehavior.Create(null, characterClass.ID);
@@ -85,7 +85,7 @@ namespace DOL.GS
         public string GetTitle(GamePlayer player, int level)
             => characterClass.GetTitle(player,level);
 
-        public virtual void Init(GamePlayer player)
+        public void Init(GamePlayer player)
         {
             // TODO : Should Throw Exception Here.
             if (Behavior != null && log.IsWarnEnabled)
@@ -96,9 +96,9 @@ namespace DOL.GS
 
         public override bool Equals(object obj)
         {
-            if (obj is CharacterClassBase characterClass)
+            if (obj is CharacterClassBase characterClassBase)
             {
-                return characterClass.characterClass.ID == ID;
+                return characterClassBase.characterClass.Equals(characterClass);
             }
             return false;
         }

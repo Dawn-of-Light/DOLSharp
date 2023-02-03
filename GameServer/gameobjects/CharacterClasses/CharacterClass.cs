@@ -128,6 +128,7 @@ namespace DOL.GS
             => ID;
 
         #region CharacterClass(Base) creation shortcuts
+        public static ICharacterClass None => CharacterClassBase.GetClass((int)eCharacterClass.Unknown);
         //alb
         public static ICharacterClass Armsman => CharacterClassBase.GetClass((int)eCharacterClass.Armsman);
 		public static ICharacterClass Cabalist => CharacterClassBase.GetClass((int)eCharacterClass.Cabalist);

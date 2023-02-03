@@ -18,7 +18,7 @@ namespace DOL.GS.Keeps
 			if (ModelRealm == eRealm.Albion) return CharacterClassBase.GetClass((int)eCharacterClass.Scout);
 			else if (ModelRealm == eRealm.Midgard) return CharacterClassBase.GetClass((int)eCharacterClass.Hunter);
 			else if (ModelRealm == eRealm.Hibernia) return CharacterClassBase.GetClass((int)eCharacterClass.Ranger);
-			return new CharacterClassBase();
+			return CharacterClass.None;
 		}
 
 		protected override void SetBlockEvadeParryChance()
