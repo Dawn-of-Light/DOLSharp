@@ -7001,9 +7001,11 @@ namespace DOL.GS
 			{
 				return 0;
 			}
+
+			var baseRangedWeaponRange = 440;
 			double classbase =
 				(weapon.SlotPosition == (int)eInventorySlot.DistanceWeapon
-				 ? CharacterClass.WeaponSkillRangedBase
+				 ? baseRangedWeaponRange
 				 : CharacterClass.WeaponSkillBase);
 
 			//added for WS Poisons

@@ -94,11 +94,6 @@ namespace DOL.GS
 		/// Class Weapon Skill Base
 		/// </summary>
 		int WeaponSkillBase { get; }
-		
-		/// <summary>
-		/// Class Weapon Skill Ranged Base
-		/// </summary>
-		int WeaponSkillRangedBase { get; }
 
 		/// <summary>
 		/// Class Type

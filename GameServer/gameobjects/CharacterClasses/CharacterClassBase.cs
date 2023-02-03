@@ -35,8 +35,6 @@ namespace DOL.GS
         private DefaultClassBehavior behavior;
 
         public int ID => characterClass.ID;
-        protected int m_baseWeaponSkillRanged;
-        protected ushort m_maxPulsingSpells;
         public GamePlayer Player { get; private set; }
 
         public string Name
@@ -67,8 +65,7 @@ namespace DOL.GS
         public eStat TertiaryStat => characterClass.LeveledStats.Tertiary;
         public eStat ManaStat => characterClass.ManaStat;
         public int WeaponSkillBase => characterClass.BaseWeaponSkill;
-        public int WeaponSkillRangedBase => m_baseWeaponSkillRanged;
-        public ushort MaxPulsingSpells => m_maxPulsingSpells;
+        public ushort MaxPulsingSpells => characterClass.MaxPulsingSpells;
         public virtual eClassType ClassType
             => characterClass.ClassType;
         public IList<string> GetAutotrainableSkills()
@@ -83,9 +80,7 @@ namespace DOL.GS
         public CharacterClassBase()
         {
             characterClass = CharacterClass.Unknown;
-            m_baseWeaponSkillRanged = 440;
-            m_maxPulsingSpells = 1;
-            behavior = DefaultClassBehavior.Create(null,characterClass.ID);
+            behavior = DefaultClassBehavior.Create(null, characterClass.ID);
         }
 
         public static CharacterClassBase GetClass(int classID)

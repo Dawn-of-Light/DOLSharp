@@ -28,6 +28,8 @@ namespace DOL.GS
         public eClassType ClassType { get; protected set; }
         public int ChampionTrainerID { get; protected set; }
 
+        public ushort MaxPulsingSpells { get; protected set; } = 2;
+
         public static CharacterClass GetClass(int classID)
         {
             allClasses.TryGetValue(classID, out var characterClass);
