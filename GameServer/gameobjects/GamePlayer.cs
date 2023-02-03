@@ -2825,7 +2825,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public virtual bool SetCharacterClass(int id)
 		{
-			var cl = CharacterClassBase.Create(this, id);
+			var cl = GS.CharacterClass.Create(this, id);
 			if(cl.Equals(GS.CharacterClass.Bainshee)) new BainsheeMorphEffect(this);
 
 			if (cl.Equals(GS.CharacterClass.None))

@@ -7,9 +7,9 @@ namespace DOL.GS.Keeps
 	{
 		protected override ICharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return CharacterClassBase.GetClass((int)eCharacterClass.Armsman);
-			else if (ModelRealm == eRealm.Midgard) return CharacterClassBase.GetClass((int)eCharacterClass.Warrior);
-			else if (ModelRealm == eRealm.Hibernia) return CharacterClassBase.GetClass((int)eCharacterClass.Hero);
+			if (ModelRealm == eRealm.Albion) return CharacterClass.Armsman;
+			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Warrior;
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClass.Hero;
 			return CharacterClass.None;
 		}
 

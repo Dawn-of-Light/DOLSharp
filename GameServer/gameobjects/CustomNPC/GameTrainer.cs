@@ -320,8 +320,8 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual bool CanPromotePlayer(GamePlayer player)
 		{
-			var baseClass = CharacterClassBase.GetBaseClass((int)TrainedClass);
-			var pickedClass = CharacterClassBase.GetClass((int)TrainedClass);
+			var pickedClass = CharacterClass.GetClass((int)TrainedClass);
+			var baseClass = pickedClass.GetBaseClass();
 
 			// Error or Base Trainer...
 			if (baseClass.Equals(pickedClass))

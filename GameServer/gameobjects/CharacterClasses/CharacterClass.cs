@@ -7,41 +7,73 @@ using DOL.Language;
 
 namespace DOL.GS
 {
-    public class CharacterClass
+    public class CharacterClass : ICharacterClass
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public int ID { get; protected set; }
 
-        public string Name { get; protected set; }
-        public string BaseName { get; protected set; }
-        public string FemaleName { get; protected set; }
+        private GamePlayer player;
+        private string name;
+        private bool hasAdvancedFromBaseClass;
+        private IEnumerable<PlayerRace> eligibleRaces;
+        private (eStat Primary, eStat Secondary, eStat Tertiary) leveledStats;
 
-        public string ProfessionTranslationId { get; protected set; } = "";
-        public int SpecPointsMultiplier { get; protected set; }
-        public IEnumerable<string> AutoTrainSkills { get; protected set; }
-        public (eStat Primary, eStat Secondary, eStat Tertiary) LeveledStats { get; protected set; }
-        public eStat ManaStat { get; protected set; }
-        public IEnumerable<PlayerRace> EligibleRaces { get; protected set; }
-        public bool CanUseLeftHandedWeapon { get; protected set; }
-        public bool HasAdvancedFromBaseClass { get; protected set; }
-        public int BaseHP { get; protected set; }
-        public int BaseWeaponSkill { get; protected set; }
-        public eClassType ClassType { get; protected set; }
-        public int ChampionTrainerID { get; protected set; }
+        public int ID { get; private set; }
+        public string BaseName { get; private set; }
+        public string FemaleName { get; private set; }
+        public string ProfessionTranslationId { get; private set; } = "";
+        public int SpecPointsMultiplier { get; private set; }
+        public IEnumerable<string> AutoTrainSkills { get; private set; }
+        public eStat ManaStat { get; private set; }
+        public bool CanUseLeftHandedWeapon { get; private set; }
+        public int BaseHP { get; private set; }
+        public int BaseWeaponSkill { get; private set; }
+        public eClassType ClassType { get; private set; }
+        public int ChampionTrainerID { get; private set; }
+        public ushort MaxPulsingSpells { get; private set; } = 2;
 
-        public ushort MaxPulsingSpells { get; protected set; } = 2;
+        public string Name => GetSalutation(player);
+        public string Profession
+            => LanguageMgr.TryTranslateOrDefault(player, ProfessionTranslationId, ProfessionTranslationId);
+        public int AdjustedSpecPointsMultiplier => SpecPointsMultiplier;
+        public eStat PrimaryStat => leveledStats.Primary;
+        public eStat SecondaryStat => leveledStats.Secondary;
+        public eStat TertiaryStat => leveledStats.Tertiary;
+        public int WeaponSkillBase => BaseWeaponSkill;
+        public IList<string> GetAutotrainableSkills()
+            => AutoTrainSkills.ToList();
+        public GameTrainer.eChampionTrainerType ChampionTrainerType()
+            => (GameTrainer.eChampionTrainerType)ChampionTrainerID;
+        public bool CanUseLefthandedWeapon
+            => CanUseLeftHandedWeapon;
+        public bool HasAdvancedFromBaseClass()
+            => hasAdvancedFromBaseClass;
+        public List<PlayerRace> EligibleRaces => eligibleRaces.ToList();
+
+        private CharacterClass() { }
+
+        private CharacterClass(GamePlayer player) 
+        { 
+            this.player = player;
+        }
+
+        public static CharacterClass Create(GamePlayer player, int classID)
+        {
+            var characterClass = GetClass(classID);
+            characterClass.player = player;
+            return characterClass;
+        }
 
         public string GetSalutation(GamePlayer player)
         {
-                var femaleName = FemaleName;
-                var useFemaleName = (player != null && player.Gender == eGender.Female && !Util.IsEmpty(femaleName));
-                if (useFemaleName) return femaleName;
-                else return Name;
+            var femaleName = FemaleName;
+            var useFemaleName = (player != null && player.Gender == eGender.Female && !Util.IsEmpty(femaleName));
+            if (useFemaleName) return femaleName;
+            else return name;
         }
 
         public string GetTitle(GamePlayer player, int level)
         {
-            if (!HasAdvancedFromBaseClass) level = 0;
+            if (!hasAdvancedFromBaseClass) level = 0;
 
             // Clamp level in 5 by 5 steps - 50 is the max available translation for now
             int clamplevel = Math.Min(50, (level / 5) * 5);
@@ -49,7 +81,7 @@ namespace DOL.GS
             string none = LanguageMgr.TryTranslateOrDefault(player, "!None!", "PlayerClass.GetTitle.none");
 
             if (clamplevel > 0)
-                return LanguageMgr.TryTranslateOrDefault(player, string.Format("!{0}!", Name), string.Format("PlayerClass.{0}.GetTitle.{1}", Name, clamplevel));
+                return LanguageMgr.TryTranslateOrDefault(player, string.Format("!{0}!", name), string.Format("PlayerClass.{0}.GetTitle.{1}", name, clamplevel));
 
             return none;
         }
@@ -63,9 +95,9 @@ namespace DOL.GS
 
         public CharacterClass GetBaseClass()
         {
-            if(Equals(CharacterClass.Unknown)) return CharacterClass.Unknown;
+            if (Equals(CharacterClass.Unknown)) return CharacterClass.Unknown;
 
-            return allClasses.Values.Where(c => c.Name == BaseName).First();
+            return allClasses.Values.Where(c => c.name == BaseName).First();
         }
 
         public static void LoadCustomizationsFromDatabase()
@@ -91,7 +123,7 @@ namespace DOL.GS
                         .Split(';', ',').Where(s => !string.IsNullOrEmpty(s))
                         .Select(s => Convert.ToInt32(s))
                         .Select(i => PlayerRace.GetRace(i));
-                    if(newElibibleRaces.Any()) characterClass.EligibleRaces = newElibibleRaces;
+                    if (newElibibleRaces.Any()) characterClass.eligibleRaces = newElibibleRaces;
 
                 }
                 catch (Exception e)
@@ -105,17 +137,17 @@ namespace DOL.GS
             => new CharacterClass()
             {
                 ID = 0,
-                Name = "Unknown Class",
+                name = "Unknown Class",
                 BaseName = "Unknown Base Class",
                 FemaleName = "",
                 ProfessionTranslationId = "",
                 SpecPointsMultiplier = 10,
                 AutoTrainSkills = new string[] { },
-                LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                 ManaStat = eStat.UNDEFINED,
-                EligibleRaces = PlayerRace.AllRaces.ToArray(),
+                eligibleRaces = PlayerRace.AllRaces,
                 CanUseLeftHandedWeapon = false,
-                HasAdvancedFromBaseClass = true,
+                hasAdvancedFromBaseClass = true,
                 BaseHP = 600,
                 BaseWeaponSkill = 400,
                 ClassType = eClassType.ListCaster,
@@ -124,7 +156,7 @@ namespace DOL.GS
 
         public override bool Equals(object obj)
         {
-            if(obj is CharacterClass characterClass)
+            if (obj is CharacterClass characterClass)
             {
                 return characterClass.ID == ID;
             }
@@ -135,57 +167,57 @@ namespace DOL.GS
             => ID;
 
         #region CharacterClass(Base) creation shortcuts
-        public static ICharacterClass None => CharacterClassBase.GetClass((int)eCharacterClass.Unknown);
+        public static ICharacterClass None => CharacterClass.GetClass((int)eCharacterClass.Unknown);
         //alb
-        public static ICharacterClass Armsman => CharacterClassBase.GetClass((int)eCharacterClass.Armsman);
-		public static ICharacterClass Cabalist => CharacterClassBase.GetClass((int)eCharacterClass.Cabalist);
-		public static ICharacterClass Cleric => CharacterClassBase.GetClass((int)eCharacterClass.Cleric);
-		public static ICharacterClass Friar => CharacterClassBase.GetClass((int)eCharacterClass.Friar);
-		public static ICharacterClass Heretic => CharacterClassBase.GetClass((int)eCharacterClass.Heretic);
-		public static ICharacterClass Infiltrator => CharacterClassBase.GetClass((int)eCharacterClass.Infiltrator);
-		public static ICharacterClass Mercenary => CharacterClassBase.GetClass((int)eCharacterClass.Mercenary);
-		public static ICharacterClass Minstrel => CharacterClassBase.GetClass((int)eCharacterClass.Minstrel);
-		public static ICharacterClass Necromancer => CharacterClassBase.GetClass((int)eCharacterClass.Necromancer);
-		public static ICharacterClass Paladin => CharacterClassBase.GetClass((int)eCharacterClass.Paladin);
-		public static ICharacterClass Reaver => CharacterClassBase.GetClass((int)eCharacterClass.Reaver);
-		public static ICharacterClass Scout => CharacterClassBase.GetClass((int)eCharacterClass.Scout);
-		public static ICharacterClass Sorcerer => CharacterClassBase.GetClass((int)eCharacterClass.Sorcerer);
-		public static ICharacterClass Theurgist => CharacterClassBase.GetClass((int)eCharacterClass.Theurgist);
-		public static ICharacterClass Wizard => CharacterClassBase.GetClass((int)eCharacterClass.Wizard);
-		public static ICharacterClass MaulerAlb => CharacterClassBase.GetClass((int)eCharacterClass.MaulerAlb);
-		//mid
-		public static ICharacterClass Berserker => CharacterClassBase.GetClass((int)eCharacterClass.Berserker);
-		public static ICharacterClass Bonedancer => CharacterClassBase.GetClass((int)eCharacterClass.Bonedancer);
-		public static ICharacterClass Healer => CharacterClassBase.GetClass((int)eCharacterClass.Healer);
-		public static ICharacterClass Hunter => CharacterClassBase.GetClass((int)eCharacterClass.Hunter);
-		public static ICharacterClass Runemaster => CharacterClassBase.GetClass((int)eCharacterClass.Runemaster);
-		public static ICharacterClass Savage => CharacterClassBase.GetClass((int)eCharacterClass.Savage);
-		public static ICharacterClass Shadowblade => CharacterClassBase.GetClass((int)eCharacterClass.Shadowblade);
-		public static ICharacterClass Shaman => CharacterClassBase.GetClass((int)eCharacterClass.Shaman);
-		public static ICharacterClass Skald => CharacterClassBase.GetClass((int)eCharacterClass.Skald);
-		public static ICharacterClass Spiritmaster => CharacterClassBase.GetClass((int)eCharacterClass.Spiritmaster);
-		public static ICharacterClass Thane => CharacterClassBase.GetClass((int)eCharacterClass.Thane);
-		public static ICharacterClass Valkyrie => CharacterClassBase.GetClass((int)eCharacterClass.Valkyrie);
-		public static ICharacterClass Warlock => CharacterClassBase.GetClass((int)eCharacterClass.Warlock);
-		public static ICharacterClass Warrior => CharacterClassBase.GetClass((int)eCharacterClass.Warrior);
-		public static ICharacterClass MaulerMid => CharacterClassBase.GetClass((int)eCharacterClass.MaulerMid);
-		//hib
-		public static ICharacterClass Animist => CharacterClassBase.GetClass((int)eCharacterClass.Animist);
-		public static ICharacterClass Bainshee => CharacterClassBase.GetClass((int)eCharacterClass.Bainshee);
-		public static ICharacterClass Bard => CharacterClassBase.GetClass((int)eCharacterClass.Bard);
-		public static ICharacterClass Blademaster => CharacterClassBase.GetClass((int)eCharacterClass.Blademaster);
-		public static ICharacterClass Champion => CharacterClassBase.GetClass((int)eCharacterClass.Champion);
-		public static ICharacterClass Druid => CharacterClassBase.GetClass((int)eCharacterClass.Druid);
-		public static ICharacterClass Eldritch => CharacterClassBase.GetClass((int)eCharacterClass.Eldritch);
-		public static ICharacterClass Enchanter => CharacterClassBase.GetClass((int)eCharacterClass.Enchanter);
-		public static ICharacterClass Hero => CharacterClassBase.GetClass((int)eCharacterClass.Hero);
-		public static ICharacterClass Mentalist => CharacterClassBase.GetClass((int)eCharacterClass.Mentalist);
-		public static ICharacterClass Nightshade => CharacterClassBase.GetClass((int)eCharacterClass.Nightshade);
-		public static ICharacterClass Ranger => CharacterClassBase.GetClass((int)eCharacterClass.Ranger);
-		public static ICharacterClass Valewalker => CharacterClassBase.GetClass((int)eCharacterClass.Valewalker);
-		public static ICharacterClass Vampiir => CharacterClassBase.GetClass((int)eCharacterClass.Vampiir);
-		public static ICharacterClass Warden => CharacterClassBase.GetClass((int)eCharacterClass.Warden);
-		public static ICharacterClass MaulerHib => CharacterClassBase.GetClass((int)eCharacterClass.MaulerHib);
+        public static ICharacterClass Armsman => CharacterClass.GetClass((int)eCharacterClass.Armsman);
+        public static ICharacterClass Cabalist => CharacterClass.GetClass((int)eCharacterClass.Cabalist);
+        public static ICharacterClass Cleric => CharacterClass.GetClass((int)eCharacterClass.Cleric);
+        public static ICharacterClass Friar => CharacterClass.GetClass((int)eCharacterClass.Friar);
+        public static ICharacterClass Heretic => CharacterClass.GetClass((int)eCharacterClass.Heretic);
+        public static ICharacterClass Infiltrator => CharacterClass.GetClass((int)eCharacterClass.Infiltrator);
+        public static ICharacterClass Mercenary => CharacterClass.GetClass((int)eCharacterClass.Mercenary);
+        public static ICharacterClass Minstrel => CharacterClass.GetClass((int)eCharacterClass.Minstrel);
+        public static ICharacterClass Necromancer => CharacterClass.GetClass((int)eCharacterClass.Necromancer);
+        public static ICharacterClass Paladin => CharacterClass.GetClass((int)eCharacterClass.Paladin);
+        public static ICharacterClass Reaver => CharacterClass.GetClass((int)eCharacterClass.Reaver);
+        public static ICharacterClass Scout => CharacterClass.GetClass((int)eCharacterClass.Scout);
+        public static ICharacterClass Sorcerer => CharacterClass.GetClass((int)eCharacterClass.Sorcerer);
+        public static ICharacterClass Theurgist => CharacterClass.GetClass((int)eCharacterClass.Theurgist);
+        public static ICharacterClass Wizard => CharacterClass.GetClass((int)eCharacterClass.Wizard);
+        public static ICharacterClass MaulerAlb => CharacterClass.GetClass((int)eCharacterClass.MaulerAlb);
+        //mid
+        public static ICharacterClass Berserker => CharacterClass.GetClass((int)eCharacterClass.Berserker);
+        public static ICharacterClass Bonedancer => CharacterClass.GetClass((int)eCharacterClass.Bonedancer);
+        public static ICharacterClass Healer => CharacterClass.GetClass((int)eCharacterClass.Healer);
+        public static ICharacterClass Hunter => CharacterClass.GetClass((int)eCharacterClass.Hunter);
+        public static ICharacterClass Runemaster => CharacterClass.GetClass((int)eCharacterClass.Runemaster);
+        public static ICharacterClass Savage => CharacterClass.GetClass((int)eCharacterClass.Savage);
+        public static ICharacterClass Shadowblade => CharacterClass.GetClass((int)eCharacterClass.Shadowblade);
+        public static ICharacterClass Shaman => CharacterClass.GetClass((int)eCharacterClass.Shaman);
+        public static ICharacterClass Skald => CharacterClass.GetClass((int)eCharacterClass.Skald);
+        public static ICharacterClass Spiritmaster => CharacterClass.GetClass((int)eCharacterClass.Spiritmaster);
+        public static ICharacterClass Thane => CharacterClass.GetClass((int)eCharacterClass.Thane);
+        public static ICharacterClass Valkyrie => CharacterClass.GetClass((int)eCharacterClass.Valkyrie);
+        public static ICharacterClass Warlock => CharacterClass.GetClass((int)eCharacterClass.Warlock);
+        public static ICharacterClass Warrior => CharacterClass.GetClass((int)eCharacterClass.Warrior);
+        public static ICharacterClass MaulerMid => CharacterClass.GetClass((int)eCharacterClass.MaulerMid);
+        //hib
+        public static ICharacterClass Animist => CharacterClass.GetClass((int)eCharacterClass.Animist);
+        public static ICharacterClass Bainshee => CharacterClass.GetClass((int)eCharacterClass.Bainshee);
+        public static ICharacterClass Bard => CharacterClass.GetClass((int)eCharacterClass.Bard);
+        public static ICharacterClass Blademaster => CharacterClass.GetClass((int)eCharacterClass.Blademaster);
+        public static ICharacterClass Champion => CharacterClass.GetClass((int)eCharacterClass.Champion);
+        public static ICharacterClass Druid => CharacterClass.GetClass((int)eCharacterClass.Druid);
+        public static ICharacterClass Eldritch => CharacterClass.GetClass((int)eCharacterClass.Eldritch);
+        public static ICharacterClass Enchanter => CharacterClass.GetClass((int)eCharacterClass.Enchanter);
+        public static ICharacterClass Hero => CharacterClass.GetClass((int)eCharacterClass.Hero);
+        public static ICharacterClass Mentalist => CharacterClass.GetClass((int)eCharacterClass.Mentalist);
+        public static ICharacterClass Nightshade => CharacterClass.GetClass((int)eCharacterClass.Nightshade);
+        public static ICharacterClass Ranger => CharacterClass.GetClass((int)eCharacterClass.Ranger);
+        public static ICharacterClass Valewalker => CharacterClass.GetClass((int)eCharacterClass.Valewalker);
+        public static ICharacterClass Vampiir => CharacterClass.GetClass((int)eCharacterClass.Vampiir);
+        public static ICharacterClass Warden => CharacterClass.GetClass((int)eCharacterClass.Warden);
+        public static ICharacterClass MaulerHib => CharacterClass.GetClass((int)eCharacterClass.MaulerHib);
         #endregion
 
         #region Default Database
@@ -196,21 +228,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Paladin,
-                    Name = "Paladin",
+                    name = "Paladin",
                     BaseName = "Fighter",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.ChurchofAlbion",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new[] { Specs.Slash, Specs.Chants },
-                    LeveledStats = (eStat.CON, eStat.PIE, eStat.STR),
+                    leveledStats = (eStat.CON, eStat.PIE, eStat.STR),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.Highlander,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 760,
                     BaseWeaponSkill = 380,
                     ClassType = eClassType.Hybrid,
@@ -222,15 +254,15 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Armsman,
-                    Name = "Armsman",
+                    name = "Armsman",
                     BaseName = "Fighter",
                     FemaleName = "Armswoman",
                     ProfessionTranslationId = "PlayerClass.Profession.DefendersofAlbion",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new[] { Specs.Slash, Specs.Thrust },
-                    LeveledStats = (eStat.STR, eStat.CON, eStat.DEX),
+                    leveledStats = (eStat.STR, eStat.CON, eStat.DEX),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Korazh,
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
@@ -239,7 +271,7 @@ namespace DOL.GS
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 880,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.PureTank,
@@ -251,21 +283,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Scout,
-                    Name = "Scout",
+                    name = "Scout",
                     BaseName = "Rogue",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.DefendersofAlbion",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new[] { Specs.Archery, Specs.Longbow },
-                    LeveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
+                    leveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
                     ManaStat = eStat.DEX,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Briton,
                         PlayerRace.Highlander,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -277,20 +309,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Minstrel,
-                    Name = "Minstrel",
+                    name = "Minstrel",
                     BaseName = "Rogue",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.Academy",
                     SpecPointsMultiplier = 15,
                     AutoTrainSkills = new[] { Specs.Instruments },
-                    LeveledStats = (eStat.CHR, eStat.DEX, eStat.STR),
+                    leveledStats = (eStat.CHR, eStat.DEX, eStat.STR),
                     ManaStat = eStat.CHR,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Briton,
                         PlayerRace.Highlander,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 380,
                     ClassType = eClassType.Hybrid,
@@ -302,20 +334,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Theurgist,
-                    Name = "Theurgist",
+                    name = "Theurgist",
                     BaseName = "Elementalist",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.DefendersofAlbion",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.HalfOgre },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -327,20 +359,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Cleric,
-                    Name = "Cleric",
+                    name = "Cleric",
                     BaseName = "Acolyte",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.ChurchofAlbion",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.PIE, eStat.CON, eStat.STR),
+                    leveledStats = (eStat.PIE, eStat.CON, eStat.STR),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.Highlander },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 320,
                     ClassType = eClassType.Hybrid,
@@ -352,20 +384,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Wizard,
-                    Name = "Wizard",
+                    name = "Wizard",
                     BaseName = "Elementalist",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.Academy",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.HalfOgre },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 240,
                     ClassType = eClassType.ListCaster,
@@ -377,22 +409,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Sorcerer,
-                    Name = "Sorcerer",
+                    name = "Sorcerer",
                     BaseName = "Mage",
                     FemaleName = "Sorceress",
                     ProfessionTranslationId = "PlayerClass.Profession.Academy",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.HalfOgre,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -404,21 +436,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Infiltrator,
-                    Name = "Infiltrator",
+                    name = "Infiltrator",
                     BaseName = "Rogue",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.GuildofShadows",
                     SpecPointsMultiplier = 25,
                     AutoTrainSkills = new[] { Specs.Stealth },
-                    LeveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
+                    leveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Briton,
                         PlayerRace.Highlander,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.PureTank,
@@ -430,20 +462,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Friar,
-                    Name = "Friar",
+                    name = "Friar",
                     BaseName = "Acolyte",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.DefendersofAlbion",
                     SpecPointsMultiplier = 18,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.PIE, eStat.CON, eStat.STR),
+                    leveledStats = (eStat.PIE, eStat.CON, eStat.STR),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.Highlander },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -455,15 +487,15 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Mercenary,
-                    Name = "Mercenary",
+                    name = "Mercenary",
                     BaseName = "Fighter",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.GuildofShadows",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new[] { Specs.Slash, Specs.Thrust },
-                    LeveledStats = (eStat.STR, eStat.DEX, eStat.CON),
+                    leveledStats = (eStat.STR, eStat.DEX, eStat.CON),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Korazh,
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
@@ -472,7 +504,7 @@ namespace DOL.GS
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 880,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.PureTank,
@@ -484,20 +516,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Necromancer,
-                    Name = "Necromancer",
+                    name = "Necromancer",
                     BaseName = "Disciple",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.TempleofArawn",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Briton,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -509,22 +541,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Cabalist,
-                    Name = "Cabalist",
+                    name = "Cabalist",
                     BaseName = "Mage",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.GuildofShadows",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.HalfOgre,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -536,15 +568,15 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Fighter,
-                    Name = "Fighter",
+                    name = "Fighter",
                     BaseName = "Fighter",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Korazh,
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
@@ -553,7 +585,7 @@ namespace DOL.GS
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 880,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.PureTank,
@@ -565,20 +597,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Elementalist,
-                    Name = "Elementalist",
+                    name = "Elementalist",
                     BaseName = "Elementalist",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.HalfOgre },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -590,22 +622,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Acolyte,
-                    Name = "Acolyte",
+                    name = "Acolyte",
                     BaseName = "Acolyte",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Korazh,
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.Highlander,
                         PlayerRace.Inconnu },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 720,
                     BaseWeaponSkill = 320,
                     ClassType = eClassType.Hybrid,
@@ -617,21 +649,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.AlbionRogue,
-                    Name = "Rogue",
+                    name = "Rogue",
                     BaseName = "Rogue",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Briton,
                         PlayerRace.Highlander,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.PureTank,
@@ -643,22 +675,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Mage,
-                    Name = "Mage",
+                    name = "Mage",
                     BaseName = "Mage",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.HalfOgre,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -670,20 +702,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Reaver,
-                    Name = "Reaver",
+                    name = "Reaver",
                     BaseName = "Fighter",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.TempleofArawn",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new[] { Specs.Slash, Specs.Flexible },
-                    LeveledStats = (eStat.STR, eStat.DEX, eStat.PIE),
+                    leveledStats = (eStat.STR, eStat.DEX, eStat.PIE),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Briton,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 760,
                     BaseWeaponSkill = 380,
                     ClassType = eClassType.Hybrid,
@@ -695,20 +727,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Disciple,
-                    Name = "Disciple",
+                    name = "Disciple",
                     BaseName = "Disciple",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Briton,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -720,22 +752,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Thane,
-                    Name = "Thane",
+                    name = "Thane",
                     BaseName = "Viking",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofThor",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.STR, eStat.PIE, eStat.CON),
+                    leveledStats = (eStat.STR, eStat.PIE, eStat.CON),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Deifrang,
                         PlayerRace.Norseman,
                         PlayerRace.Troll },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -747,15 +779,15 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Warrior,
-                    Name = "Warrior",
+                    name = "Warrior",
                     BaseName = "Viking",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofTyr",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new[] { Specs.Axe, Specs.Hammer, Specs.Sword },
-                    LeveledStats = (eStat.STR, eStat.CON, eStat.DEX),
+                    leveledStats = (eStat.STR, eStat.CON, eStat.DEX),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Kobold,
                         PlayerRace.Deifrang,
@@ -763,7 +795,7 @@ namespace DOL.GS
                         PlayerRace.Troll,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 880,
                     BaseWeaponSkill = 460,
                     ClassType = eClassType.PureTank,
@@ -775,22 +807,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Shadowblade,
-                    Name = "Shadowblade",
+                    name = "Shadowblade",
                     BaseName = "MidgardRogue",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.Loki",
                     SpecPointsMultiplier = 22,
                     AutoTrainSkills = new[] { Specs.Stealth },
-                    LeveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
+                    leveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
                         PlayerRace.Norseman,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 760,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.PureTank,
@@ -802,21 +834,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Skald,
-                    Name = "Skald",
+                    name = "Skald",
                     BaseName = "Viking",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofBragi",
                     SpecPointsMultiplier = 15,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.CHR, eStat.STR, eStat.CON),
+                    leveledStats = (eStat.CHR, eStat.STR, eStat.CON),
                     ManaStat = eStat.CHR,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Kobold,
                         PlayerRace.Norseman,
                         PlayerRace.Troll },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 760,
                     BaseWeaponSkill = 380,
                     ClassType = eClassType.Hybrid,
@@ -828,22 +860,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Hunter,
-                    Name = "Hunter",
+                    name = "Hunter",
                     BaseName = "MidgardRogue",
                     FemaleName = "Huntress",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofSkadi",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new[] { Specs.Archery, Specs.CompositeBow },
-                    LeveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
+                    leveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
                     ManaStat = eStat.DEX,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
                         PlayerRace.Norseman,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 380,
                     ClassType = eClassType.Hybrid,
@@ -855,20 +887,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Healer,
-                    Name = "Healer",
+                    name = "Healer",
                     BaseName = "Seer",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofEir",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.PIE, eStat.CON, eStat.STR),
+                    leveledStats = (eStat.PIE, eStat.CON, eStat.STR),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Norseman },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -880,20 +912,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Spiritmaster,
-                    Name = "Spiritmaster",
+                    name = "Spiritmaster",
                     BaseName = "Mystic",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofHel",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.PIE, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.PIE, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
                         PlayerRace.Norseman },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -905,21 +937,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Shaman,
-                    Name = "Shaman",
+                    name = "Shaman",
                     BaseName = "Seer",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofYmir",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.PIE, eStat.CON, eStat.STR),
+                    leveledStats = (eStat.PIE, eStat.CON, eStat.STR),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
                         PlayerRace.Troll },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -931,21 +963,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Runemaster,
-                    Name = "Runemaster",
+                    name = "Runemaster",
                     BaseName = "Mystic",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofOdin",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.PIE, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.PIE, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
                         PlayerRace.Norseman },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -957,20 +989,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Bonedancer,
-                    Name = "Bonedancer",
+                    name = "Bonedancer",
                     BaseName = "Mystic",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofBodgar",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.PIE, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.PIE, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Kobold,
                         PlayerRace.Troll,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -982,22 +1014,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Berserker,
-                    Name = "Berserker",
+                    name = "Berserker",
                     BaseName = "Viking",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofModi",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.STR, eStat.DEX, eStat.CON),
+                    leveledStats = (eStat.STR, eStat.DEX, eStat.CON),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Deifrang,
                         PlayerRace.Norseman,
                         PlayerRace.Troll,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 880,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.PureTank,
@@ -1009,22 +1041,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Savage,
-                    Name = "Savage",
+                    name = "Savage",
                     BaseName = "Viking",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofKelgor",
                     SpecPointsMultiplier = 15,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
+                    leveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Kobold,
                         PlayerRace.Norseman,
                         PlayerRace.Troll,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 880,
                     BaseWeaponSkill = 400,
                     ClassType = eClassType.PureTank,
@@ -1036,22 +1068,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Heretic,
-                    Name = "Heretic",
+                    name = "Heretic",
                     BaseName = "Acolyte",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.TempleofArawn",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.PIE, eStat.DEX, eStat.CON),
+                    leveledStats = (eStat.PIE, eStat.DEX, eStat.CON),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Korazh,
                         PlayerRace.Avalonian,
                         PlayerRace.Briton,
                         PlayerRace.Inconnu,
                         PlayerRace.Saracen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -1063,21 +1095,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Valkyrie,
-                    Name = "Valkyrie",
+                    name = "Valkyrie",
                     BaseName = "Viking",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofOdin",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.CON, eStat.STR, eStat.DEX),
+                    leveledStats = (eStat.CON, eStat.STR, eStat.DEX),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Norseman,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -1089,15 +1121,15 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Viking,
-                    Name = "Viking",
+                    name = "Viking",
                     BaseName = "Viking",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
@@ -1106,7 +1138,7 @@ namespace DOL.GS
                         PlayerRace.Troll,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 880,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.PureTank,
@@ -1118,15 +1150,15 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Mystic,
-                    Name = "Mystic",
+                    name = "Mystic",
                     BaseName = "Mystic",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
@@ -1134,7 +1166,7 @@ namespace DOL.GS
                         PlayerRace.Troll,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -1146,22 +1178,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Seer,
-                    Name = "Seer",
+                    name = "Seer",
                     BaseName = "Seer",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
                         PlayerRace.Norseman,
                         PlayerRace.Troll },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -1173,22 +1205,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.MidgardRogue,
-                    Name = "Rogue",
+                    name = "Rogue",
                     BaseName = "Rogue",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Dwarf,
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
                         PlayerRace.Norseman,
                         PlayerRace.Valkyn },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.PureTank,
@@ -1200,20 +1232,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Bainshee,
-                    Name = "Bainshee",
+                    name = "Bainshee",
                     BaseName = "Magician",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofAffinity",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.DEX, eStat.CON),
+                    leveledStats = (eStat.INT, eStat.DEX, eStat.CON),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Elf,
                         PlayerRace.Lurikeen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -1225,19 +1257,19 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Eldritch,
-                    Name = "Eldritch",
+                    name = "Eldritch",
                     BaseName = "Magician",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofFocus",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Elf,
                         PlayerRace.Lurikeen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -1249,19 +1281,19 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Enchanter,
-                    Name = "Enchanter",
+                    name = "Enchanter",
                     BaseName = "Magician",
                     FemaleName = "Enchantress",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofEssence",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Elf,
                         PlayerRace.Lurikeen },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -1273,21 +1305,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Mentalist,
-                    Name = "Mentalist",
+                    name = "Mentalist",
                     BaseName = "Magician",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofHarmony",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
+                    leveledStats = (eStat.INT, eStat.DEX, eStat.QUI),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Elf,
                         PlayerRace.Lurikeen,
                         PlayerRace.Shar },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -1299,22 +1331,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Blademaster,
-                    Name = "Blademaster",
+                    name = "Blademaster",
                     BaseName = "Guardian",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofHarmony",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.STR, eStat.DEX, eStat.CON),
+                    leveledStats = (eStat.STR, eStat.DEX, eStat.CON),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Elf,
                         PlayerRace.Firbolg,
                         PlayerRace.Graoch,
                         PlayerRace.Shar },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 880,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.PureTank,
@@ -1326,15 +1358,15 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Hero,
-                    Name = "Hero",
+                    name = "Hero",
                     BaseName = "Guardian",
                     FemaleName = "Heroine",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofFocus",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.STR, eStat.CON, eStat.DEX),
+                    leveledStats = (eStat.STR, eStat.CON, eStat.DEX),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Firbolg,
                         PlayerRace.Graoch,
@@ -1342,7 +1374,7 @@ namespace DOL.GS
                         PlayerRace.Shar,
                         PlayerRace.Sylvan },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 880,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.PureTank,
@@ -1354,22 +1386,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Champion,
-                    Name = "Champion",
+                    name = "Champion",
                     BaseName = "Guardian",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofEssence",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.STR, eStat.INT, eStat.DEX),
+                    leveledStats = (eStat.STR, eStat.INT, eStat.DEX),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Elf,
                         PlayerRace.Graoch,
                         PlayerRace.Lurikeen,
                         PlayerRace.Shar },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 760,
                     BaseWeaponSkill = 380,
                     ClassType = eClassType.Hybrid,
@@ -1381,21 +1413,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Warden,
-                    Name = "Warden",
+                    name = "Warden",
                     BaseName = "Naturalist",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofFocus",
                     SpecPointsMultiplier = 18,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.EMP, eStat.STR, eStat.CON),
+                    leveledStats = (eStat.EMP, eStat.STR, eStat.CON),
                     ManaStat = eStat.EMP,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Firbolg,
                         PlayerRace.Graoch,
                         PlayerRace.Sylvan },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -1407,20 +1439,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Druid,
-                    Name = "Druid",
+                    name = "Druid",
                     BaseName = "Naturalist",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofHarmony",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.EMP, eStat.CON, eStat.STR),
+                    leveledStats = (eStat.EMP, eStat.CON, eStat.STR),
                     ManaStat = eStat.EMP,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Firbolg,
                         PlayerRace.Sylvan },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 320,
                     ClassType = eClassType.Hybrid,
@@ -1432,19 +1464,19 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Bard,
-                    Name = "Bard",
+                    name = "Bard",
                     BaseName = "Naturalist",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofEssence",
                     SpecPointsMultiplier = 15,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.CHR, eStat.EMP, eStat.CON),
+                    leveledStats = (eStat.CHR, eStat.EMP, eStat.CON),
                     ManaStat = eStat.CHR,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Firbolg },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -1456,20 +1488,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Nightshade,
-                    Name = "Nightshade",
+                    name = "Nightshade",
                     BaseName = "Stalker",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofEssence",
                     SpecPointsMultiplier = 22,
                     AutoTrainSkills = new[] { Specs.Stealth },
-                    LeveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
+                    leveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
                     ManaStat = eStat.DEX,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Elf,
                         PlayerRace.Lurikeen },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -1481,22 +1513,22 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Ranger,
-                    Name = "Ranger",
+                    name = "Ranger",
                     BaseName = "Stalker",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofFocus",
                     SpecPointsMultiplier = 20,
                     AutoTrainSkills = new[] { Specs.Archery, Specs.RecurveBow },
-                    LeveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
+                    leveledStats = (eStat.DEX, eStat.QUI, eStat.STR),
                     ManaStat = eStat.DEX,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Elf,
                         PlayerRace.Lurikeen,
                         PlayerRace.Shar,
                         PlayerRace.Sylvan },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -1508,21 +1540,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Magician,
-                    Name = "Magician",
+                    name = "Magician",
                     BaseName = "Magician",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Elf,
                         PlayerRace.Lurikeen,
                         PlayerRace.Shar },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -1534,15 +1566,15 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Guardian,
-                    Name = "Guardian",
+                    name = "Guardian",
                     BaseName = "Guardian",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Elf,
                         PlayerRace.Firbolg,
@@ -1551,7 +1583,7 @@ namespace DOL.GS
                         PlayerRace.Shar,
                         PlayerRace.Sylvan },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 880,
                     BaseWeaponSkill = 400,
                     ClassType = eClassType.PureTank,
@@ -1563,21 +1595,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Naturalist,
-                    Name = "Naturalist",
+                    name = "Naturalist",
                     BaseName = "Naturalist",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.EMP,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Firbolg,
                         PlayerRace.Sylvan,
                         PlayerRace.Graoch },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.Hybrid,
@@ -1589,21 +1621,21 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Stalker,
-                    Name = "Stalker",
+                    name = "Stalker",
                     BaseName = "Stalker",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Elf,
                         PlayerRace.Lurikeen,
                         PlayerRace.Shar },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 720,
                     BaseWeaponSkill = 360,
                     ClassType = eClassType.PureTank,
@@ -1615,20 +1647,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Animist,
-                    Name = "Animist",
+                    name = "Animist",
                     BaseName = "Forester",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofAffinity",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.INT, eStat.CON, eStat.DEX),
+                    leveledStats = (eStat.INT, eStat.CON, eStat.DEX),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Firbolg,
                         PlayerRace.Sylvan },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -1640,20 +1672,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Valewalker,
-                    Name = "Valewalker",
+                    name = "Valewalker",
                     BaseName = "Forester",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofAffinity",
                     SpecPointsMultiplier = 15,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.STR, eStat.INT, eStat.CON),
+                    leveledStats = (eStat.STR, eStat.INT, eStat.CON),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Firbolg,
                         PlayerRace.Sylvan },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 720,
                     BaseWeaponSkill = 400,
                     ClassType = eClassType.ListCaster,
@@ -1665,20 +1697,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Forester,
-                    Name = "Forester",
+                    name = "Forester",
                     BaseName = "Forester",
                     FemaleName = "",
                     ProfessionTranslationId = "",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
+                    leveledStats = (eStat.UNDEFINED, eStat.UNDEFINED, eStat.UNDEFINED),
                     ManaStat = eStat.INT,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Firbolg,
                         PlayerRace.Sylvan },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = false,
+                    hasAdvancedFromBaseClass = false,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -1690,20 +1722,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Vampiir,
-                    Name = "Vampiir",
+                    name = "Vampiir",
                     BaseName = "Stalker",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.PathofAffinity",
                     SpecPointsMultiplier = 15,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.CON, eStat.STR, eStat.DEX),
+                    leveledStats = (eStat.CON, eStat.STR, eStat.DEX),
                     ManaStat = eStat.UNDEFINED,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Lurikeen,
                         PlayerRace.Shar },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 878,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.ListCaster,
@@ -1715,20 +1747,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.Warlock,
-                    Name = "Warlock",
+                    name = "Warlock",
                     BaseName = "Mystic",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.HouseofHel",
                     SpecPointsMultiplier = 10,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.PIE, eStat.CON, eStat.DEX),
+                    leveledStats = (eStat.PIE, eStat.CON, eStat.DEX),
                     ManaStat = eStat.PIE,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Frostalf,
                         PlayerRace.Kobold,
                         PlayerRace.Norseman },
                     CanUseLeftHandedWeapon = false,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 560,
                     BaseWeaponSkill = 280,
                     ClassType = eClassType.ListCaster,
@@ -1740,20 +1772,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.MaulerAlb,
-                    Name = "Mauler",
+                    name = "Mauler",
                     BaseName = "Fighter",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.TempleofIronFist",
                     SpecPointsMultiplier = 15,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.STR, eStat.CON, eStat.QUI),
+                    leveledStats = (eStat.STR, eStat.CON, eStat.QUI),
                     ManaStat = eStat.STR,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Korazh,
                         PlayerRace.Briton,
                         PlayerRace.Inconnu },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 600,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.Hybrid,
@@ -1765,20 +1797,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.MaulerMid,
-                    Name = "Mauler",
+                    name = "Mauler",
                     BaseName = "Viking",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.TempleofIronFist",
                     SpecPointsMultiplier = 15,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.STR, eStat.CON, eStat.QUI),
+                    leveledStats = (eStat.STR, eStat.CON, eStat.QUI),
                     ManaStat = eStat.STR,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Kobold,
                         PlayerRace.Deifrang,
                         PlayerRace.Norseman },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 600,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.Hybrid,
@@ -1790,20 +1822,20 @@ namespace DOL.GS
                 new CharacterClass()
                 {
                     ID = (int)eCharacterClass.MaulerHib,
-                    Name = "Mauler",
+                    name = "Mauler",
                     BaseName = "Guardian",
                     FemaleName = "",
                     ProfessionTranslationId = "PlayerClass.Profession.TempleofIronFist",
                     SpecPointsMultiplier = 15,
                     AutoTrainSkills = new string[] {  },
-                    LeveledStats = (eStat.STR, eStat.CON, eStat.QUI),
+                    leveledStats = (eStat.STR, eStat.CON, eStat.QUI),
                     ManaStat = eStat.STR,
-                    EligibleRaces = new[] {
+                    eligibleRaces = new[] {
                         PlayerRace.Celt,
                         PlayerRace.Graoch,
                         PlayerRace.Lurikeen },
                     CanUseLeftHandedWeapon = true,
-                    HasAdvancedFromBaseClass = true,
+                    hasAdvancedFromBaseClass = true,
                     BaseHP = 600,
                     BaseWeaponSkill = 440,
                     ClassType = eClassType.Hybrid,

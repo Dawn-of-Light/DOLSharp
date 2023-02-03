@@ -454,7 +454,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					if (flagChangedStats)
 					{
-						var charClass = CharacterClassBase.GetClass(character.Class);
+						var charClass = CharacterClass.GetClass(character.Class);
 
 						if (!charClass.Equals(CharacterClass.None))
 						{
@@ -664,7 +664,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <returns></returns>
 		public static bool IsCustomPointsDistributionValid(DOLCharacters character, IDictionary<eStat, int> stats, out int points)
 		{
-			var charClass = CharacterClassBase.GetClass(character.Class);
+			var charClass = CharacterClass.GetClass(character.Class);
 
 			if (!charClass.Equals(CharacterClass.None))
 			{
@@ -712,7 +712,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <returns>True if valid</returns>
 		public static bool IsCharacterValid(DOLCharacters ch)
 		{
-			var charClass = CharacterClassBase.GetClass(ch.Class);
+			var charClass = CharacterClass.GetClass(ch.Class);
 
 			bool valid = true;
 			try
@@ -1120,7 +1120,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (flagChangedStats)
 						{
-							var charClass = CharacterClassBase.GetClass(character.Class);
+							var charClass = CharacterClass.GetClass(character.Class);
 
 							if (!charClass.Equals(CharacterClass.None))
 							{

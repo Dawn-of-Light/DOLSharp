@@ -15,9 +15,9 @@ namespace DOL.GS.Keeps
 
 		protected override ICharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return CharacterClassBase.GetClass((int)eCharacterClass.Scout);
-			else if (ModelRealm == eRealm.Midgard) return CharacterClassBase.GetClass((int)eCharacterClass.Hunter);
-			else if (ModelRealm == eRealm.Hibernia) return CharacterClassBase.GetClass((int)eCharacterClass.Ranger);
+			if (ModelRealm == eRealm.Albion) return CharacterClass.Scout;
+			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Hunter;
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClass.Ranger;
 			return CharacterClass.None;
 		}
 
