@@ -11,11 +11,6 @@ namespace DOL.GS
     {
         public NecromancerClassBehavior(GamePlayer player) : base(player) { }
 
-        public override void Init()
-        {
-            Player.Model = (ushort)Player.Client.Account.Characters[Player.Client.ActiveCharIndex].CreationModel;
-        }
-
         public override byte HealthPercentGroupWindow
         {
             get
