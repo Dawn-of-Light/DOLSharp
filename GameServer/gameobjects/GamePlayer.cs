@@ -12478,7 +12478,7 @@ namespace DOL.GS
 			m_charStat[eStat.EMP - eStat._First] = (short)DBCharacter.Empathy;
 			m_charStat[eStat.CHR - eStat._First] = (short)DBCharacter.Charisma;
 
-			SetCharacterClass(CharacterClass.GetClass(DBCharacter.Class));
+			SetCharacterClass(CharacterClass.GetClass(this, DBCharacter.Class));
 
 			m_currentSpeed = 0;
 			if (MaxSpeedBase == 0)
