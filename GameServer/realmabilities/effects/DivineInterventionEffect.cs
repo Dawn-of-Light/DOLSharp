@@ -156,7 +156,7 @@ namespace DOL.GS.RealmAbilities
 
             m_playerOwner.Out.SendMessage("Your pool of healing heals the " + npc.Name + " of " + petOwner.Name + " for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
-            npc.ChangeHealth(m_owner, GameLiving.eHealthChangeType.Spell, healamount);
+            npc.ChangeHealth(npc, GameLiving.eHealthChangeType.Spell, healamount);
             PoolValue -= dmgamount;
 
             if (PoolValue <= 0)
@@ -203,7 +203,7 @@ namespace DOL.GS.RealmAbilities
 			}
 			player.Out.SendMessage("You are healed by the pool of healing for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
             m_playerOwner.Out.SendMessage("Your pool of healing heals " + player.Name + " for " + healamount + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-			player.ChangeHealth(m_owner, GameLiving.eHealthChangeType.Spell, healamount);
+			player.ChangeHealth(player, GameLiving.eHealthChangeType.Spell, healamount);
 			PoolValue -= dmgamount;
 
 			if (PoolValue <= 0)
