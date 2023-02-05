@@ -805,7 +805,7 @@ namespace DOL.GS
 				else
 					Flags &= ~eFlags.STEALTH;
 
-				if (Brain is IControlledBrain brain && brain.GetPlayerOwner() is GamePlayer player && !goStealth)
+				if (!goStealth && Brain is IControlledBrain brain && brain.GetPlayerOwner() is GamePlayer player)
 					player.Stealth(false);
 			}
 		}
