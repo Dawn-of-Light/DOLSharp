@@ -12936,7 +12936,7 @@ namespace DOL.GS
 		/// Set player's stealth state
 		/// </summary>
 		/// <param name="goStealth">true is stealthing, false if unstealthing</param>
-		public virtual void Stealth(bool goStealth)
+		public override void Stealth(bool goStealth)
 		{
 			if (IsStealthed == goStealth)
 				return;

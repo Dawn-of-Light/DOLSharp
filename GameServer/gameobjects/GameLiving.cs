@@ -1934,10 +1934,9 @@ namespace DOL.GS
 
 							// blocked for another player
 							if (ad.Target is GamePlayer)
-							{
 								((GamePlayer)ad.Target).Out.SendMessage(string.Format(LanguageMgr.GetTranslation(((GamePlayer)ad.Target).Client.Account.Language, "GameLiving.AttackData.YouBlock"), ad.Attacker.GetName(0, false), target.GetName(0, false)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-								((GamePlayer)ad.Target).Stealth(false);
-							}
+
+							ad.Target.Stealth(false);
 						}
 						else if (ad.Target is GamePlayer)
 						{
@@ -2933,8 +2932,7 @@ namespace DOL.GS
 				}
 
 				// unstealth before attack animation
-				if (owner is GamePlayer)
-					((GamePlayer)owner).Stealth(false);
+				owner.Stealth(false);
 
 				//Show the animation
 				if (mainHandAD.AttackResult != eAttackResult.HitUnstyled && mainHandAD.AttackResult != eAttackResult.HitStyle && leftHandAD != null)
@@ -3751,8 +3749,7 @@ namespace DOL.GS
 					if (this is GamePlayer) ((GamePlayer)this).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)this).Client.Account.Language, "GameLiving.CalculateEnemyAttackResult.BlowAbsorbed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 					if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)ad.Attacker).Client.Account.Language, "GameLiving.CalculateEnemyAttackResult.StrikeAbsorbed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 					bladeturn.Cancel(false);
-					if (this is GamePlayer)
-						((GamePlayer)this).Stealth(false);
+					Stealth(false);
 					return eAttackResult.Missed;
 				}
 			}
@@ -4148,6 +4145,8 @@ namespace DOL.GS
 			}
 
 			Health -= damageAmount + criticalAmount;
+
+			Stealth(false);
 
 			if (!IsAlive)
 			{
@@ -5945,13 +5944,41 @@ namespace DOL.GS
 
 			return base.MoveTo(regionID, x, y, z, heading);
 		}
-
+		#endregion
+		#region Stealth
 		/// <summary>
 		/// The stealth state of this living
 		/// </summary>
 		public virtual bool IsStealthed
 		{
 			get { return false; }
+		}
+
+		/// <summary>
+		/// Set the NPC to stealth or unstealth
+		/// </summary>
+		/// <param name="goStealth">True to stealth, false to unstealth</param>
+		public virtual void Stealth(bool goStealth)
+		{
+			if (goStealth)
+				log.Error($"Stealth(): {GetType().FullName} cannot be stealthed.  You probably need to override Stealth() for this class");
+		}
+
+		/// <summary>
+		/// Set stealth of all pets and subpets
+		/// </summary>
+		/// <param name="goStealth">True to stealth, false to unstealth</param>
+		public virtual void StealthPets(bool goStealth)
+		{
+			if (m_controlledBrain != null)
+			{
+				foreach (IControlledBrain brain in m_controlledBrain)
+					if (brain != null && brain.Body is GameLiving pet)
+					{
+						pet.Stealth(goStealth);
+						pet.StealthPets(goStealth);
+					}
+			}
 		}
 
 		#endregion

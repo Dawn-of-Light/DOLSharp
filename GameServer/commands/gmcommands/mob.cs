@@ -1097,6 +1097,7 @@ namespace DOL.GS.Commands
 		private void stealth(GameClient client, GameNPC targetMob, string[] args)
 		{
 			targetMob.Flags ^= GameNPC.eFlags.STEALTH;
+			targetMob.CanStealth = targetMob.IsStealthed;
 			targetMob.SaveIntoDatabase();
 			client.Out.SendMessage("Mob STEALTH flag is set to " + ((targetMob.Flags & GameNPC.eFlags.STEALTH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}

@@ -63,13 +63,6 @@ namespace DOL.GS.RealmAbilities
 			if (caster is GamePlayer && modheal > 0)
 				((GamePlayer)caster).Out.SendMessage("Your Soul Quench returns " + modheal + " lifepoints to you", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
-			GamePlayer targetPlayer = target as GamePlayer;
-			if (targetPlayer != null)
-			{
-				if (targetPlayer.IsStealthed)
-					targetPlayer.Stealth(false);
-			}
-
 			foreach (GamePlayer p in target.GetPlayersInRadius(false, WorldMgr.VISIBILITY_DISTANCE))
 			{
 				p.Out.SendSpellEffectAnimation(caster, target, 1145, 0, false, 1);

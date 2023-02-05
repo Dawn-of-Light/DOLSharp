@@ -409,8 +409,8 @@ namespace DOL.GS.Spells
 			Caster.Notify(GameLivingEvent.CastStarting, m_caster, new CastingEventArgs(this));
 
 			//[Stryve]: Do not break stealth if spell can be cast without breaking stealth.
-			if (Caster is GamePlayer && UnstealthCasterOnStart)
-				((GamePlayer)Caster).Stealth(false);
+			if (UnstealthCasterOnStart)
+				Caster.Stealth(false);
 
 			if (Caster.IsEngaging)
 			{
@@ -1862,8 +1862,8 @@ namespace DOL.GS.Spells
 				((GamePlayer)Caster).IsOnHorse = false;
 
 			//[Stryve]: Do not break stealth if spell never breaks stealth.
-			if ((Caster is GamePlayer) && UnstealthCasterOnFinish)
-				((GamePlayer)Caster).Stealth(false);
+			if (UnstealthCasterOnFinish)
+				Caster.Stealth(false);
 
 			if (Caster is GamePlayer && !HasPositiveEffect)
 			{

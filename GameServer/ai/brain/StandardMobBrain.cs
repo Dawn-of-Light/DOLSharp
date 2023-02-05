@@ -230,12 +230,12 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-		/// Check if the NPC needs to be stealthed or unstealthed
+		/// Check if the NPC can be stealthed
 		/// </summary>
 		public virtual void CheckStealth()
 		{
-			if (Body.CanStealth)
-				Body.Stealth(!Body.InCombat && !Body.IsCasting);
+			if (Body.CanStealth && !Body.IsStealthed && !Body.InCombat && !Body.IsCasting)
+				Body.Stealth(true);
 		}
 
 		/// <summary>

@@ -742,9 +742,6 @@ namespace DOL.GS
 				eFlags oldflags = m_flags;
 				m_flags = value;
 
-				if (IsStealthed)
-					CanStealth = true;
-
 				if (ObjectState == eObjectState.Active)
 				{
 					if (oldflags != m_flags)
@@ -761,48 +758,45 @@ namespace DOL.GS
 		}
 
 		public bool IsGhost
-		{ get => (m_flags & eFlags.GHOST) != 0; }
+		{ get => m_flags.HasFlag(eFlags.GHOST); }
 
 		public override bool IsStealthed
-		{ get => (m_flags & eFlags.STEALTH) != 0; }
+		{ get => m_flags.HasFlag(eFlags.STEALTH); }
 
 		public bool IsDontShowName
-		{ get => (m_flags & eFlags.DONTSHOWNAME) != 0; }
+		{ get => m_flags.HasFlag(eFlags.DONTSHOWNAME); }
 
 		public bool IsCannotTarget
-		{ get => (m_flags & eFlags.CANTTARGET) != 0; }
+		{ get => m_flags.HasFlag(eFlags.CANTTARGET); }
 
 		public bool IsPeaceful
-		{ get => (m_flags & eFlags.PEACE) != 0; }
+		{ get => m_flags.HasFlag(eFlags.PEACE); }
 
 		public bool IsFlying
-		{ get => (m_flags & eFlags.FLYING) != 0; }
+		{ get => m_flags.HasFlag(eFlags.FLYING); }
 
 		public bool IsTorchLit
-		{ get => (m_flags & eFlags.TORCH) != 0; }
+		{ get => m_flags.HasFlag(eFlags.TORCH); }
 
 		public bool IsStatue
-		{ get => (m_flags & eFlags.STATUE) != 0; }
+		{ get => m_flags.HasFlag(eFlags.STATUE); }
 
 		public override bool IsUnderwater
 		{
-			get { return (m_flags & eFlags.SWIMMING) == eFlags.SWIMMING || base.IsUnderwater; }
+			get { return m_flags.HasFlag(eFlags.SWIMMING) || base.IsUnderwater; }
 		}
 
 		/// <summary>
 		/// Is this NPC able to stealth?
 		/// </summary>
 		public bool CanStealth
-		{
-			get;
-			protected set;
-		}
+		{ get; set; }
 
 		/// <summary>
 		/// Set the NPC to stealth or unstealth
 		/// </summary>
 		/// <param name="goStealth">True to stealth, false to unstealth</param>
-		public virtual void Stealth(bool goStealth)
+		public override void Stealth(bool goStealth)
 		{
 			if (goStealth != IsStealthed)
 			{
@@ -810,6 +804,9 @@ namespace DOL.GS
 					Flags |= eFlags.STEALTH;
 				else
 					Flags &= ~eFlags.STEALTH;
+
+				if (Brain is IControlledBrain brain && brain.GetPlayerOwner() is GamePlayer player && !goStealth)
+					player.Stealth(false);
 			}
 		}
 
@@ -2091,6 +2088,7 @@ namespace DOL.GS
 			Model = dbMob.Model;
 			Size = dbMob.Size;
 			Flags = (eFlags)dbMob.Flags;
+			CanStealth = IsStealthed;
 			m_packageID = dbMob.PackageID;
 
 			// Skip Level.set calling AutoSetStats() so it doesn't load the DB entry we already have
@@ -2419,6 +2417,7 @@ namespace DOL.GS
 			this.BodyType = (ushort)template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = (eFlags)template.Flags;
+			CanStealth = IsStealthed;
 			this.MeleeDamageType = template.MeleeDamageType;
 			#endregion
 

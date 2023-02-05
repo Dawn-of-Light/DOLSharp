@@ -18,15 +18,11 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS;
 using DOL.Events;
-using DOL.GS.Spells;
 using DOL.Database;
-using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
@@ -452,12 +448,14 @@ namespace DOL.GS.Spells
         }
         public override void OnEffectStart(GameSpellEffect effect)
         {
-            base.OnEffectStart(effect);
-            m_effect = effect;
-            if (effect.Owner is GamePlayer)
+            // Patch Notes 1.70: Players can no longer be stealthed by the Blanket of Camouflage master level ability if they are holding a relic.
+			if (effect.Owner is GamePlayer playerTarget && !GameRelic.IsPlayerCarryingRelic(playerTarget))
             {
-                GamePlayer playerTarget = effect.Owner as GamePlayer;
+				base.OnEffectStart(effect);
+				m_effect = effect;
+
                 playerTarget.Stealth(true);
+                playerTarget.StealthPets(true);
                 if (effect.Owner != Caster)
                 {
                     //effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] += 80;
@@ -478,15 +476,15 @@ namespace DOL.GS.Spells
         /// <returns>immunity duration in milliseconds</returns>
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            if (effect.Owner != Caster && effect.Owner is GamePlayer)
+            if (effect.Owner != Caster && effect.Owner is GamePlayer playerTarget)
             {
                 //effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] -= 80;
-                GamePlayer playerTarget = effect.Owner as GamePlayer;
                 GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.AttackFinished, new DOLEventHandler(PlayerAction));
                 GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.CastStarting, new DOLEventHandler(PlayerAction));
                 GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
                 GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.Dying, new DOLEventHandler(PlayerAction));
                 playerTarget.Stealth(false);
+				playerTarget.StealthPets(false);
             }
             return base.OnEffectExpires(effect, noMessages);
         }

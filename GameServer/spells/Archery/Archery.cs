@@ -300,10 +300,7 @@ namespace DOL.GS.Spells
 			if (target == null && Spell.Target.ToLower() != "area") return;
 			if (Caster == null) return;
 
-			if (Caster is GamePlayer && Caster.IsStealthed)
-			{
-				(Caster as GamePlayer).Stealth(false);
-			}
+			Caster.Stealth(false);
 
 			if (Spell.Target.ToLower() == "area")
 			{
