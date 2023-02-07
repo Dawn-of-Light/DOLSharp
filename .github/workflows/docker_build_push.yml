@@ -30,20 +30,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push NetFramework
-        uses: docker/build-push-action@v2
-        with:
-          context: .github/Docker
-          target: release_netframework
-          build-args: |
-            GITHUB_API_URL=https://api.github.com/repos/${{ github.repository }}
-            BUILD_DATE=${{ steps.getdate.outputs.date }}
-            BUILD_VERSION=${{ github.event.inputs.version }}
-            VCS_REF=${{ github.sha }}
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: dawnoflight/dolsharp:latest,dawnoflight/dolsharp:netframework
-      - name: Build and push DotNet
+      - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .github/Docker
@@ -56,20 +43,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: dawnoflight/dolsharp:edge,dawnoflight/dolsharp:dotnet
-      - name: Build and push Sandbox NetFramework
-        uses: docker/build-push-action@v2
-        with:
-          context: .github/Docker
-          target: release_sandbox_netframework
-          build-args: |
-            GITHUB_API_URL=https://api.github.com/repos/${{ github.repository }}
-            BUILD_DATE=${{ steps.getdate.outputs.date }}
-            BUILD_VERSION=${{ github.event.inputs.version }}
-            VCS_REF=${{ github.sha }}
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: dawnoflight/dolsharp:sandbox,dawnoflight/dolsharp:sandbox-netframework
-      - name: Build and push Sandbox DotNet
+      - name: Build and push Sandbox
         uses: docker/build-push-action@v2
         with:
           context: .github/Docker

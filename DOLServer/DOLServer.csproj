@@ -13,6 +13,7 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <OutputPath>..\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>..\build\DOLServer\$(Configuration)\obj\</IntermediateOutputPath>
+    <UseAppHost>false</UseAppHost>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <SatelliteResourceLanguages>none</SatelliteResourceLanguages>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
@@ -49,8 +50,9 @@
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DOLServer.exe.config" CopyToOutputDirectory="Always" />
     <Content Include="icon.ico" />
+    <Content Include="DOLServer.sh" CopyToOutputDirectory="always" />
+    <Content Include="DOLServer.bat" CopyToOutputDirectory="always" />
   </ItemGroup>
   <Target Name="CreateLibFolder" AfterTargets="Build">
     <MakeDir Directories="$(OutDir)lib" />

@@ -35,46 +35,7 @@ jobs:
           name: release_info
           path: |
             patch_notes.txt
-  
-  netframework_build:
-    name: Create Legacy Build
-    needs: get_release_info
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        build_target: [Release]
-    env:
-      OUTPUT_FILE_NAME: DOLServer_net45_${{ matrix.build_target }}.zip
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Build
-        run: |
-          export DOTNET_CLI_TELEMETRY_OPTOUT=1
-          assembly_version="${{ needs.get_release_info.outputs.version }}"
-          dotnet build --configuration "${{ matrix.build_target}}" -p:Version="$assembly_version" --verbosity normal "old\DOLold.sln"
-          cp -r $HOME/.nuget/packages/sqlitepclraw.lib.e_sqlite3/*/runtimes/win-* ./old/${{ matrix.build_target }}/lib/runtimes/
-          cp -r $HOME/.nuget/packages/sqlitepclraw.lib.e_sqlite3/*/runtimes/alpine-* ./old/${{ matrix.build_target }}/lib/runtimes/
-          cp -r $HOME/.nuget/packages/sqlitepclraw.lib.e_sqlite3/*/runtimes/osx-* ./old/${{ matrix.build_target }}/lib/runtimes/
-      - name: Test Build
-        run: |
-          dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" ./old/build/Tests/${{ matrix.build_target }}/lib/Tests.dll
-          dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" ./old/build/Tests/${{ matrix.build_target }}/lib/Tests.dll
-      - name: Add DOLConfig
-        run: |
-          dolconfig_location="$(dirname $(git remote get-url origin))/DOLConfig/releases/latest/download/DOLConfig_${{ matrix.build_target }}.zip"
-          wget "$dolconfig_location" -O DOLConfig.zip
-          unzip DOLConfig.zip -d old/"${{ matrix.build_target }}/DOLConfig"
-      - name: Compress Build Artifacts
-        run: |
-          (cd old/${{ matrix.build_target }}/ && zip -r ../../${{ env.OUTPUT_FILE_NAME }} * )
-      - name: Upload Build Output
-        uses: actions/upload-artifact@v3
-        with:
-          name: build_artifacts
-          path: |
-            ${{ env.OUTPUT_FILE_NAME }}
-            
+
   netcore_build:
     name: Create Build
     needs: get_release_info
