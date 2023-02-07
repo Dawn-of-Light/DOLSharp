@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using DOL.DOLServer.Actions;
 
@@ -147,6 +148,14 @@ namespace DOL.DOLServer
 #endif
 		}
 
+        private static Assembly LoadFromAlternativeLocation(object sender, ResolveEventArgs args)
+        {
+            var assemblyName = new AssemblyName(args.Name).Name + ".dll";
+            var altLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"lib", assemblyName);
+            if (File.Exists(altLocation)) return Assembly.LoadFrom(altLocation);
+            else return null;
+        }
+
 		/// <summary>
 		/// The main entry into the application
 		/// </summary>
@@ -155,6 +164,7 @@ namespace DOL.DOLServer
 		{
 			// Graveen: the lib path append is now specified in the .config file.
 			//AppDomain.CurrentDomain.AppendPrivatePath("."+Path.DirectorySeparatorChar+"lib");
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromAlternativeLocation);
 
 			Thread.CurrentThread.Name = "MAIN";
 				
