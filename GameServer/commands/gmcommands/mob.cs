@@ -1389,7 +1389,7 @@ namespace DOL.GS.Commands
 				info.Add(" + Equipment Template ID: " + targetMob.EquipmentTemplateID);
 
 			if (targetMob.Inventory != null)
-				info.Add(" + Inventory: " + targetMob.Inventory.AllItems.Count + " items");
+				info.Add(" + Inventory: " + targetMob.Inventory.Count + " items");
 
 			info.Add(" + Quests to give:  " + targetMob.QuestListToGive.Count);
 

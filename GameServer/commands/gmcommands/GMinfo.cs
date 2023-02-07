@@ -224,7 +224,7 @@ namespace DOL.GS.Commands
 						info.Add(" + Equipment Template ID: " + target.EquipmentTemplateID);
 						
 					if (target.Inventory != null)
-						info.Add(" + Inventory: " + target.Inventory.AllItems.Count + " items");
+						info.Add(" + Inventory: " + target.Inventory.Count + " items");
 						
 					info.Add(" ");
 					info.Add(" + Mob_ID:  " + target.InternalID);
