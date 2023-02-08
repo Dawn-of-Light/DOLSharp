@@ -3,9 +3,7 @@ using System.Runtime.Versioning;
 
 namespace DOL.PerformanceStatistics
 {
-#if NET
     [SupportedOSPlatform("Windows")]
-#endif
     public class PerformanceCounterStatistic : IPerformanceStatistic
     {
         private PerformanceCounter performanceCounter;

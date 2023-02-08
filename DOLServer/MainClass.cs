@@ -131,21 +131,6 @@ namespace DOL.DOLServer
 		{
 			//Start server in console mode
 			RegisterAction(new ConsoleStart());
-
-#if NETFRAMEWORK
-			//Important action, used on service start internally
-			//!!!DO NOT REMOVE!!!
-			RegisterAction(new ServiceRun());
-			
-			//Install service action
-			RegisterAction(new ServiceInstall());
-			//Uninstall service action
-			RegisterAction(new ServiceUninstall());
-			//Start service action
-			RegisterAction(new ServiceStart());
-			//Stop service action
-			RegisterAction(new ServiceStop());
-#endif
 		}
 
         private static Assembly LoadFromAlternativeLocation(object sender, ResolveEventArgs args)

@@ -361,70 +361,7 @@ namespace DOL.GS
 			
 			return new List<string>();
 		}
-
 		#endregion
-
-#if NETFRAMEWORK
-		[Obsolete("Use GetFormattedStackTraceFrom(Thread) instead.")]
-		public static StackTrace GetThreadStack(Thread thread)
-		{
-			#pragma warning disable 0618
-			try
-			{
-				thread.Suspend();
-			}
-			catch(Exception e)
-			{
-				return new StackTrace(e);
-			}
-			
-			StackTrace trace;
-
-			try
-			{
-				trace = new StackTrace(thread, true);
-			}
-			catch(Exception e)
-			{
-				trace = new StackTrace(e);
-			}
-			finally
-			{
-				thread.Resume();
-			}
-			#pragma warning restore 0618
-			
-			return trace;
-		}
-
-		[Obsolete("Use GetFormattedStackTraceFrom(Thread) instead.")]
-		public static string FormatStackTrace(StackTrace trace)
-		{
-			var str = new StringBuilder(128);
-
-			if (trace == null)
-			{
-				str.Append("(null)");
-			}
-			else
-			{
-				for (int i = 0; i < trace.FrameCount; i++)
-				{
-					StackFrame frame = trace.GetFrame(i);
-					Type declType = frame.GetMethod().DeclaringType;
-					str.Append("   at ")
-						.Append(declType == null ? "(null)" : declType.FullName).Append('.')
-						.Append(frame.GetMethod().Name).Append(" in ")
-						.Append(frame.GetFileName())
-						.Append("  line:").Append(frame.GetFileLineNumber())
-						.Append(" col:").Append(frame.GetFileColumnNumber())
-						.Append("\n");
-				}
-			}
-
-			return str.ToString();
-		}
-#endif
 
 		public static string GetFormattedStackTraceFrom(Thread targetThread)
         {
