@@ -77,9 +77,6 @@ namespace DOL.AI.Brain
 					playerowner.Out.SendObjectUpdate(Body);
 				}
 
-				if (SpellsQueued)
-					// if spells are queued then handle them first
-					CheckSpellQueue();
 				else if (AggressionState == eAggressionState.Aggressive)
 				{
 					CheckPlayerAggro();
