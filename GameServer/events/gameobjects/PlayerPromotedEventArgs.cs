@@ -27,14 +27,14 @@ namespace DOL.Events
 	public class PlayerPromotedEventArgs : EventArgs
 	{
 		private GamePlayer player;
-		private ICharacterClass oldClass;
+		private CharacterClass oldClass;
 
 		/// <summary>
 		/// Constructs a new PlayerPromoted event argument class
 		/// </summary>
 		/// <param name="player">the player that was promoted</param>
 		/// <param name="oldClass">the player old class</param>
-		public PlayerPromotedEventArgs(GamePlayer player, ICharacterClass oldClass)
+		public PlayerPromotedEventArgs(GamePlayer player, CharacterClass oldClass)
 		{
 			this.player = player;
 			this.oldClass = oldClass;
@@ -51,7 +51,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Gets the class player was using before promotion
 		/// </summary>
-		public ICharacterClass OldClass
+		public CharacterClass OldClass
 		{
 			get { return oldClass; }
 		}

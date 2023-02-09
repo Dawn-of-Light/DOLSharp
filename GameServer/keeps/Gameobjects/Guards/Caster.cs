@@ -17,7 +17,6 @@
  */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using DOL.GS.PlayerClass;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
@@ -73,12 +72,12 @@ namespace DOL.GS.Keeps
 			return base.GetArmorAbsorb(slot) - 0.05;
 		}
 
-		protected override ICharacterClass GetClass()
+		protected override CharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return new ClassWizard();
-			else if (ModelRealm == eRealm.Midgard) return new ClassRunemaster();
-			else if (ModelRealm == eRealm.Hibernia) return new ClassEldritch();
-			return new CharacterClassBase();
+			if (ModelRealm == eRealm.Albion) return CharacterClass.Wizard;
+			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Runemaster;
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClass.Eldritch;
+			return CharacterClass.None;
 		}
 
 		protected override KeepGuardBrain GetBrain() => new CasterBrain();

@@ -1535,9 +1535,9 @@ namespace DOL.GS.Quests.Albion
 					//k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text3", questTitle), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 
-					if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.AlbionRogue")
-						|| player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Acolyte")
-						|| player.CharacterClass.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Mauler_Alb"))
+					if (player.CharacterClass.GetBaseClass().Equals(CharacterClass.AlbionRogue)
+						|| player.CharacterClass.GetBaseClass().Equals(CharacterClass.Acolyte)
+						|| player.CharacterClass.Equals(CharacterClass.MaulerAlb))
 					{
 						GiveItem(Charles, quest.m_questPlayer, daringleatherboots_alb);
 						GiveItem(Charles, quest.m_questPlayer, daringleathercap_alb);
@@ -1546,7 +1546,7 @@ namespace DOL.GS.Quests.Albion
 						GiveItem(Charles, quest.m_questPlayer, daringleatherleggings_alb);
 						GiveItem(Charles, quest.m_questPlayer, daringleathersleeves_alb);
 					}
-					else if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Fighter"))
+					else if (player.CharacterClass.GetBaseClass().Equals(CharacterClass.Fighter))
 					{
 						GiveItem(Charles, quest.m_questPlayer, daringstuddedboots_alb);
 						GiveItem(Charles, quest.m_questPlayer, daringstuddedcap_alb);

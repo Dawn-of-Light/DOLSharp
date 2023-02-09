@@ -1539,9 +1539,9 @@ namespace DOL.GS.Quests.Midgard
                     //k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text3", questTitle), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 
-                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.MidgardRogue")
-                        || player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Seer")
-                        || player.CharacterClass.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Mauler_Mid"))
+                    if (player.CharacterClass.GetBaseClass().Equals(CharacterClass.MidgardRogue)
+                        || player.CharacterClass.GetBaseClass().Equals(CharacterClass.Seer)
+                        || player.CharacterClass.Equals(CharacterClass.MaulerMid))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringleatherboots);
                         GiveItem(Charles, quest.m_questPlayer, daringleathercap);
@@ -1550,7 +1550,7 @@ namespace DOL.GS.Quests.Midgard
                         GiveItem(Charles, quest.m_questPlayer, daringleatherleggings);
                         GiveItem(Charles, quest.m_questPlayer, daringleathersleeves);
                     }
-                    else if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Viking"))
+                    else if (player.CharacterClass.GetBaseClass().Equals(CharacterClass.Viking))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedboots);
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedcap);

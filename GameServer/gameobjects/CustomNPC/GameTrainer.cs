@@ -180,8 +180,31 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool CanTrainChampionLevels(GamePlayer player)
 		{
-			return player.Level >= player.MaxLevel && player.Champion && m_championTrainerType != eChampionTrainerType.None && m_championTrainerType != player.CharacterClass.ChampionTrainerType();
+			return player.Level >= player.MaxLevel && player.Champion && m_championTrainerType != eChampionTrainerType.None && m_championTrainerType != GetChampionTrainerTypeID(player.CharacterClass);
 		}
+
+        private eChampionTrainerType GetChampionTrainerTypeID(CharacterClass charClass)
+        {
+            switch (charClass.ID)
+            {
+                case (int)eCharacterClass.Acolyte: return eChampionTrainerType.Acolyte;
+                case (int)eCharacterClass.AlbionRogue: return eChampionTrainerType.AlbionRogue;
+                case (int)eCharacterClass.Disciple: return eChampionTrainerType.Disciple;
+                case (int)eCharacterClass.Elementalist: return eChampionTrainerType.Elementalist;
+                case (int)eCharacterClass.Fighter: return eChampionTrainerType.Fighter;
+                case (int)eCharacterClass.Forester: return eChampionTrainerType.Forester;
+                case (int)eCharacterClass.Guardian: return eChampionTrainerType.Guardian;
+                case (int)eCharacterClass.Mage: return eChampionTrainerType.Mage;
+                case (int)eCharacterClass.Magician: return eChampionTrainerType.Magician;
+                case (int)eCharacterClass.MidgardRogue: return eChampionTrainerType.MidgardRogue;
+                case (int)eCharacterClass.Mystic: return eChampionTrainerType.Mystic;
+                case (int)eCharacterClass.Naturalist: return eChampionTrainerType.Naturalist;
+                case (int)eCharacterClass.Seer: return eChampionTrainerType.Seer;
+                case (int)eCharacterClass.Stalker: return eChampionTrainerType.Stalker;
+                case (int)eCharacterClass.Viking: return eChampionTrainerType.Viking;
+                default: return eChampionTrainerType.None;
+            }
+        }
 
 		/// <summary>
 		/// Talk to trainer
@@ -320,11 +343,11 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual bool CanPromotePlayer(GamePlayer player)
 		{
-			var baseClass = ScriptMgr.FindCharacterBaseClass((int)TrainedClass);
-			ICharacterClass pickedClass = ScriptMgr.FindCharacterClass((int)TrainedClass);
+			var pickedClass = CharacterClass.GetClass((int)TrainedClass);
+			var baseClass = pickedClass.GetBaseClass();
 
 			// Error or Base Trainer...
-			if (baseClass == null || baseClass.ID == (int)TrainedClass)
+			if (baseClass.Equals(pickedClass))
 				return false;
 			
 			if (player.Level < 5 || player.CharacterClass.ID != baseClass.ID)
@@ -352,10 +375,10 @@ namespace DOL.GS
 
 			if (player == null) return false;
 
-			ICharacterClass oldClass = player.CharacterClass;
+			var oldClass = player.CharacterClass;
 
 			// Player was promoted
-			if (player.SetCharacterClass(classid))
+			if (player.SetCharacterClass(CharacterClass.GetClass(classid)))
 			{
 				player.RemoveAllStyles();
 				player.RemoveAllAbilities();
@@ -365,7 +388,6 @@ namespace DOL.GS
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Says", this.Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Upgraded", player.CharacterClass.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-				player.CharacterClass.OnLevelUp(player, player.Level);
 				player.RefreshSpecDependantSkills(true);
 				player.StartPowerRegeneration();
 				player.Out.SendUpdatePlayerSkills();

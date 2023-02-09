@@ -81,7 +81,7 @@ namespace DOL.GS.GameEvents
 			DOLCharacters ch = chArgs.Character;
 
 			// Revert to Base Class.
-			var chClass = ScriptMgr.FindCharacterBaseClass(ch.Class);
+			var chClass = CharacterClass.GetClass(ch.Class).GetBaseClass();
 			
 			if (chClass != null && chClass.ID != ch.Class)
 				ch.Class = chClass.ID;

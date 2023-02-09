@@ -1,5 +1,4 @@
 using DOL.AI.Brain;
-using DOL.GS.PlayerClass;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
@@ -7,12 +6,12 @@ namespace DOL.GS.Keeps
 {
 	public class GuardHealer : GameKeepGuard
 	{
-		protected override ICharacterClass GetClass()
+		protected override CharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return new ClassCleric();
-			else if (ModelRealm == eRealm.Midgard) return new ClassHealer();
-			else if (ModelRealm == eRealm.Hibernia) return new ClassDruid();
-			return new CharacterClassBase();
+			if (ModelRealm == eRealm.Albion) return CharacterClass.Cleric;
+			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Healer;
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClass.Druid;
+			return CharacterClass.None;
 		}
 
 		protected override void SetBlockEvadeParryChance()

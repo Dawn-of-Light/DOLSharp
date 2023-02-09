@@ -1,4 +1,3 @@
-using DOL.GS.PlayerClass;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
@@ -14,12 +13,12 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		protected override ICharacterClass GetClass()
+		protected override CharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return new ClassScout();
-			else if (ModelRealm == eRealm.Midgard) return new ClassHunter();
-			else if (ModelRealm == eRealm.Hibernia) return new ClassRanger();
-			return new CharacterClassBase();
+			if (ModelRealm == eRealm.Albion) return CharacterClass.Scout;
+			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Hunter;
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClass.Ranger;
+			return CharacterClass.None;
 		}
 
 		protected override void SetBlockEvadeParryChance()

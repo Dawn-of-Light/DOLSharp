@@ -1,4 +1,3 @@
-using DOL.GS.PlayerClass;
 using DOL.GS.ServerProperties;
 using DOL.Language;
 
@@ -11,12 +10,12 @@ namespace DOL.GS.Keeps
             Flags = eFlags.STEALTH;
         }
 
-		protected override ICharacterClass GetClass()
+		protected override CharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return new ClassInfiltrator();
-			else if (ModelRealm == eRealm.Midgard) return new ClassShadowblade();
-			else if (ModelRealm == eRealm.Hibernia) return new ClassNightshade();
-			return new CharacterClassBase();
+			if (ModelRealm == eRealm.Albion) return CharacterClass.Infiltrator;
+			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Shadowblade;
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClass.Nightshade;
+			return CharacterClass.None;
 		}
 
 		protected override void SetBlockEvadeParryChance()

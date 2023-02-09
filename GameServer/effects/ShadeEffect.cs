@@ -18,77 +18,61 @@
  */
 using System;
 using System.Collections.Generic;
+using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Player shade effect.
-	/// </summary>
 	public class ShadeEffect : StaticEffect, IGameEffect
 	{
-		/// <summary>
-		/// The effect owner
-		/// </summary>
-		GamePlayer m_player;
+		protected GamePlayer player;
 
-		/// <summary>
-		/// Start the shade effect on a player.
-		/// </summary>
-		/// <param name="living">The effect target</param>
 		public override void Start(GameLiving living)
 		{
-			GamePlayer player = living as GamePlayer;
-
-			if (player != null)
+			if (living is GamePlayer p)
 			{
-				m_player = player;
-
+				player = p;
 				player.EffectList.Add(this);
-                player.Out.SendUpdatePlayer();       
+                player.Out.SendUpdatePlayer();
+				player.Model = player.ShadeModel;
 			}
 		}
 
-		/// <summary>
-		/// Stop the effect.
-		/// </summary>
 		public override void Stop()
 		{
-            if (m_player != null)
+            if (player != null)
             {
-                m_player.EffectList.Remove(this);
-                m_player.Out.SendUpdatePlayer();
+                player.EffectList.Remove(this);
+                player.Out.SendUpdatePlayer();
             }
 		}
 
-		/// <summary>
-		/// Cancel the effect.
-		/// </summary>
 		public override void Cancel(bool playerCancel) 
 		{
-            if (m_player != null)
-			    m_player.Shade(false);
+            if (player != null)
+			{
+				if (player.ShadeEffect != null)
+                {
+                    // Drop shade form.
+                    player.ShadeEffect.Stop();
+                    player.ShadeEffect = null;
+                }
+                // Drop shade form.
+                player.Model = player.CreationModel;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Shade.NoLongerShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
 		}
 
-		/// <summary>
-		/// Name of the effect.
-		/// </summary>
 		public override string Name 
         { 
-            get { return LanguageMgr.GetTranslation(m_player.Client, "Effects.ShadeEffect.Name"); } 
+            get { return LanguageMgr.GetTranslation(player.Client, "Effects.ShadeEffect.Name"); } 
         }	
 
-		/// <summary>
-		/// Icon to show on players, can be id
-		/// </summary>
 		public override ushort Icon 
         { 
             get { return 0x193; } 
         }
-		
-		/// <summary>
-		/// Delve Info
-		/// </summary>
+
 		public override IList<string> DelveInfo 
         { 
             get { return Array.Empty<string>(); } 
