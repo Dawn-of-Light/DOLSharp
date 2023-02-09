@@ -5795,7 +5795,7 @@ namespace DOL.GS
 
 			copyTarget.SetOwnBrain(brain);
 
-			if (Inventory != null && Inventory.AllItems.Count > 0)
+			if (Inventory != null && Inventory.Count > 0)
 			{
 				GameNpcInventoryTemplate inventoryTemplate = Inventory as GameNpcInventoryTemplate;
 
