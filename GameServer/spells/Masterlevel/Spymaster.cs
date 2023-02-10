@@ -23,6 +23,8 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.Database;
+using DOL.AI.Brain;
+using log4net;
 
 namespace DOL.GS.Spells
 {
@@ -435,37 +437,113 @@ namespace DOL.GS.Spells
 
     #region Spymaster-10
     [SpellHandler("BlanketOfCamouflage")]
-    public class GroupstealthHandler : MasterlevelHandling
+    public class GroupStealthHandler : MasterlevelHandling
     {
-        public GroupstealthHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private GameSpellEffect m_effect;
+		public GroupStealthHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override bool CheckBeginCast(GameLiving selectedTarget)
+		/// <summary>
+		/// Apply effect when appropriate
+		/// </summary>
+		/// <param name="target">target that gets the effect</param>
+		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+		{
+			if (!target.IsAlive || target.InCombat || (target.IsCasting && target != Caster))
+				return;
+
+			// Patch Notes 1.70: Players can no longer be stealthed by the Blanket of Camouflage master level ability if they are holding a relic.
+			if (target is GamePlayer playerTarget && GameRelic.IsPlayerCarryingRelic(playerTarget))
+				return;
+
+			if (target.CanStealth)
+				target.Stealth(true);
+			else
+				base.ApplyEffectOnTarget(target, effectiveness);
+		}
+
+		/// <summary>
+		/// Never replace existing camouflage effects, it causes pets to improperly destealth owners
+		/// </summary>
+		public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
         {
-            if (selectedTarget == Caster) return false;
-            return base.CheckBeginCast(selectedTarget);
+			return false;
         }
-        public override void OnEffectStart(GameSpellEffect effect)
-        {
-            // Patch Notes 1.70: Players can no longer be stealthed by the Blanket of Camouflage master level ability if they are holding a relic.
-			if (effect.Owner is GamePlayer playerTarget && !GameRelic.IsPlayerCarryingRelic(playerTarget))
+
+		/// <summary>
+		/// Select all targets for Blanket of Camouflage, including subpets
+		/// </summary>
+		public override IList<GameLiving> SelectTargets(GameObject castTarget)
+		{
+			List<GameLiving> list;
+
+			Group group = m_caster.Group;
+			int spellRange = CalculateSpellRange();
+			if (spellRange == 0)
+				spellRange = m_spell.Radius;
+            if (spellRange == 0)
             {
-				base.OnEffectStart(effect);
-				m_effect = effect;
-
-                playerTarget.Stealth(true);
-                playerTarget.StealthPets(true);
-                if (effect.Owner != Caster)
-                {
-                    //effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] += 80;
-                    GameEventMgr.AddHandler(playerTarget, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
-                    GameEventMgr.AddHandler(playerTarget, GamePlayerEvent.AttackFinished, new DOLEventHandler(PlayerAction));
-                    GameEventMgr.AddHandler(playerTarget, GamePlayerEvent.CastStarting, new DOLEventHandler(PlayerAction));
-                    GameEventMgr.AddHandler(playerTarget, GamePlayerEvent.Dying, new DOLEventHandler(PlayerAction));
-                }
+                log.Warn($"SelectTargets(): range of Blanket of Camouflage is not defined by SpellID {m_spell.ID}, using default value");
+                spellRange = 1500;
             }
-        }
+			if (group == null)
+			{
+				list = new List<GameLiving>(1);
+				AddAllLivingToList(m_caster, ref list, m_caster, spellRange);
+			}
+			else
+			{
+				list = new List<GameLiving>(group.MemberCount);
+				foreach (GamePlayer player in group.GetMembersInTheGroup())
+					AddAllLivingToList(player, ref list, m_caster, spellRange);
+			}
+
+			return list;
+		}
+
+		/// <summary>
+		/// Recusively add living and all their pets to the list
+		/// </summary>
+		protected void AddAllLivingToList(GameLiving living, ref List<GameLiving> list, GameLiving caster, int radius)
+		{
+			if (living != null && !list.Contains(living)
+                && (living == caster || living.IsWithinRadius(caster, radius)))
+			{
+				list.Add(living);
+
+                if (living is GameNPC npc && npc.ControlledNpcList != null)
+                    foreach (IControlledBrain brain in npc.ControlledNpcList)
+                    {
+                        if (brain != null)
+                            AddAllLivingToList(brain.Body, ref list, caster, radius);
+                    }
+                else
+                    AddAllLivingToList(living.ControlledBody, ref list, caster, radius);
+			}
+		}
+
+		/// <summary>
+		/// When an applied effect starts
+		/// duration spells only
+		/// </summary>
+		/// <param name="effect"></param>
+		public override void OnEffectStart(GameSpellEffect effect)
+        {
+            effect.Owner.Stealth(true);
+
+            //effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] += 80;
+            if (effect.Owner is GamePlayer player)
+                GameEventMgr.AddHandler(effect.Owner, GamePlayerEvent.Moving, new DOLEventHandler(StealthAction));
+            else if (effect.Owner is GameNPC npc)
+                GameEventMgr.AddHandler(effect.Owner, GameNPCEvent.WalkTo, new DOLEventHandler(StealthAction));
+
+            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(StealthAction));
+            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.CastStarting, new DOLEventHandler(StealthAction));
+            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(StealthAction));
+
+			base.OnEffectStart(effect);
+		}
 
         /// <summary>
         /// When an applied effect expires.
@@ -476,50 +554,82 @@ namespace DOL.GS.Spells
         /// <returns>immunity duration in milliseconds</returns>
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            if (effect.Owner != Caster && effect.Owner is GamePlayer playerTarget)
+            effect.Owner.Stealth(false);
+
+            //effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] -= 80;
+            if (effect.Owner is GamePlayer player)
             {
-                //effect.Owner.BuffBonusCategory1[(int)eProperty.Skill_Stealth] -= 80;
-                GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.AttackFinished, new DOLEventHandler(PlayerAction));
-                GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.CastStarting, new DOLEventHandler(PlayerAction));
-                GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
-                GameEventMgr.RemoveHandler(playerTarget, GamePlayerEvent.Dying, new DOLEventHandler(PlayerAction));
-                playerTarget.Stealth(false);
-				playerTarget.StealthPets(false);
+                if (player.IsShade && player.ControlledBody is GameNPC npc 
+                    && npc.FindEffectOnTarget(typeof(GroupStealthHandler)) is GameSpellEffect eff)
+                        eff.Cancel(false);
+
+				GameEventMgr.RemoveHandler(effect.Owner, GamePlayerEvent.Moving, new DOLEventHandler(StealthAction));
             }
+            else if (effect.Owner is GameNPC)
+                GameEventMgr.RemoveHandler(effect.Owner, GameNPCEvent.WalkTo, new DOLEventHandler(StealthAction));
+
+			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(StealthAction));
+			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.CastStarting, new DOLEventHandler(StealthAction));
+            GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(StealthAction));
+				
+			RemoveEffectFromOwner(effect);
+            
             return base.OnEffectExpires(effect, noMessages);
         }
-        private void PlayerAction(DOLEvent e, object sender, EventArgs args)
+
+        /// <summary>
+        /// Event Handler for GroupStealthHandler
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void StealthAction(DOLEvent e, object sender, EventArgs args)
         {
-            GamePlayer player = (GamePlayer)sender;
-            if (player == null) return;
-            if (args is AttackFinishedEventArgs)
+            if (!(sender is GameLiving living))
+				return;
+
+			if (e == GameNPCEvent.WalkTo)
+			{
+				if (args is WalkToEventArgs walktoArgs && walktoArgs.Speed > 0 &&
+                    living.FindEffectOnTarget(typeof(GroupStealthHandler)) is GameSpellEffect eff)
+						eff.Cancel(false);
+			}
+			else if(e == GamePlayerEvent.Moving)
+			{
+				MessageToLiving(living, "You are moving. Your camouflage fades!", eChatType.CT_SpellResisted);
+				if (living.FindEffectOnTarget(typeof(GroupStealthHandler)) is GameSpellEffect eff)
+					eff.Cancel(false);
+			}
+            else if (e == GameLivingEvent.AttackFinished)
             {
-                MessageToLiving((GameLiving)player, "You are attacking. Your camouflage fades!", eChatType.CT_SpellResisted);
-                OnEffectExpires(m_effect, true);
-                return;
-            }
-            if (args is DyingEventArgs)
+                if (living is GamePlayer)
+                    MessageToLiving(living, "You are attacking. Your camouflage fades!", eChatType.CT_SpellResisted);
+                if (living.FindEffectOnTarget(typeof(GroupStealthHandler)) is GameSpellEffect eff)
+					eff.Cancel(false);
+			}
+            else if (e == GameLivingEvent.CastStarting)
             {
-                OnEffectExpires(m_effect, false);
-                return;
-            }
-            if (args is CastingEventArgs)
-            {
-                if ((args as CastingEventArgs).SpellHandler.Caster != Caster)
-                    return;
-                MessageToLiving((GameLiving)player, "You are casting a spell. Your camouflage fades!", eChatType.CT_SpellResisted);
-                OnEffectExpires(m_effect, true);
-                return;
-            }
-            if (e == GamePlayerEvent.Moving)
-            {
-                MessageToLiving((GameLiving)player, "You are moving. Your camouflage fades!", eChatType.CT_SpellResisted);
-                OnEffectExpires(m_effect, true);
-                return;
-            }
+                if (living is GamePlayer)
+                    MessageToLiving(living, "You are casting a spell. Your camouflage fades!", eChatType.CT_SpellResisted);
+                if (living.FindEffectOnTarget(typeof(GroupStealthHandler)) is GameSpellEffect eff)
+					eff.Cancel(false);
+			}
+			else if (e == GameLivingEvent.Dying)
+                if (living.FindEffectOnTarget(typeof(GroupStealthHandler)) is GameSpellEffect eff)
+				    eff.Cancel(false);
+		}
+
+        /// <summary>
+        /// Remove effect from this pet's owner
+        /// </summary>
+        protected void RemoveEffectFromOwner(GameSpellEffect effect)
+        {
+            if (effect.Owner is GameNPC npc && npc.Brain is IControlledBrain brain && brain.Owner is GameLiving owner 
+                && owner.FindEffectOnTarget(typeof(GroupStealthHandler)) is GameSpellEffect ownerEffect)
+                   ownerEffect.Cancel(false);
         }
 
-        public override string ShortDescription 
+		public override string ShortDescription 
             => "Conceal your group in stealth. Moving will break the effect for non-stealthers.";
     }
         #endregion
