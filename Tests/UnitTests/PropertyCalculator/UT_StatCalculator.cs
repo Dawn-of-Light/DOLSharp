@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using DOL.GS;
 using DOL.GS.PropertyCalc;
+using DOL.Database;
 
 namespace DOL.UnitTests.Gameserver.PropertyCalc
 {
@@ -101,10 +102,10 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
         }
 
         [Test]
-        public void CalcValueFromItems_IntelligenceOfLevel50AnimistWith50AcuityFromItems_50()
+        public void CalcValueFromItems_IntelligenceOfLevel50IntCasterWith50AcuityFromItems_50()
         {
             var player = NewPlayer();
-            player.fakeCharacterClass = new CharacterClassAnimist();
+            player.fakeCharacterClass = IntCaster;
             player.Level = 50;
             player.ItemBonus[eProperty.Acuity] = 50;
 
@@ -210,10 +211,10 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
         }
 
         [Test]
-        public void CalcValue_GetIntelligenceFromLevel50AnimistWith50Acuity_50()
+        public void CalcValue_GetIntelligenceFromLevel50IntCasterWith50Acuity_50()
         {
             var player = NewPlayer();
-            player.fakeCharacterClass = new CharacterClassAnimist();
+            player.fakeCharacterClass = IntCaster;
             player.Level = 50;
             player.BaseBuffBonusCategory[(int)eProperty.Acuity] = 50;
 
@@ -313,6 +314,8 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
         public static StatCalculator StatCalculator => new StatCalculator();
 
         private static FakePlayer NewPlayer() => new FakePlayer();
+        private static CharacterClass IntCaster
+            => CharacterClass.Create(new DBCharacterClass() { ManaStat = (byte)eStat.INT });
         private static FakeNPC NewNPC() => new FakeNPC();
     }
 }

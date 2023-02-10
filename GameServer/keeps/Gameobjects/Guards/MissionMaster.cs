@@ -18,11 +18,9 @@
  */
 
 using DOL.AI.Brain;
-using DOL.GS.PlayerClass;
 using DOL.GS.Quests;
 using DOL.GS.ServerProperties;
 using DOL.Language;
-using System;
 
 namespace DOL.GS.Keeps
 {
@@ -259,12 +257,12 @@ namespace DOL.GS.Keeps
 			return true;
 		}
 
-		protected override ICharacterClass GetClass()
+		protected override CharacterClass GetClass()
 		{
-			if (ModelRealm == eRealm.Albion) return new ClassArmsman();
-			else if (ModelRealm == eRealm.Midgard) return new ClassWarrior();
-			else if (ModelRealm == eRealm.Hibernia) return new ClassHero();
-			return new CharacterClassBase();
+			if (ModelRealm == eRealm.Albion) return CharacterClass.Armsman;
+			else if (ModelRealm == eRealm.Midgard) return CharacterClass.Warrior;
+			else if (ModelRealm == eRealm.Hibernia) return CharacterClass.Hero;
+			return CharacterClass.None;
 		}
 
 		protected override void SetBlockEvadeParryChance()

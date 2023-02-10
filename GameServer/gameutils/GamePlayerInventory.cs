@@ -333,7 +333,8 @@ namespace DOL.GS
 					{
 						m_player.Out.SendMessage("Error adding item to the database, item may be lost!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						Log.ErrorFormat("Error adding item {0}:{1} for player {2} into the database during AddItem!", item.Id_nb, item.Name, m_player.Name);
-						m_items.Remove(slot);
+						lock( m_items )
+							m_items.Remove(slot);
 						item.SlotPosition = savePosition;
 						item.OwnerID = saveOwnerID;
 						return false;
@@ -345,7 +346,8 @@ namespace DOL.GS
 					{
 						m_player.Out.SendMessage("Error saving item to the database, this item may be lost!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						Log.ErrorFormat("Error saving item {0}:{1} for player {2} into the database during AddItem!", item.Id_nb, item.Name, m_player.Name);
-						m_items.Remove(slot);
+						lock( m_items )
+							m_items.Remove(slot);
 						item.SlotPosition = savePosition;
 						item.OwnerID = saveOwnerID;
 						return false;
@@ -416,7 +418,8 @@ namespace DOL.GS
 					{
 						m_player.Out.SendMessage("Error deleting item from the database, operation aborted!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						Log.ErrorFormat("Error deleting item {0}:{1} for player {2} from the database during RemoveItem!", item.Id_nb, item.Name, m_player.Name);
-						m_items.Add(oldSlot, item);
+						lock( m_items )
+							m_items.Add(oldSlot, item);
 						item.SlotPosition = savePosition;
 						item.OwnerID = saveOwnerID;
 						return false;
@@ -428,7 +431,8 @@ namespace DOL.GS
 					{
 						m_player.Out.SendMessage("Error saving item to the database, operation aborted!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						Log.ErrorFormat("Error saving item {0}:{1} for player {2} to the database during RemoveItem!", item.Id_nb, item.Name, m_player.Name);
-						m_items.Add(oldSlot, item);
+						lock( m_items )
+							m_items.Add(oldSlot, item);
 						item.SlotPosition = savePosition;
 						item.OwnerID = saveOwnerID;
 						return false;

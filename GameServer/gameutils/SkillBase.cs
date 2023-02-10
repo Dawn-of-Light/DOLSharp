@@ -131,8 +131,8 @@ namespace DOL.GS
 					// Load Spec, SpecXAbility, SpecXSpellLine, SpecXStyle, Styles, StylesProcs...
 					// Need Spell, SpellLines, Abilities Loaded (including RealmAbilities...) !
 					LoadSpecializations();
+					CharacterClassDB.Load();
 					LoadClassSpecializations();
-					CharacterClassBase.LoadClassOverrideDictionary();
 					LoadAbilityHandlers();
 					LoadSkillHandlers();
 					m_loaded = true;

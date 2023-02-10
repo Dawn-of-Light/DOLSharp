@@ -822,7 +822,23 @@ namespace DOL.GS
 		/// </summary>
 		public virtual ICollection<InventoryItem> AllItems
 		{
-			get { return m_items.Values; }
+			get
+			{
+				lock( m_items )
+					return new List<InventoryItem>( m_items.Values );
+			}
+		}
+
+		/// <summary>
+		/// Returns the total number of items in this inventory
+		/// </summary>
+		public int Count
+		{
+			get
+			{
+				lock( m_items )
+					return m_items.Count;
+			}
 		}
 
 		#endregion

@@ -381,7 +381,7 @@ namespace DOL.GS
 			if (!HasEffect(typeof(FacilitatePainworkingEffect)) &&
 				ad != null && ad.Attacker != null && ChanceSpellInterrupt(ad.Attacker))
 			{
-				if (Brain is NecromancerPetBrain necroBrain)
+				if (Brain is NecromancerPetBrain necroBrain && IsCasting)
 				{
 					StopCurrentSpellcast();
 					necroBrain.MessageToOwner("Your pet was attacked by " + ad.Attacker.Name + " and their spell was interrupted!", eChatType.CT_SpellResisted);
@@ -401,10 +401,10 @@ namespace DOL.GS
 		{
 			if (!HasEffect(typeof(FacilitatePainworkingEffect)))
 			{
-				StopCurrentSpellcast();
-
-				if (Brain is NecromancerPetBrain necroBrain)
+				if (Brain is NecromancerPetBrain necroBrain && IsCasting)
 				{
+					StopCurrentSpellcast();
+
 					necroBrain.MessageToOwner("Your pet attacked and interrupted their spell!", eChatType.CT_SpellResisted);
 
 					if (necroBrain.SpellsQueued)

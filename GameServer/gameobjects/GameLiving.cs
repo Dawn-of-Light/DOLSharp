@@ -934,33 +934,6 @@ namespace DOL.GS
 			return true;
 		}
 
-
-		/// <summary>
-		/// Calculate how fast this living can cast a given spell
-		/// </summary>
-		/// <param name="spell"></param>
-		/// <returns></returns>
-		public virtual int CalculateCastingTime(SpellLine line, Spell spell)
-		{
-			int ticks = spell.CastTime;
-
-			if (spell.InstrumentRequirement != 0 ||
-			    line.KeyName == GlobalSpellsLines.Item_Spells ||
-			    line.KeyName.StartsWith(GlobalSpellsLines.Champion_Lines_StartWith))
-			{
-				return ticks;
-			}
-
-
-			double percent = DexterityCastTimeReduction;
-
-			ticks = (int)(ticks * Math.Max(CastingSpeedReductionCap, percent));
-			if (ticks < MinimumCastingSpeed)
-				ticks = MinimumCastingSpeed;
-
-			return ticks;
-		}
-
 		/// <summary>
 		/// The casting time reduction based on dexterity bonus.
 		/// http://daoc.nisrv.com/modules.php?name=DD_DMG_Calculator

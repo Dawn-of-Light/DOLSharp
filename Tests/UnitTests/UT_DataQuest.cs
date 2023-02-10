@@ -1,6 +1,5 @@
 ﻿using DOL.Database;
 using DOL.GS;
-using DOL.GS.PlayerClass;
 using DOL.GS.Quests;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -189,7 +188,7 @@ namespace DOL.UnitTests.Gameserver
         public void CheckQuestQualification_PlayerIsPaladinAndAllowedClassIsCleric_False()
         {
             var player = NewFakePlayer();
-            player.fakeCharacterClass = new ClassPaladin();
+            player.fakeCharacterClass = CharacterClass.Paladin;
             var dbDataQuest = new DBDataQuest();
             var clericClassID = (int)eCharacterClass.Cleric;
             dbDataQuest.AllowedClasses = clericClassID.ToString();

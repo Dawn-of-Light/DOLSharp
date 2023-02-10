@@ -96,11 +96,6 @@ namespace DOL.GS.Spells
 			if ((m_pet.Brain as TurretFNFBrain) == null)
 				return;
 
-			if (Caster.ControlledBrain == null)
-			{
-				((GamePlayer)Caster).Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
-			}
-
 			GameEventMgr.RemoveHandler(m_pet, GameLivingEvent.PetReleased, OnNpcReleaseCommand);
 
 			GameSpellEffect effect = FindEffectOnTarget(m_pet, this);

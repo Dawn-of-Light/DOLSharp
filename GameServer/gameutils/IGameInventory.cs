@@ -181,6 +181,7 @@ namespace DOL.GS
 		ICollection<InventoryItem> VisibleItems		{ get; }
 		ICollection<InventoryItem> EquippedItems	{ get; }
 		ICollection<InventoryItem> AllItems			{ get; }
+		int Count { get; }
 
 		int InventoryWeight { get; }
 	}

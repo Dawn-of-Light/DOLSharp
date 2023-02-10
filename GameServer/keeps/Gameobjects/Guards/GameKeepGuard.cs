@@ -25,8 +25,6 @@ using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.ServerProperties;
 using System.Collections.Generic;
-using DOL.GS.Realm;
-using DOL.GS.PlayerClass;
 
 namespace DOL.GS.Keeps
 {
@@ -1213,9 +1211,9 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		protected virtual ICharacterClass GetClass()
+		protected virtual CharacterClass GetClass()
         {
-			return new CharacterClassBase();
+			return CharacterClass.None;
 		}
 
 		protected virtual void SetModel()

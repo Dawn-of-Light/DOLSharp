@@ -77,9 +77,6 @@ namespace DOL.AI.Brain
 					playerowner.Out.SendObjectUpdate(Body);
 				}
 
-				if (SpellsQueued)
-					// if spells are queued then handle them first
-					CheckSpellQueue();
 				else if (AggressionState == eAggressionState.Aggressive)
 				{
 					CheckPlayerAggro();
@@ -208,6 +205,8 @@ namespace DOL.AI.Brain
                 // This message is for spells from the spell queue only, so suppress
                 // it for insta cast buffs coming from the pet itself.
 
+                var spellHandler = ScriptMgr.CreateSpellHandler(Owner, spellArgs.Spell, spellLine);
+                Owner.Mana -= spellHandler.PowerCost(target);
                 if (spellLine.Name != (Body as NecromancerPet).PetInstaSpellLine)
                 {
                     Owner.Notify(GameLivingEvent.CastStarting, Body, new CastingEventArgs(Body.CurrentSpellHandler));

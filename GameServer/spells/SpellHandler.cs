@@ -1784,7 +1784,65 @@ namespace DOL.GS.Spells
 		/// <returns>effective casting time in milliseconds</returns>
 		public virtual int CalculateCastingTime()
 		{
-			return m_caster.CalculateCastingTime(m_spellLine, m_spell);
+			//return m_caster.CalculateCastingTime(SpellLine, Spell);
+			int ticks = Spell.CastTime;
+
+			if (Spell.InstrumentRequirement != 0 ||
+			    SpellLine.KeyName == GlobalSpellsLines.Item_Spells ||
+			    SpellLine.KeyName.StartsWith(GlobalSpellsLines.Champion_Lines_StartWith))
+			{
+				return ticks;
+			}
+
+			if (Spell.SpellType == "Chamber")
+                return ticks;
+
+            if ((SpellLine.KeyName == "Cursing"
+                 || SpellLine.KeyName == "Cursing Spec"
+                 || SpellLine.KeyName == "Hexing"
+                 || SpellLine.KeyName == "Witchcraft")
+                && (Spell.SpellType != "ArmorFactorBuff"
+                    && Spell.SpellType != "Bladeturn"
+                    && Spell.SpellType != "ArmorAbsorptionBuff"
+                    && Spell.SpellType != "MatterResistDebuff"
+                    && Spell.SpellType != "Uninterruptable"
+                    && Spell.SpellType != "Powerless"
+                    && Spell.SpellType != "Range"
+                    && Spell.Name != "Lesser Twisting Curse"
+                    && Spell.Name != "Twisting Curse"
+                    && Spell.Name != "Lesser Winding Curse"
+                    && Spell.Name != "Winding Curse"
+                    && Spell.Name != "Lesser Wrenching Curse"
+                    && Spell.Name != "Wrenching Curse"
+                    && Spell.Name != "Lesser Warping Curse"
+                    && Spell.Name != "Warping Curse"))
+            {
+                return ticks;
+            }
+
+			if (Caster.EffectList.GetOfType<QuickCastEffect>() != null)
+			{
+				// Most casters have access to the Quickcast ability (or the Necromancer equivalent, Facilitate Painworking).
+				// This ability will allow you to cast a spell without interruption.
+				// http://support.darkageofcamelot.com/kb/article.php?id=022
+
+				// A: You're right. The answer I should have given was that Quick Cast reduces the time needed to cast to a flat two seconds,
+				// and that a spell that has been quick casted cannot be interrupted. ...
+				// http://www.camelotherald.com/news/news_article.php?storyid=1383
+
+				return 2000;
+			}
+
+
+			double percent = Caster.DexterityCastTimeReduction;
+
+			percent *= 1.0 - Caster.GetModified(eProperty.CastingSpeed) * 0.01;
+
+			ticks = (int)(ticks * Math.Max(Caster.CastingSpeedReductionCap, percent));
+			if (ticks < Caster.MinimumCastingSpeed)
+				ticks = Caster.MinimumCastingSpeed;
+
+			return ticks;
 		}
 
 

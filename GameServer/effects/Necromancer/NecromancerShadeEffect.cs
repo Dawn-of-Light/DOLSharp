@@ -16,36 +16,60 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+using System.Collections.Generic;
+using DOL.AI.Brain;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Necromancer shade effect (grants immunity to all forms of
-	/// attack).
-	/// </summary>
-	/// <author>Aredhel</author>
 	public class NecromancerShadeEffect : ShadeEffect
 	{
-		/// <summary>
-		/// Creates a new shade effect.
-		/// </summary>
-		public NecromancerShadeEffect()	{ }
+		public override void Start(GameLiving living)
+		{
+			base.Start(living);
+
+			if (player.ControlledBrain != null && player.ControlledBrain.Body != null)
+                {
+                    GameNPC pet = player.ControlledBrain.Body;
+                    List<GameObject> attackerList;
+                    lock (player.Attackers)
+                        attackerList = new List<GameObject>(player.Attackers);
+
+                    foreach (GameObject obj in attackerList)
+                    {
+                        if (obj is GameNPC)
+                        {
+                            GameNPC npc = (GameNPC)obj;
+                            if (npc.TargetObject == player && npc.AttackState)
+                            {
+                                IOldAggressiveBrain brain = npc.Brain as IOldAggressiveBrain;
+                                if (brain != null)
+                                {
+                                    npc.AddAttacker(pet);
+                                    npc.StopAttack();
+                                    brain.AddToAggroList(pet, (int)(brain.GetAggroAmountForLiving(player) + 1));
+                                }
+                            }
+                        }
+                    }
+                }
+		}
+
+		public override void Cancel(bool playerCanceled)
+		{
+            if (player.ControlledBrain != null)
+            {
+                (player.ControlledBrain as ControlledNpcBrain).Stop();
+            }
+			base.Cancel(playerCanceled);
+		}
 
 		protected int m_timeRemaining = -1;
 
-		/// <summary>
-		/// Remaining time of the effect in seconds.
-		/// </summary>
 		public override int RemainingTime
 		{
 			get { return (m_timeRemaining < 0) ? 0 : m_timeRemaining * 1000; }
 		}
 
-		/// <summary>
-		/// Set timer when pet is out of range.
-		/// </summary>
-		/// <param name="seconds"></param>
 		public void SetTetherTimer(int seconds)
 		{
 			m_timeRemaining = seconds;
