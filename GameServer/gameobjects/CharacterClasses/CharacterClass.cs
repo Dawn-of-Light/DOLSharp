@@ -9,6 +9,8 @@ namespace DOL.GS
 {
     public class CharacterClass
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static Dictionary<int, CharacterClass> allClasses = new Dictionary<int, CharacterClass>();
 
         private GamePlayer player;
@@ -68,11 +70,16 @@ namespace DOL.GS
             charClass.AutoTrainSkills = dbCharClass.AutoTrainSkills
                     .Split(';', ',').Where(s => !string.IsNullOrEmpty(s));
 
-            var newElibibleRaces = dbCharClass.EligibleRaces
+            charClass.eligibleRaces = dbCharClass.EligibleRaces
                 .Split(';', ',').Where(s => !string.IsNullOrEmpty(s))
                 .Select(s => Convert.ToInt32(s))
-                .Select(i => PlayerRace.GetRace(i));
-            charClass.eligibleRaces = newElibibleRaces;
+                .Select(i => PlayerRace.GetRace(i))
+                .Where(r => r != null && r.ID != eRace.Unknown);
+            if (charClass.eligibleRaces.Count() == 0)
+            {
+                charClass.eligibleRaces = PlayerRace.AllRaces;
+                log.Warn($"Create(): No eligible races found in CharacterClass table for class ID {charClass.ID}, setting to all possible races");
+            }
 
             charClass.MaxPulsingSpells = dbCharClass.MaxPulsingSpells == 0 ? (byte)2 : dbCharClass.MaxPulsingSpells;
 
