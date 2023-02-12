@@ -16,13 +16,95 @@ namespace DOL.GS
             foreach (var classID in defaultClasses.Keys.ToList().Union(dbClasses.Keys))
             {
                 DBCharacterClass dbClass;
+                if (!defaultClasses.TryGetValue(classID, out dbClass))
+                {
+                    dbClass = new DBCharacterClass()
+                    {
+                        ID = classID,
+                        BaseClassID = 0,
+                        Name = CharacterClass.Unknown.GetSalutation(eGender.Male),
+                        FemaleName = CharacterClass.Unknown.GetSalutation(eGender.Female),
+                        ProfessionTranslationID = CharacterClass.Unknown.ProfessionTranslationID,
+                        SpecPointMultiplier = (byte)CharacterClass.Unknown.SpecPointsMultiplier,
+                        AutoTrainSkills = "",
+                        PrimaryStat = (byte)CharacterClass.Unknown.PrimaryStat,
+                        SecondaryStat = (byte)CharacterClass.Unknown.SecondaryStat,
+                        TertiaryStat = (byte)CharacterClass.Unknown.TertiaryStat,
+                        ManaStat = (byte)CharacterClass.Unknown.ManaStat,
+                        EligibleRaces = "",
+                        CanUseLeftHandedWeapon = CharacterClass.Unknown.CanUseLefthandedWeapon,
+                        BaseHP = (short)CharacterClass.Unknown.BaseHP,
+                        BaseWeaponSkill = (short)CharacterClass.Unknown.WeaponSkillBase,
+                        ClassType = (byte)CharacterClass.Unknown.ClassType
+                    };
+                }
+
                 if (dbClasses.TryGetValue(classID, out var databaseEntry))
                 {
-                    dbClass = databaseEntry;
+                    if (!String.IsNullOrEmpty(databaseEntry.Name))
+                        dbClass.Name = databaseEntry.Name;
+                    else
+                        log.Warn($"Load(): Name is not defined in CharacterClass for ClassID {classID}, using default value [{dbClass.Name}]");
+
+                    dbClass.FemaleName = databaseEntry.FemaleName ?? "";
+
+                    if (databaseEntry.BaseClassID != (byte)eCharacterClass.Unknown)
+                        dbClass.BaseClassID = databaseEntry.BaseClassID;
+                    else
+                        log.Warn($"Load(): BaseClassID is not defined in CharacterClass for ClassID {classID}, using default value [{dbClass.BaseClassID}]");
+
+                    if (databaseEntry.SpecPointMultiplier > 0)
+                        dbClass.SpecPointMultiplier = databaseEntry.SpecPointMultiplier;
+                    else
+                        log.Warn($"Load(): SpecPointMultiplier is not defined in CharacterClass for ClassID {classID}, using default value [{dbClass.SpecPointMultiplier}]");
+
+                    dbClass.AutoTrainSkills = databaseEntry.AutoTrainSkills ?? "";
+
+                    if (databaseEntry.PrimaryStat <= (byte)eStat._Last && (databaseEntry.PrimaryStat >= (byte)eStat._First || dbClass.ID == dbClass.BaseClassID))
+                        dbClass.PrimaryStat = databaseEntry.PrimaryStat;
+                    else
+                        log.Warn($"Load(): PrimaryStat in CharacterClass for ClassID {classID} is out of range, using default value [{dbClass.PrimaryStat}]");
+
+                    if (databaseEntry.SecondaryStat <= (byte)eStat._Last && (databaseEntry.PrimaryStat >= (byte)eStat._First || dbClass.ID == dbClass.BaseClassID))
+                        dbClass.SecondaryStat = databaseEntry.SecondaryStat;
+                    else
+                        log.Warn($"Load(): SecondaryStat in CharacterClass for ClassID {classID} is out of range, using default value [{dbClass.SecondaryStat}]");
+
+                    if (databaseEntry.TertiaryStat <= (byte)eStat._Last && (databaseEntry.PrimaryStat >= (byte)eStat._First || dbClass.ID == dbClass.BaseClassID))
+                        dbClass.TertiaryStat = databaseEntry.TertiaryStat;
+                    else 
+                        log.Warn($"Load(): TertiaryStat in CharacterClass for ClassID {classID} is out of range, using default value [{dbClass.TertiaryStat}]");
+
+                    if (databaseEntry.ManaStat <= (byte)eStat._Last && databaseEntry.ManaStat >= (byte)eStat.UNDEFINED) 
+                        dbClass.ManaStat = databaseEntry.ManaStat;
+                    else 
+                        log.Warn($"Load(): ManaStat in CharacterClass for ClassID {classID} is out of range, using default value [{dbClass.ManaStat}]");
+
+                    if (!String.IsNullOrEmpty(databaseEntry.EligibleRaces))
+                        dbClass.EligibleRaces = databaseEntry.EligibleRaces;
+                    else
+                        log.Warn($"Load(): EligibleRaces is not defined in CharacterClass for ClassID {classID}, using default value [{dbClass.EligibleRaces}]");
+
+                    if (databaseEntry.BaseHP > 0)
+                        dbClass.BaseHP = databaseEntry.BaseHP;
+                    else
+                        log.Warn($"Load(): BaseHP is not defined in CharacterClass for ClassID {classID}, using default value [{dbClass.BaseHP}]");
+
+                    if (databaseEntry.BaseWeaponSkill > 0)
+                        dbClass.BaseWeaponSkill = databaseEntry.BaseWeaponSkill;
+                    else
+                        log.Warn($"Load(): BaseWeaponSkill is not defined in CharacterClass for ClassID {classID}, using default value [{dbClass.BaseWeaponSkill}]");
+
+                    if (databaseEntry.ClassType >= (byte)eClassType.ListCaster && databaseEntry.ClassType <= (byte)eClassType.PureTank)
+                        dbClass.ClassType = databaseEntry.ClassType;
+                    else
+                        log.Warn($"Load(): ClassType in CharacterClass for ClassID {classID} is out of range, using default value [{dbClass.ClassType}]");
+
+                    dbClass.ProfessionTranslationID = databaseEntry.ProfessionTranslationID ?? "";
+                    dbClass.CanUseLeftHandedWeapon = databaseEntry.CanUseLeftHandedWeapon;
                 }
                 else
                 {
-                    dbClass = defaultClasses[classID];
                     dbClass.AllowAdd = true;
                     GameServer.Database.AddObject(dbClass);
                 }
