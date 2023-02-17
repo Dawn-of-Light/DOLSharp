@@ -9,6 +9,8 @@ namespace DOL.GS
 {
     public class CharacterClass
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static Dictionary<int, CharacterClass> allClasses = new Dictionary<int, CharacterClass>();
 
         private GamePlayer player;
@@ -66,13 +68,19 @@ namespace DOL.GS
             charClass.ProfessionTranslationID = dbCharClass.ProfessionTranslationID;
 
             charClass.AutoTrainSkills = dbCharClass.AutoTrainSkills
-                    .Split(';', ',').Where(s => !string.IsNullOrEmpty(s));
+                .Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var newElibibleRaces = dbCharClass.EligibleRaces
-                .Split(';', ',').Where(s => !string.IsNullOrEmpty(s))
-                .Select(s => Convert.ToInt32(s))
-                .Select(i => PlayerRace.GetRace(i));
-            charClass.eligibleRaces = newElibibleRaces;
+            var eligibleRaces = new List<PlayerRace>();
+            var raceIDs = dbCharClass.EligibleRaces
+                .Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => Convert.ToInt32(s));
+            foreach(var raceID in raceIDs)
+            {
+                var race = PlayerRace.GetRace(raceID);
+                if(race.Equals(PlayerRace.Unknown)) log.Error($"CharacterClass with ID {charClass.ID} contains invalid EligibleRace {raceID}");
+                else eligibleRaces.Add(race);
+            }
+            charClass.eligibleRaces = eligibleRaces;
 
             charClass.MaxPulsingSpells = dbCharClass.MaxPulsingSpells == 0 ? (byte)2 : dbCharClass.MaxPulsingSpells;
 
