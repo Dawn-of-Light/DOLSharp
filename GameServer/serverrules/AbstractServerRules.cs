@@ -356,10 +356,10 @@ namespace DOL.GS.ServerRules
 
 			// PEACE NPCs can't be attacked/attack
 			if (attacker is GameNPC)
-				if ((((GameNPC)attacker).Flags & GameNPC.eFlags.PEACE) != 0)
+				if (((GameNPC)attacker).IsPeaceful)
 					return false;
 			if (defender is GameNPC)
-				if ((((GameNPC)defender).Flags & GameNPC.eFlags.PEACE) != 0)
+				if (((GameNPC)defender).IsPeaceful)
 					return false;
 			// Players can't attack mobs while they have immunity
 			if (playerAttacker != null && defender != null)
@@ -2279,7 +2279,7 @@ namespace DOL.GS.ServerRules
 				npc.Z = location.Z;
 				npc.Heading = heading;
 				npc.CurrentRegionID = house.RegionID;
-				if ((npc.Flags & GameNPC.eFlags.PEACE) == 0)
+				if (!npc.IsPeaceful)
 				{
 					npc.Flags ^= GameNPC.eFlags.PEACE;
 				}

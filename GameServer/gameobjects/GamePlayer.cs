@@ -3076,10 +3076,12 @@ namespace DOL.GS
 				{
 					// Adding
 					m_specialization.Add(skill.KeyName, skill);
-					
+
+					if (skill.KeyName == Specs.Stealth)
+						CanStealth = true;
+
 					if (notify)
 						Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.AddSpecialisation.YouLearn", skill.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
 				}
 				else
 				{
@@ -3104,6 +3106,9 @@ namespace DOL.GS
 						return false;
 				
 				m_specialization.Remove(specKeyName);
+				
+				if (specKeyName == Specs.Stealth)
+					CanStealth = false;
 			}
 			
 			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RemoveSpecialization.YouLose", playerSpec.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -3265,8 +3270,7 @@ namespace DOL.GS
 			if (CharacterClass.Equals(GS.CharacterClass.Bonedancer)
 				&& DOL.GS.ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0
 				&& DOL.GS.ServerProperties.Properties.PET_CAP_BD_MINION_SPELL_SCALING_BY_SPEC
-				&& ControlledBrain is IControlledBrain brain && brain.Body is GamePet pet
-				&& pet.ControlledNpcList != null)
+				&& ControlledBody is GamePet pet && pet.ControlledNpcList != null)
 					foreach (ABrain subBrain in pet.ControlledNpcList)
 						if (subBrain != null && subBrain.Body is BDSubPet subPet && subPet.PetSpecLine == specLine.KeyName)
 							subPet.SortSpells();
@@ -5665,9 +5669,7 @@ namespace DOL.GS
 			}
 
 			// Necromancer with summoned pet cannot attack
-			if (ControlledBrain != null)
-				if (ControlledBrain.Body != null)
-					if (ControlledBrain.Body is NecromancerPet)
+			if (ControlledBody is NecromancerPet)
 			{
                 Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.StartAttack.CantInShadeMode"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
@@ -10079,25 +10081,15 @@ namespace DOL.GS
 				{
 					Point2D point = GetPointFromHeading(Heading, 64);
 
-					IControlledBrain npc = ControlledBrain;
-					if (npc != null)
+					if (ControlledBody is GameNPC petBody)
 					{
-						GameNPC petBody = npc.Body;
-
 						petBody.MoveInRegion(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
 
-						if (petBody != null && petBody.ControlledNpcList != null)
-						{
+						if (petBody.ControlledNpcList != null)
 							foreach (IControlledBrain icb in petBody.ControlledNpcList)
-							{
-								if (icb != null && icb.Body != null)
-								{
-									GameNPC petBody2 = icb.Body;
-									if (petBody2 != null && originalPoint.IsWithinRadius(petBody2, 500))
+								if (icb != null && icb.Body is GameNPC petBody2
+									&& originalPoint.IsWithinRadius(petBody2, 500))
 										petBody2.MoveInRegion(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
-								}
-							}
-						}
 					}
 				}
 			}
@@ -12862,7 +12854,7 @@ namespace DOL.GS
 		/// Set player's stealth state
 		/// </summary>
 		/// <param name="goStealth">true is stealthing, false if unstealthing</param>
-		public virtual void Stealth(bool goStealth)
+		public override void Stealth(bool goStealth)
 		{
 			if (IsStealthed == goStealth)
 				return;

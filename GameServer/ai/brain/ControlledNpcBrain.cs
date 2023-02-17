@@ -439,6 +439,8 @@ namespace DOL.AI.Brain
 
 			if (!Body.AttackState && WalkState == eWalkState.Follow && Owner != null && !Body.InCombat)
 				Follow(Owner);
+
+			CheckStealth();
 		}
 
 		/// <summary>

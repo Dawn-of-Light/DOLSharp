@@ -776,12 +776,12 @@ namespace DOL.GS.PacketHandler
 				if (m_gameClient.Account.PrivLevel < 2)
 				{
 					// no name only if normal player
-					if ((npc.Flags & GameNPC.eFlags.CANTTARGET) != 0)
+					if (npc.IsCannotTarget)
 						flags |= 0x01;
-					if ((npc.Flags & GameNPC.eFlags.DONTSHOWNAME) != 0)
+					if (npc.IsDontShowName)
 						flags |= 0x02;
 				}
-				if ((npc.Flags & GameNPC.eFlags.STATUE) != 0)
+				if (npc.IsStatue)
 				{
 					flags |= 0x01;
 				}
@@ -789,7 +789,7 @@ namespace DOL.GS.PacketHandler
 				{
 					flags |= 0x10;
 				}
-				if ((npc.Flags & GameNPC.eFlags.FLYING) != 0)
+				if (npc.IsFlying)
 				{
 					flags |= 0x20;
 				}
@@ -1065,8 +1065,8 @@ namespace DOL.GS.PacketHandler
 				if ((npc.Flags & GameNPC.eFlags.GHOST) != 0) flags |= 0x01;
 				if (npc.Inventory != null)
 					flags |= 0x02; //If mob has equipment, then only show it after the client gets the 0xBD packet
-				if ((npc.Flags & GameNPC.eFlags.PEACE) != 0) flags |= 0x10;
-				if ((npc.Flags & GameNPC.eFlags.FLYING) != 0) flags |= 0x20;
+				if (npc.IsPeaceful) flags |= 0x10;
+				if (npc.IsFlying) flags |= 0x20;
 
 				pak.WriteByte(flags);
 				pak.WriteByte(0x20); //TODO this is the default maxstick distance
@@ -1074,9 +1074,9 @@ namespace DOL.GS.PacketHandler
 				string add = "";
 				if (m_gameClient.Account.PrivLevel > 1)
 				{
-					if ((npc.Flags & GameNPC.eFlags.CANTTARGET) != 0)
+					if (npc.IsCannotTarget)
 						add += "-DOR"; // indicates DOR flag for GMs
-					if ((npc.Flags & GameNPC.eFlags.DONTSHOWNAME) != 0)
+					if (npc.IsDontShowName)
 						add += "-NON"; // indicates NON flag for GMs
 				}
 

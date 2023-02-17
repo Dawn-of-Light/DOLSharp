@@ -874,7 +874,7 @@ namespace DOL.GS.Commands
 		{
 			targetMob.Flags ^= GameNPC.eFlags.PEACE;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage("Mob PEACE flag is set to " + ((targetMob.Flags & GameNPC.eFlags.PEACE) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("Mob PEACE flag is set to " + targetMob.IsPeaceful, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void aggro(GameClient client, GameNPC targetMob, string[] args)
@@ -1097,6 +1097,7 @@ namespace DOL.GS.Commands
 		private void stealth(GameClient client, GameNPC targetMob, string[] args)
 		{
 			targetMob.Flags ^= GameNPC.eFlags.STEALTH;
+			targetMob.CanStealth = targetMob.IsStealthed;
 			targetMob.SaveIntoDatabase();
 			client.Out.SendMessage("Mob STEALTH flag is set to " + ((targetMob.Flags & GameNPC.eFlags.STEALTH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
@@ -1105,7 +1106,7 @@ namespace DOL.GS.Commands
 		{
 			targetMob.Flags ^= GameNPC.eFlags.TORCH;
 			targetMob.SaveIntoDatabase();
-			client.Out.SendMessage("Mob TORCH flag is set to " + ((targetMob.Flags & GameNPC.eFlags.TORCH) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage("Mob TORCH flag is set to " + targetMob.IsTorchLit, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void statue(GameClient client, GameNPC targetMob, string[] args)
@@ -1113,10 +1114,10 @@ namespace DOL.GS.Commands
 			targetMob.Flags ^= GameNPC.eFlags.STATUE;
 			targetMob.SaveIntoDatabase();
 
-			if ((targetMob.Flags & GameNPC.eFlags.STATUE) > 0)
+			if (targetMob.IsStatue)
 				client.Out.SendMessage("You have set the STATUE flag - you will need to use \"/debug on\" to target this NPC.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-			client.Out.SendMessage(targetMob.Name + "'s STATUE flag is set to " + ((targetMob.Flags & GameNPC.eFlags.STATUE) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(targetMob.Name + "'s STATUE flag is set to " + targetMob.IsStatue, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void fly(GameClient client, GameNPC targetMob, string[] args)
@@ -1135,12 +1136,12 @@ namespace DOL.GS.Commands
 
 			targetMob.Flags ^= GameNPC.eFlags.FLYING;
 
-			if ((targetMob.Flags & GameNPC.eFlags.FLYING) != 0)
+			if (targetMob.IsFlying)
 				targetMob.MoveTo(targetMob.CurrentRegionID, targetMob.X, targetMob.Y, targetMob.Z + height, targetMob.Heading);
 
 			targetMob.SaveIntoDatabase();
 
-			client.Out.SendMessage(targetMob.Name + "'s FLYING flag is set to " + ((targetMob.Flags & GameNPC.eFlags.FLYING) != 0), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(targetMob.Name + "'s FLYING flag is set to " + targetMob.IsFlying, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void swimming(GameClient client, GameNPC targetMob, string[] args)
@@ -2595,7 +2596,7 @@ namespace DOL.GS.Commands
 			mob.LoadedFromScript = false;
 			mob.SaveIntoDatabase();
 			client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			if ((mob.Flags & GameNPC.eFlags.PEACE) != 0)
+			if (mob.IsPeaceful)
 			{
 				// because copying 100 mobs with their peace flag set is not fun
 				client.Out.SendMessage("This mobs PEACE flag is set!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);

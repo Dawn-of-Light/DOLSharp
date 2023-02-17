@@ -160,8 +160,8 @@ namespace DOL.AI.Brain
 
 			//Mob will now always walk on their path
 			if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving
-			    && !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
-			    && Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
+				&& !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath
+				&& Body.PathID != null && Body.PathID != "" && Body.PathID != "NULL")
 			{
 				PathPoint path = MovementMgr.LoadPath(Body.PathID);
 				if (path != null)
@@ -225,6 +225,17 @@ namespace DOL.AI.Brain
 					Body.TargetObject = null;
 				}
 			}
+
+			CheckStealth();
+		}
+
+		/// <summary>
+		/// Check if the NPC can be stealthed
+		/// </summary>
+		public virtual void CheckStealth()
+		{
+			if (Body.CanStealth && !Body.IsStealthed && !Body.InCombat && !Body.IsCasting)
+				Body.Stealth(true);
 		}
 
 		/// <summary>
@@ -808,7 +819,7 @@ namespace DOL.AI.Brain
 					// first check to see if the healer is in our aggrolist so we don't go attacking anyone who heals
 					if (m_aggroTable.ContainsKey(eArgs.HealSource as GameLiving))
 					{
-						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & GameNPC.eFlags.PEACE) == 0))
+						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && !((GameNPC)eArgs.HealSource).IsPeaceful))
 						{
 							AddToAggroList((GameLiving)eArgs.HealSource, eArgs.HealAmount);
 						}

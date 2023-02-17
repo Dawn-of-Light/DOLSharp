@@ -128,11 +128,11 @@ namespace DOL.GS.ServerRules
 
 			//Peace flag NPCs are same realm
 			if (target is GameNPC)
-				if ((((GameNPC)target).Flags & GameNPC.eFlags.PEACE) != 0)
+				if (((GameNPC)target).IsPeaceful)
 					return true;
 
 			if (source is GameNPC)
-				if ((((GameNPC)source).Flags & GameNPC.eFlags.PEACE) != 0)
+				if (((GameNPC)source).IsPeaceful)
 					return true;
 
 			if(source.Realm != target.Realm)
@@ -191,11 +191,11 @@ namespace DOL.GS.ServerRules
 
 			//Peace flag NPCs can trade with everyone
 			if (target is GameNPC)
-				if ((((GameNPC)target).Flags & GameNPC.eFlags.PEACE) != 0)
+				if (((GameNPC)target).IsPeaceful)
 					return true;
 
 			if (source is GameNPC)
-				if ((((GameNPC)source).Flags & GameNPC.eFlags.PEACE) != 0)
+				if (((GameNPC)source).IsPeaceful)
 					return true;
 
 			if(source.Realm != target.Realm)
@@ -217,7 +217,7 @@ namespace DOL.GS.ServerRules
 			//Peace flag NPCs can be understood by everyone
 
 			if (source is GameNPC)
-				if ((((GameNPC)source).Flags & GameNPC.eFlags.PEACE) != 0)
+				if (((GameNPC)source).IsPeaceful)
 					return true;
 
 			if(source.Realm > 0 && source.Realm != target.Realm) return false;

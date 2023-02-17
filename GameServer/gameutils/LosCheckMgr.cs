@@ -815,7 +815,7 @@ namespace DOL.GS
 					continue;
 				
 				// don't give LoS results to Peace NPC
-				if((contamined.Flags & GameNPC.eFlags.PEACE) == GameNPC.eFlags.PEACE)
+				if(contamined.IsPeaceful)
 					continue;
 					
 				// player pet to player should use the special PET radius

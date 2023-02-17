@@ -741,6 +741,7 @@ namespace DOL.GS
 			{
 				eFlags oldflags = m_flags;
 				m_flags = value;
+
 				if (ObjectState == eObjectState.Active)
 				{
 					if (oldflags != m_flags)
@@ -756,12 +757,52 @@ namespace DOL.GS
 			}
 		}
 
+		public bool IsGhost
+		{ get => m_flags.HasFlag(eFlags.GHOST); }
+
+		public override bool IsStealthed
+		{ get => m_flags.HasFlag(eFlags.STEALTH); }
+
+		public bool IsDontShowName
+		{ get => m_flags.HasFlag(eFlags.DONTSHOWNAME); }
+
+		public bool IsCannotTarget
+		{ get => m_flags.HasFlag(eFlags.CANTTARGET); }
+
+		public bool IsPeaceful
+		{ get => m_flags.HasFlag(eFlags.PEACE); }
+
+		public bool IsFlying
+		{ get => m_flags.HasFlag(eFlags.FLYING); }
+
+		public bool IsTorchLit
+		{ get => m_flags.HasFlag(eFlags.TORCH); }
+
+		public bool IsStatue
+		{ get => m_flags.HasFlag(eFlags.STATUE); }
 
 		public override bool IsUnderwater
 		{
-			get { return (m_flags & eFlags.SWIMMING) == eFlags.SWIMMING || base.IsUnderwater; }
+			get { return m_flags.HasFlag(eFlags.SWIMMING) || base.IsUnderwater; }
 		}
 
+		/// <summary>
+		/// Set the NPC to stealth or unstealth
+		/// </summary>
+		/// <param name="goStealth">True to stealth, false to unstealth</param>
+		public override void Stealth(bool goStealth)
+		{
+			if (goStealth != IsStealthed)
+			{
+				if (goStealth)
+					Flags |= eFlags.STEALTH;
+				else
+					Flags &= ~eFlags.STEALTH;
+
+				if (!goStealth && Brain is IControlledBrain brain && brain.Owner is GameLiving living && living.IsStealthed)
+					living.Stealth(false);
+			}
+		}
 
 		/// <summary>
 		/// Shows wether any player sees that mob
@@ -936,17 +977,6 @@ namespace DOL.GS
 						return TargetPosition.Z;
 				}
 				return base.Z;
-			}
-		}
-
-		/// <summary>
-		/// The stealth state of this NPC
-		/// </summary>
-		public override bool IsStealthed
-		{
-			get
-			{
-				return (Flags & eFlags.STEALTH) != 0;
 			}
 		}
 
@@ -2052,6 +2082,7 @@ namespace DOL.GS
 			Model = dbMob.Model;
 			Size = dbMob.Size;
 			Flags = (eFlags)dbMob.Flags;
+			CanStealth = IsStealthed;
 			m_packageID = dbMob.PackageID;
 
 			// Skip Level.set calling AutoSetStats() so it doesn't load the DB entry we already have
@@ -2380,6 +2411,7 @@ namespace DOL.GS
 			this.BodyType = (ushort)template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = (eFlags)template.Flags;
+			CanStealth = IsStealthed;
 			this.MeleeDamageType = template.MeleeDamageType;
 			#endregion
 
@@ -3900,16 +3932,8 @@ namespace DOL.GS
 			StopMoving();
 			StopMovingOnPath();
 
-			if (Brain != null && Brain is IControlledBrain)
-			{
-				if ((Brain as IControlledBrain).AggressionState == eAggressionState.Passive)
+			if (Brain is IControlledBrain brain && brain.AggressionState == eAggressionState.Passive)
 					return;
-
-				GamePlayer owner = null;
-
-				if ((owner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
-					owner.Stealth(false);
-			}
 
 			SetLastMeleeAttackTick();
 			StartMeleeAttackTimer();
@@ -3941,7 +3965,6 @@ namespace DOL.GS
 			base.RangedAttackFinished();
 
 			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
-				Brain != null &&
 				Brain is IControlledBrain &&
 				(TargetObject is GamePlayer || (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)))
 			{
@@ -4821,6 +4844,254 @@ namespace DOL.GS
 
 		#endregion
 
+		#region Styles
+		/// <summary>
+		/// Styles for this NPC
+		/// </summary>
+		private IList m_styles = new List<Style>(0);
+		public IList Styles
+		{
+			get { return m_styles; }
+			set
+			{
+				m_styles = value;
+				this.SortStyles();
+			}
+		}
+
+		/// <summary>
+		/// Stealth styles for this NPC
+		/// </summary>
+		public List<Style> StylesStealth { get; protected set; } = null;
+
+		/// <summary>
+		/// Chain styles for this NPC
+		/// </summary>
+		public List<Style> StylesChain { get; protected set; } = null;
+
+		/// <summary>
+		/// Defensive styles for this NPC
+		/// </summary>
+		public List<Style> StylesDefensive { get; protected set; } = null;
+
+		/// <summary>
+		/// Back positional styles for this NPC
+		/// </summary>
+		public List<Style> StylesBack { get; protected set; } = null;
+
+		/// <summary>
+		/// Side positional styles for this NPC
+		/// </summary>
+		public List<Style> StylesSide { get; protected set; } = null;
+
+		/// <summary>
+		/// Front positional styles for this NPC
+		/// </summary>
+		public List<Style> StylesFront { get; protected set; } = null;
+
+		/// <summary>
+		/// Anytime styles for this NPC
+		/// </summary>
+		public List<Style> StylesAnytime { get; protected set; } = null;
+
+		/// <summary>
+		/// Sorts styles by type for more efficient style selection later
+		/// </summary>
+		public virtual void SortStyles()
+		{
+			if (StylesStealth != null)
+				StylesStealth.Clear();
+
+			if (StylesChain != null)
+				StylesChain.Clear();
+
+			if (StylesDefensive != null)
+				StylesDefensive.Clear();
+
+			if (StylesBack != null)
+				StylesBack.Clear();
+
+			if (StylesSide != null)
+				StylesSide.Clear();
+
+			if (StylesFront != null)
+				StylesFront.Clear();
+
+			if (StylesAnytime != null)
+				StylesAnytime.Clear();
+
+			if (m_styles == null)
+				return;
+
+			foreach (Style s in m_styles)
+			{
+				if (s == null)
+				{
+					if (log.IsWarnEnabled)
+					{
+						String sError = $"GameNPC.SortStyles(): NULL style for NPC named {Name}";
+						if (m_InternalID != null)
+							sError += $", InternalID {this.m_InternalID}";
+						if (m_npcTemplate != null)
+							sError += $", NPCTemplateID {m_npcTemplate.TemplateId}";
+						log.Warn(sError);
+					}
+					continue; // Keep sorting, as a later style may not be null
+				}// if (s == null)
+
+				if (s.StealthRequirement)
+				{
+					if (StylesStealth == null)
+						StylesStealth = new List<Style>(1);
+					StylesStealth.Add(s);
+				}
+
+				switch (s.OpeningRequirementType)
+				{
+					case Style.eOpening.Defensive:
+						if (StylesDefensive == null)
+							StylesDefensive = new List<Style>(1);
+						StylesDefensive.Add(s);
+						break;
+					case Style.eOpening.Positional:
+						switch ((Style.eOpeningPosition)s.OpeningRequirementValue)
+						{
+							case Style.eOpeningPosition.Back:
+								if (StylesBack == null)
+									StylesBack = new List<Style>(1);
+								StylesBack.Add(s);
+								break;
+							case Style.eOpeningPosition.Side:
+								if (StylesSide == null)
+									StylesSide = new List<Style>(1);
+								StylesSide.Add(s);
+								break;
+							case Style.eOpeningPosition.Front:
+								if (StylesFront == null)
+									StylesFront = new List<Style>(1);
+								StylesFront.Add(s);
+								break;
+							default:
+								log.Warn($"GameNPC.SortStyles(): Invalid OpeningRequirementValue for positional style {s.Name }, ID {s.ID}, ClassId {s.ClassID}");
+								break;
+						}
+						break;
+					default:
+						if (s.OpeningRequirementValue > 0)
+						{
+							if (StylesChain == null)
+								StylesChain = new List<Style>(1);
+							StylesChain.Add(s);
+						}
+						else
+						{
+							if (StylesAnytime == null)
+								StylesAnytime = new List<Style>(1);
+							StylesAnytime.Add(s);
+						}
+						break;
+				}// switch (s.OpeningRequirementType)
+			}// foreach
+		}// SortStyles()
+
+		/// <summary>
+		/// Can we use this style without spamming a stun style?
+		/// </summary>
+		/// <param name="style">The style to check.</param>
+		/// <returns>True if we should use the style, false if it would be spamming a stun effect.</returns>
+		protected bool CheckStyleStun(Style style)
+		{
+			if (TargetObject is GameLiving living && style.Procs.Count > 0)
+				foreach (Tuple<Spell, int, int> t in style.Procs)
+					if (t != null && t.Item1 is Spell spell
+						&& spell.SpellType.ToUpper() == "STYLESTUN" && living.HasEffect(t.Item1))
+							return false;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Picks a style, prioritizing reactives an	d chains over positionals and anytimes
+		/// </summary>
+		/// <returns>Selected style</returns>
+		protected override Style GetStyleToUse()
+		{
+			if (m_styles == null || m_styles.Count < 1 || TargetObject == null)
+				return null;
+
+			if (StylesStealth != null && StylesStealth.Count > 0 && IsStealthed)
+				foreach (Style s in StylesStealth)
+					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+						return s;
+
+			// Chain and defensive styles skip the GAMENPC_CHANCES_TO_STYLE,
+			//	or they almost never happen e.g. NPC blocks 10% of the time,
+			//	default 20% style chance means the defensive style only happens
+			//	2% of the time, and a chain from it only happens 0.4% of the time.
+			if (StylesChain != null && StylesChain.Count > 0)
+				foreach (Style s in StylesChain)
+					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+						return s;
+
+			if (StylesDefensive != null && StylesDefensive.Count > 0)
+				foreach (Style s in StylesDefensive)
+					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon)
+						&& CheckStyleStun(s)) // Make sure we don't spam stun styles like Brutalize
+						return s;
+
+			if (Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE))
+			{
+				// Check positional styles
+				// Picking random styles allows mobs to use multiple styles from the same position
+				//	e.g. a mob with both Pincer and Ice Storm side styles will use both of them.
+				if (StylesBack != null && StylesBack.Count > 0)
+				{
+					Style s = StylesBack[Util.Random(0, StylesBack.Count - 1)];
+					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+						return s;
+				}
+
+				if (StylesSide != null && StylesSide.Count > 0)
+				{
+					Style s = StylesSide[Util.Random(0, StylesSide.Count - 1)];
+					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+						return s;
+				}
+
+				if (StylesFront != null && StylesFront.Count > 0)
+				{
+					Style s = StylesFront[Util.Random(0, StylesFront.Count - 1)];
+					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+						return s;
+				}
+
+				// Pick a random anytime style
+				if (StylesAnytime != null && StylesAnytime.Count > 0)
+					return StylesAnytime[Util.Random(0, StylesAnytime.Count - 1)];
+			}
+
+			return null;
+		} // GetStyleToUse()
+		#endregion
+
+		/// <summary>
+		/// The Abilities for this NPC
+		/// </summary>
+		public Dictionary<string, Ability> Abilities
+		{
+			get
+			{
+				Dictionary<string, Ability> tmp = new Dictionary<string, Ability>();
+
+				lock (m_lockAbilities)
+				{
+					tmp = new Dictionary<string, Ability>(m_abilities);
+				}
+
+				return tmp;
+			}
+		}
+
 		#region Spell
 		private List<Spell> m_spells = new List<Spell>(0);
 		/// <summary>
@@ -5004,234 +5275,6 @@ namespace DOL.GS
 					}
 				}
 			} // foreach
-		}
-		#endregion
-
-		#region Styles
-		/// <summary>
-		/// Styles for this NPC
-		/// </summary>
-		private IList m_styles = new List<Style>(0);
-		public IList Styles
-		{
-			get { return m_styles; }
-			set
-			{
-				m_styles = value;
-				this.SortStyles();
-			}
-		}
-
-		/// <summary>
-		/// Chain styles for this NPC
-		/// </summary>
-		public List<Style> StylesChain { get; protected set; } = null;
-
-		/// <summary>
-		/// Defensive styles for this NPC
-		/// </summary>
-		public List<Style> StylesDefensive { get; protected set; } = null;
-
-		/// <summary>
-		/// Back positional styles for this NPC
-		/// </summary>
-		public List<Style> StylesBack { get; protected set; } = null;
-
-		/// <summary>
-		/// Side positional styles for this NPC
-		/// </summary>
-		public List<Style> StylesSide { get; protected set; } = null;
-
-		/// <summary>
-		/// Front positional styles for this NPC
-		/// </summary>
-		public List<Style> StylesFront { get; protected set; } = null;
-
-		/// <summary>
-		/// Anytime styles for this NPC
-		/// </summary>
-		public List<Style> StylesAnytime { get; protected set; } = null;
-
-		/// <summary>
-		/// Sorts styles by type for more efficient style selection later
-		/// </summary>
-		public virtual void SortStyles()
-		{
-			if (StylesChain != null)
-				StylesChain.Clear();
-
-			if (StylesDefensive != null)
-				StylesDefensive.Clear();
-
-			if (StylesBack != null)
-				StylesBack.Clear();
-
-			if (StylesSide != null)
-				StylesSide.Clear();
-
-			if (StylesFront != null)
-				StylesFront.Clear();
-
-			if (StylesAnytime != null)
-				StylesAnytime.Clear();
-
-			if (m_styles == null)
-				return;
-
-			foreach (Style s in m_styles)
-			{
-				if (s == null)
-				{
-					if (log.IsWarnEnabled)
-					{
-						String sError = $"GameNPC.SortStyles(): NULL style for NPC named {Name}";
-						if (m_InternalID != null)
-							sError += $", InternalID {this.m_InternalID}";
-						if (m_npcTemplate != null)
-							sError += $", NPCTemplateID {m_npcTemplate.TemplateId}";
-						log.Warn(sError);
-					}
-					continue; // Keep sorting, as a later style may not be null
-				}// if (s == null)
-
-				switch (s.OpeningRequirementType)
-				{
-					case Style.eOpening.Defensive:
-						if (StylesDefensive == null)
-							StylesDefensive = new List<Style>(1);
-						StylesDefensive.Add(s);
-						break;
-					case Style.eOpening.Positional:
-						switch ((Style.eOpeningPosition)s.OpeningRequirementValue)
-						{
-							case Style.eOpeningPosition.Back:
-								if (StylesBack == null)
-									StylesBack = new List<Style>(1);
-								StylesBack.Add(s);
-								break;
-							case Style.eOpeningPosition.Side:
-								if (StylesSide == null)
-									StylesSide = new List<Style>(1);
-								StylesSide.Add(s);
-								break;
-							case Style.eOpeningPosition.Front:
-								if (StylesFront == null)
-									StylesFront = new List<Style>(1);
-								StylesFront.Add(s);
-								break;
-							default:
-								log.Warn($"GameNPC.SortStyles(): Invalid OpeningRequirementValue for positional style {s.Name }, ID {s.ID}, ClassId {s.ClassID}");
-								break;
-						}
-						break;
-					default:
-						if (s.OpeningRequirementValue > 0)
-						{
-							if (StylesChain == null)
-								StylesChain = new List<Style>(1);
-							StylesChain.Add(s);
-						}
-						else
-						{
-							if (StylesAnytime == null)
-								StylesAnytime = new List<Style>(1);
-							StylesAnytime.Add(s);
-						}
-						break;
-				}// switch (s.OpeningRequirementType)
-			}// foreach
-		}// SortStyles()
-
-		/// <summary>
-		/// Can we use this style without spamming a stun style?
-		/// </summary>
-		/// <param name="style">The style to check.</param>
-		/// <returns>True if we should use the style, false if it would be spamming a stun effect.</returns>
-		protected bool CheckStyleStun(Style style)
-		{
-			if (TargetObject is GameLiving living && style.Procs.Count > 0)
-				foreach (Tuple<Spell, int, int> t in style.Procs)
-					if (t != null && t.Item1 is Spell spell
-						&& spell.SpellType.ToUpper() == "STYLESTUN" && living.HasEffect(t.Item1))
-							return false;
-
-			return true;
-		}
-
-		/// <summary>
-		/// Picks a style, prioritizing reactives an	d chains over positionals and anytimes
-		/// </summary>
-		/// <returns>Selected style</returns>
-		protected override Style GetStyleToUse()
-		{
-			if (m_styles == null || m_styles.Count < 1 || TargetObject == null)
-				return null;
-
-			// Chain and defensive styles skip the GAMENPC_CHANCES_TO_STYLE,
-			//	or they almost never happen e.g. NPC blocks 10% of the time,
-			//	default 20% style chance means the defensive style only happens
-			//	2% of the time, and a chain from it only happens 0.4% of the time.
-			if (StylesChain != null && StylesChain.Count > 0)
-				foreach (Style s in StylesChain)
-					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
-						return s;
-
-			if (StylesDefensive != null && StylesDefensive.Count > 0)
-				foreach (Style s in StylesDefensive)
-					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon)
-						&& CheckStyleStun(s)) // Make sure we don't spam stun styles like Brutalize
-						return s;
-
-			if (Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE))
-			{
-				// Check positional styles
-				// Picking random styles allows mobs to use multiple styles from the same position
-				//	e.g. a mob with both Pincer and Ice Storm side styles will use both of them.
-				if (StylesBack != null && StylesBack.Count > 0)
-				{
-					Style s = StylesBack[Util.Random(0, StylesBack.Count - 1)];
-					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
-						return s;
-				}
-
-				if (StylesSide != null && StylesSide.Count > 0)
-				{
-					Style s = StylesSide[Util.Random(0, StylesSide.Count - 1)];
-					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
-						return s;
-				}
-
-				if (StylesFront != null && StylesFront.Count > 0)
-				{
-					Style s = StylesFront[Util.Random(0, StylesFront.Count - 1)];
-					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
-						return s;
-				}
-
-				// Pick a random anytime style
-				if (StylesAnytime != null && StylesAnytime.Count > 0)
-					return StylesAnytime[Util.Random(0, StylesAnytime.Count - 1)];
-			}
-
-			return null;
-		} // GetStyleToUse()
-
-		/// <summary>
-		/// The Abilities for this NPC
-		/// </summary>
-		public Dictionary<string, Ability> Abilities
-		{
-			get
-			{
-				Dictionary<string, Ability> tmp = new Dictionary<string, Ability>();
-
-				lock (m_lockAbilities)
-				{
-					tmp = new Dictionary<string, Ability>(m_abilities);
-				}
-
-				return tmp;
-			}
 		}
 
 		private SpellAction m_spellaction = null;

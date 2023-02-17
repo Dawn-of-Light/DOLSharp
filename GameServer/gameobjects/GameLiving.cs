@@ -1907,10 +1907,9 @@ namespace DOL.GS
 
 							// blocked for another player
 							if (ad.Target is GamePlayer)
-							{
 								((GamePlayer)ad.Target).Out.SendMessage(string.Format(LanguageMgr.GetTranslation(((GamePlayer)ad.Target).Client.Account.Language, "GameLiving.AttackData.YouBlock"), ad.Attacker.GetName(0, false), target.GetName(0, false)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-								((GamePlayer)ad.Target).Stealth(false);
-							}
+
+							ad.Target.Stealth(false);
 						}
 						else if (ad.Target is GamePlayer)
 						{
@@ -2033,9 +2032,8 @@ namespace DOL.GS
 				{
 					GameLiving owner_living = brain.GetLivingOwner();
 					excludes.Add(owner_living);
-					if (owner_living != null && owner_living is GamePlayer && owner_living.ControlledBrain != null && ad.Target == owner_living.ControlledBrain.Body)
+					if (owner_living is GamePlayer owner && ad.Target == owner.ControlledBody)
 					{
-						GamePlayer owner = owner_living as GamePlayer;
 						switch (ad.AttackResult)
 						{
 							case eAttackResult.Blocked:
@@ -2906,8 +2904,7 @@ namespace DOL.GS
 				}
 
 				// unstealth before attack animation
-				if (owner is GamePlayer)
-					((GamePlayer)owner).Stealth(false);
+				owner.Stealth(false);
 
 				//Show the animation
 				if (mainHandAD.AttackResult != eAttackResult.HitUnstyled && mainHandAD.AttackResult != eAttackResult.HitStyle && leftHandAD != null)
@@ -3724,8 +3721,7 @@ namespace DOL.GS
 					if (this is GamePlayer) ((GamePlayer)this).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)this).Client.Account.Language, "GameLiving.CalculateEnemyAttackResult.BlowAbsorbed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 					if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)ad.Attacker).Client.Account.Language, "GameLiving.CalculateEnemyAttackResult.StrikeAbsorbed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 					bladeturn.Cancel(false);
-					if (this is GamePlayer)
-						((GamePlayer)this).Stealth(false);
+					Stealth(false);
 					return eAttackResult.Missed;
 				}
 			}
@@ -4121,6 +4117,8 @@ namespace DOL.GS
 			}
 
 			Health -= damageAmount + criticalAmount;
+
+			Stealth(false);
 
 			if (!IsAlive)
 			{
@@ -5918,6 +5916,13 @@ namespace DOL.GS
 
 			return base.MoveTo(regionID, x, y, z, heading);
 		}
+		#endregion
+		#region Stealth
+		/// <summary>
+		/// Is this NPC able to stealth?
+		/// </summary>
+		public virtual bool CanStealth
+		{ get; set; }
 
 		/// <summary>
 		/// The stealth state of this living
@@ -5925,6 +5930,16 @@ namespace DOL.GS
 		public virtual bool IsStealthed
 		{
 			get { return false; }
+		}
+
+		/// <summary>
+		/// Set the NPC to stealth or unstealth
+		/// </summary>
+		/// <param name="goStealth">True to stealth, false to unstealth</param>
+		public virtual void Stealth(bool goStealth)
+		{
+			if (goStealth)
+				log.Warn($"Stealth(): {GetType().FullName} cannot be stealthed.  You probably need to override Stealth() for this class");
 		}
 
 		#endregion
@@ -6433,8 +6448,6 @@ namespace DOL.GS
 			return list;
 		}
 
-		#endregion Abilities
-
 		/// <summary>
 		/// Checks if living has ability to use items of this type
 		/// </summary>
@@ -6444,6 +6457,8 @@ namespace DOL.GS
 		{
 			return GameServer.ServerRules.CheckAbilityToUseItem(this, item);
 		}
+		#endregion
+		#region Skills
 
 		/// <summary>
 		/// Table of skills currently disabled
@@ -6555,7 +6570,7 @@ namespace DOL.GS
 					m_disabledSkills.Remove(key);
 			}
 		}
-
+		#endregion
 		#region Broadcasting utils
 
 		/// <summary>
@@ -6576,7 +6591,6 @@ namespace DOL.GS
 		}
 		
 		#endregion
-		
 		#region Region
 
 		/// <summary>
@@ -6870,6 +6884,19 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>
+		/// Get the controlled pet's body, or null if not present.  Always uses m_controlledBrain[0]
+		/// </summary>
+		public virtual GameLiving ControlledBody
+		{
+			get
+			{
+				if (m_controlledBrain != null && m_controlledBrain[0] != null && m_controlledBrain[0].Body is GameLiving body)
+					return body;
+				return null;
+			}
+		}
+
 		public virtual bool IsControlledNPC(GameNPC npc)
 		{
 			if (npc == null)
@@ -6965,6 +6992,8 @@ namespace DOL.GS
 			m_mana = 1;
 			m_endurance = 1;
 			m_maxEndurance = 1;
+
+			CanStealth = false;
 		}
 	}
 }

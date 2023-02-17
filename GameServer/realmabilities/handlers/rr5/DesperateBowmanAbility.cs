@@ -53,13 +53,6 @@ namespace DOL.GS.RealmAbilities
 			if (player != null)
 				player.Out.SendMessage("You hit " + target.Name + " for " + damage + " points of damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 
-			GamePlayer targetPlayer = target as GamePlayer;
-			if (targetPlayer != null)
-			{
-				if (targetPlayer.IsStealthed)
-					targetPlayer.Stealth(false);
-			}
-
 			AttackData ad = new AttackData();
 			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
 			ad.Attacker = caster;

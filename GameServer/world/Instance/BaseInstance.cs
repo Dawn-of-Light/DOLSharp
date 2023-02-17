@@ -526,11 +526,11 @@ namespace DOL.GS
 			{
 				if(alive)
 				{
-					return new List<GameNPC>(from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) && ((GameNPC)regionObjects).IsAlive select (GameNPC)regionObjects);
+					return new List<GameNPC>(from regionObjects in this.Objects where (regionObjects is GameNPC) && (!((GameNPC)regionObjects).IsPeaceful) && ((GameNPC)regionObjects).IsAlive select (GameNPC)regionObjects);
 				}
 				else
 				{
-					return new List<GameNPC>(from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) select (GameNPC)regionObjects);
+					return new List<GameNPC>(from regionObjects in this.Objects where (regionObjects is GameNPC) && (!((GameNPC)regionObjects).IsPeaceful) select (GameNPC)regionObjects);
 				}
 			}
 		}

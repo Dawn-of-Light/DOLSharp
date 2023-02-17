@@ -178,13 +178,6 @@ namespace DOL.GS.RealmAbilities
 				player.Out.SendMessage("You hit " + target.Name + " for " + damage + "(" + resist + ") points of damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 			}
 
-			GamePlayer targetPlayer = target as GamePlayer;
-			if (targetPlayer != null)
-			{
-				if (targetPlayer.IsStealthed)
-					targetPlayer.Stealth(false);
-			}
-
 			foreach (GamePlayer p in target.GetPlayersInRadius(false, WorldMgr.VISIBILITY_DISTANCE))
 			{
 				p.Out.SendSpellEffectAnimation(owner, target, 7026, 0, false, 1);
