@@ -15,27 +15,28 @@ namespace DOL.GS
             var dbClasses = DOLDB<DBCharacterClass>.SelectAllObjects().ToDictionary(c => c.ID, c => c);
             foreach (var classID in defaultClasses.Keys.ToList().Union(dbClasses.Keys))
             {
-                DBCharacterClass dbClass;
+                CharacterClass charClass;
                 if (dbClasses.TryGetValue(classID, out var databaseEntry))
                 {
-                    dbClass = databaseEntry;
+                    try
+                    {
+                        charClass = CharacterClass.Create(databaseEntry);
+                    }
+                    catch (Exception e)
+                    {
+                        log.Error($"CharacterClass with ID {classID} could not be loaded from database. Load default instead.:\n{e}");
+                        charClass = CharacterClass.Create(defaultClasses[classID]);
+                    }
                 }
                 else
                 {
-                    dbClass = defaultClasses[classID];
+                    var dbClass = defaultClasses[classID];
                     dbClass.AllowAdd = true;
                     GameServer.Database.AddObject(dbClass);
+                    charClass = CharacterClass.Create(dbClass);
                 }
 
-                try
-                {
-                    var charClass = CharacterClass.Create(dbClass);
-                    CharacterClass.AddOrReplace(charClass);
-                }
-                catch (Exception e)
-                {
-                    log.Error($"CharacterClass with ID {classID} could not be loaded:\n{e}");
-                }
+                CharacterClass.AddOrReplace(charClass);
             }
         }
 

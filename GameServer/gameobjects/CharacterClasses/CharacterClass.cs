@@ -74,10 +74,10 @@ namespace DOL.GS
             var raceIDs = dbCharClass.EligibleRaces
                 .Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => Convert.ToInt32(s));
-            foreach(var raceID in raceIDs)
+            foreach (var raceID in raceIDs)
             {
                 var race = PlayerRace.GetRace(raceID);
-                if(race.Equals(PlayerRace.Unknown)) log.Error($"CharacterClass with ID {charClass.ID} contains invalid EligibleRace {raceID}");
+                if (race.Equals(PlayerRace.Unknown)) log.Error($"CharacterClass with ID {charClass.ID} contains invalid EligibleRace {raceID}.");
                 else eligibleRaces.Add(race);
             }
             charClass.eligibleRaces = eligibleRaces;
