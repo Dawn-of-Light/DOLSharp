@@ -13,8 +13,6 @@ namespace DOL.GS
 
         private static Dictionary<int, CharacterClass> allClasses = new Dictionary<int, CharacterClass>();
 
-        private GamePlayer player;
-
         private string name;
         private string femaleName;
         private IEnumerable<PlayerRace> eligibleRaces;
@@ -115,13 +113,6 @@ namespace DOL.GS
             allClasses.TryGetValue(classID, out var characterClass);
             if (characterClass == null) return Unknown;
             return characterClass;
-        }
-
-        public static CharacterClass GetClass(GamePlayer player, int classID)
-        {
-            var charClass = GetClass(classID);
-            charClass.player = player;
-            return charClass;
         }
 
         public CharacterClass GetBaseClass()
