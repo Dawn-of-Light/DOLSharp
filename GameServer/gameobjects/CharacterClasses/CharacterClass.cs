@@ -35,8 +35,6 @@ namespace DOL.GS
         public ushort MaxPulsingSpells { get; private set; }
 
         public string BaseName => GetClass(baseClassID).name;
-        public string Profession
-            => LanguageMgr.TryTranslateOrDefault(player, ProfessionTranslationID, ProfessionTranslationID);
         public List<PlayerRace> EligibleRaces => eligibleRaces.ToList();
         public int AdjustedSpecPointsMultiplier => SpecPointsMultiplier;
 
@@ -93,6 +91,9 @@ namespace DOL.GS
             if (useFemaleName) return femaleName;
             else return name;
         }
+
+        public string GetProfessionTitle(GamePlayer player)
+            => LanguageMgr.TryTranslateOrDefault(player, ProfessionTranslationID, ProfessionTranslationID);
 
         public string GetTitle(GamePlayer player, int level)
         {

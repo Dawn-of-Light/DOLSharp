@@ -60,7 +60,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte) (player.MaxHealth >> 8)); // maxhealth high byte ?
 				pak.WritePascalString(player.Salutation); // class name
 				pak.WriteByte((byte) (player.MaxHealth & 0xFF)); // maxhealth low byte ?
-				pak.WritePascalString( /*"The "+*/player.CharacterClass.Profession); // Profession
+				pak.WritePascalString( /*"The "+*/player.CharacterClass.GetProfessionTitle(player)); // Profession
 				pak.WriteByte(0x00); //unk
 	            pak.WritePascalString(player.CharacterClass.GetTitle(player, player.Level)); // player level
 				//todo make function to calcule realm rank
