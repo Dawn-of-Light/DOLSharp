@@ -373,7 +373,7 @@ namespace DOL.GS.Quests.Albion
 						case "technique":
 							if(quest.Step == 5)
 							{
-								elvarIronhand.SayTo(player, "Thank you for your help, "+player.CharacterClass.Name+". Here's a bit of copper for your time. Keep your eyes open for a good source of horn in case the bone prototype doesn't work out.");
+								elvarIronhand.SayTo(player, "Thank you for your help, "+player.Salutation+". Here's a bit of copper for your time. Keep your eyes open for a good source of horn in case the bone prototype doesn't work out.");
 								quest.FinishQuest();
 							}
 							break;	

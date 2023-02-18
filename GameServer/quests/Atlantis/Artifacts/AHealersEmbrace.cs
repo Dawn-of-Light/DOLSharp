@@ -135,7 +135,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 						"it, but it is for you and you alone. Do not destroy it because you will never",
 						"have access to its full power again. Take care of it and it shall aid you in",
 						"the trials",
-						player.CharacterClass.Name);
+						player.Salutation);
 					scholar.TurnTo(player);
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 					FinishQuest();

@@ -46,7 +46,7 @@ namespace DOL.GS
 			String realm = GlobalConstants.RealmToName((eRealm)Realm);
 
 			SayTo(player, eChatLoc.CL_PopupWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, 
-				String.Format("{0}.Arbiter.Interact.Welcome", realm), player.CharacterClass.Name));
+				String.Format("{0}.Arbiter.Interact.Welcome", realm), player.Salutation));
 
             // TODO: This appears to be level-dependent. Get the proper message
             // for all the other cases (high enough level when starting the trials
@@ -75,7 +75,7 @@ namespace DOL.GS
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client.Account.Language,
-					String.Format("{0}.Arbiter.WhisperReceive.Text1", realm), player.CharacterClass.Name));
+					String.Format("{0}.Arbiter.WhisperReceive.Text1", realm), player.Salutation));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language,
@@ -99,7 +99,7 @@ namespace DOL.GS
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client.Account.Language,
-					String.Format("{0}.Arbiter.WhisperReceive.Text4", realm), player.CharacterClass.Name));
+					String.Format("{0}.Arbiter.WhisperReceive.Text4", realm), player.Salutation));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language,
@@ -115,7 +115,7 @@ namespace DOL.GS
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client.Account.Language,
-					String.Format("{0}.Arbiter.WhisperReceive.Text6", realm), player.CharacterClass.Name));
+					String.Format("{0}.Arbiter.WhisperReceive.Text6", realm), player.Salutation));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language,
@@ -123,7 +123,7 @@ namespace DOL.GS
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client.Account.Language,
-					String.Format("{0}.Arbiter.WhisperReceive.Text7", realm), player.CharacterClass.Name));
+					String.Format("{0}.Arbiter.WhisperReceive.Text7", realm), player.Salutation));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language,
@@ -131,7 +131,7 @@ namespace DOL.GS
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client.Account.Language,
-					String.Format("{0}.Arbiter.WhisperReceive.Text8", realm), player.CharacterClass.Name));
+					String.Format("{0}.Arbiter.WhisperReceive.Text8", realm), player.Salutation));
 				return false;
 			}
 			else if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language,
@@ -139,7 +139,7 @@ namespace DOL.GS
 			{
 				SayTo(player, eChatLoc.CL_PopupWindow,
 					LanguageMgr.GetTranslation(player.Client.Account.Language,
-					String.Format("{0}.Arbiter.WhisperReceive.Text9", realm), player.CharacterClass.Name));
+					String.Format("{0}.Arbiter.WhisperReceive.Text9", realm), player.Salutation));
 				return false;
 			}
 

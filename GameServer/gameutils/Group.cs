@@ -483,7 +483,7 @@ namespace DOL.GS
 							text.Append("<Leader> ");
 						}
 					}
-					text.Append("(" + plr.CharacterClass.Name + ")");
+					text.Append("(" + plr.Salutation + ")");
 					text.Append(plr.Name + " ");
 				}
 				return text.ToString();

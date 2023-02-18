@@ -297,7 +297,7 @@ namespace DOL.GS.Scripts
 
 					pi.Name = plr.Name;
 					pi.LastName = plr.LastName;
-					pi.Class = plr.CharacterClass.Name;
+					pi.Class = plr.Salutation;
 					pi.Race = plr.RaceName;
 					pi.Guild = plr.GuildName;
 					pi.Level = plr.Level;

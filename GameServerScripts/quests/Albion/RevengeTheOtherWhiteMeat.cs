@@ -253,7 +253,7 @@ namespace DOL.GS.Quests.Albion
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					farmerAsma.SayTo(player, "Greetings, "+player.CharacterClass.Name+".  You wouldn't believe how expensive it is to lease land here in the Camelot Hills area. Just the other day, I went to check out some fields, and the asking price is just too high.  Things were better in the Black [Mountains].");
+					farmerAsma.SayTo(player, "Greetings, "+player.Salutation+".  You wouldn't believe how expensive it is to lease land here in the Camelot Hills area. Just the other day, I went to check out some fields, and the asking price is just too high.  Things were better in the Black [Mountains].");
 					return;
 				}
 				else

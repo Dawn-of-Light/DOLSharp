@@ -367,7 +367,7 @@ namespace DOL.GS.Scripts
 				//Class
 				m_js.Append("document.write(\"<td bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", plr.CharacterClass.Name);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.Salutation);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);

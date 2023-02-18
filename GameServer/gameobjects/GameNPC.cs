@@ -5593,7 +5593,7 @@ namespace DOL.GS
 
 			// issuing text
 			if (living is GamePlayer)
-				text = text.Replace("{class}", (living as GamePlayer).CharacterClass.Name).Replace("{race}", (living as GamePlayer).RaceName);
+				text = text.Replace("{class}", (living as GamePlayer).Salutation).Replace("{race}", (living as GamePlayer).RaceName);
 			if (living is GameNPC)
 				text = text.Replace("{class}", "NPC").Replace("{race}", "NPC");
 

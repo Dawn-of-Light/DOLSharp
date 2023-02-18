@@ -464,7 +464,7 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			get
 			{
-				String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.Conclusion.Text1", QuestPlayer.CharacterClass.Name));
+				String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Hib.SearchForKnowledge.Conclusion.Text1", QuestPlayer.Salutation));
 				return text;
 			}
 		}

@@ -467,7 +467,7 @@ namespace DOL.GS.Spells
 
             else
             {
-                player.Out.SendMessage("" + player.CharacterClass.Name + "'s cant Summon Light!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage("" + player.Salutation + "'s cant Summon Light!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
         }

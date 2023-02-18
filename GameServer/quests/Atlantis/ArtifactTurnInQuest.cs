@@ -387,7 +387,7 @@ namespace DOL.GS.Quests.Atlantis
 					if (GiveItem(player, template))
 					{
 						FinishQuest();
-						scholar.SayTo(player, eChatLoc.CL_PopupWindow, string.Format("Here is your {0}, {1}. May it serve you well!", ArtifactID, player.CharacterClass.Name));
+						scholar.SayTo(player, eChatLoc.CL_PopupWindow, string.Format("Here is your {0}, {1}. May it serve you well!", ArtifactID, player.Salutation));
 						return true;
 					}
 

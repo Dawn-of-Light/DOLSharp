@@ -793,7 +793,7 @@ namespace DOL.GS.Quests.Midgard
 					//Player is not doing the quest...
 					if (quest.Step == 3 || quest.Step == 2)
 					{
-                        idora.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToIdora.Talk1", player.CharacterClass.Name));
+                        idora.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.TalkToIdora.Talk1", player.Salutation));
                     }
 					else if (quest.Step == 4)
 					{

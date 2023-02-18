@@ -338,7 +338,7 @@ namespace DOL.GS.Quests.Albion
                         case "some time":
                             if (quest.Step == 1)
                             {
-                                brotherMaynard.SayTo(player, "To find the boulderlings, travel east to Prydwen Bridge and cross it. The boulderlings will be located on a hill just to the east of the road. Good luck, " + player.CharacterClass.Name + ".");
+                                brotherMaynard.SayTo(player, "To find the boulderlings, travel east to Prydwen Bridge and cross it. The boulderlings will be located on a hill just to the east of the road. Good luck, " + player.Salutation + ".");
                                 quest.Step = 2;
                             }
                             break;

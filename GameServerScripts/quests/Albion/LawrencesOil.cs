@@ -331,7 +331,7 @@ namespace DOL.GS.Quests.Albion
 				{
 					if (quest.Step == 4)
 					{
-						brotherLawrence.SayTo(player, "Welcome back, "+player.CharacterClass.Name+". I've almost finished making my preparations for the demonstration. May I have the flask of oil?");
+						brotherLawrence.SayTo(player, "Welcome back, "+player.Salutation+". I've almost finished making my preparations for the demonstration. May I have the flask of oil?");
 					}
 					return;
 				}

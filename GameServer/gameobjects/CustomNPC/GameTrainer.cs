@@ -386,7 +386,7 @@ namespace DOL.GS
 
 				if (messageToPlayer != "")
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Says", this.Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Upgraded", player.CharacterClass.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Upgraded", player.Salutation), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				player.RefreshSpecDependantSkills(true);
 				player.StartPowerRegeneration();

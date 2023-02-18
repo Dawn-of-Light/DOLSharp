@@ -350,7 +350,7 @@ namespace DOL.GS.Quests.Albion
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					sirJerem.SayTo(player, "Good day, "+player.CharacterClass.Name+".  I'm sorry that I can't spare much time for idle chatter, but I've got a number of things on my mind right now.  Keeping track of a keep full of squires certainly isn't easy [work].");
+					sirJerem.SayTo(player, "Good day, "+player.Salutation+".  I'm sorry that I can't spare much time for idle chatter, but I've got a number of things on my mind right now.  Keeping track of a keep full of squires certainly isn't easy [work].");
 					return;
 				}
 				else

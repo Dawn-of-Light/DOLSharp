@@ -458,7 +458,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			get
 			{
-				String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.Conclusion.Text1", QuestPlayer.CharacterClass.Name));
+				String text = String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.Conclusion.Text1", QuestPlayer.Salutation));
 				text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.ANewHeroesWelcome.Conclusion.Text2");
 				return text;
 			}

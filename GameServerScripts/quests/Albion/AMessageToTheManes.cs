@@ -261,7 +261,7 @@ namespace DOL.GS.Quests.Albion
                 else
                 {
                     //Player hasn't the quest:
-                    sirJerem.SayTo(player, "Hello again, " + player.CharacterClass.Name + ". Pardon me for not taking note of your presence earlier, but I've been considering how best to approach a new problem. Albion has no lack of enemies, and we must be vigilant in our defence against [each].");
+                    sirJerem.SayTo(player, "Hello again, " + player.Salutation + ". Pardon me for not taking note of your presence earlier, but I've been considering how best to approach a new problem. Albion has no lack of enemies, and we must be vigilant in our defence against [each].");
                     return;
                 }
             }

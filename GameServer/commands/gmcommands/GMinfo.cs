@@ -332,7 +332,7 @@ namespace DOL.GS.Commands
 					info.Add("  - Lastname : " + target.LastName);
 					info.Add("  - Realm : " + GlobalConstants.RealmToName(target.Realm));
 					info.Add("  - Level : " + target.Level);
-					info.Add("  - Class : " + target.CharacterClass.Name);
+					info.Add("  - Class : " + target.Salutation);
 					info.Add("  - Guild : " + target.GuildName);
 					info.Add(" ");
 					info.Add("  - Account Name : " + target.AccountName);

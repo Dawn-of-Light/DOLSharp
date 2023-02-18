@@ -239,7 +239,7 @@ namespace DOL.GS.Commands
 			if (player.ClassNameFlag)
 			{
 				result.Append(" ");
-				result.Append(LanguageMgr.GetTranslation(source, "PlayerClass.Name." + player.CharacterClass.Name));
+				result.Append(LanguageMgr.GetTranslation(source, "PlayerClass.Name." + player.Salutation));
 			}
 			else if (player.CharacterClass != null)
 			{
@@ -388,7 +388,7 @@ namespace DOL.GS.Commands
 					return true;
 				if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 					return false;
-				if (player.CharacterClass.Name.ToLower().StartsWith(m_filterString))
+				if (player.Salutation.ToLower().StartsWith(m_filterString))
 					return true;
 				if (player.CurrentZone != null && player.CurrentZone.Description.ToLower().Contains(m_filterString))
 					return true;

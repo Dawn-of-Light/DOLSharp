@@ -278,7 +278,7 @@ namespace DOL.GS.Quests.Albion
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					yettaFletcher.SayTo(player, "Greetings to you, young "+player.CharacterClass.Name+". I was wondering if I might have a few minutes of your time. I have [a matter] I need some help with. Unfortunately I have been unable to find anyone to help me so far.");
+					yettaFletcher.SayTo(player, "Greetings to you, young "+player.Salutation+". I was wondering if I might have a few minutes of your time. I have [a matter] I need some help with. Unfortunately I have been unable to find anyone to help me so far.");
 					return;
 				}
 				else

@@ -34,7 +34,6 @@ namespace DOL.GS
         public string ProfessionTranslationID { get; private set; } = "";
         public ushort MaxPulsingSpells { get; private set; }
 
-        public string Name => GetSalutation(player.Gender);
         public string BaseName => GetClass(baseClassID).name;
         public string Profession
             => LanguageMgr.TryTranslateOrDefault(player, ProfessionTranslationID, ProfessionTranslationID);
