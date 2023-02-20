@@ -37,15 +37,8 @@ namespace DOL.GS.PacketHandler
 	[PacketLib(173, GameClient.eClientVersion.Version173)]
 	public class PacketLib173 : PacketLib172
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// Constructs a new PacketLib for Version 1.73 clients
-		/// </summary>
-		/// <param name="client">the gameclient this lib is associated with</param>
 		public PacketLib173(GameClient client)
 			: base(client)
 		{
@@ -55,69 +48,24 @@ namespace DOL.GS.PacketHandler
         {
         	using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect)))
         	{
-
 	            pak.WriteShort((ushort)player.ObjectID);
 	            pak.WriteByte((byte)3);
-	
-	            SortedList sortList = new SortedList();
-	            sortList.Add(1, null);
-	            sortList.Add(2, null);
-	            sortList.Add(3, null);
-	            sortList.Add(4, null);
-	            sortList.Add(5, null);
+
 	            lock (player.EffectList)
 	            {
 	                foreach (IGameEffect fx in player.EffectList)
 	                {
-	                    if (fx is GameSpellEffect)
+                        var effect = fx as GameSpellEffect;
+                        var isActiveChamberSpell = effect != null && !effect.IsExpired 
+                            && effect.SpellHandler.Spell != null && (effect.SpellHandler is ChamberSpellHandler);
+	                    if (isActiveChamberSpell)
 	                    {
-	                        GameSpellEffect effect = (GameSpellEffect)fx;
-	                        if (effect.SpellHandler.Spell != null && (effect.SpellHandler.Spell.SpellType == "Chamber"))
-	                        {
-	                            ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
-	                            sortList[chamber.EffectSlot] = effect;
-	                        }
+                            var chamber = (ChamberSpellHandler)effect.SpellHandler;
+                            pak.WriteByte(GetChamberModelID(chamber));
 	                    }
 	                }
-	                foreach (GameSpellEffect effect in sortList.Values)
-	                {
-	                    if (effect == null)
-	                    {
-	                        pak.WriteByte((byte)0);
-	                    }
-	                    else
-	                    {
-	                        ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
-	                        if (chamber.PrimarySpell != null && chamber.SecondarySpell == null)
-	                        {
-	                            pak.WriteByte((byte)3);
-	                        }
-	                        else if (chamber.PrimarySpell != null && chamber.SecondarySpell != null)
-	                        {
-	                            if (chamber.SecondarySpell.SpellType == "Lifedrain")
-	                                pak.WriteByte(0x11);
-	                            else if (chamber.SecondarySpell.SpellType.IndexOf("SpeedDecrease") != -1)
-	                                pak.WriteByte(0x33);
-	                            else if (chamber.SecondarySpell.SpellType == "PowerRegenBuff")
-	                                pak.WriteByte(0x77);
-	                            else if (chamber.SecondarySpell.SpellType == "DirectDamage")
-	                                pak.WriteByte(0x66);
-	                            else if (chamber.SecondarySpell.SpellType == "SpreadHeal")
-	                                pak.WriteByte(0x55);
-	                            else if (chamber.SecondarySpell.SpellType == "Nearsight")
-	                                pak.WriteByte(0x44);
-	                            else if (chamber.SecondarySpell.SpellType == "DamageOverTime")
-	                                pak.WriteByte(0x22);
-	                        }
-	                    }
-	                }
+                    if(pak.Length < 8) pak.Fill(0x00,8 - (int)pak.Length);
 	            }
-	            //pak.WriteByte(0x11);
-	            //pak.WriteByte(0x22);
-	            //pak.WriteByte(0x33);
-	            //pak.WriteByte(0x44);
-	            //pak.WriteByte(0x55);
-	            pak.WriteInt(0);
 	
 	            foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 	            {
@@ -127,6 +75,21 @@ namespace DOL.GS.PacketHandler
 	
 	            SendTCP(pak);
         	}
+        }
+
+        private byte GetChamberModelID(ChamberSpellHandler chamberSpell)
+        {
+            if (chamberSpell.PrimarySpell == null) return 0x00;
+            if (chamberSpell.SecondarySpell == null) return  0x01;
+
+            if (chamberSpell.SecondarySpell.SpellType == "Lifedrain") return 0x11;
+            else if (chamberSpell.SecondarySpell.SpellType == "DamageOverTime") return 0x21;
+            else if (chamberSpell.SecondarySpell.SpellType.Contains("SpeedDecrease")) return 0x31;
+            else if (chamberSpell.SecondarySpell.SpellType == "Nearsight") return 0x41;
+            else if (chamberSpell.SecondarySpell.SpellType == "SpreadHeal") return 0x51;
+            else if (chamberSpell.SecondarySpell.SpellType == "DirectDamage") return 0x61;
+            else if (chamberSpell.SecondarySpell.SpellType.Contains("Buff")) return 0x71;
+            else return 0x01;
         }
 
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
