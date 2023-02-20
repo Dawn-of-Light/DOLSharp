@@ -32,7 +32,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.description="Dawn of Light (DOL) - Dark Age of Camelot (DAOC) Server Emulator" \
       org.label-schema.usage="https://github.com/Dawn-of-Light/DOLSharp/blob/master/.github/Docker/README.md" \
       org.label-schema.schema-version="2.0.0-rc1" \
-      maintainer="Leodagan <leodagan@freyad.net>"
+      maintainer="Leodagan <leodagan@durron.net>"
 
 RUN set -ex; \
     # Get Tmux and procps
@@ -87,7 +87,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.description="Dawn of Light (DOL) Sandbox - Dark Age of Camelot (DAOC) Server Emulator" \
       org.label-schema.usage="https://github.com/Dawn-of-Light/DOLSharp/blob/master/.github/Docker/README.md" \
       org.label-schema.schema-version="2.0.0-rc1" \
-      maintainer="Leodagan <leodagan@freyad.net>"
+      maintainer="Leodagan <leodagan@durron.net>"
 
 RUN set -ex; \
     mkdir -p /dawn-of-light/database/sandbox
