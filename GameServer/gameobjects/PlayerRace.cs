@@ -42,9 +42,10 @@ namespace DOL.GS.Realm
 			FemaleModel = femaleModel;
         }
 
+        public static PlayerRace Unknown { get; } = new PlayerRace();
+
 		private static Dictionary<eRace, PlayerRace> races = new Dictionary<eRace, PlayerRace>()
 		{
-			{ eRace.Unknown, new PlayerRace() },
 			{ eRace.Briton, new PlayerRace( eRace.Briton, eRealm.Albion, eDAoCExpansion.Classic, eLivingModel.BritonMale, eLivingModel.BritonFemale) } ,
 			{ eRace.Highlander, new PlayerRace(eRace.Highlander, eRealm.Albion, eDAoCExpansion.Classic, eLivingModel.HighlanderMale, eLivingModel.HighlanderFemale) } ,
 			{ eRace.Saracen, new PlayerRace(eRace.Saracen, eRealm.Albion, eDAoCExpansion.Classic, eLivingModel.SaracenMale, eLivingModel.SaracenFemale) } ,
@@ -68,22 +69,12 @@ namespace DOL.GS.Realm
 			{ eRace.Graoch, new PlayerRace(eRace.Graoch, eRealm.Hibernia, eDAoCExpansion.LabyrinthOfTheMinotaur, eLivingModel.MinotaurMaleHib, eLivingModel.None) } ,
 		};
 
-		/// <summary>
-		/// Try to retrieve a PlayerRace based on eRace
-		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="playerRace"></param>
-		/// <returns></returns>
-		public static bool TryGetRace(eRace key, out PlayerRace playerRace)
-		{
-			return races.TryGetValue(key, out playerRace);
-		}
-
-		public static PlayerRace GetRace(int id)
-		{
-			races.TryGetValue((eRace)id,out var race);
-			return race;
-		}
+        public static PlayerRace GetRace(int id)
+        {
+            races.TryGetValue((eRace)id, out var race);
+            if (race == null) return Unknown;
+            return race;
+        }
 
 		public eLivingModel GetModel(eGender gender)
         {

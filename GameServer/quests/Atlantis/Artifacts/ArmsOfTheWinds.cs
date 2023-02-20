@@ -149,11 +149,11 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 						"Atlanteans. I am only sad that I shall never get to meet the people that created",
 						"wonderful objects like the Arms of the Winds. The magic in them has been",
 						"reawakened for you,",
-						player.CharacterClass.Name,
+						player.Salutation,
 						"You must take care of these sleeves because I cannot do it again. If you lose them",
 						"or they are  destroyed, the Arms of the Winds will be forever lost to you. I hope",
 						"they serve you well,",
-						player.CharacterClass.Name);
+						player.Salutation);
 					scholar.TurnTo(player);
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 					FinishQuest();

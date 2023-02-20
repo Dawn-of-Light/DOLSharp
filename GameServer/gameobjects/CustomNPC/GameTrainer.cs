@@ -386,7 +386,7 @@ namespace DOL.GS
 
 				if (messageToPlayer != "")
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Says", this.Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Upgraded", player.CharacterClass.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Upgraded", player.Salutation), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				player.RefreshSpecDependantSkills(true);
 				player.StartPowerRegeneration();
@@ -405,7 +405,7 @@ namespace DOL.GS
 				}
 
 				// after gifts
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Accepted", player.CharacterClass.Profession), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Accepted", player.CharacterClass.GetProfessionTitle(player)), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				Notify(GameTrainerEvent.PlayerPromoted, this, new PlayerPromotedEventArgs(player, oldClass));
 

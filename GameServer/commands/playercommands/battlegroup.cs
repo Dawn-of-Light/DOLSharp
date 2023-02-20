@@ -309,7 +309,7 @@ namespace DOL.GS.Commands
                        {
                            text.Append(" <Leader>");
                        }
-                       text.Append("(" + nongrouped.CharacterClass.Name + ")");
+                       text.Append("(" + nongrouped.Salutation + ")");
                        text.Append(nongrouped.Name + '\n');
                        client.Out.SendMessage(text.ToString(), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
                    }

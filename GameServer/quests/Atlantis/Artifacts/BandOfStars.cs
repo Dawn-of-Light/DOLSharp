@@ -133,13 +133,13 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 					GiveItem(scholar, player, ArtifactID, versions[";;"]);
 					String reply = String.Format("Do you see how the stars in the {0} {1}? {2} {3} {4} {5} {6} {7}.",
 						"band have begun to glow, ",
-						player.CharacterClass.Name,
+						player.Salutation,
 						"That is because the magic of the bracelet is active again. It shall flow through",
 						"the Band and into you, then back into the Band. Because of this flow, you may not",
 						"give the bracelet to anyone else. Destroying the Bracelet will end the flow of",
 						"magic and once stopped, it cannot be restarted again. May the Band of Stars guide",
 						"you to success in the trials, ",
-						player.CharacterClass.Name);
+						player.Salutation);
 					scholar.TurnTo(player);
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 					FinishQuest();

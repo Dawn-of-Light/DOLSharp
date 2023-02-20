@@ -426,7 +426,7 @@ namespace DOL.GS.PacketHandler
 					foreach (GameLiving living in group.GetMembersInTheGroup())
 					{
 						pak.WritePascalString(living.Name);
-						pak.WritePascalString(living is GamePlayer ? ((GamePlayer)living).CharacterClass.Name : "NPC");
+						pak.WritePascalString(living is GamePlayer ? ((GamePlayer)living).Salutation : "NPC");
 						pak.WriteShort((ushort)living.ObjectID); //or session id?
 						pak.WriteByte(living.Level);
 					}

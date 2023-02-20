@@ -146,7 +146,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 					GiveItem(scholar, player, ArtifactID, template);
 					String reply = String.Format("The spell is complete and the magic {0} {1}! {2} {3} {4}",
 						"of the Leggings has been reawakened from its long sleep! But heed this warning,",
-						player.CharacterClass.Name,
+						player.Salutation,
 						"Take good care of these leggings, because the magic contained within them is",
 						"fragile and if the leggings are lost or destroyed, the magic will be gone forever.",
 						"May these leggings serve you well as you travel through the trial planes.");

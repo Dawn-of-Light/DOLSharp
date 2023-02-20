@@ -343,7 +343,7 @@ namespace DOL.GS.Quests.Albion
 				if (quest == null)
 				{
 					//Player is not doing the quest...
-					farmerAsma.SayTo(player, "Good night. I wish I had time to talk, "+player.CharacterClass.Name+", but I'm in the process of trying to find a new field to lease. I'd like to return to my life as a farmer. It's not that Cotswold isn't a nice village, but I feel more at home in the [field].");
+					farmerAsma.SayTo(player, "Good night. I wish I had time to talk, "+player.Salutation+", but I'm in the process of trying to find a new field to lease. I'd like to return to my life as a farmer. It's not that Cotswold isn't a nice village, but I feel more at home in the [field].");
 					return;
 				}
 				else

@@ -9,9 +9,9 @@ namespace DOL.GS
 {
     public class CharacterClass
     {
-        private static Dictionary<int, CharacterClass> allClasses = new Dictionary<int, CharacterClass>();
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private GamePlayer player;
+        private static Dictionary<int, CharacterClass> allClasses = new Dictionary<int, CharacterClass>();
 
         private string name;
         private string femaleName;
@@ -32,10 +32,7 @@ namespace DOL.GS
         public string ProfessionTranslationID { get; private set; } = "";
         public ushort MaxPulsingSpells { get; private set; }
 
-        public string Name => GetSalutation(player.Gender);
         public string BaseName => GetClass(baseClassID).name;
-        public string Profession
-            => LanguageMgr.TryTranslateOrDefault(player, ProfessionTranslationID, ProfessionTranslationID);
         public List<PlayerRace> EligibleRaces => eligibleRaces.ToList();
         public int AdjustedSpecPointsMultiplier => SpecPointsMultiplier;
 
@@ -66,13 +63,19 @@ namespace DOL.GS
             charClass.ProfessionTranslationID = dbCharClass.ProfessionTranslationID;
 
             charClass.AutoTrainSkills = dbCharClass.AutoTrainSkills
-                    .Split(';', ',').Where(s => !string.IsNullOrEmpty(s));
+                .Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var newElibibleRaces = dbCharClass.EligibleRaces
-                .Split(';', ',').Where(s => !string.IsNullOrEmpty(s))
-                .Select(s => Convert.ToInt32(s))
-                .Select(i => PlayerRace.GetRace(i));
-            charClass.eligibleRaces = newElibibleRaces;
+            var eligibleRaces = new List<PlayerRace>();
+            var raceIDs = dbCharClass.EligibleRaces
+                .Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => Convert.ToInt32(s));
+            foreach (var raceID in raceIDs)
+            {
+                var race = PlayerRace.GetRace(raceID);
+                if (race.Equals(PlayerRace.Unknown)) log.Error($"CharacterClass with ID {charClass.ID} contains invalid EligibleRace {raceID}.");
+                else eligibleRaces.Add(race);
+            }
+            charClass.eligibleRaces = eligibleRaces;
 
             charClass.MaxPulsingSpells = dbCharClass.MaxPulsingSpells == 0 ? (byte)2 : dbCharClass.MaxPulsingSpells;
 
@@ -86,6 +89,9 @@ namespace DOL.GS
             if (useFemaleName) return femaleName;
             else return name;
         }
+
+        public string GetProfessionTitle(GamePlayer player)
+            => LanguageMgr.TryTranslateOrDefault(player, ProfessionTranslationID, ProfessionTranslationID);
 
         public string GetTitle(GamePlayer player, int level)
         {
@@ -107,13 +113,6 @@ namespace DOL.GS
             allClasses.TryGetValue(classID, out var characterClass);
             if (characterClass == null) return Unknown;
             return characterClass;
-        }
-
-        public static CharacterClass GetClass(GamePlayer player, int classID)
-        {
-            var charClass = GetClass(classID);
-            charClass.player = player;
-            return charClass;
         }
 
         public CharacterClass GetBaseClass()

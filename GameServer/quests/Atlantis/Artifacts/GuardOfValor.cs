@@ -145,9 +145,9 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 					reply += "presented the gift to Nikolia, the magic in it bound to her. And now as ";
 					reply += "I present it to you, the magic in it will bind itself to you, so that no ";
 					reply += String.Format("other may wear it. I beg you, {0}, take care not to destroy ",
-						player.CharacterClass.Name);
+						player.Salutation);
 					reply += String.Format("such a gift! It cannot be replaced! I wish you well, {0}.",
-						player.CharacterClass.Name);
+						player.Salutation);
 					scholar.TurnTo(player);
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 					FinishQuest();
@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			if (Step == 1 && text.ToLower() == ArtifactID.ToLower())
 			{
 				String reply = String.Format("Tell me, {0}, do you have any versions of the Love Story {1} {2} {3} {4}",
-					player.CharacterClass.Name,
+					player.Salutation,
 					"to go with the Guard of Valor? I have found a few copies, but I am always looking",
 					"for more. Each one has different information in them that helps me with",
 					"my research. Please give me the Love Story now while I finish up with",

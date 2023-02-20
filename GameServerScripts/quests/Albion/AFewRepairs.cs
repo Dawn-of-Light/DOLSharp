@@ -349,7 +349,7 @@ namespace DOL.GS.Quests.Albion
                 else
                 {
                     //Player hasn't the quest:
-                    briceYarley.SayTo(player, "Welcome to Cornwall, "+player.CharacterClass.Name+". My family has a bit of a [problem] and we would be grateful if you could lend a hand.");
+                    briceYarley.SayTo(player, "Welcome to Cornwall, "+player.Salutation+". My family has a bit of a [problem] and we would be grateful if you could lend a hand.");
                     return;
                 }
             }

@@ -58,7 +58,7 @@ namespace DOL.GS
 
 			if(player.CustomisationStep == 2)
 			{
-				SayTo(player, eChatLoc.CL_PopupWindow, player.CharacterClass.Name +", I have discovered a secret spell that will allow you to change your appearance. I can cast this spell upon you if you wish. All you must do is say the word and I will [change your appearance].");
+				SayTo(player, eChatLoc.CL_PopupWindow, player.Salutation +", I have discovered a secret spell that will allow you to change your appearance. I can cast this spell upon you if you wish. All you must do is say the word and I will [change your appearance].");
 			}
 			else if(player.CustomisationStep == 3)
 			{

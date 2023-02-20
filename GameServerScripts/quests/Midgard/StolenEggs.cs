@@ -468,7 +468,7 @@ namespace DOL.GS.Quests.Midgard
 			{
 				if (quest != null)
 				{
-                    hyndla.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToHyndla.Talk1", player.CharacterClass.Name));
+                    hyndla.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToHyndla.Talk1", player.Salutation));
                     hyndla.SayTo(player, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.TalkToHyndla.Talk2"));
                 }
 			}

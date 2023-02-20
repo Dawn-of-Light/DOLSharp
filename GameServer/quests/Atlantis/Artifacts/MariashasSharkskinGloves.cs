@@ -135,7 +135,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 						"have access to its full power again. Take care of it and it shall aid you in",
 						"the trials",
 						ArtifactID,
-						player.CharacterClass.Name);
+						player.Salutation);
 					scholar.TurnTo(player);
 					scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 					FinishQuest();

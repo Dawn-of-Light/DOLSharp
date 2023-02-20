@@ -657,7 +657,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			var outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
 			outpak190.Write(outpakArr, 5, outpakArr.Length - 5);
-			outpak190.FillString(client.Player.CharacterClass.Name, 32);
+			outpak190.FillString(client.Player.Salutation, 32);
 			outpak190.WriteByte((byte)(client.Player.RPFlag ? 1 : 0)); // roleplay flag, if == 1, show name (RP) with gray color
 			outpak190.WriteByte(0); // send last byte for 190+ packets
 			outpak190.WritePacketLength();
@@ -1227,7 +1227,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			outpak1112.WriteByte(0);
 			outpak1112.WritePacketLength();
 
-			outpak190.FillString(client.Player.CharacterClass.Name, 32);
+			outpak190.FillString(client.Player.Salutation, 32);
 			outpak190.WriteByte((byte)(client.Player.RPFlag ? 1 : 0));
 			outpak190.WriteByte(0);
 			outpak190.WritePacketLength();

@@ -141,7 +141,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 				if (RemoveItem(player, item))
 				{
 					String reply = String.Format("You now have a decision to make, {0}. {1} {2} {3} {4} {5}",
-						player.CharacterClass.Name,
+						player.Salutation,
 						"I can unlock your Battler so it uses [slashing] skills or so it uses",
 						"[crushing] skills. In both cases, I can unlock it as a one-handed weapon",
 						"or a two-handed one. All you must do is decide which kind of damage you",

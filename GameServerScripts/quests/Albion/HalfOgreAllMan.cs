@@ -853,7 +853,7 @@ namespace DOL.GS.Quests.Albion
 				{
 					if(quest.Step == 1  || quest.Step == 3 || quest.Step == 4 || quest.Step == 5)
 					{
-						serawen.SayTo(player, "Hello.  I don't recognize you, "+player.CharacterClass.Name+". Are you looking for my father, [Arliss]?");
+						serawen.SayTo(player, "Hello.  I don't recognize you, "+player.Salutation+". Are you looking for my father, [Arliss]?");
 					}
 				}
 			}

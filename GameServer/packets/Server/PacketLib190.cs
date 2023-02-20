@@ -348,7 +348,7 @@ namespace DOL.GS.PacketHandler
 				// Write Remainings.
 				pak.WriteByte(player.ManaPercent);
 				pak.WriteByte(player.EndurancePercent);
-				pak.FillString(player.CharacterClass.Name, 32);
+				pak.FillString(player.Salutation, 32);
 				pak.WriteByte((byte)(player.RPFlag ? 1 : 0));
 				pak.WriteByte(0); // send last byte for 190+ packets
 	

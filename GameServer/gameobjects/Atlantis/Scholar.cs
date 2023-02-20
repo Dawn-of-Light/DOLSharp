@@ -97,7 +97,7 @@ namespace DOL.GS
 			else
 			{
 				intro = String.Format("Which artifact may I assist you with, {0}? {1} {2}",
-					player.CharacterClass.Name,
+					player.Salutation,
 					"I study the lore and magic of the following artifacts:",
 					artifacts);
 

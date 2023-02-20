@@ -149,7 +149,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 					else
 					{
 						reply = String.Format("The magic of Eirene's Chestpiece is unlocked {0} {1}. {2} {3} {4} {5}, {1}!",
-							"and linked now to you,", player.CharacterClass.Name,
+							"and linked now to you,", player.Salutation,
 							"Please know that if you lose or destroy this Chestpiece, it will be gone",
 							"from you forever. I hope it will help you succeed in the trials.",
 							"Bring glory to", GlobalConstants.RealmToName(player.Realm));
@@ -220,7 +220,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			if (Step == 1 && text.ToLower() == ArtifactID.ToLower())
 			{
 				String reply = String.Format("There is powerful magic flowing through that artifact, {0}, {1} {2}",
-                    player.CharacterClass.Name,
+                    player.Salutation,
 					"but I cannot release it without the spell hidden in the Journal. Please give me Eirene's",
 					"Journal now. If you no longer have it, go and find the pages again. I will wait for you.");
 				scholar.TurnTo(player);
@@ -239,7 +239,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 					if (GiveItem(scholar, player, ArtifactID, versions[version]))
 					{
 						String reply = String.Format("The magic of Eirene's Chestpiece is unlocked {0} {1}. {2} {3} {4} {5}, {1}!",
-							"and linked now to you,", player.CharacterClass.Name,
+							"and linked now to you,", player.Salutation,
 							"Please know that if you lose or destroy this Chestpiece, it will be gone",
 							"from you forever. I hope it will help you succeed in the trials.",
 							"Bring glory to ", GlobalConstants.RealmToName(player.Realm));

@@ -2807,10 +2807,12 @@ namespace DOL.GS
 
 		public virtual CharacterClass CharacterClass { get; protected set; }
 
+		public string Salutation => CharacterClass.GetSalutation(Gender);
+
 		[Obsolete("Use SetCharacterClass(CharacterClass) instead.")]
 		public virtual bool SetCharacterClass(int id)
 		{
-			var cl = GS.CharacterClass.GetClass(this, id);
+			var cl = GS.CharacterClass.GetClass(id);
 
 			return SetCharacterClass(cl);
 		}
@@ -12470,7 +12472,7 @@ namespace DOL.GS
 			m_charStat[eStat.EMP - eStat._First] = (short)DBCharacter.Empathy;
 			m_charStat[eStat.CHR - eStat._First] = (short)DBCharacter.Charisma;
 
-			SetCharacterClass(CharacterClass.GetClass(this, DBCharacter.Class));
+			SetCharacterClass(CharacterClass.GetClass(DBCharacter.Class));
 
 			m_currentSpeed = 0;
 			if (MaxSpeedBase == 0)
@@ -12755,7 +12757,7 @@ namespace DOL.GS
 				case eGameServerType.GST_Normal:
 					{
 						if (Realm == player.Realm || Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
-							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.RealmMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name);
+							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.RealmMember", player.GetName(this), GetPronoun(Client, 0, true), Salutation);
 						else
 							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.EnemyRealmMember", player.GetName(this), GetPronoun(Client, 0, true));
 						break;
@@ -12764,11 +12766,11 @@ namespace DOL.GS
 				case eGameServerType.GST_PvP:
 					{
 						if (Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
-							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name);
+							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), Salutation);
 						else if (Guild == null)
 							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.NeutralMember", player.GetName(this), GetPronoun(Client, 0, true));
 						else if (Guild == player.Guild || Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
-							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name);
+							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), Salutation);
 						else
 							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.OtherGuildMember", player.GetName(this), GetPronoun(Client, 0, true), GuildName);
 						break;
@@ -15567,7 +15569,7 @@ namespace DOL.GS
 		public override string ToString()
 		{
 			return new StringBuilder(base.ToString())
-				.Append(" class=").Append(CharacterClass.Name)
+				.Append(" class=").Append(Salutation)
 				.Append('(').Append(CharacterClass.ID.ToString()).Append(')')
 				.ToString();
 		}
