@@ -24,9 +24,7 @@ namespace DOL.PerformanceStatistics
         public float GetNextValue() => performanceStatistic.GetNextValue();
     }
 
-#if NET
     [UnsupportedOSPlatform("Windows")]
-#endif
     internal class LinuxTotalDiskTransfers : IPerformanceStatistic
     {
         public float GetNextValue()

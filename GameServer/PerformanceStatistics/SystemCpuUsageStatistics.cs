@@ -26,9 +26,7 @@ namespace DOL.PerformanceStatistics
             => processorTimeRatioStatistic.GetNextValue();
     }
 
-#if NET
     [UnsupportedOSPlatform("Windows")]
-#endif
     internal class LinuxSystemCpuUsagePercent : IPerformanceStatistic
     {
         private IPerformanceStatistic processorTimeStatistic;
@@ -47,9 +45,7 @@ namespace DOL.PerformanceStatistics
         }
     }
 
-#if NET
     [UnsupportedOSPlatform("Windows")]
-#endif
     internal class LinuxTotalProcessorTimeInSeconds : IPerformanceStatistic
     {
         public float GetNextValue()
@@ -61,9 +57,7 @@ namespace DOL.PerformanceStatistics
         }
     }
 
-#if NET
     [UnsupportedOSPlatform("Windows")]
-#endif
     internal class LinuxSystemIdleProcessorTimeInSeconds : IPerformanceStatistic
     {
         public float GetNextValue()

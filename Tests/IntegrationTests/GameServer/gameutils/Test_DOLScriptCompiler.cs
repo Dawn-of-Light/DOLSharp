@@ -4,8 +4,6 @@ using NUnit.Framework;
 
 using DOL.GS;
 using DOL.UnitTests.Gameserver;
-using System.Reflection;
-using Microsoft.CodeAnalysis;
 
 namespace DOL.Integration.Gameserver
 {
@@ -17,9 +15,6 @@ namespace DOL.Integration.Gameserver
         {
             var server = new FakeServer();
             GameServer.LoadTestDouble(server);
-            #if NETFRAMEWORK
-            DOLScriptCompiler.AddReferenceAssembly("GameServer.dll");
-            #endif
         }
 
         [Test]

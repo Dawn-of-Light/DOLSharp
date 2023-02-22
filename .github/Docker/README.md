@@ -7,10 +7,8 @@ https://hub.docker.com/r/dawnoflight/dolsharp
 
 | Tag | Description |
 | --- | --- |
-| latest, netframework | Mono Based Image running DOL with NetFramework Implementation |
-| edge, dotnet | DotNet 5 Based Image running DOL with .NET5 Implementation |
-| sandbox, sandbox-netframework | Mono Based Image with embedded Eve of Darkness Public Database (sqlite) |
-| sandbox-edge, sandbox-dotnet | DotNet 5 Based Image with embedded Eve of Darkness Public Database (sqlite) |
+| latest | Net 6 Based Image running DOL with supplied database |
+| sandbox | Net 6 Based Image with embedded Eve of Darkness Public Database (sqlite) |
 
 # Env Vars
 | Name | Values | Description |
