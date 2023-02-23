@@ -20,7 +20,7 @@ jobs:
       - name: Generate Release Info
         id: release_info
         run: |
-          version="1.9.7"
+          version="2.0.0"
           last_version_tag=$(git tag -l --sort=creatordate | grep -E '^([0-9]+\.){3}[0-9]+$' | tail -n1)
           git log origin/master --first-parent  --format="%s%n%w(0,4,4)%b" "$last_version_tag".. | grep -v "^$" >> patch_notes.txt
           if [ ! -s patch_notes.txt ]; then echo "No commits since last run."; exit 1; fi #fail if empty
