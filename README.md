@@ -18,6 +18,25 @@ Build Status for NetFramework and NetCore builds: [![Build Status](https://githu
 
 Latest Release : https://github.com/Dawn-of-Light/DOLSharp/releases/latest
 
+How to Run (example)
+----
+Required: [.NET Runtime 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), 7-zip, tool to edit SQLite databases (i.e. HeidiSQL)
+
+1. Download [DOLServer release](https://github.com/Dawn-of-Light/DOLSharp/releases/latest/download/DOLServer_Debug.zip) and [public db](https://github.com/Eve-of-Darkness/db-public/releases/latest/download/public-db.sqlite.sql.7z)
+2. Extract DOLServer and public-db
+3. Create SQLite database with your tool of choice for example HeidiSQL
+4. Move the created database file to the folder where the `DOLServer.dll` is located and rename it to `dol.sqlite3.db`
+5. Start DOLServer (either the `DOLServer.bat` or `DOLServer.sh`)
+
+### Via CLI (Linux)
+Required: `wget`, `dotnet` (6.0), `p7zip`, `sqlite3`
+
+1. `wget https://github.com/Dawn-of-Light/DOLSharp/releases/latest/download/DOLServer_Debug.zip`
+2. `wget https://github.com/Eve-of-Darkness/db-public/releases/latest/download/public-db.sqlite.sql.7z`
+3. `7z x -oDOLServer DOLServer_Debug.zip`
+3. `7z x -so public-db.sqlite.sql.7z | sqlite3 DOLServer/dol.sqlite3.db`
+4. `DOLServer/DOLServer.sh`
+
 How To Build
 ----
 
