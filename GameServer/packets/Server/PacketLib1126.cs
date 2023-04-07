@@ -368,6 +368,32 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 		}
+
+        public override void SendAddFriends(string[] friendNames)
+        {
+            using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.AddFriend)))
+            {
+                pak.WriteByte((byte)friendNames.Length);
+                foreach (string friend in friendNames)
+                {
+                    pak.WritePascalStringIntLE(friend);
+                }
+                SendTCP(pak);
+            }
+        }
+
+        public override void SendRemoveFriends(string[] friendNames)
+        {
+            using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RemoveFriend)))
+            {
+                pak.WriteByte(0x00);
+                foreach (string friend in friendNames)
+                {
+                    pak.WritePascalStringIntLE(friend);
+                }
+                SendTCP(pak);
+            }
+        }
 	}
 }
 
