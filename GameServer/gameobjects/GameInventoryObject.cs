@@ -169,7 +169,7 @@ namespace DOL.GS
 				// if there is an item in the objects target slot then move it to the players inventory
 				if (inventory.ContainsKey((int)toClientSlot))
 				{
-					InventoryItem toItem = inventory[(int)toClientSlot];
+					InventoryItem toItem = GameInventoryItem.Create(inventory[(int)toClientSlot]);
 					thisObject.OnRemoveItem(player, toItem);
 					player.Inventory.AddTradeItem(fromClientSlot, toItem);
 				}
