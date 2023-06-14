@@ -601,6 +601,11 @@ namespace DOL.GS
 					return false;
 
 				//---------------------------------------------------------------
+				//Try to initialize the Pathing Manager
+				if (!InitComponent(PathingMgr.Init(), "Pathing Manager Initialization"))
+					return false;
+
+				//---------------------------------------------------------------
 				//Try to initialize the script components
 				if (!InitComponent(StartScriptComponents(), "Script components"))
 					return false;

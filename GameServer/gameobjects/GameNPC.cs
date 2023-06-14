@@ -39,6 +39,8 @@ using DOL.GS.Utils;
 using DOL.Language;
 using DOL.GS.ServerProperties;
 using DOL.GS.Finance;
+using System.Threading.Tasks;
+using System.Numerics;
 
 namespace DOL.GS
 {
@@ -1367,13 +1369,16 @@ namespace DOL.GS
 		/// </summary>
 		protected class ArriveAtTargetAction : RegionAction
 		{
+			private Action<GameNPC> m_goToNodeCallback;
+
 			/// <summary>
 			/// Constructs a new ArriveAtTargetAction
 			/// </summary>
 			/// <param name="actionSource">The action source</param>
-			public ArriveAtTargetAction(GameNPC actionSource)
+			public ArriveAtTargetAction(GameNPC actionSource, Action<GameNPC> goToNodeCallback = null)
 				: base(actionSource)
 			{
+				m_goToNodeCallback = goToNodeCallback;
 			}
 
 			/// <summary>
@@ -1384,6 +1389,11 @@ namespace DOL.GS
 			protected override void OnTick()
 			{
 				GameNPC npc = (GameNPC)m_actionSource;
+				if (m_goToNodeCallback != null)
+				{
+					m_goToNodeCallback(npc);
+					return;
+				}
 
 				bool arriveAtSpawnPoint = npc.IsReturningToSpawnPoint;
 
@@ -1485,9 +1495,92 @@ namespace DOL.GS
 			BroadcastUpdate();
 		}
 
-		private void StartArriveAtTargetAction(int requiredTicks)
+		public PathCalculator PathCalculator { get; protected set; }
+		/// <summary>
+		/// Finds a valid path to the destination (or picks the direct path otherwise). Uses WalkTo for each of the pathing nodes.
+		/// </summary>
+		/// <param name="dest"></param>
+		/// <param name="speed"></param>
+		/// <returns>true if a path was found</returns>
+		public bool PathTo(IPoint3D dest, short? speed = null)
 		{
-			m_arriveAtTargetAction = new ArriveAtTargetAction(this);
+			var walkSpeed = speed ?? MaxSpeed;
+			if (!PathCalculator.ShouldPath(this, new Vector3(dest.X, dest.Y, dest.Z)))
+			{
+				WalkTo(dest, walkSpeed);
+				return false;
+			}
+
+			// Initialize pathing if possible and required
+			if (PathCalculator == null)
+			{
+				if (!PathCalculator.IsSupported(this))
+				{
+					WalkTo(dest, walkSpeed);
+					return false;
+				}
+				// TODO: Only make this check once on spawn since it internally calls .CurrentZone + hashtable lookup?
+				PathCalculator = new PathCalculator(this);
+			}
+
+			// Pick the next pathing node, and walk towards it
+			Vector3? nextNode = null;
+			bool didFindPath = false;
+			bool shouldUseAirPath = true;
+			if (PathCalculator != null)
+			{
+				var res = PathCalculator.CalculateNextTarget(new Vector3(dest.X, dest.Y, dest.Z));
+				nextNode = res.Item1;
+				var noPathReason = res.Item2;
+				shouldUseAirPath = noPathReason == NoPathReason.RECAST_FOUND_NO_PATH;
+				didFindPath = PathCalculator.DidFindPath;
+			}
+
+			// Directly walk towards the target (or call the customly provided action)
+			if (!nextNode.HasValue)
+			{
+				WalkTo(dest, walkSpeed);
+				return false;
+			}
+
+			// Do the actual pathing bit: Walk towards the next pathing node
+			WalkTo(nextNode.Value, walkSpeed, npc => npc.PathTo(dest, speed));
+			return true;
+		}
+
+		private void WalkTo(Vector3 node, short speed, Action<GameNPC> goToNextNodeCallback)
+		{
+			if (IsTurningDisabled)
+				return;
+
+			if (speed > MaxSpeed)
+				speed = MaxSpeed;
+
+			if (speed <= 0)
+				return;
+
+			TargetPosition = new Point3D(node.X, node.Y, node.Z); // this also saves the current position
+
+			if (IsWithinRadius(TargetPosition, 5))
+			{
+				goToNextNodeCallback(this);
+				return;
+			}
+
+			CancelWalkToTimer();
+
+			m_Heading = GetHeading(TargetPosition);
+			m_currentSpeed = speed;
+
+			UpdateTickSpeed();
+			StartArriveAtTargetAction(GetTicksToArriveAt(TargetPosition, speed), goToNextNodeCallback);
+			BroadcastUpdate();
+		}
+
+
+		private void StartArriveAtTargetAction(int requiredTicks, Action<GameNPC> goToNextNodeCallback = null)
+		{
+			m_arriveAtTargetAction = new ArriveAtTargetAction(this, goToNextNodeCallback);
 			m_arriveAtTargetAction.Start((requiredTicks > 1) ? requiredTicks : 1);
 		}
 
@@ -1528,7 +1621,7 @@ namespace DOL.GS
 
 			IsReturningHome = true;
 			IsReturningToSpawnPoint = true;
-			WalkTo(SpawnPoint, speed);
+			PathTo(SpawnPoint, speed);
 		}
 
 		/// <summary>

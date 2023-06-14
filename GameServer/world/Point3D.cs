@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Numerics;
 
 namespace DOL.GS
 {
@@ -131,6 +132,11 @@ namespace DOL.GS
 			return (int) Math.Sqrt(dx*dx + dy*dy + dz*dz);
 		}
 
+		public virtual float GetDistanceTo(Vector3 point)
+		{
+			return Vector3.Distance(new Vector3(X, Y, Z), point);
+		}
+
 		/// <summary>
 		/// Determine if another point is within a given radius
 		/// </summary>
@@ -194,6 +200,13 @@ namespace DOL.GS
 			}
 
 			return true;
+		}
+
+		public bool IsWithinRadius(Vector3 point, int radius, bool ignoreZ = false)
+		{
+			if (ignoreZ || point.Z == 0 || Z == 0)
+				return Vector2.DistanceSquared(new Vector2(X, Y), point.ToVector2()) <= radius * radius;
+			return Vector3.DistanceSquared(new Vector3(X, Y, Z), point) <= radius * radius;
 		}
 	}
 }

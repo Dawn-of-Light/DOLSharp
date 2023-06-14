@@ -452,6 +452,7 @@ namespace DOL.GS
 			get { return m_objectCount; }
 		}
 
+		public bool IsPathingEnabled { get; set; } = false;
 		#endregion
 
 		#region New subzone Management function
