@@ -129,34 +129,35 @@ DLLEXPORT bool FreeNavMeshQuery(dtNavMeshQuery *queryPtr)
 	return true;
 }
 
+static inline bool IsMidPointOnPath(float const* A, float const* B, float const* C)
+{
+	float vectAC[3];
+	dtVsub(vectAC, C, A);
+	dtVnormalize(vectAC);
+	float vectAB[3];
+	dtVsub(vectAB, B, A);
+	float cross[3];
+	dtVcross(cross, vectAB, vectAC);
+	float len = dtVlen(cross);
+	return len <= 1;
+}
+
 void PathOptimize(dtNavMeshQuery *query, int *pointCount, float *pointBuffer, dtPolyRef *refs)
 {
 	for (int i = 0; i < *pointCount - 2; ++i)
 	{
 		unsigned short flags[2];
-		query->getAttachedNavMesh()->getPolyFlags(refs[i], flags + 0);
+		query->getAttachedNavMesh()->getPolyFlags(refs[i + 0], flags + 0);
 		query->getAttachedNavMesh()->getPolyFlags(refs[i + 1], flags + 1);
 		if (flags[0] != flags[1]) // we can't merge 2 different points
 			continue;
 
 		// we take 3 points: first --- mid --- last and check if mid is on the line, in this case, we remove mid
-		float const *A = &(pointBuffer[i * 3 + 0]);
-		float const *B = &(pointBuffer[(i + 1) * 3 + 0]); // mid, point to remove
-		float const *C = &(pointBuffer[(i + 2) * 3 + 0]);
+		float const *A = &(pointBuffer[(i + 0) * 3]);
+		float const *B = &(pointBuffer[(i + 1) * 3]); // mid, point to remove
+		float const *C = &(pointBuffer[(i + 2) * 3]);
 
-		float vectAC[3];
-		dtVsub(vectAC, A, C);
-		float len = dtVlen(vectAC);
-		dtVnormalize(vectAC);
-		float vectAB[3];
-		dtVsub(vectAB, B, A);
-		float distPt = dtClamp(dtVdot(vectAB, vectAC), 0.0f, len);
-		float pt[3];
-		dtVscale(pt, vectAC, distPt);
-		dtVadd(pt, A, pt);
-		float distAC = dtVdist(pt, B);
-
-		if (distAC < 2.0f)
+		if (IsMidPointOnPath(A, B, C))
 		{
 			std::copy(pointBuffer + (i + 2) * 3, pointBuffer + (*pointCount) * 3, pointBuffer + (i + 1) * 3);
 			std::copy(refs + i + 2, refs + *pointCount, refs + i + 1);
