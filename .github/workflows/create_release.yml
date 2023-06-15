@@ -66,8 +66,7 @@ jobs:
         run: |
           dolconfig_location="$(dirname $(git remote get-url origin))/DOLConfig/releases/latest/download/DOLConfig_${{ matrix.build_target }}.zip"
           wget "$dolconfig_location" -O DOLConfig.zip
-          mkdir "${{ matrix.build_target }}/config"
-          unzip DOLConfig.zip -d "${{ matrix.build_target }}/config/DOLConfig"
+          unzip DOLConfig.zip -d "${{ matrix.build_target }}/config"
       - name: Cleanup
         run: |
           # Move everything except DOLServer files into lib folder
