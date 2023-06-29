@@ -7,4 +7,5 @@
 /old/build
 /old/Debug
 /old/Release
+/Pathing/Detour/build
 **/*.csproj.user

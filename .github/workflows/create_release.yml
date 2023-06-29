@@ -52,17 +52,36 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
+      - name: Setup MinGW-w64
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
       - name: Build
         run: |
           export DOTNET_CLI_TELEMETRY_OPTOUT=1 
           assembly_version="${{ needs.get_release_info.outputs.version }}"
           dotnet build --configuration "${{ matrix.build_target}}" -p:Version="$assembly_version" --verbosity normal "Dawn of Light.sln"
           echo "dotnet DOLServer.dll" > "${{ matrix.build_target }}/DOLServer.bat"
+      - name: Build DOL Detour (Linux x64)
+        run: |
+          mkdir Pathing/Detour/build
+          cd Pathing/Detour/build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..
+          make
+          cp libdol_detour.so ../../../${{ matrix.build_target }}/
+      - name: Build DOL Detour (Windows x64)
+        run: |
+          mkdir Pathing/Detour/build_win64
+          cd Pathing/Detour/build_win64
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++-posix -DCMAKE_SHARED_LINKER_FLAGS="-static" ..
+          make
+          cp libdol_detour.dll ../../../${{ matrix.build_target }}/dol_detour.dll
       - name: Test Build
         run: |
           dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll
           dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll
       - name: Add DOLConfig
+        if: ${{ github.repository_owner == 'Dawn-of-Light' }}
         run: |
           dolconfig_location="$(dirname $(git remote get-url origin))/DOLConfig/releases/latest/download/DOLConfig_${{ matrix.build_target }}.zip"
           wget "$dolconfig_location" -O DOLConfig.zip

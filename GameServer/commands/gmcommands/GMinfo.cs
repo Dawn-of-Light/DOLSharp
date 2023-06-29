@@ -703,6 +703,7 @@ namespace DOL.GS.Commands
 					info.Add(" Zone Height: "+ client.Player.CurrentZone.Height);
 					info.Add(" Zone DivingEnabled: " + client.Player.CurrentZone.IsDivingEnabled);
 					info.Add(" Zone Waterlevel: " + client.Player.CurrentZone.Waterlevel);
+					info.Add(" Zone Pathing: " + (PathingMgr.Instance.HasNavmesh(client.Player.CurrentZone) ? "enabled" : "disabled"));
 					info.Add(" ");
 					info.Add(" Region Name: "+ client.Player.CurrentRegion.Name);
                     info.Add(" Region Description: " + client.Player.CurrentRegion.Description);

@@ -29,6 +29,7 @@ using DOL.GS.SkillHandler;
 using DOL.GS.Keeps;
 using DOL.Language;
 using log4net;
+using System.Numerics;
 
 namespace DOL.AI.Brain
 {
@@ -138,7 +139,7 @@ namespace DOL.AI.Brain
 					}
 					else
 					{
-						Body.WalkTo(target, 50);
+						Body.PathTo(target, 50);
 					}
 
 					Body.FireAmbientSentence(GameNPC.eAmbientTrigger.roaming);
@@ -1552,6 +1553,14 @@ namespace DOL.AI.Brain
 
 		public virtual IPoint3D CalcRandomWalkTarget()
 		{
+			if (PathCalculator.IsSupported(Body))
+			{
+				int radius = Body.RoamingRange > 0 ? Body.RoamingRange : 500;
+				var target = PathingMgr.Instance.GetRandomPointAsync(Body.CurrentZone, new Vector3(Body.X, Body.Y, Body.Z), radius);
+				if (target.HasValue)
+					return new Point3D(target.Value.X, target.Value.Y, target.Value.Z);
+			}
+
 			int maxRoamingRadius = Body.CurrentRegion.IsDungeon ? 5 : 500;
 
 			if (Body.RoamingRange > 0)
