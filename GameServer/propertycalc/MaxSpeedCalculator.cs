@@ -124,37 +124,27 @@ namespace DOL.GS.PropertyCalc
 
 				speed *= horseSpeed;
 			}
-			else if (living is GameNPC)
+			else if (living is GameNPC npc)
 			{
-				if (!living.InCombat)
-				{
-					IControlledBrain brain = ((GameNPC)living).Brain as IControlledBrain;
-					if (brain != null)
-					{
-                        GameLiving owner = brain.GetLivingOwner();
-						if (owner != null)
-						{
-							if (owner == brain.Body.CurrentFollowTarget)
-							{
-								speed *= 1.25;
+                if (ServerProperties.Properties.ENABLE_PVE_SPEED)
+                {
+                    if (!npc.InCombat && !npc.CurrentRegion.IsRvR)
+                    {
+                        var pveSpeed = 1.25;
+                        if(speed < pveSpeed) speed = pveSpeed;
+                    }
+                }
 
-								double ownerSpeedAdjust = (double)owner.MaxSpeed / (double)GamePlayer.PLAYER_BASE_SPEED;
+                if(npc.Brain is IControlledBrain brain)
+                {
+                    var owner = brain.GetPlayerOwner();
+                    if(owner != null && owner.IsSprinting)
+                    {
+                        speed *= 1.29;
+                    }
+                }
 
-								if (ownerSpeedAdjust > 1.0)
-								{
-									speed *= ownerSpeedAdjust;
-								}
-
-                                if (owner is GamePlayer && (owner as GamePlayer).IsOnHorse)
-                                {
-									speed *= 1.45;
-								}
-							}
-						}
-					}
-				}
-
-				double healthPercent = living.Health / (double)living.MaxHealth;
+				double healthPercent = npc.Health / (double)npc.MaxHealth;
 				if (healthPercent < 0.33)
 				{
 					speed *= 0.2 + healthPercent * (0.8 / 0.33); //33%hp=full speed 0%hp=20%speed
