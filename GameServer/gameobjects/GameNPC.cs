@@ -1118,14 +1118,11 @@ namespace DOL.GS
 				return m_targetPosition;
 			}
 
-			protected set
-			{
-				if (value != m_targetPosition)
-				{
-					SaveCurrentPosition();
-					m_targetPosition = value;
-				}
-			}
+            protected set
+            {
+                SaveCurrentPosition();
+                m_targetPosition = value;
+            }
 		}
 
 		/// <summary>
