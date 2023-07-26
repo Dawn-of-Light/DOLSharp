@@ -1867,11 +1867,11 @@ namespace DOL.GS
 
             if (InCombat || Brain is BomberBrain) 
             {
-                WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
+                PathTo(new Point3D(newX, newY, (ushort)newZ), MaxSpeed);
             }
             else 
             {
-                WalkTo(newX, newY, (ushort)newZ, (short)GetDistance(new Point2D(newX, newY)));
+                PathTo(new Point3D(newX, newY, (ushort)newZ), (short)GetDistance(new Point2D(newX, newY)));
             }
             return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
 		}
