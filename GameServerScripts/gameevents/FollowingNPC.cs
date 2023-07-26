@@ -152,7 +152,7 @@ namespace DOL.GS.GameEvents
 					speed = 50;
 
 				//Make the mob walk to the new spot
-				WalkTo(newX, newY, 0, (short)speed);
+				PathTo(new Point3D(newX, newY, 0), (short)speed);
 			}
 		}
 

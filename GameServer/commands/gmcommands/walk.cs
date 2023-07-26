@@ -79,7 +79,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			targetNPC.WalkTo((targetNPC.X + xoff), (targetNPC.Y + yoff), (targetNPC.Z + zoff), speed);
+			targetNPC.PathTo(new Point3D((targetNPC.X + xoff), (targetNPC.Y + yoff), (targetNPC.Z + zoff)), speed);
 		}
 	}
 }

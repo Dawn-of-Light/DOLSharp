@@ -246,7 +246,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						npc.WalkTo(X, Y, Z, speed);
+						npc.PathTo(new Point3D(X, Y, Z), speed);
 						client.Out.SendMessage("Your target is walking to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}
