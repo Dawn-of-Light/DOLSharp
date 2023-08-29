@@ -759,34 +759,16 @@ namespace DOL.GS
 			}
 		}
 
-		public bool IsGhost
-		{ get => m_flags.HasFlag(eFlags.GHOST); }
-
-		public override bool IsStealthed
-		{ get => m_flags.HasFlag(eFlags.STEALTH); }
-
-		public bool IsDontShowName
-		{ get => m_flags.HasFlag(eFlags.DONTSHOWNAME); }
-
-		public bool IsCannotTarget
-		{ get => m_flags.HasFlag(eFlags.CANTTARGET); }
-
-		public bool IsPeaceful
-		{ get => m_flags.HasFlag(eFlags.PEACE); }
-
-		public bool IsFlying
-		{ get => m_flags.HasFlag(eFlags.FLYING); }
-
-		public bool IsTorchLit
-		{ get => m_flags.HasFlag(eFlags.TORCH); }
-
-		public bool IsStatue
-		{ get => m_flags.HasFlag(eFlags.STATUE); }
-
-		public override bool IsUnderwater
-		{
-			get { return m_flags.HasFlag(eFlags.SWIMMING) || base.IsUnderwater; }
-		}
+        public bool IsGhost => Flags.HasFlag(eFlags.GHOST);
+        public override bool IsStealthed => Flags.HasFlag(eFlags.STEALTH);
+        public bool IsDontShowName => Flags.HasFlag(eFlags.DONTSHOWNAME);
+        public bool IsCannotTarget => Flags.HasFlag(eFlags.CANTTARGET);
+        public bool IsPeaceful => Flags.HasFlag(eFlags.PEACE);
+        public bool IsFlying => Flags.HasFlag(eFlags.FLYING);
+        public bool IsTorchLit => Flags.HasFlag(eFlags.TORCH);
+        public bool IsStatue => Flags.HasFlag(eFlags.STATUE);
+        public override bool IsUnderwater
+            => Flags.HasFlag(eFlags.SWIMMING) || base.IsUnderwater;
 
 		/// <summary>
 		/// Set the NPC to stealth or unstealth
