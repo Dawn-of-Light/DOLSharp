@@ -20,15 +20,24 @@ jobs:
       - name: Generate Release Info
         id: release_info
         run: |
-          version="2.1.0"
+          version="2.1"
           last_version_tag=$(git tag -l --sort=creatordate | grep -E '^([0-9]+\.){3}[0-9]+$' | tail -n1)
+          major_version=$(echo "$last_version_tag" | cut -d. -f1)
+          minor_version=$(echo "$last_version_tag" | cut -d. -f2)
+          patch_version=$(echo "$last_version_tag" | cut -d. -f3)
+          build_number=$(echo "$last_version_tag" | cut -d. -f4)
+          if [ "$major_version.$minor_version" != "$version" ];
+          then patch_version=0;
+          else patch_version=$((1+patch_version));
+          fi
+          new_version_tag="$version.$patch_version.$((1+build_number))"
+          echo $new_version_tag
+          echo "version=$new_version_tag" >> $GITHUB_OUTPUT
+
           git log origin/master --first-parent  --format="%s%n%w(0,4,4)%b" "$last_version_tag".. | grep -v "^$" >> patch_notes.txt
           if [ ! -s patch_notes.txt ]; then echo "No commits since last run."; exit 1; fi #fail if empty
           #Prepend patch notes with backticks
           sed -i '1s/^/```\n/' patch_notes.txt
-          new_build_number=$((1+$(echo "$last_version_tag" | grep -oE "[0-9]+$")))
-          new_version_tag="$version"."$new_build_number"
-          echo "version=$new_version_tag" >> $GITHUB_OUTPUT
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
