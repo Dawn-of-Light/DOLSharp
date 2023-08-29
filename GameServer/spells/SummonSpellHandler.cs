@@ -136,17 +136,7 @@ namespace DOL.GS.Spells
 
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 
-			IControlledBrain brain = null;
-			if (template.ClassType != null && template.ClassType.Length > 0)
-			{
-				Assembly asm = Assembly.GetExecutingAssembly();
-				brain = (IControlledBrain)asm.CreateInstance(template.ClassType, true);
-
-				if (brain == null && log.IsWarnEnabled)
-					log.Warn($"ApplyEffectOnTarget(): ClassType {template.ClassType} on NPCTemplateID {template.TemplateId} not found, using default ControlledBrain");
-			}
-			if (brain == null)
-				brain = GetPetBrain(Caster);
+			var brain = GetPetBrain(Caster);
 
 			m_pet = GetGamePet(template);
 			//brain.WalkState = eWalkState.Stay;
