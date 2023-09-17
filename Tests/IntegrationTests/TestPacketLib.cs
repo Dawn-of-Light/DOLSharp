@@ -28,6 +28,7 @@ using DOL.AI.Brain;
 using DOL.GS.Keeps;
 using DOL.GS.Housing;
 using DOL.GS.Profession;
+using DOL.GS.Geometry;
 
 namespace DOL.Tests
 {
@@ -633,11 +634,13 @@ namespace DOL.Tests
 		{
 			if (SendChangeTargetMethod != null) SendChangeTargetMethod(this, newTarget);
 		}
-		public Action<TestPacketLib, Point3D> SendChangeGroundTargetMethod { get; set; }
+		public Action<TestPacketLib, Coordinate> SendChangeGroundTargetMethod { get; set; }
+        [Obsolete("Use .SendChangeGroundTarget(Coordinate) instead!")]
 		public void SendChangeGroundTarget(Point3D newTarget)
 		{
-			if (SendChangeGroundTargetMethod != null) SendChangeGroundTargetMethod(this, newTarget);
+			if (SendChangeGroundTargetMethod != null) SendChangeGroundTargetMethod(this, Coordinate.CreateFromPoint(newTarget));
 		}
+        public void SendChangeGroundTarget(Coordinate newTarget) => SendChangeGroundTarget(newTarget);
 		public Action<TestPacketLib, GameLiving, ePetWindowAction, eAggressionState, eWalkState> SendPetWindowMethod { get; set; }
 		public void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState)
 		{
@@ -922,6 +925,10 @@ namespace DOL.Tests
 		public void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z)
 		{
 			if (SendMinotaurRelicMapUpdateMethod != null) SendMinotaurRelicMapUpdateMethod(this, id, region, x, y, z);
+		}
+        public void SendMinotaurRelicMapUpdate(byte id, Position position)
+		{
+			if (SendMinotaurRelicMapUpdateMethod != null) SendMinotaurRelicMapUpdateMethod(this, id, position.RegionID, position.X, position.Y, position.Z);
 		}
 		public Action<TestPacketLib, GamePlayer, int, bool> SendMinotaurRelicWindowMethod { get; set; }
 		public void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag)

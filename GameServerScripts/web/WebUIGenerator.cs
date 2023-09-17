@@ -430,7 +430,7 @@ namespace DOL.GS.Scripts
 				//X
 				m_js.Append("document.write(\"<td align=\\\"center\\\" bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", plr.X);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.Position.X);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);
@@ -439,7 +439,7 @@ namespace DOL.GS.Scripts
 				//Y
 				m_js.Append("document.write(\"<td align=\\\"center\\\" bgcolor=\\\"#333333\\\">\")");
 				m_js.Append(nl.NewLine);
-				m_js.AppendFormat("document.write(\"{0}\")", plr.Y);
+				m_js.AppendFormat("document.write(\"{0}\")", plr.Position.Y);
 				m_js.Append(nl.NewLine);
 				m_js.Append("document.write(\"</td>\")");
 				m_js.Append(nl.NewLine);

@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
@@ -79,7 +80,8 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			targetNPC.PathTo(new Point3D((targetNPC.X + xoff), (targetNPC.Y + yoff), (targetNPC.Z + zoff)), speed);
+            var locationOffset = Vector.Create(x: xoff, y: yoff, z: zoff);
+			targetNPC.WalkTo(targetNPC.Location + locationOffset, speed);
 		}
 	}
 }

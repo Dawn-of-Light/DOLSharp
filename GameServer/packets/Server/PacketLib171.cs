@@ -54,10 +54,10 @@ namespace DOL.GS.PacketHandler
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PositionAndObjectID)))
 			{
 				pak.WriteShort((ushort)m_gameClient.Player.ObjectID); //This is the player's objectid not Sessionid!!!
-				pak.WriteShort((ushort)m_gameClient.Player.Z);
-				pak.WriteInt((uint)m_gameClient.Player.X);
-				pak.WriteInt((uint)m_gameClient.Player.Y);
-				pak.WriteShort(m_gameClient.Player.Heading);
+				pak.WriteShort((ushort)m_gameClient.Player.Position.Z);
+				pak.WriteInt((uint)m_gameClient.Player.Position.X);
+				pak.WriteInt((uint)m_gameClient.Player.Position.Y);
+				pak.WriteShort(m_gameClient.Player.Orientation.InHeading);
 	
 				int flags = 0;
 				if (m_gameClient.Player.CurrentZone.IsDivingEnabled)
@@ -67,8 +67,8 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x00);	//TODO Unknown
 				Zone zone = m_gameClient.Player.CurrentZone;
 				if (zone == null) return;
-				pak.WriteShort((ushort)(zone.XOffset / 0x2000));
-				pak.WriteShort((ushort)(zone.YOffset / 0x2000));
+				pak.WriteShort((ushort)(zone.Offset.X / 0x2000));
+				pak.WriteShort((ushort)(zone.Offset.Y / 0x2000));
 				//Dinberg - Changing to allow instances...
 				pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
 				pak.WriteShort(0x00); //TODO: unknown, new in 1.71
@@ -90,10 +90,10 @@ namespace DOL.GS.PacketHandler
 				if (obj is GameStaticItem)
 					pak.WriteShort((ushort)(obj as GameStaticItem).Emblem);
 				else pak.WriteShort(0);
-				pak.WriteShort(obj.Heading);
-				pak.WriteShort((ushort)obj.Z);
-				pak.WriteInt((uint)obj.X);
-				pak.WriteInt((uint)obj.Y);
+				pak.WriteShort(obj.Orientation.InHeading);
+				pak.WriteShort((ushort)obj.Position.Z);
+				pak.WriteInt((uint)obj.Position.X);
+				pak.WriteInt((uint)obj.Position.Y);
 				int flag = ((byte)obj.Realm & 3) << 4;
 				ushort model = obj.Model;
 				if (obj.IsUnderwater)
@@ -172,17 +172,17 @@ namespace DOL.GS.PacketHandler
 				ushort speedZ = 0;
 				if (npc == null)
 					return;
-				if (!npc.IsAtTargetPosition)
+				if (!npc.IsAtTargetLocation)
 				{
 					speed = npc.CurrentSpeed;
-					speedZ = (ushort)npc.TickSpeedZ;
+					speedZ = (ushort)npc.ZSpeedFactor;
 				}
 				pak.WriteShort((ushort)npc.ObjectID);
 				pak.WriteShort((ushort)(speed));
-				pak.WriteShort(npc.Heading);
-				pak.WriteShort((ushort)npc.Z);
-				pak.WriteInt((uint)npc.X);
-				pak.WriteInt((uint)npc.Y);
+				pak.WriteShort(npc.Orientation.InHeading);
+				pak.WriteShort((ushort)npc.Position.Z);
+				pak.WriteInt((uint)npc.Position.X);
+				pak.WriteInt((uint)npc.Position.Y);
 				pak.WriteShort(speedZ);
 				pak.WriteShort(npc.Model);
 				pak.WriteByte(npc.Size);

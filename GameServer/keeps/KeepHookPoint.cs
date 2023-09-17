@@ -21,53 +21,35 @@ using System.Linq;
 
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Keeps
 {
 	/// <summary>
 	/// A keepComponent
 	/// </summary>
-	public class GameKeepHookPoint : Point3D
+	public class GameKeepHookPoint
 	{
 		public GameKeepHookPoint(int id, GameKeepComponent component)
 		{
 			m_index = id;
 			m_component = component;
 			m_hookpointTimer = new HookpointTimer(this, this.Component);
-			this.X = component.X;
-			this.Y = component.Y;
-			this.Z = component.Z;
-			this.Heading = component.Heading;
+            Position = component.Position;
 		}
 
 		public GameKeepHookPoint(DBKeepHookPoint dbhookPoint, GameKeepComponent component)
 		{
-			double angle = component.Keep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-			switch (component.ComponentHeading)
-			{
-				case 0:
-					X = (int)(component.X + Math.Cos(angle) * dbhookPoint.X + Math.Sin(angle) * dbhookPoint.Y);
-					Y = (int)(component.Y - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
-					break;
-				case 1:
-					X = (int)(component.X + Math.Cos(angle) * dbhookPoint.Y - Math.Sin(angle) * dbhookPoint.X);
-					Y = (int)(component.Y + Math.Cos(angle) * dbhookPoint.X + Math.Sin(angle) * dbhookPoint.Y);
-					break;
-				case 2:
-					X = (int)(component.X - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
-					Y = (int)(component.Y + Math.Cos(angle) * dbhookPoint.Y - Math.Sin(angle) * dbhookPoint.X);
-					break;
-				case 3:
-					X = (int)(component.X - Math.Cos(angle) * dbhookPoint.Y + Math.Sin(angle) * dbhookPoint.X);
-					Y = (int)(component.Y - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
-					break;
-			}
-			this.Z = component.Z + dbhookPoint.Z;
-			this.Heading = (ushort)(component.Heading + dbhookPoint.Heading);
-			this.m_index = dbhookPoint.HookPointID;
-			this.Component = component;
+			var angle = component.Keep.Orientation + component.RelativeOrientationToKeep;
+            var offset = Vector.Create(dbhookPoint.X, -dbhookPoint.Y, dbhookPoint.Z).RotatedClockwise(angle);
+            Position = component.Position + offset;
+			Position = Position.With(component.Orientation + Angle.Heading(dbhookPoint.Heading));
+			m_index = dbhookPoint.HookPointID;
+			Component = component;
 			m_hookpointTimer = new HookpointTimer(this, this.Component);
 		}
+
+        public Position Position { get; private init; }
 
 		#region properties
 
@@ -91,12 +73,6 @@ namespace DOL.GS.Keeps
 			get { return (m_object == null); }
 		}
 
-		private ushort m_heading;
-		public ushort Heading
-		{
-			get { return m_heading; }
-			set { m_heading = value; }
-		}
 		private GameLiving m_object;
 
 		public GameLiving Object

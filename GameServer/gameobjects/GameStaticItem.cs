@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS
@@ -195,29 +196,25 @@ namespace DOL.GS
 			base.LoadFromDatabase(obj);
 			
 			m_loadedFromScript = false;
-			CurrentRegionID = item.Region;
             TranslationId = item.TranslationId;
 			Name = item.Name;
             ExamineArticle = item.ExamineArticle;
 			Model = item.Model;
 			Emblem = item.Emblem;
 			Realm = (eRealm)item.Realm;
-			Heading = item.Heading;
-			X = item.X;
-			Y = item.Y;
-			Z = item.Z;
+            Position = Position.Create(item.Region, item.X, item.Y, item.Z, item.Heading);
 			RespawnInterval = item.RespawnInterval;
 		}
 
-		/// <summary>
-		/// Gets or sets the heading of this item
-		/// </summary>
-		public override ushort Heading
+        /// <summary>
+        /// Gets or sets the heading of this item
+        /// </summary>
+        public override Angle Orientation
 		{
-			get { return base.Heading; }
+			get => base.Orientation;
 			set
 			{
-				base.Heading = value;
+				base.Orientation = value;
 				if (ObjectState == eObjectState.Active)
 				{
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -282,11 +279,11 @@ namespace DOL.GS
 			obj.Model = Model;
 			obj.Emblem = Emblem;
 			obj.Realm = (byte)Realm;
-			obj.Heading = Heading;
-			obj.Region = CurrentRegionID;
-			obj.X = X;
-			obj.Y = Y;
-			obj.Z = Z;
+			obj.Heading = Orientation.InHeading;
+			obj.Region = Position.RegionID;
+			obj.X = Position.X;
+			obj.Y = Position.Y;
+			obj.Z = Position.Z;
 			obj.ClassType = this.GetType().ToString();
 			obj.RespawnInterval = RespawnInterval;
 

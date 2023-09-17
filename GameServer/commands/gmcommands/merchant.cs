@@ -99,11 +99,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 						//Fill the object variables
-						merchant.X = client.Player.X;
-						merchant.Y = client.Player.Y;
-						merchant.Z = client.Player.Z;
-						merchant.CurrentRegion = client.Player.CurrentRegion;
-						merchant.Heading = client.Player.Heading;
+						merchant.Position = client.Player.Position;
 						merchant.Level = 1;
 						merchant.Realm = client.Player.Realm;
 						merchant.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GMCommands.Merchant.NewName");
@@ -419,11 +415,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 						//Fill the object variables
-						merchant.X = targetMerchant.X;
-						merchant.Y = targetMerchant.Y;
-						merchant.Z = targetMerchant.Z;
-						merchant.CurrentRegion = targetMerchant.CurrentRegion;
-						merchant.Heading = targetMerchant.Heading;
+						merchant.Position = targetMerchant.Position;
 						merchant.Level = targetMerchant.Level;
 						merchant.Realm = targetMerchant.Realm;
 						merchant.Name = targetMerchant.Name;

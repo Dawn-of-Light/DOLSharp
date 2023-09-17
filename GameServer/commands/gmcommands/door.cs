@@ -181,10 +181,10 @@ namespace DOL.GS.Commands
 					door.Type = DoorID/100000000;
 					door.Level = 20;
 					door.Realm = 6;
-					door.X = targetDoor.X;
-					door.Y = targetDoor.Y;
-					door.Z = targetDoor.Z;
-					door.Heading = targetDoor.Heading;
+					door.X = targetDoor.Position.X;
+					door.Y = targetDoor.Position.Y;
+					door.Z = targetDoor.Position.Z;
+					door.Heading = targetDoor.Orientation.InHeading;
 					door.Health = 2545;
 					GameServer.Database.AddObject(door);
 					(targetDoor).AddToWorld();
@@ -213,10 +213,10 @@ namespace DOL.GS.Commands
 					door.Realm = (byte) targetDoor.Realm;
 					door.Health = targetDoor.Health;
 					door.Locked = targetDoor.Locked;
-					door.X = client.Player.X;
-					door.Y = client.Player.Y;
-					door.Z = client.Player.Z;
-					door.Heading = client.Player.Heading;
+					door.X = client.Player.Position.X;
+					door.Y = client.Player.Position.Y;
+					door.Z = client.Player.Position.Z;
+					door.Heading = client.Player.Orientation.InHeading;
 					GameServer.Database.AddObject(door);
 					(targetDoor).AddToWorld();
 					client.Player.Out.SendMessage("Added door " + DoorID + " to the database", eChatType.CT_Important,
@@ -389,10 +389,10 @@ namespace DOL.GS.Commands
 			info.Add(" + Health : " + targetDoor.Health + " / " + targetDoor.MaxHealth);
 			info.Add(" + Statut : " + statut);
 			info.Add(" + Type : " + doorType);
-			info.Add(" + X : " + targetDoor.X);
-			info.Add(" + Y : " + targetDoor.Y);
-			info.Add(" + Z : " + targetDoor.Z);
-			info.Add(" + Heading : " + targetDoor.Heading);
+			info.Add(" + X : " + targetDoor.Position.X);
+			info.Add(" + Y : " + targetDoor.Position.Y);
+			info.Add(" + Z : " + targetDoor.Position.Z);
+			info.Add(" + Heading : " + targetDoor.Orientation.InHeading);
 
 			client.Out.SendCustomTextWindow("Door Information", info);
 		}

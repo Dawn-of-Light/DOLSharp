@@ -34,6 +34,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -147,14 +148,10 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + yettaFletcher.Name + ", creating him ...");
 				yettaFletcher.GuildName = "Part of " + questTitle + " Quest";
 				yettaFletcher.Realm = eRealm.Albion;
-				yettaFletcher.CurrentRegionID = 1;
 
 				yettaFletcher.Size = 53;
 				yettaFletcher.Level = 17;
-				yettaFletcher.X = 560072;
-				yettaFletcher.Y = 510125;
-				yettaFletcher.Z = 2473;
-				yettaFletcher.Heading = 1956;
+                yettaFletcher.Position = Position.Create(regionID: 1, x: 560072, y: 510125, z: 2473, heading: 1956);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

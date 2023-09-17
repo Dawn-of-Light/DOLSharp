@@ -213,9 +213,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.LevelCap"),
 							                       eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-							player.MoveTo((ushort) player.BindRegion, player.BindXpos,
-							              player.BindYpos, player.BindZpos,
-							              (ushort) player.BindHeading);
+							player.MoveTo(player.BindPosition);
 							break;
 						}
 					}
@@ -235,7 +233,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				int gracePeriodInMinutes = 0;
 				Int32.TryParse(Properties.RVR_LINK_DEATH_RELOG_GRACE_PERIOD, out gracePeriodInMinutes);
-				AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
+				AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(player.Position, WorldMgr.VISIBILITY_DISTANCE);
 				if (keep != null && player.Client.Account.PrivLevel == 1 && GameServer.KeepManager.IsEnemy(keep, player))
 				{
 					if (WorldMgr.RvRLinkDeadPlayers.ContainsKey(player.InternalID))
@@ -266,9 +264,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.SaferLocation"),
 				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				player.MoveTo((ushort) player.BindRegion, player.BindXpos,
-				              player.BindYpos, player.BindZpos,
-				              (ushort) player.BindHeading);
+				player.MoveTo(player.BindPosition);
 			}
 
 			private static void SendHouseRentRemindersToPlayer(GamePlayer player)

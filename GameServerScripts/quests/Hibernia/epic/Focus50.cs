@@ -34,6 +34,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -116,7 +117,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 421281 && npc.Y == 516273)
+					if (npc.CurrentRegionID == 200)
 					{
 						Ainrebh = npc;
 						break;
@@ -131,13 +132,9 @@ namespace DOL.GS.Quests.Hibernia
 				Ainrebh.Name = "Ainrebh";
 				Ainrebh.GuildName = "Enchanter";
 				Ainrebh.Realm = eRealm.Hibernia;
-				Ainrebh.CurrentRegionID = 200;
 				Ainrebh.Size = 48;
 				Ainrebh.Level = 40;
-				Ainrebh.X = 421281;
-				Ainrebh.Y = 516273;
-				Ainrebh.Z = 1877;
-				Ainrebh.Heading = 3254;
+                Ainrebh.Position = Position.Create(regionID: 200, x: 421281, y: 516273, z: 1877, heading: 3254);
 				Ainrebh.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -150,7 +147,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 488306 && npc.Y == 521440)
+					if (npc.CurrentRegionID == 200)
 					{
 						GreenMaw = npc;
 						break;
@@ -165,13 +162,9 @@ namespace DOL.GS.Quests.Hibernia
 				GreenMaw.Name = "Green Maw";
 				GreenMaw.GuildName = "";
 				GreenMaw.Realm = eRealm.None;
-				GreenMaw.CurrentRegionID = 200;
 				GreenMaw.Size = 50;
 				GreenMaw.Level = 65;
-				GreenMaw.X = 488306;
-				GreenMaw.Y = 521440;
-				GreenMaw.Z = 6328;
-				GreenMaw.Heading = 1162;
+                GreenMaw.Position = Position.Create(regionID: 200, x: 488306, y: 521440, z: 6328, heading: 1162);
 				GreenMaw.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -1568,7 +1561,7 @@ namespace DOL.GS.Quests.Hibernia
         *#26 seek out Loken in Raumarik Loc 47k, 25k, 4k, and kill him purp and 2 blue adds 
         *#27 return to Ainrebh 
         *#28 give her the ball of flame
-        *#29 talk with Ainrebh about Loken’s demise
+        *#29 talk with Ainrebh about Loken's demise
         *#30 go to MorlinCaan in Jordheim 
         *#31 give her the sealed pouch
         *#32 you get your epic armor as a reward

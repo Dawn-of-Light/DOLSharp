@@ -151,7 +151,7 @@ namespace DOL.GS.GameEvents
 			if (chArgs == null)
 				return;
 			
-			DOLCharacters ch = chArgs.Character;
+			var ch = chArgs.Character;
 			
 			// check if location looks ok.
 			if (ch.Xpos == 0 && ch.Ypos == 0 && ch.Zpos == 0)

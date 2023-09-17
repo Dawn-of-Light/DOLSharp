@@ -27,6 +27,7 @@ using DOL.Events;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Quests.Atlantis
 {
@@ -178,13 +179,9 @@ namespace DOL.GS.Quests.Atlantis
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + m_scholarAlaria.Name + ", creating her ...");
 				m_scholarAlaria.Realm = eRealm.Midgard;
-				m_scholarAlaria.CurrentRegionID = 71;
 				m_scholarAlaria.Size = 50;
 				m_scholarAlaria.Level = 45;
-				m_scholarAlaria.X = 565733;
-				m_scholarAlaria.Y = 569502;
-				m_scholarAlaria.Z = 7255;
-				m_scholarAlaria.Heading = 708;
+                m_scholarAlaria.Position = Position.Create(regionID: 71, x: 565733, y: 569502, z: 7255, heading: 708);
 				m_scholarAlaria.MaxSpeedBase = 200;
 
 				m_scholarAlaria.SaveIntoDatabase();
@@ -203,13 +200,9 @@ namespace DOL.GS.Quests.Atlantis
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + m_scholarJarron.Name + ", creating him ...");
 				m_scholarJarron.Realm = eRealm.Albion;
-				m_scholarJarron.CurrentRegionID = 70;
 				m_scholarJarron.Size = 50;
 				m_scholarJarron.Level = 45;
-				m_scholarJarron.X = 577936;
-				m_scholarJarron.Y = 533228;
-				m_scholarJarron.Z = 7295;
-				m_scholarJarron.Heading = 3731;
+                m_scholarJarron.Position = Position.Create(regionID: 70, x: 577936, y: 533228, z: 7295, heading: 3731);
 				m_scholarJarron.MaxSpeedBase = 200;
 
 				m_scholarJarron.SaveIntoDatabase();
@@ -228,13 +221,9 @@ namespace DOL.GS.Quests.Atlantis
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + m_scholarElmer.Name + ", creating him ...");
 				m_scholarElmer.Realm = eRealm.Hibernia;
-				m_scholarElmer.CurrentRegionID = 72;
 				m_scholarElmer.Size = 50;
 				m_scholarElmer.Level = 45;
-				m_scholarElmer.X = 552291;
-				m_scholarElmer.Y = 576366;
-				m_scholarElmer.Z = 6767;
-				m_scholarElmer.Heading = 1074;
+                m_scholarElmer.Position = Position.Create(regionID: 72, x: 552291, y: 576366, z: 6767, heading: 1074);
 				m_scholarElmer.MaxSpeedBase = 200;
 
 				m_scholarElmer.SaveIntoDatabase();

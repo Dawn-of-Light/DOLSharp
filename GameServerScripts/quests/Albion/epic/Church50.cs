@@ -34,6 +34,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -98,7 +99,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 408557 && npc.Y == 651675)
+					if (npc.CurrentRegionID == 1)
 					{
 						Roben = npc;
 						break;
@@ -113,13 +114,9 @@ namespace DOL.GS.Quests.Albion
 				Roben.Name = "Roben Fraomar";
 				Roben.GuildName = "";
 				Roben.Realm = eRealm.Albion;
-				Roben.CurrentRegionID = 1;
 				Roben.Size = 52;
 				Roben.Level = 50;
-				Roben.X = 408557;
-				Roben.Y = 651675;
-				Roben.Z = 5200;
-				Roben.Heading = 3049;
+                Roben.Position = Position.Create(regionID: 1, x: 408557, y: 651675, z: 5200, heading: 3049);
 				Roben.AddToWorld();
 
 				if (SAVE_INTO_DATABASE)
@@ -131,7 +128,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 322231 && npc.Y == 671546)
+					if (npc.CurrentRegionID == 1)
 					{
 						Blythe = npc;
 						break;
@@ -146,13 +143,9 @@ namespace DOL.GS.Quests.Albion
 				Blythe.Name = "Sister Blythe";
 				Blythe.GuildName = "";
 				Blythe.Realm = eRealm.None;
-				Blythe.CurrentRegionID = 1;
 				Blythe.Size = 50;
 				Blythe.Level = 69;
-				Blythe.X = 322231;
-				Blythe.Y = 671546;
-				Blythe.Z = 2762;
-				Blythe.Heading = 1683;
+                Blythe.Position = Position.Create(regionID: 1, x: 322231, y: 671546, z: 2762, heading: 1683);
 				Blythe.AddToWorld();
 
 				if (SAVE_INTO_DATABASE)
@@ -1028,7 +1021,7 @@ namespace DOL.GS.Quests.Albion
         *#26 seek out Loken in Raumarik Loc 47k, 25k, 4k, and kill him purp and 2 blue adds 
         *#27 return to Roben 
         *#28 give her the ball of flame
-        *#29 talk with Roben about Loken’s demise
+        *#29 talk with Roben about Loken's demise
         *#30 go to MorlinCaan in Jordheim 
         *#31 give her the sealed pouch
         *#32 you get your epic armor as a reward

@@ -20,6 +20,7 @@ using System;
 using System.Linq;
 
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.Language;
@@ -50,7 +51,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			AbstractGameKeep myKeep = GameServer.KeepManager.GetKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, WorldMgr.OBJ_UPDATE_DISTANCE);
+			AbstractGameKeep myKeep = GameServer.KeepManager.GetKeepCloseToSpot(client.Player.Position, WorldMgr.OBJ_UPDATE_DISTANCE);
 
 			if (myKeep == null)
 			{
@@ -113,41 +114,19 @@ namespace DOL.GS.Commands
 						}
 
 						GameKeepComponent component = new GameKeepComponent();
-						component.X = client.Player.X;
-						component.Y = client.Player.Y;
-						component.Z = client.Player.Z;
-						component.ComponentHeading = (client.Player.Heading - myKeep.Heading) / 1024;
-						component.Heading = (ushort)(component.ComponentHeading * 1024 + myKeep.Heading);
+						component.Position = client.Player.Position
+                            .With(Angle.Degrees(component.ComponentHeading * 90) + myKeep.Orientation);
+						component.ComponentHeading = (client.Player.Orientation - myKeep.Orientation).InHeading / 1024;
 						component.Keep = myKeep;
-						//todo good formula
-						//component.ComponentX = (component.X - myKeep.X) / 148;
-						//component.ComponentY = (component.Y - myKeep.Y) / 148;
 
-                        double angle = myKeep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-
-                        //component.ComponentX = (int)((148 * Math.Sin(angle) * myKeep.X - 148 * Math.Sin(angle) * client.Player.X + client.Player.Y - myKeep.Y)
-                        //    / (148 * Math.Sin(angle) - 148 * 148 * 2 * Math.Sin(angle) * Math.Cos(angle)));
-                        //component.ComponentY = (int)((myKeep.Y - client.Player.Y + 148 * Math.Sin(angle) * component.ComponentX) / (148 * Math.Cos(angle)));
-
+                        var angle = myKeep.Orientation.InRadians;
                         component.ComponentX = CalcCX(client.Player, myKeep, angle);
                         component.ComponentY = CalcCY(client.Player, myKeep, angle);
 
-						/*
-						x = (component.X-myKeep.X)/148 = a*cos(t) - b*sin(t)
-						y = (component.Y-myKeep.Y)/148 = a*sin(t) + b*cos(t)
-						a = sqrt((x+b*sin(t))^2 + (y-b*cos(t))^2)
-						a = sqrt(x²+y²+b² +2*x*b*sin(t)-2*y*b*cos(t))
-						b = sqrt((x-a*cos(t))^2 + (y-a*sin(t))^2)
-						b = sqrt(x²+y²+a²-2*x*a*cos(t)-2*y*a*sin(t))
-						0 = 2x²+2y²-2*x*a*cos(t)-2*y*a*sin(t)+2*x*sqrt(x²+y²+a²-2*x*a*cos(t)-2*y*a*sin(t))*sin(t)-2*y*sqrt(x²+y²+a²-2*x*a*cos(t)-2*y*a*sin(t))*cos(t)
-						pfff
-						so must find an other way to find it....
-						*/
 						component.Name = myKeep.Name;
 						component.Model = INVISIBLE_MODEL;
 						component.Skin = skin;
 						component.Level = (byte)myKeep.Level;
-						component.CurrentRegion = client.Player.CurrentRegion;
 						component.Health = component.MaxHealth;
 						component.ID = myKeep.KeepComponents.Count;
 						component.Keep.KeepComponents.Add(component);
@@ -162,23 +141,14 @@ namespace DOL.GS.Commands
                 #region Move
                 case "move":
                     {
-                        GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
+                        var component = client.Player.TargetObject as GameKeepComponent;
 
-                        component.X = client.Player.X;
-                        component.Y = client.Player.Y;
-                        component.Z = client.Player.Z;
-                        component.ComponentHeading = (client.Player.Heading - myKeep.Heading) / 1024;
-                        component.Heading = (ushort)(component.ComponentHeading * 1024 + myKeep.Heading);
+                        component.Position = client.Player.Position
+                            .With(Angle.Heading(component.ComponentHeading * 1024) + myKeep.Orientation);
+                        component.ComponentHeading = (client.Player.Orientation - myKeep.Orientation).InDegrees / 90;
                         component.Keep = myKeep;
-                        //todo good formula
-                        //component.ComponentX = (component.X - myKeep.X) / 148;
-                        //component.ComponentY = (myKeep.Y - component.Y) / 148;
-                        double angle = myKeep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
 
-                        //component.ComponentX = (int)((148 * Math.Sin(angle) * myKeep.X - 148 * Math.Sin(angle) * client.Player.X + client.Player.Y - myKeep.Y)
-                        //    / (148 * Math.Sin(angle) - 148 * 148 * 2 * Math.Sin(angle) * Math.Cos(angle)));
-                        //component.ComponentY = (int)((myKeep.Y - client.Player.Y + 148 * Math.Sin(angle) * component.ComponentX) / (148 * Math.Cos(angle)));
-
+                        var angle = myKeep.Orientation.InRadians;
                         component.ComponentX = CalcCX(client.Player, myKeep, angle);
                         component.ComponentY = CalcCY(client.Player, myKeep, angle);
 
@@ -201,7 +171,7 @@ namespace DOL.GS.Commands
 							GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
 
 							component.ComponentHeading = amount;
-							component.Heading = (ushort)(component.ComponentHeading * 1024 + myKeep.Heading);
+							component.Orientation = Angle.Heading(component.ComponentHeading * 1024) + myKeep.Orientation;
 
 							client.Out.SendKeepInfo(myKeep);
 							client.Out.SendKeepComponentInfo(component);
@@ -328,28 +298,32 @@ namespace DOL.GS.Commands
 
         public int CalcCX(GamePlayer player, AbstractGameKeep myKeep, double angle)
         {
+            var keepPos = myKeep.Position;
+            var playerPos = player.Position;
             if (Math.Abs(Math.Sin(angle)) < 0.0001) //for approximations, == 0 wont work.
             {
-                return (player.X - myKeep.X) / 148;
+                return (playerPos.X - keepPos.X) / 148;
             }
             else
             {
-                return (int)((148 * Math.Sin(angle) * myKeep.X - 148 * Math.Sin(angle) * player.X + player.Y - myKeep.Y)
-                            / (148 * Math.Sin(angle) - 148 * 148 * 2 * Math.Sin(angle) * Math.Cos(angle)));
+                return (int)((148 * Math.Sin(angle) * keepPos.X - 148 * Math.Sin(angle) * playerPos.X + playerPos.Y - keepPos.Y)
+                    / (148 * Math.Sin(angle) - 148 * 148 * 2 * Math.Sin(angle) * Math.Cos(angle)));
             }
         }
 
         public int CalcCY(GamePlayer player, AbstractGameKeep myKeep, double angle)
         {
+            var keepPos = myKeep.Position;
+            var playerPos = player.Position;
             if (Math.Abs(Math.Sin(angle)) < 0.0001)
             {
-                return (myKeep.Y - player.Y) / 148;
+                return (keepPos.Y - playerPos.Y) / 148;
             }
             else
             {
-                int cx = (int)((148 * Math.Sin(angle) * myKeep.X - 148 * Math.Sin(angle) * player.X + player.Y - myKeep.Y)
+                int cx = (int)((148 * Math.Sin(angle) * keepPos.X - 148 * Math.Sin(angle) * playerPos.X + playerPos.Y - keepPos.Y)
                             / (148 * Math.Sin(angle) - 148 * 148 * 2 * Math.Sin(angle) * Math.Cos(angle)));
-                return (int)((myKeep.Y - player.Y + 148 * Math.Sin(angle) * cx) / (148 * Math.Cos(angle)));
+                return (int)((keepPos.Y - playerPos.Y + 148 * Math.Sin(angle) * cx) / (148 * Math.Cos(angle)));
             }
         }
 	}

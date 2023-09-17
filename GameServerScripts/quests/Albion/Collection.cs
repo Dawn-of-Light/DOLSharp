@@ -36,6 +36,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -80,7 +81,7 @@ namespace DOL.GS.Quests.Albion
 
 		private static GameNPC[] general = new GameNPC[3];
 		private static String[] generalNames = {"Palearis", "Bohad", "Fluvale"};
-		private static GameLocation[] generalLocations = new GameLocation[3];
+		private static Position[] generalLocations = new Position[3];
 
 
 		private static ItemTemplate fairyGeneralWings = null;
@@ -144,9 +145,9 @@ namespace DOL.GS.Quests.Albion
 
 			masterFrederick = GetMasterFrederick();
 
-			generalLocations[0] = new GameLocation(generalNames[0], 1, 568589, 501801, 2134, 23);
-			generalLocations[1] = new GameLocation(generalNames[1], 1, 572320, 499246, 2472, 14);
-			generalLocations[2] = new GameLocation(generalNames[2], 1, 571900, 510559, 2210, 170);
+			generalLocations[0] = Position.Create(regionID: 1, x: 568589, y: 501801, z: 2134, heading: 23);
+			generalLocations[1] = Position.Create(regionID: 1, x: 572320, y: 499246, z: 2472, heading: 14);
+			generalLocations[2] = Position.Create(regionID: 1, x: 571900, y: 510559, z: 2210, heading: 170);
 
 			GameNPC[] npcs = null;
 			for (int i = 0; i < general.Length; i++)
@@ -163,14 +164,10 @@ namespace DOL.GS.Quests.Albion
 					general[i].Model = 603;
 
 					general[i].Name = generalNames[i];
-					general[i].X = generalLocations[i].X;
-					general[i].Y = generalLocations[i].Y;
-					general[i].Z = generalLocations[i].Z;
-					general[i].Heading = generalLocations[i].Heading;
+					general[i].Position = generalLocations[i];
 
 					general[i].GuildName = "Part of " + questTitle + " Quest";
 					general[i].Realm = eRealm.None;
-					general[i].CurrentRegionID = generalLocations[i].RegionID;
 
 					general[i].Size = 49;
 					general[i].Level = 2;

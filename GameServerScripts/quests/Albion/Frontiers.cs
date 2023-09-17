@@ -38,6 +38,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.GS.Profession;
 using log4net;
@@ -84,8 +85,8 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC alice = null;
 		private static GameStableMaster uliam = null;
 
-		private static GameLocation locationAlice = null;
-		private static GameLocation locationUliam = null;
+		private static Position locationAlice = Position.Nowhere;
+		private static Position locationUliam = Position.Nowhere;
 
 		private static GameStableMaster colm = null;
 		private static GameNPC dragonfly = null;
@@ -170,13 +171,9 @@ namespace DOL.GS.Quests.Albion
 				masterVisur.Name = "Master Visur";
 				masterVisur.GuildName = "Part of " + questTitle + " Quest";
 				masterVisur.Realm = eRealm.Albion;
-				masterVisur.CurrentRegionID = 1;
 				masterVisur.Size = 49;
 				masterVisur.Level = 55;
-				masterVisur.X = 585589;
-				masterVisur.Y = 478396;
-				masterVisur.Z = 3368;
-				masterVisur.Heading = 56;
+                masterVisur.Position = Position.Create(regionID: 1, x: 585589, y: 478396, z: 3368, heading: 56);
 				masterVisur.MaxSpeedBase = 200;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -210,12 +207,9 @@ namespace DOL.GS.Quests.Albion
 				alice.Name = "Scryer Alice";
 				alice.GuildName = "Part of " + questTitle + " Quest";
 				alice.Realm = eRealm.Albion;
-				alice.CurrentRegionID = 1;
 				alice.Size = 51;
 				alice.Level = 50;
-				alice.X = 436598;
-				alice.Y = 650425;
-				alice.Z = 2448;
+                alice.Position = Position.Create(regionID: 1, x: 436598, y: 650425, z: 2448, heading: 3766);
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 81);
@@ -232,7 +226,6 @@ namespace DOL.GS.Quests.Albion
 //				alice.AddNPCEquipment(Slot.CLOAK, 91, 0, 0, 0);
 //				alice.AddNPCEquipment(Slot.RIGHTHAND, 3, 0, 0, 0);
 
-				alice.Heading = 3766;
 				alice.MaxSpeedBase = 200;
 				alice.EquipmentTemplateID = "200276";
 				alice.Flags = (GameNPC.eFlags) 18;
@@ -252,8 +245,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				alice = npcs[0];
 
-			Point2D point = alice.GetPointFromHeading( alice.Heading, 30 );
-			locationAlice = new GameLocation(alice.CurrentZone.Description, alice.CurrentRegionID, point.X, point.Y, alice.Z);
+			locationAlice =  alice.Position + Vector.Create(alice.Orientation, length: 30);
 
 			dragonflyTicket = CreateTicketTo("Castle Sauvage", "hs_src_castlesauvage");
 			horseTicket = CreateTicketTo("Camelot Hills", "hs_src_camelothills");
@@ -268,7 +260,6 @@ namespace DOL.GS.Quests.Albion
 				colm.Name = "Dragonfly Handler Colm";
 				colm.GuildName = "Stable Master";
 				colm.Realm = eRealm.Albion;
-				colm.CurrentRegionID = 1;
 				colm.Size = 51;
 				colm.Level = 50;
 
@@ -284,10 +275,7 @@ namespace DOL.GS.Quests.Albion
 //				colm.AddNPCEquipment(Slot.FEET, 84, 10, 0, 0);
 //				colm.AddNPCEquipment(Slot.CLOAK, 57, 32, 0, 0);
 
-				colm.X = 562775;
-				colm.Y = 512453;
-				colm.Z = 2438;
-				colm.Heading = 158;
+                colm.Position = Position.Create(regionID: 1, x: 562775, y: 512453, z: 2438, heading: 158);
 				colm.MaxSpeedBase = 200;
 
 				StandardMobBrain brain = new StandardMobBrain();
@@ -331,19 +319,15 @@ namespace DOL.GS.Quests.Albion
 				dragonfly.Name = "dragonfly hatchling";
 				dragonfly.GuildName = "Part of " + questTitle + " Quest";
 				dragonfly.Realm = eRealm.None;
-				dragonfly.CurrentRegionID = 1;
 				dragonfly.Size = 25;
 				dragonfly.Level = 31;
-				dragonfly.X = colm.X + 80;
-				dragonfly.Y = colm.Y + 100;
-				dragonfly.Z = colm.Z;
+				dragonfly.Position = colm.Position.With(heading: 2434) + Vector.Create(x: 80,y: 100);
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
 				brain.AggroRange = 0;
 				dragonfly.SetOwnBrain(brain);
 
-				dragonfly.Heading = 2434;
 				dragonfly.MaxSpeedBase = 400;
 				//dragonfly.EquipmentTemplateID = 200276;
 
@@ -366,13 +350,9 @@ namespace DOL.GS.Quests.Albion
 				uliam.Name = "Uliam";
 				uliam.GuildName = "Stable Master";
 				uliam.Realm = eRealm.Albion;
-				uliam.CurrentRegionID = 1;
 				uliam.Size = 51;
 				uliam.Level = 50;
-				uliam.X = 585609;
-				uliam.Y = 478980;
-				uliam.Z = 2183;
-				uliam.Heading = 93;
+                uliam.Position = Position.Create(regionID: 1, x: 585609, y: 478980, z: 2183, heading: 93);
 				uliam.MaxSpeedBase = 200;
 
 				StandardMobBrain brain = new StandardMobBrain();
@@ -393,8 +373,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				uliam = npcs[0] as GameStableMaster;
 
-			Point2D uliamloc = uliam.GetPointFromHeading( uliam.Heading, 30 );
-			locationUliam = new GameLocation(uliam.CurrentZone.Description, uliam.CurrentRegionID, uliam.X, uliam.Y, uliam.Z);
+			locationUliam = uliam.Position + Vector.Create(uliam.Orientation, length: 30);
 
 			/*
             foreach (GameNPC npc in WorldMgr.GetNPCsCloseToObject(uliam, 400))
@@ -880,7 +859,7 @@ namespace DOL.GS.Quests.Albion
 								GiveItem(alice, player, horseTicket);
 								quest.Step = 5;
 
-								quest.TeleportTo(player, alice, locationUliam, 50);
+								quest.TeleportTo(player, alice, locationUliam, uliam.CurrentZone.Description, 50, 0);
 							}
 							break;
 					}
@@ -910,7 +889,7 @@ namespace DOL.GS.Quests.Albion
 					masterVisur.SayTo(player, "From sodden ground to the glow of the moon, let each vessel in this circle depart to lands now lost from the light of our fair Camelot!");
 					quest.Step = 3;
 
-					quest.TeleportTo(player, masterVisur, locationAlice, 30);
+					quest.TeleportTo(player, masterVisur, locationAlice, alice.CurrentZone.Description, 30, 0);
 					return;
 				}
 

@@ -26,6 +26,7 @@ using DOL.GS.Quests;
 using DOL.GS.ServerRules;
 
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -73,7 +74,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				ChatUtil.SendDebugMessage(client, $"Invalid Jump (ZonePoint table): [{jumpSpotId}]{((zonePoint == null) ? ". Entry missing!" : ". TargetRegion is 0!")}");
 				zonePoint = new ZonePoint();
 				zonePoint.Id = jumpSpotId;
-				string zonePointLocation = $"Region {player.CurrentRegionID} and coordinates ({player.X},{player.Y},{player.Z})";
+				string zonePointLocation = $"Region {player.CurrentRegionID} and coordinates ({player.Location})";
 				Log.Error($"ZonePoint {jumpSpotId} at {zonePointLocation} on client {client.Version} missing. Either ZonePoint missing or RegionChangeRequestHandler needs to be updated.");
 			}
 
@@ -240,7 +241,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 
 				//move the player
-				player.MoveTo(m_zonePoint.TargetRegion, m_zonePoint.TargetX, m_zonePoint.TargetY, m_zonePoint.TargetZ, m_zonePoint.TargetHeading);
+				player.MoveTo(m_zonePoint.GetTargetPosition());
 			}
 		}
 	}

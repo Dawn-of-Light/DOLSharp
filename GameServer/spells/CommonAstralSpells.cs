@@ -26,6 +26,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Effects;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 using DOL.Language;
@@ -121,20 +122,14 @@ namespace DOL.GS.Spells
                 return;
             }
 
-            Point2D summonloc;
+            var summonPosition = target.Position.TurnedAround() + Vector.Create(target.Orientation, length: 64);
             beffect = CreateSpellEffect(target, effectiveness);
             {
-                summonloc = target.GetPointFromHeading(target.Heading, 64);
-
                 BrittleBrain controlledBrain = new BrittleBrain(player);
                 controlledBrain.IsMainPet = false;
                 summoned = new GameNPC(template);
                 summoned.SetOwnBrain(controlledBrain);
-                summoned.X = summonloc.X;
-                summoned.Y = summonloc.Y;
-                summoned.Z = target.Z;
-                summoned.CurrentRegion = target.CurrentRegion;
-                summoned.Heading = (ushort)((target.Heading + 2048) % 4096);
+                summoned.Position = summonPosition;
                 summoned.Realm = target.Realm;
                 summoned.CurrentSpeed = 0;
                 summoned.Level = Caster.Level;

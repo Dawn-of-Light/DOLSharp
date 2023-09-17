@@ -36,8 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
-	namespace DOL.GS.Quests.Albion {
+namespace DOL.GS.Quests.Albion {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -120,15 +121,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + MistressLaws.Name + ", creating ...");
 				MistressLaws.GuildName = "Part of " + questTitle + " Quest";
 				MistressLaws.Realm = eRealm.Albion;
-				MistressLaws.CurrentRegionID = 51;
 				MistressLaws.Size = 52;
 				MistressLaws.Level = 40;
 				MistressLaws.MaxSpeedBase = 191;
 				MistressLaws.Faction = FactionMgr.GetFactionByID(0);
-				MistressLaws.X = 536859;
-				MistressLaws.Y = 548403;
-				MistressLaws.Z = 4800;
-				MistressLaws.Heading = 1035;
+                MistressLaws.Position = Position.Create(regionID: 51, x: 536859, y: 548403, z: 4800, heading: 1035);
 				MistressLaws.RespawnInterval = -1;
 				MistressLaws.BodyType = 0;
 				
@@ -165,15 +162,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + YlaineBarrett.Name + ", creating ...");
 				YlaineBarrett.GuildName = "Part of " + questTitle + " Quest";
 				YlaineBarrett.Realm = eRealm.Albion;
-				YlaineBarrett.CurrentRegionID = 51;
 				YlaineBarrett.Size = 50;
 				YlaineBarrett.Level = 40;
 				YlaineBarrett.MaxSpeedBase = 191;
 				YlaineBarrett.Faction = FactionMgr.GetFactionByID(0);
-				YlaineBarrett.X = 522790;
-				YlaineBarrett.Y = 542142;
-				YlaineBarrett.Z = 3230;
-				YlaineBarrett.Heading = 1661;
+                YlaineBarrett.Position = Position.Create(regionID: 51, x: 522790, y: 542142, z: 3230, heading: 1661);
 				YlaineBarrett.RespawnInterval = -1;
 				YlaineBarrett.BodyType = 0;
 				

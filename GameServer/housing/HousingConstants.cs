@@ -96,6 +96,23 @@ namespace DOL.GS.Housing
 		                                                          		new[] {-0.58f, 638, 100, 3} // model 12
 		                                                          	};
 
+        public static readonly float[][] ConsignmentPositions = new[]
+        {
+            null,
+            new[] {0.55f, 630, 40, 1}, // model 1
+		    new[] {0.55f, 630, 40, 1}, // model 2
+		    new[] {-0.55f, 613, 100, 1}, // model 3
+		    new[] {0.53f, 620, 100, 1}, // model 4
+		    new[] {-0.47f, 755, 40, 2}, // model 5
+		    new[] {-0.5f, 630, 40, 2}, // model 6
+		    new[] {0.48f, 695, 100, 2}, // model 7
+		    new[] {-0.505f, 680, 100, 2}, // model 8
+		    new[] {0.475f, 693, 40, 3}, // model 9
+		    new[] {0.47f, 688, 40, 3}, // model 10
+		    new[] {-0.65f, 603, 100, 3}, // model 11
+		    new[] {-0.58f, 638, 100, 3} // model 12
+		};
+
 		/// <summary>
 		/// Housing hookpoint coordinates offset relative to a house.
 		/// </summary>

@@ -19,6 +19,7 @@
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.Housing;
 using DOL.GS.Profession;
 using DOL.GS.Spells;
@@ -205,7 +206,7 @@ namespace DOL.GS.PacketHandler
 							Region region = WorldMgr.GetRegion((ushort)c.Region);
 							if (region != null)
 							{
-								locationDescription = region.GetTranslatedSpotDescription(m_gameClient, c.Xpos, c.Ypos, c.Zpos);
+								locationDescription = region.GetTranslatedSpotDescription(m_gameClient, c.GetPosition().Coordinate);
 							}
 							if (locationDescription.Length > 23) // location name over 23 chars has to be truncated eg. "The Great Pyramid of Stygia"
 							{

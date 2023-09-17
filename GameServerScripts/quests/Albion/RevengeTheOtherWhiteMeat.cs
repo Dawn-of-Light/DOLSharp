@@ -34,6 +34,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -74,8 +75,9 @@ namespace DOL.GS.Quests.Albion
 		protected const int maximumLevel = 8;
 
 		private static GameNPC farmerAsma = null;
-		
-		private static GameLocation wilburSpawnLocation = new GameLocation("Wilbur Location", 1, 500646, 491255, 2298);
+
+        private static Coordinate wilburSpawnLocation = Coordinate.Create(x: 500646, y: 491255, z: 2298);
+		//private static GameLocation wilburSpawnLocation = new GameLocation("Wilbur Location", 1, 500646, 491255, 2298);
 		
 		/* We need to define the constructors from the base class here, else there might be problems
 		 * when loading this quest...
@@ -147,7 +149,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + farmerAsma.Name + ", creating him ...");
 				farmerAsma.GuildName = "Part of " + questTitle + " Quest";
 				farmerAsma.Realm = eRealm.Albion;
-				farmerAsma.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 31);
@@ -159,10 +160,7 @@ namespace DOL.GS.Quests.Albion
 
 				farmerAsma.Size = 50;
 				farmerAsma.Level = 35;
-				farmerAsma.X = 563939;
-				farmerAsma.Y = 509234;
-				farmerAsma.Z = 2744 ;
-				farmerAsma.Heading = 21;
+                farmerAsma.Position = Position.Create(regionID: 1, x: 563939, y: 509234, z: 2744 , heading: 21);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -487,7 +485,6 @@ namespace DOL.GS.Quests.Albion
 						pigHerderWyatt.Model = 39;
 						pigHerderWyatt.Name = "Pig Herder Wyatt";
 						pigHerderWyatt.Realm = eRealm.Albion;
-						pigHerderWyatt.CurrentRegionID = 1;
 
 						GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 						template.AddNPCEquipment(eInventorySlot.FeetArmor, 143);
@@ -497,14 +494,12 @@ namespace DOL.GS.Quests.Albion
 
 						pigHerderWyatt.Size = 54;
 						pigHerderWyatt.Level = 33;
-						pigHerderWyatt.X = wilburSpawnLocation.X - 1000;
-						pigHerderWyatt.Y = wilburSpawnLocation.Y + 1500;
-						pigHerderWyatt.Z = wilburSpawnLocation.Z;
-						pigHerderWyatt.Heading = 2548;
+						pigHerderWyatt.Position = Position.Create(regionID: 1, wilburSpawnLocation + Vector.Create(x: -1000, y: 1500), Angle.Heading(2548));
 						pigHerderWyatt.AddToWorld();
 
 						GameEventMgr.AddHandler(pigHerderWyatt, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnCloseToDeadWilbur));
-						pigHerderWyatt.WalkTo(gArgs.Target.X - 90, gArgs.Target.Y + 90, gArgs.Target.Z, 200);
+                        var offset = Vector.Create(x: -90, y: 90 );
+						pigHerderWyatt.WalkTo(gArgs.Target.Location + offset, 200);
 						
 						return;
 					}
@@ -536,7 +531,9 @@ namespace DOL.GS.Quests.Albion
 				pigHerderWyatt.Yell("The King's men will hear about this!!! Oh, Wilbur...");
 				pigHerderWyatt.Emote(eEmote.Cry);
 				GameEventMgr.AddHandler(pigHerderWyatt, GameNPCEvent.CloseToTarget, new DOLEventHandler(OnRemovePigHerder));
-				pigHerderWyatt.WalkTo(wilburSpawnLocation.X - 1000, wilburSpawnLocation.Y + 1500, wilburSpawnLocation.Z, 200);
+                var movementOffset = Vector.Create(x: -1000, y: 1500 );
+                short speed = 200;
+				pigHerderWyatt.WalkTo(wilburSpawnLocation + movementOffset, speed);
 			}
 			return 0;
 		}

@@ -19,6 +19,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Albion
@@ -216,7 +217,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + SirPrescott.Name + ", creating him ...");
 				//SirPrescott.GuildName = "Part of " + questTitle + " Quest";
 				SirPrescott.Realm = eRealm.Albion;
-				SirPrescott.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 39);
@@ -229,10 +229,7 @@ namespace DOL.GS.Quests.Albion
 
 				SirPrescott.Size = 50;
 				SirPrescott.Level = 50;
-				SirPrescott.X = 559862;
-				SirPrescott.Y = 513092;
-				SirPrescott.Z = 2408;
-				SirPrescott.Heading = 2480;
+                SirPrescott.Position = Position.Create(regionID: 1, x: 559862, y: 513092, z: 2408, heading: 2480);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

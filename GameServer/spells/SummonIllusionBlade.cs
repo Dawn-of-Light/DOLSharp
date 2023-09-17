@@ -46,17 +46,7 @@ namespace DOL.GS.Spells
             IControlledBrain brain = GetPetBrain(Caster);
             m_pet = GetGamePet(template);
             m_pet.SetOwnBrain(brain as AI.ABrain);
-            int x, y, z;
-            ushort heading;
-            Region region;
-
-            GetPetLocation(out x, out y, out z, out heading, out region);
-
-            m_pet.X = x;
-            m_pet.Y = y;
-            m_pet.Z = z;
-            m_pet.Heading = heading;
-            m_pet.CurrentRegion = region;
+            m_pet.Position = GetSummonPosition();
            // m_pet.CurrentSpeed = 0;
             m_pet.Realm = Caster.Realm;
             m_pet.Race = 0;

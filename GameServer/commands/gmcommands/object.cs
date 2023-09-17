@@ -108,17 +108,14 @@ namespace DOL.GS.Commands
 						}
 
 						info.Add(" ");
-						info.Add(" Location: X= " + targetObject.X + " ,Y= " + targetObject.Y + " ,Z= " + targetObject.Z);
+						info.Add(" Location: X= " + targetObject.Position.X + " ,Y= " + targetObject.Position.Y + " ,Z= " + targetObject.Position.Z);
 						
 						client.Out.SendCustomTextWindow( "[ " + name + " ]", info );
 						break;
 					}
 				case "movehere":
 					{
-						targetObject.X = client.Player.X;
-						targetObject.Y = client.Player.Y;
-						targetObject.Z = client.Player.Z;
-						targetObject.Heading = client.Player.Heading;
+						targetObject.Position = client.Player.Position;
 						targetObject.SaveIntoDatabase();
 						break;
 					}
@@ -278,11 +275,7 @@ namespace DOL.GS.Commands
 							ChatUtil.SendSystemMessage(client, "There was an error creating an instance of " + targetObject.GetType().FullName + "!");
 							return;
 						}
-						item.X = client.Player.X;
-						item.Y = client.Player.Y;
-						item.Z = client.Player.Z;
-						item.CurrentRegion = client.Player.CurrentRegion;
-						item.Heading = client.Player.Heading;
+						item.Position = client.Player.Position;
 						item.Level = targetObject.Level;
 						item.Name = targetObject.Name;
 						item.Model = targetObject.Model;
@@ -399,11 +392,7 @@ namespace DOL.GS.Commands
 
 			//Fill the object variables
 			obj.LoadedFromScript = false;
-			obj.X = client.Player.X;
-			obj.Y = client.Player.Y;
-			obj.Z = client.Player.Z;
-			obj.CurrentRegion = client.Player.CurrentRegion;
-			obj.Heading = client.Player.Heading;
+			obj.Position = client.Player.Position;
 			obj.Name = "New Object";
 			obj.Model = 100;
 			obj.Emblem = 0;

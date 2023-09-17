@@ -30,6 +30,7 @@ using log4net;
 
 using DOL.GS;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -415,11 +416,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the areas for a certain spot
 		/// </summary>
-		/// <param name="zone"></param>
-		/// <param name="p"></param>
-		/// <param name="checkZ"></param>
 		/// <returns></returns>
-		public override IList<IArea> GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
+		public override IList<IArea> GetAreasOfZone(Zone zone, Coordinate loc, bool checkZ)
 		{
 			Zone checkZone = zone;
 			var areas = new List<IArea>();
@@ -446,7 +444,7 @@ namespace DOL.GS
 						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
 						{
 							IArea area = (IArea)Areas[m_ZoneAreas[zoneIndex][i]];
-							if (area.IsContaining(p, checkZ))
+							if (area.IsContaining(loc, ignoreZ: !checkZ))
 							{
 								areas.Add(area);
 							}
@@ -469,7 +467,7 @@ namespace DOL.GS
 		/// <param name="p"></param>
 		/// <param name="checkZ"></param>
 		/// <returns></returns>
-		public override IList<IArea> GetAreasOfZone(Zone zone, int x, int y, int z)
+		public override IList<IArea> GetAreasOfZone(Zone zone, Coordinate loc)
 		{
 			Zone checkZone = zone;
 			var areas = new List<IArea>();
@@ -496,7 +494,7 @@ namespace DOL.GS
 						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
 						{
 							IArea area = (IArea)Areas[m_ZoneAreas[zoneIndex][i]];
-							if (area.IsContaining(x, y, z))
+							if (area.IsContaining(loc))
 								areas.Add(area);
 						}
 					}

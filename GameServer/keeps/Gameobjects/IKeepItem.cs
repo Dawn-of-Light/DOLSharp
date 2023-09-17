@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.Database;
-
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Keeps
 {
 	public interface IKeepItem
 	{
+        Position Position { get; set; }
 		ushort CurrentRegionID { get;set;}
 		int X { get;set;}
 		int Y { get;set;}
@@ -32,7 +31,7 @@ namespace DOL.GS.Keeps
 		ushort Heading { get;set;}
 		string TemplateID { get;}
 		GameKeepComponent Component { get; set;}
-		DBKeepPosition Position { get;set;}
+		DBKeepPosition DbKeepPosition { get;set;}
 		void LoadFromPosition(DBKeepPosition position, GameKeepComponent component);
 		void MoveToPosition(DBKeepPosition position);
 	}

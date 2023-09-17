@@ -29,6 +29,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using log4net;
@@ -46,7 +47,7 @@ namespace DOL.GS.Quests.Hibernia
 		private static GameNPC Richael = null;
 		private QuestGoal FoundBreach;
 
-		private static GameLocation Demons_Breach = new GameLocation("Demon's Breach", 200, 354760, 486115, 5973);
+		private static Position Demons_Breach = Position.Create(regionID: 200, x: 354760, y: 486115, z: 5973);
 
 		private static IArea Demons_Breach_Area = null;
 
@@ -214,7 +215,6 @@ namespace DOL.GS.Quests.Hibernia
 				//k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
 				//Richael.GuildName = "Part of " + questTitle + " Quest";
 				Richael.Realm = eRealm.Hibernia;
-				Richael.CurrentRegionID = 200;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 416, 37);       //Slot 22
@@ -228,10 +228,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				Richael.Size = 48;
 				Richael.Level = 38;
-				Richael.X = 347089;
-				Richael.Y = 491290;
-				Richael.Z = 5247;
-				Richael.Heading = 978;
+                Richael.Position = Position.Create(regionID: 200, x: 347089, y: 491290, z: 5247, heading: 978);
 
 				if (SAVE_INTO_DATABASE)
 					Richael.SaveIntoDatabase();
@@ -243,7 +240,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#endregion
 			#region defineAreas
-			Demons_Breach_Area = WorldMgr.GetRegion(Demons_Breach.RegionID).AddArea(new Area.Circle("", Demons_Breach.X, Demons_Breach.Y, Demons_Breach.Z, 200));
+			Demons_Breach_Area = WorldMgr.GetRegion(Demons_Breach.RegionID).AddArea(new Area.Circle("", Demons_Breach.Coordinate, 200));
 			Demons_Breach_Area.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterDemonBreachArea));
 			#endregion
 

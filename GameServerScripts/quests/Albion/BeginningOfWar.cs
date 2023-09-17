@@ -49,6 +49,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -75,7 +76,7 @@ namespace DOL.GS.Quests.Albion
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/* Declare the variables we need inside our quest.
+        /* Declare the variables we need inside our quest.
 		 * You can declare static variables here, which will be available in 
 		 * ALL instance of your quest and should be initialized ONLY ONCE inside
 		 * the OnScriptLoaded method.
@@ -85,7 +86,8 @@ namespace DOL.GS.Quests.Albion
 		 * 
 		 */
 
-		protected static GameLocation locationFrederick = new GameLocation("Master Frederick", 1, 0, 19105 + 50, 26552 + 40, 2861, 0);
+        private static Coordinate fredericksLocation = Coordinate.Create(x: 19155, y: 26592, z: 2861) + WorldMgr.GetZone(0).Offset;
+        protected static Position locationFrederick = Position.Create(regionID: 1, fredericksLocation, heading: 0);
 
 		protected const string questTitle = "Beginning of War";
 		protected const int minimumLevel = 4;
@@ -93,7 +95,7 @@ namespace DOL.GS.Quests.Albion
 
 		private static GameNPC masterFrederick = null;
 
-		private static GameLocation locationDunwynClone = new GameLocation(null, 1, 567604, 509619, 2813, 3292);
+		private static Position locationDunwynClone = Position.Create(regionID: 1, x: 567604, y: 509619, z: 2813, heading: 3292);
 
 		private static GameNPC dunwyn = null;
 		private GameNPC dunwynClone = null;
@@ -181,14 +183,10 @@ namespace DOL.GS.Quests.Albion
 				dunwyn.Name = "Master Dunwyn";
 				dunwyn.GuildName = "Part of " + questTitle + " Quest";
 				dunwyn.Realm = eRealm.Albion;
-				dunwyn.CurrentRegionID = 1;
 
 				dunwyn.Size = 50;
 				dunwyn.Level = 20;
-				dunwyn.X = 465383;
-				dunwyn.Y = 634773;
-				dunwyn.Z = 1840;
-				dunwyn.Heading = 187;
+                dunwyn.Position = Position.Create(regionID: 1, x: 465383, y: 634773, z: 1840, heading: 187);
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 798);
@@ -218,14 +216,10 @@ namespace DOL.GS.Quests.Albion
 				princessObera = new GameNPC();
 
 				princessObera.Name = "Princess Obera";
-				princessObera.X = 579289;
-				princessObera.Y = 508200;
-				princessObera.Z = 2779;
-				princessObera.Heading = 347;
+                princessObera.Position = Position.Create(regionID: 1, x: 579289, y: 508200, z: 2779, heading: 347);
 				princessObera.Model = 603;
 				princessObera.GuildName = "Part of " + questTitle + " Quest";
 				princessObera.Realm = eRealm.None;
-				princessObera.CurrentRegionID = 1;
 				princessObera.Size = 49;
 				princessObera.Level = 3;
 
@@ -266,19 +260,15 @@ namespace DOL.GS.Quests.Albion
 					fairySorceress[i].Name = "ire fairy sorceress";
 					fairySorceress[i].GuildName = "Part of " + questTitle + " Quest";
 					fairySorceress[i].Realm = eRealm.None;
-					fairySorceress[i].CurrentRegionID = 1;
 					fairySorceress[i].Size = 35;
 					fairySorceress[i].Level = 3;
-					fairySorceress[i].X = princessObera.X + Util.Random(-150, 150);
-					fairySorceress[i].Y = princessObera.Y + Util.Random(-150, 150);
-					fairySorceress[i].Z = princessObera.Z;
+					fairySorceress[i].Position = princessObera.Position.With(heading: 93) + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 
 					StandardMobBrain brain = new StandardMobBrain();
 					brain.AggroLevel = 30;
 					brain.AggroRange = 300;
 					fairySorceress[i].SetOwnBrain(brain);
 
-					fairySorceress[i].Heading = 93;
 					//fairySorceress[i].EquipmentTemplateID = 200276;                
 
 					//You don't have to store the created mob in the db if you don't want,
@@ -882,7 +872,7 @@ namespace DOL.GS.Quests.Albion
 							dunwyn.SayTo(player, "Hehe! Here you go!");
 							if (quest.Step == 13)
 							{
-								quest.TeleportTo(player, dunwyn, locationFrederick, 10);
+								quest.TeleportTo(player, dunwyn, locationFrederick, "Master Frederick", 10, 0);
 							}
 							break;
 					}
@@ -1008,14 +998,10 @@ namespace DOL.GS.Quests.Albion
 				dunwynClone.Model = dunwyn.Model;
 				dunwynClone.GuildName = dunwyn.GuildName;
 				dunwynClone.Realm = dunwyn.Realm;
-				dunwynClone.CurrentRegionID = 1;
 				dunwynClone.Size = dunwyn.Size;
 				dunwynClone.Level = 15; // to make the figthing against fairy sorceress a bit more dramatic :)
-
-				dunwynClone.X = 567604 + Util.Random(-150, 150);
-				dunwynClone.Y = 509619 + Util.Random(-150, 150);
-				dunwynClone.Z = 2813;
-				dunwynClone.Heading = 3292;
+                dunwynClone.Position = Position.Create(regionID: 1, x: 567604, y: 509619, z: 2813, heading: 3292)
+                    + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 798);
@@ -1042,7 +1028,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			else
 			{
-				TeleportTo(dunwynClone, dunwynClone, locationDunwynClone);
+				TeleportTo(dunwynClone, dunwynClone, locationDunwynClone, delay: 0, scatterRadius: 0);
 			}
 
 		}

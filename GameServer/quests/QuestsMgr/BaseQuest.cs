@@ -32,6 +32,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Behaviour;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using log4net;
@@ -239,41 +240,46 @@ namespace DOL.GS.Quests
 			return 0;
 		}
 
+        [Obsolete("Use .TeleportTo(GameObject, GameObject, Position, string, int, int) instead!")]
 		protected virtual void TeleportTo(GameObject target, GameObject caster, GameLocation location)
-		{
-			TeleportTo(target, caster, location, 0, 0);
-		}
+            => TeleportTo(target, caster, location, 0, 0);
 
+        [Obsolete("Use .TeleportTo(GameObject, GameObject, Position, string, int, int) instead!")]
 		protected virtual void TeleportTo(GameObject target, GameObject caster, GameLocation location, uint delay)
-		{
-			TeleportTo(target, caster, location, delay, 0);
-		}
+            => TeleportTo(target, caster, location, delay, 0);
 
-		protected virtual void TeleportTo(GameObject target, GameObject caster, GameLocation location, uint delay, int fuzzyLocation)
-		{
-			delay *= 100; // 1/10sec to milliseconds
-			if (delay <= 0)
-				delay = 1;
-			m_animSpellObjectQueue.Enqueue(caster);
-			m_animSpellTeleportTimerQueue.Enqueue(new RegionTimer(caster, new RegionTimerCallback(MakeAnimSpellSequence), (int)delay));
+        [Obsolete("Use .TeleportTo(GameObject, GameObject, Position, string, int, int) instead!")]
+        protected virtual void TeleportTo(GameObject target, GameObject caster, GameLocation location, uint delay, int randomSquareRadius)
+            => TeleportTo(target, caster, destination: location.Position, destinationName: location.Name, delay, randomSquareRadius);
 
-			m_animEmoteObjectQueue.Enqueue(target);
-			m_animEmoteTeleportTimerQueue.Enqueue(new RegionTimer(target, new RegionTimerCallback(MakeAnimEmoteSequence), (int)delay + 2000));
+        protected virtual void TeleportTo(GameObject target, GameObject caster, Position destination, string destinationName, uint delay, int scatterRadius)
+        {
+            TeleportTo(target,caster,destination,delay,scatterRadius);
 
-			m_portObjectQueue.Enqueue(target);
-
-			location.X += Util.Random(0 - fuzzyLocation, fuzzyLocation);
-			location.Y += Util.Random(0 - fuzzyLocation, fuzzyLocation);
-
-			m_portDestinationQueue.Enqueue(location);
-			m_portTeleportTimerQueue.Enqueue(new RegionTimer(target, new RegionTimerCallback(MakePortSequence), (int)delay + 3000));
-
-			if (location.Name != null)
-			{
-                m_questPlayer.Out.SendMessage(LanguageMgr.GetTranslation(m_questPlayer.Client, "BaseQuest.TeleportTo.Text1", target.Name, location.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            if (destinationName != null)
+            {
+                m_questPlayer.Out.SendMessage(LanguageMgr.GetTranslation(m_questPlayer.Client, "BaseQuest.TeleportTo.Text1", target.Name, destinationName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
+        }
 
-		}
+        protected virtual void TeleportTo(GameObject target, GameObject caster, Position destination, uint delay, int scatterRadius)
+        {
+            delay *= 100; // 1/10sec to milliseconds
+            if (delay <= 0)
+                delay = 1;
+            m_animSpellObjectQueue.Enqueue(caster);
+            m_animSpellTeleportTimerQueue.Enqueue(new RegionTimer(caster, new RegionTimerCallback(MakeAnimSpellSequence), (int)delay));
+
+            m_animEmoteObjectQueue.Enqueue(target);
+            m_animEmoteTeleportTimerQueue.Enqueue(new RegionTimer(target, new RegionTimerCallback(MakeAnimEmoteSequence), (int)delay + 2000));
+
+            m_portObjectQueue.Enqueue(target);
+
+            var randomOffset = Vector.Create(x: Util.Random(-scatterRadius, scatterRadius), y: Util.Random(-scatterRadius, scatterRadius));
+
+            m_portDestinationQueue.Enqueue(destination + randomOffset);
+            m_portTeleportTimerQueue.Enqueue(new RegionTimer(target, new RegionTimerCallback(MakePortSequence), (int)delay + 3000));
+        }
 
 		protected virtual int MakePortSequence(RegionTimer callingTimer)
 		{
@@ -281,8 +287,8 @@ namespace DOL.GS.Quests
 			{
 				m_portTeleportTimerQueue.Dequeue();
 				GameObject gameObject = (GameObject)m_portObjectQueue.Dequeue();
-				GameLocation location = (GameLocation)m_portDestinationQueue.Dequeue();
-				gameObject.MoveTo(location.RegionID, location.X, location.Y, location.Z, location.Heading);
+				var destination = (Position)m_portDestinationQueue.Dequeue();
+				gameObject.MoveTo(destination);
 			}
 			return 0;
 		}

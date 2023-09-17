@@ -1,26 +1,7 @@
-﻿using System;
-using System.Numerics;
+using System;
 
 namespace DOL.GS
 {
-	public struct WrappedPathingResult
-	{
-		public PathingError Error;
-		public WrappedPathPoint[] Points;
-	}
-
-
-	public struct WrappedPathPoint
-	{
-		public Vector3 Position;
-		public dtPolyFlags Flags;
-
-		public override string ToString()
-		{
-			return $"({Position}, {Flags})";
-		}
-	}
-
 	[Flags]
 	public enum dtPolyFlags : ushort
 	{

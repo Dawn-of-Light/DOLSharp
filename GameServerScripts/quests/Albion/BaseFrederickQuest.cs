@@ -39,6 +39,7 @@ using System;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -163,7 +164,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + masterFrederick.Name + ", creating him ...");
 				masterFrederick.GuildName = "Part of Frederick Quests";
 				masterFrederick.Realm = eRealm.Albion;
-				masterFrederick.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 41);
@@ -182,10 +182,7 @@ namespace DOL.GS.Quests.Albion
 
 				masterFrederick.Size = 50;
 				masterFrederick.Level = 50;
-				masterFrederick.X = 567969;
-				masterFrederick.Y = 509880;
-				masterFrederick.Z = 2861;
-				masterFrederick.Heading = 65;
+                masterFrederick.Position = Position.Create(regionID: 1, x: 567969, y: 509880, z: 2861, heading: 65);
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;

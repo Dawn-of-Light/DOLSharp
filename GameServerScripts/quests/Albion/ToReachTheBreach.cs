@@ -28,6 +28,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Albion
@@ -43,7 +44,7 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC LadyGrynoch = null;
 		private QuestGoal FoundBreach;
 
-		private static GameLocation Demons_Breach = new GameLocation("Demon's Breach", 1, 562731, 514531, 2751);
+		private static Position Demons_Breach = Position.Create(regionID: 1, x: 562731, y: 514531, z: 2751);
 
 		private static IArea Demons_Breach_Area = null;
 
@@ -201,7 +202,6 @@ namespace DOL.GS.Quests.Albion
 				//k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
 				//LadyGrynoch.GuildName = "Part of " + questTitle + " Quest";
 				LadyGrynoch.Realm = eRealm.Albion;
-				LadyGrynoch.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58);    //Slot 25
@@ -210,10 +210,7 @@ namespace DOL.GS.Quests.Albion
 
 				LadyGrynoch.Size = 51;
 				LadyGrynoch.Level = 38;
-				LadyGrynoch.X = 559698;
-				LadyGrynoch.Y = 513578;
-				LadyGrynoch.Z = 2428;
-				LadyGrynoch.Heading = 2742;
+                LadyGrynoch.Position = Position.Create(regionID: 1, x: 559698, y: 513578, z: 2428, heading: 2742);
 
 				if (SAVE_INTO_DATABASE)
 					LadyGrynoch.SaveIntoDatabase();
@@ -225,7 +222,7 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 			#region defineAreas
-			Demons_Breach_Area = WorldMgr.GetRegion(Demons_Breach.RegionID).AddArea(new Area.Circle("", Demons_Breach.X, Demons_Breach.Y, Demons_Breach.Z, 200));
+			Demons_Breach_Area = WorldMgr.GetRegion(Demons_Breach.RegionID).AddArea(new Area.Circle("", Demons_Breach.Coordinate, 200));
 			Demons_Breach_Area.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterDemonBreachArea));
 			#endregion
 

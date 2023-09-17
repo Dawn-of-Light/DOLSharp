@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -64,13 +65,13 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			if (target.GroundTarget == null || (target.GroundTarget.X == 0 && target.GroundTarget.Y == 0 && target.GroundTarget.Z == 0))
+			if (target.GroundTargetLocation == Coordinate.Nowhere)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Groundassist.NoTarget", target.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			client.Player.Out.SendChangeGroundTarget(target.GroundTarget);
-			client.Player.SetGroundTarget(target.GroundTarget.X, target.GroundTarget.Y, target.GroundTarget.Z);
+			client.Player.Out.SendChangeGroundTarget(target.GroundTargetLocation);
+			client.Player.GroundTargetLocation = target.GroundTargetLocation;
 		}
 	}
 }

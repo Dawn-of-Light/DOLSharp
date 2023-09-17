@@ -26,6 +26,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Albion
@@ -260,7 +261,6 @@ namespace DOL.GS.Quests.Albion
 				//k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
 				//Cemmeth.GuildName = "Part of " + questTitle + " Quest";
 				CemmethBudgwold.Realm = eRealm.Albion;
-				CemmethBudgwold.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 49);    //Slot 22
@@ -276,10 +276,7 @@ namespace DOL.GS.Quests.Albion
 
 				CemmethBudgwold.Size = 50;
 				CemmethBudgwold.Level = 38;
-				CemmethBudgwold.X = 560528;
-				CemmethBudgwold.Y = 513140;
-				CemmethBudgwold.Z = 2394;
-				CemmethBudgwold.Heading = 2275;
+                CemmethBudgwold.Position = Position.Create(regionID: 1, x: 560528, y: 513140, z: 2394, heading: 2275);
 
 				if (SAVE_INTO_DATABASE)
 					CemmethBudgwold.SaveIntoDatabase();

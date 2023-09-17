@@ -27,6 +27,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.GS.Utils;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -51,17 +52,13 @@ namespace DOL.GS
 			log.Debug("Instance destructor called for " + Description);
 		}
 
-		#region Entrance
+        [Obsolete("Use .InstanceEntranceName or .EntrancePosition instead!")]
+        public GameLocation InstanceEntranceLocation => new GameLocation(EntrancePosition);
 
-		protected GameLocation m_entranceLocation = null;
+        [Obsolete("This is going to be removed.")]
+        public string InstanceEntranceName { get; set; } = null;
 
-		/// <summary>
-		/// Returns the entrance location into this instance.
-		/// </summary>
-		public GameLocation InstanceEntranceLocation
-		{ get { return m_entranceLocation; } }
-
-		#endregion
+        public Position EntrancePosition { get; set; } = Position.Nowhere;
 
 		#region LoadFromDatabase
 
@@ -94,7 +91,7 @@ namespace DOL.GS
 					case "entrance":
 						{
 							//create the entrance, then move to the next.
-							m_entranceLocation = new GameLocation(instanceName + "entranceRegion" + ID, ID, entry.X, entry.Y, entry.Z, entry.Heading);
+                            EntrancePosition = Position.Create(regionID: ID, entry.X, entry.Y, entry.Z, entry.Heading);
 							//move to the next entry, nothing more to do here...
 							continue;
 						}
@@ -119,11 +116,7 @@ namespace DOL.GS
 
 				//We now have an object that isnt null. Lets place it at the location, in this region.
 
-				obj.X = entry.X;
-				obj.Y = entry.Y;
-				obj.Z = entry.Z;
-				obj.Heading = entry.Heading;
-				obj.CurrentRegionID = ID;
+                obj.Position = Position.Create(regionID: ID, entry.X, entry.Y, entry.Z, entry.Heading);
 
 				//If its an npc, load from the npc template about now.
 				//By default, we ignore npctemplate if its set to 0.

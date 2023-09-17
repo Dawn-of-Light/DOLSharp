@@ -48,6 +48,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -90,7 +91,7 @@ namespace DOL.GS.Quests.Midgard
 
 		private static GameNPC dalikor = null;
 
-		private static GameLocation locationBriediClone = new GameLocation(null, 100, 794455, 721224, 4989, 3292);
+		private static Position locationBriediClone = Position.Create(regionID: 100, x: 794455, y: 721224, z: 4989, heading: 3292);
 
 		private static GameNPC briedi = null;
 		private GameNPC briediClone = null;
@@ -180,14 +181,10 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + briedi.Name + ", creating him ...");
 				briedi.GuildName = "Part of " + questTitle + " Quest";
 				briedi.Realm = eRealm.Midgard;
-				briedi.CurrentRegionID = 100;
 
 				briedi.Size = 50;
 				briedi.Level = 45;
-				briedi.X = GameLocation.ConvertLocalXToGlobalX(26240, 103);
-				briedi.Y = GameLocation.ConvertLocalYToGlobalY(15706, 103);
-				briedi.Z = 4489;
-				briedi.Heading = 292;
+                briedi.Position = Position.CreateInZone(zoneID: 103, x: 26240, y: 15706, z: 4489, heading: 292);
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 348);
@@ -228,14 +225,11 @@ namespace DOL.GS.Quests.Midgard
 				princessAiyr.Name = "Princess Aiyr";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + princessAiyr.Name + ", creating ...");
-				princessAiyr.X = GameLocation.ConvertLocalXToGlobalX(39315, 100);
-				princessAiyr.Y = GameLocation.ConvertLocalYToGlobalY(38957, 100);
-				princessAiyr.Z = 5460;
-				princessAiyr.Heading = 1;
+                var valeOfMularn = WorldMgr.GetZone(100);
+                princessAiyr.Position = Position.CreateInZone(zoneID: 100, x: 39315, y: 38957, z: 5460, heading: 1);
 				princessAiyr.Model = 678;
 				princessAiyr.GuildName = "Part of " + questTitle + " Quest";
 				princessAiyr.Realm = eRealm.None;
-				princessAiyr.CurrentRegionID = 100;
 				princessAiyr.Size = 49;
 				princessAiyr.Level = 3;
 
@@ -276,19 +270,15 @@ namespace DOL.GS.Quests.Midgard
 						log.Warn("Could not find " + askefruerSorceress[i].Name + ", creating ...");
 					askefruerSorceress[i].GuildName = "Part of " + questTitle + " Quest";
 					askefruerSorceress[i].Realm = eRealm.None;
-					askefruerSorceress[i].CurrentRegionID = 100;
 					askefruerSorceress[i].Size = 35;
 					askefruerSorceress[i].Level = 3;
-					askefruerSorceress[i].X = princessAiyr.X + Util.Random(-150, 150);
-					askefruerSorceress[i].Y = princessAiyr.Y + Util.Random(-150, 150);
-					askefruerSorceress[i].Z = princessAiyr.Z;
+					askefruerSorceress[i].Position = princessAiyr.Position.With(heading: 93) + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 
 					StandardMobBrain brain = new StandardMobBrain();
 					brain.AggroLevel = 30;
 					brain.AggroRange = 300;
 					askefruerSorceress[i].SetOwnBrain(brain);
 
-					askefruerSorceress[i].Heading = 93;
 					//fairySorceress[i].EquipmentTemplateID = 200276;                
 
 					//You don't have to store the created mob in the db if you don't want,
@@ -915,7 +905,7 @@ namespace DOL.GS.Quests.Midgard
 							briedi.SayTo(player, "Off you go!");
 							if (quest.Step == 13)
 							{
-								quest.TeleportTo(player, briedi, locationDalikor, 10);
+								quest.TeleportTo(player, briedi, locationDalikor, "Dalikor", delay: 10, scatterRadius: 0);
 							}
 							break;
 					}
@@ -1031,14 +1021,9 @@ namespace DOL.GS.Quests.Midgard
 				briediClone.Model = briedi.Model;
 				briediClone.GuildName = briedi.GuildName;
 				briediClone.Realm = briedi.Realm;
-				briediClone.CurrentRegionID = locationBriediClone.RegionID;
 				briediClone.Size = briedi.Size;
 				briediClone.Level = 15; // to make the figthing against fairy sorceress a bit more dramatic :)
-
-				briediClone.X = locationBriediClone.X + Util.Random(-150, 150);
-				briediClone.Y = locationBriediClone.X + Util.Random(-150, 150);
-				briediClone.Z = locationBriediClone.Y;
-				briediClone.Heading = locationBriediClone.Heading;
+				briediClone.Position = locationBriediClone + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 348);
@@ -1073,7 +1058,7 @@ namespace DOL.GS.Quests.Midgard
 			}
 			else
 			{
-				TeleportTo(briediClone, briediClone, locationBriediClone);
+				TeleportTo(briediClone, briediClone, locationBriediClone, delay: 0, scatterRadius: 0);
 			}
 
 		}

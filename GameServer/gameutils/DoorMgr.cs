@@ -25,6 +25,7 @@ using DOL.Database;
 using DOL.GS.Keeps;
 
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -67,7 +68,7 @@ namespace DOL.GS
 			if (currentZone == null) return false;
 			
 			//check if the door is a keep door
-			foreach (AbstractArea area in currentZone.GetAreasOfSpot(door.X, door.Y, door.Z))
+			foreach (AbstractArea area in currentZone.GetAreasOfSpot(Coordinate.Create(door.X, door.Y, door.Z)))
 			{
 				if (area is KeepArea)
 				{

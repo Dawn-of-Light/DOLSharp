@@ -46,10 +46,10 @@ namespace DOL.GS.Commands
 				}
 			}
 			BindPoint bp = new BindPoint();
-			bp.X = client.Player.X;
-			bp.Y = client.Player.Y;
-			bp.Z = client.Player.Z;
-			bp.Region = client.Player.CurrentRegionID;
+			bp.X = client.Player.Position.X;
+			bp.Y = client.Player.Position.Y;
+			bp.Z = client.Player.Position.Z;
+			bp.Region = client.Player.Position.RegionID;
 			bp.Radius = bindRadius;
 			GameServer.Database.AddObject(bp);
 			client.Player.CurrentRegion.AddArea(new Area.BindArea("bind point", bp));

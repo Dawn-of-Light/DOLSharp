@@ -95,13 +95,9 @@ namespace DOL.GS.Spells
             Random m_rnd = new Random();
             decoy = new GameDecoy();
             //Fill the object variables
-            decoy.CurrentRegion = caster.CurrentRegion;
-            decoy.Heading = (ushort)((caster.Heading + 2048) % 4096);
             decoy.Level = 50;
             decoy.Realm = caster.Realm;
-            decoy.X = caster.X;
-            decoy.Y = caster.Y;
-            decoy.Z = caster.Z;
+            decoy.Position = caster.Position.TurnedAround();
             string TemplateId = "";
             switch (caster.Realm)
             {
@@ -179,11 +175,7 @@ namespace DOL.GS.Spells
             mine.Model = 2592;
             mine.Name = spell.Name;
             mine.Realm = caster.Realm;
-            mine.X = caster.X;
-            mine.Y = caster.Y;
-            mine.Z = caster.Z;
-            mine.CurrentRegionID = caster.CurrentRegionID;
-            mine.Heading = caster.Heading;
+            mine.Position = caster.Position;
             mine.Owner = (GamePlayer)caster;
 
             // Construct the mine spell
@@ -232,11 +224,7 @@ namespace DOL.GS.Spells
             mine.Model = 2589;
             mine.Name = spell.Name;
             mine.Realm = caster.Realm;
-            mine.X = caster.X;
-            mine.Y = caster.Y;
-            mine.Z = caster.Z;
-            mine.CurrentRegionID = caster.CurrentRegionID;
-            mine.Heading = caster.Heading;
+            mine.Position = caster.Position;
             mine.Owner = (GamePlayer)caster;
 
             // Construct the mine spell
@@ -369,12 +357,8 @@ namespace DOL.GS.Spells
             mine.Model = 2591;
             mine.Name = spell.Name;
             mine.Realm = caster.Realm;
-            mine.X = caster.X;
-            mine.Y = caster.Y;
-            mine.Z = caster.Z;
+            mine.Position = caster.Position;
             mine.MaxSpeedBase = 0;
-            mine.CurrentRegionID = caster.CurrentRegionID;
-            mine.Heading = caster.Heading;
             mine.Owner = (GamePlayer)caster;
 
             // Construct the mine spell

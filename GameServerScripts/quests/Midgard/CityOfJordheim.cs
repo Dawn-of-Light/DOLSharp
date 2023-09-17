@@ -38,6 +38,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -78,15 +79,13 @@ namespace DOL.GS.Quests.Midgard
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 1;
 
-		protected static GameLocation warriorTrainer = new GameLocation("Warrior Trainer", 101, 29902, 35916, 8005, 2275);
-		protected static GameLocation savageTrainer = new GameLocation("Savage Trainer", 101, 28882, 35823, 8021, 2662);
-		protected static GameLocation skaldTrainer = new GameLocation("Skald Trainer", 101, 30395, 34943, 8005, 4004);
-		protected static GameLocation thaneTrainer = new GameLocation("Thane Trainer", 101, 29811, 34936, 8005, 159);
-
-		protected static GameLocation westGates = new GameLocation("West Gates", 101, 36017, 32659, 8005, 1045);
-
-		protected static GameLocation vaultKeeper = new GameLocation("Vault Keeper", 101, 31929, 28279, 8819, 2013);
-		protected static GameLocation berserkerTrainer = new GameLocation("Berserker Trainer", 101, 30327, 35598, 8002, 1706);
+		protected static Position warriorTrainer = Position.Create(regionID: 101, x: 29902, y: 35916, z: 8005, heading: 2275);
+		protected static Position savageTrainer = Position.Create(regionID: 101, x: 28882, y: 35823, z: 8021, heading: 2662);
+		protected static Position skaldTrainer = Position.Create(regionID: 101, x: 30395, y: 34943, z: 8005, heading: 4004);
+		protected static Position thaneTrainer = Position.Create(regionID: 101, x: 29811, y: 34936, z: 8005, heading: 159);
+		protected static Position westGates = Position.Create(regionID: 101, x: 36017, y: 32659, z: 8005, heading: 1045);
+		protected static Position vaultKeeper = Position.Create(regionID: 101, x: 31929, y: 28279, z: 8819, heading: 2013);
+		protected static Position berserkerTrainer = Position.Create(regionID: 101, x: 30327, y: 35598, z: 8002, heading: 1706);
 
 		private static GameNPC dalikor = null;
 		private static GameNPC yuliwyf = null;
@@ -172,13 +171,9 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + yuliwyf.Name + ", creating ...");
 				yuliwyf.GuildName = "Part of " + questTitle + " Quest";
 				yuliwyf.Realm = eRealm.Midgard;
-				yuliwyf.CurrentRegionID = 101;
 				yuliwyf.Size = 51;
 				yuliwyf.Level = 50;
-				yuliwyf.X = 31929;
-				yuliwyf.Y = 28279;
-				yuliwyf.Z = 8819;
-				yuliwyf.Heading = 2013;
+                yuliwyf.Position = Position.Create(regionID: 101, x: 31929, y: 28279, z: 8819, heading: 2013);
 				yuliwyf.EquipmentTemplateID = "5101262";
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -201,13 +196,9 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + harlfug.Name + ", creating her ...");
 				harlfug.GuildName = "Stable Master";
 				harlfug.Realm = eRealm.Midgard;
-				harlfug.CurrentRegionID = 100;
 				harlfug.Size = 52;
 				harlfug.Level = 41;
-				harlfug.X = 773458;
-				harlfug.Y = 754240;
-				harlfug.Z = 4600;
-				harlfug.Heading = 2707;
+                harlfug.Position = Position.Create(regionID: 100, x: 773458, y: 754240, z: 4600, heading: 2707);
 				harlfug.EquipmentTemplateID = "5100798";
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -748,29 +739,29 @@ namespace DOL.GS.Quests.Midgard
 							break;
 
 						case "skald":
-							quest.TeleportTo(skaldTrainer);
+							quest.TeleportTo(skaldTrainer, "Skald Trainer");
 							break;
 						case "warrior":
-							quest.TeleportTo(warriorTrainer);
+							quest.TeleportTo(warriorTrainer, "Warrior Trainer");
 							break;
 						case "savage":
-							quest.TeleportTo(savageTrainer);
+							quest.TeleportTo(savageTrainer, "Savage Trainer");
 							break;
 						case "thane":
-							quest.TeleportTo(thaneTrainer);
+							quest.TeleportTo(thaneTrainer, "Thane Trainer");
 							break;
 						case "berserker":
-							quest.TeleportTo(berserkerTrainer);
+							quest.TeleportTo(berserkerTrainer, "Berserker Trainer");
 							break;
 						case "west gates":
-							quest.TeleportTo(westGates);
+							quest.TeleportTo(westGates, "West Gates");
 							break;
 						case "vault keeper":
 							if (quest.Step == 3)
 							{
 								quest.Step = 4;
 							}
-							quest.TeleportTo(vaultKeeper);
+							quest.TeleportTo(vaultKeeper, "Vault Keeper");
 							break;
 
 						case "go away":
@@ -786,10 +777,10 @@ namespace DOL.GS.Quests.Midgard
          * Convinient Method for teleporintg with assistant 
          */
 
-		protected void TeleportTo(GameLocation target)
+		protected void TeleportTo(Position destination, string destinationName)
 		{
-			TeleportTo(m_questPlayer, assistant, target, 5);
-			TeleportTo(assistant, assistant, target, 25, 50);
+			TeleportTo(m_questPlayer, assistant, destination, destinationName, delay: 5, scatterRadius: 0);
+			TeleportTo(assistant, assistant, destination, 25, 50);
 		}
 
 
@@ -875,7 +866,7 @@ namespace DOL.GS.Quests.Midgard
 		{
 			if (assistant != null && assistant.ObjectState == GameObject.eObjectState.Active)
 			{
-				assistant.MoveTo(m_questPlayer.CurrentRegionID, m_questPlayer.X + 50, m_questPlayer.Y + 30, m_questPlayer.Z, m_questPlayer.Heading);
+				assistant.MoveTo(m_questPlayer.Position + Vector.Create(x: 50, y: 30));
 			}
 			else
 			{
@@ -884,13 +875,9 @@ namespace DOL.GS.Quests.Midgard
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";
 				assistant.Realm = m_questPlayer.Realm;
-				assistant.CurrentRegionID = m_questPlayer.CurrentRegionID;
 				assistant.Size = 25;
 				assistant.Level = 5;
-				assistant.X = m_questPlayer.X + 50;
-				assistant.Y = m_questPlayer.Y + 50;
-				assistant.Z = m_questPlayer.Z;
-				assistant.Heading = m_questPlayer.Heading;
+				assistant.Position = m_questPlayer.Position + Vector.Create(x: 50, y: 50);
 
 				assistant.AddToWorld();
 

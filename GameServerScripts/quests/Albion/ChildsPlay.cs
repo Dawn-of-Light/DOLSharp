@@ -38,6 +38,7 @@ using DOL.Events;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using DOL.Language;
@@ -77,7 +78,7 @@ namespace DOL.GS.Quests.Albion
 		private static ItemTemplate daringstuddedjerkin_alb = null;
 		private static ItemTemplate daringstuddedleggings_alb = null;
 		private static ItemTemplate daringstuddedsleeves_alb = null;
-		private static GameLocation Albion_Statue = new GameLocation("Childs Play (Alb)", 489, 27580, 40006, 14483);
+		private static Position Albion_Statue = Position.Create(regionID: 489, x: 27580, y: 40006, z: 14483);
 
 		private static IArea Albion_Statue_Area = null;
 
@@ -121,15 +122,11 @@ namespace DOL.GS.Quests.Albion
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + Charles.Name + ", creating ...");
 				Charles.Realm = eRealm.Albion;
-				Charles.CurrentRegionID = 1;
 				Charles.Size = 37;
 				Charles.Level = 1;
 				Charles.MaxSpeedBase = 191;
 				Charles.Faction = FactionMgr.GetFactionByID(0);
-				Charles.X = 559883;
-				Charles.Y = 511489;
-				Charles.Z = 2382;
-				Charles.Heading = 3515;
+                Charles.Position = Position.Create(regionID: 1, x: 559883, y: 511489, z: 2382, heading: 3515);
 				Charles.RespawnInterval = -1;
 				Charles.BodyType = 0;
 
@@ -1474,7 +1471,7 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 			#region defineAreas
-			Albion_Statue_Area = WorldMgr.GetRegion(Albion_Statue.RegionID).AddArea(new Area.Circle("", Albion_Statue.X, Albion_Statue.Y, Albion_Statue.Z, 500));
+			Albion_Statue_Area = WorldMgr.GetRegion(Albion_Statue.RegionID).AddArea(new Area.Circle("", Albion_Statue.Coordinate, 500));
 			Albion_Statue_Area.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterStatueArea));
 
 			#endregion

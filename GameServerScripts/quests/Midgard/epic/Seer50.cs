@@ -39,6 +39,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -105,7 +106,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 805929 && npc.Y == 702449)
+					if (npc.CurrentRegionID == 100)
 					{
 						Inaksha = npc;
 						break;
@@ -120,13 +121,9 @@ namespace DOL.GS.Quests.Midgard
 				Inaksha.Name = "Inaksha";
 				Inaksha.GuildName = "";
 				Inaksha.Realm = eRealm.Midgard;
-				Inaksha.CurrentRegionID = 100;
 				Inaksha.Size = 50;
 				Inaksha.Level = 41;
-				Inaksha.X = 805929;
-				Inaksha.Y = 702449;
-				Inaksha.Z = 4960;
-				Inaksha.Heading = 2116;
+                Inaksha.Position = Position.Create(regionID: 100, x: 805929, y: 702449, z: 4960, heading: 2116);
 				Inaksha.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -139,7 +136,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 636784 && npc.Y == 762433)
+					if (npc.CurrentRegionID == 100)
 					{
 						Loken = npc;
 						break;
@@ -154,13 +151,9 @@ namespace DOL.GS.Quests.Midgard
 				Loken.Name = "Loken";
 				Loken.GuildName = "";
 				Loken.Realm = eRealm.None;
-				Loken.CurrentRegionID = 100;
 				Loken.Size = 50;
 				Loken.Level = 65;
-				Loken.X = 636784;
-				Loken.Y = 762433;
-				Loken.Z = 4596;
-				Loken.Heading = 3777;
+                Loken.Position = Position.Create(regionID: 100, x: 636784, y: 762433, z: 4596, heading: 3777);
 				Loken.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -173,7 +166,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 101 && npc.X == 30641 && npc.Y == 32093)
+					if (npc.CurrentRegionID == 101)
 					{
 						Miri = npc;
 						break;
@@ -188,13 +181,9 @@ namespace DOL.GS.Quests.Midgard
 				Miri.Name = "Miri";
 				Miri.GuildName = "";
 				Miri.Realm = eRealm.Midgard;
-				Miri.CurrentRegionID = 101;
 				Miri.Size = 50;
 				Miri.Level = 43;
-				Miri.X = 30641;
-				Miri.Y = 32093;
-				Miri.Z = 8305;
-				Miri.Heading = 3037;
+                Miri.Position = Position.Create(regionID: 101, x: 30641, y: 32093, z: 8305, heading: 3037);
 				Miri.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -1004,7 +993,7 @@ namespace DOL.GS.Quests.Midgard
 					case 2:
 						return "[Step #2] Return to Inaksha and give her the Ball of Flame!";
 					case 3:
-						return "[Step #3] Talk with Inaksha about Loken’s demise!";
+						return "[Step #3] Talk with Inaksha about Loken's demise!";
 					case 4:
 						return "[Step #4] Go to Miri in Jordheim and give her the Sealed Pouch for your reward!";
 				}
@@ -1106,7 +1095,7 @@ namespace DOL.GS.Quests.Midgard
         *#26 seek out Loken in Raumarik Loc 47k, 25k, 4k, and kill him purp and 2 blue adds 
         *#27 return to Inaksha 
         *#28 give her the ball of flame
-        *#29 talk with Inaksha about Loken’s demise
+        *#29 talk with Inaksha about Loken's demise
         *#30 go to Miri in Jordheim 
         *#31 give her the sealed pouch
         *#32 you get your epic armor as a reward

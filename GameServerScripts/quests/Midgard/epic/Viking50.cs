@@ -37,6 +37,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -134,7 +135,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 760118 && npc.Y == 758453)
+					if (npc.CurrentRegionID == 100)
 					{
 						Lynnleigh = npc;
 						break;
@@ -149,13 +150,9 @@ namespace DOL.GS.Quests.Midgard
 				Lynnleigh.Name = "Lynnleigh";
 				Lynnleigh.GuildName = "";
 				Lynnleigh.Realm = eRealm.Midgard;
-				Lynnleigh.CurrentRegionID = 100;
 				Lynnleigh.Size = 51;
 				Lynnleigh.Level = 50;
-				Lynnleigh.X = 760118;
-				Lynnleigh.Y = 758453;
-				Lynnleigh.Z = 4737;
-				Lynnleigh.Heading = 2197;
+                Lynnleigh.Position = Position.Create(regionID: 100, x: 760118, y: 758453, z: 4737, heading: 2197);
 				Lynnleigh.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -167,7 +164,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 802597 && npc.Y == 727896)
+					if (npc.CurrentRegionID == 100)
 					{
 						Elizabeth = npc;
 						break;
@@ -181,13 +178,9 @@ namespace DOL.GS.Quests.Midgard
 				Elizabeth.Model = 217;
 				Elizabeth.Name = "Elizabeth";
 				Elizabeth.Realm = eRealm.Midgard;
-				Elizabeth.CurrentRegionID = 100;
 				Elizabeth.Size = 51;
 				Elizabeth.Level = 41;
-				Elizabeth.X = 802597;
-				Elizabeth.Y = 727896;
-				Elizabeth.Z = 4760;
-				Elizabeth.Heading = 2480;
+                Elizabeth.Position = Position.Create(regionID: 100, x: 802597, y: 727896, z: 4760, heading: 2480);
 				Elizabeth.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -201,7 +194,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 637680 && npc.Y == 767189)
+					if (npc.CurrentRegionID == 100)
 					{
 						Ydenia = npc;
 						break;
@@ -216,13 +209,9 @@ namespace DOL.GS.Quests.Midgard
 				Ydenia.Name = "Ydenia of Seithkona";
 				Ydenia.GuildName = "";
 				Ydenia.Realm = eRealm.None;
-				Ydenia.CurrentRegionID = 100;
 				Ydenia.Size = 100;
 				Ydenia.Level = 65;
-				Ydenia.X = 637680;
-				Ydenia.Y = 767189;
-				Ydenia.Z = 4480;
-				Ydenia.Heading = 2156;
+                Ydenia.Position = Position.Create(regionID: 100, x: 637680, y: 767189, z: 4480, heading: 2156);
 				Ydenia.Flags ^= GameNPC.eFlags.GHOST;
 				Ydenia.MaxSpeedBase = 200;
 				Ydenia.AddToWorld();

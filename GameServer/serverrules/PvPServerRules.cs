@@ -101,13 +101,7 @@ namespace DOL.GS.ServerRules
 			}
 		}
 
-
-		/// <summary>
-		/// Should be called whenever a player teleports to a new location
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="source"></param>
-		/// <param name="destination"></param>
+        [Obsolete("Use .OnPlayerTeleport(GamePlayer,Teleport) instead!")]
 		public override void OnPlayerTeleport(GamePlayer player, GameLocation source, Teleport destination)
 		{
 			// Since region change already starts an immunity timer we only want to do this if a player
@@ -134,7 +128,7 @@ namespace DOL.GS.ServerRules
 
 			//No PVP Dungeons: http://support.darkageofcamelot.com/cgi-bin/support.cfg/php/enduser/std_adp.php?p_sid=frxnPUjg&p_lva=&p_refno=020709-000000&p_created=1026248996&p_sp=cF9ncmlkc29ydD0mcF9yb3dfY250PTE0JnBfc2VhcmNoX3RleHQ9JnBfc2VhcmNoX3R5cGU9MyZwX2NhdF9sdmwxPTI2JnBfY2F0X2x2bDI9fmFueX4mcF9zb3J0X2J5PWRmbHQmcF9wYWdlPTE*&p_li
 			21,  //Tomb of Mithra
-			129, //Nisse’s Lair (Nisee's Lair in regions.ini)
+			129, //Nisse's Lair (Nisse's Lair in regions.ini)
 			221, //Muire Tomb (Undead in regions.ini)
 
 		};

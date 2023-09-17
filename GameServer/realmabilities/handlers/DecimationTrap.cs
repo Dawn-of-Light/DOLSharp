@@ -4,6 +4,7 @@ using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Events;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -58,9 +59,9 @@ namespace DOL.GS.RealmAbilities
 				}
 			}
 
-			if (living.GroundTarget == null)
+			if (living.GroundTargetLocation == Coordinate.Nowhere)
 				return;
-			if (!living.IsWithinRadius( living.GroundTarget, 1500 ))
+			if (living.Location.DistanceTo(living.GroundTargetLocation) > 1500 )
 				return;
 			GamePlayer player = living as GamePlayer;
 			if (player == null)
@@ -91,7 +92,7 @@ namespace DOL.GS.RealmAbilities
 			if (!owner.IsAlive)
 				return 0;
 
-			traparea = new Area.Circle("decimation trap", owner.X, owner.Y, owner.Z, 50);
+			traparea = new Area.Circle("decimation trap", owner.Location, 50);
 
 			owner.CurrentRegion.AddArea(traparea);
 			region = owner.CurrentRegionID;
@@ -135,14 +136,14 @@ namespace DOL.GS.RealmAbilities
 
 		private void getTargets()
 		{
-			foreach (GamePlayer target in WorldMgr.GetPlayersCloseToSpot(region, traparea.X, traparea.Y, traparea.Z, 350))
+			foreach (GamePlayer target in WorldMgr.GetPlayersCloseToSpot(region, Coordinate.Create(traparea.X, traparea.Y, traparea.Z), 350))
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(owner, target, true))
 				{
 					DamageTarget(target);
 				}
 			}
-			foreach (GameNPC target in WorldMgr.GetNPCsCloseToSpot(region, traparea.X, traparea.Y, traparea.Z, 350))
+			foreach (GameNPC target in WorldMgr.GetNPCsCloseToSpot(region, Coordinate.Create(traparea.X, traparea.Y, traparea.Z), 350))
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(owner, target, true))
 				{
@@ -162,7 +163,7 @@ namespace DOL.GS.RealmAbilities
 				ticktimer.Stop();
 				removeHandlers();
 			}
-			int dist = target.GetDistanceTo( new Point3D( traparea.X, traparea.Y, traparea.Z ) );
+			var dist = (int)target.Location.DistanceTo(Coordinate.Create(traparea.X, traparea.Y, traparea.Z));
 			double mod = 1;
 			if (dist > 0)
 				mod = 1 - ((double)dist / 350);

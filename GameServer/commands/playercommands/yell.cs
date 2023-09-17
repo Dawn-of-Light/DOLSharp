@@ -50,21 +50,9 @@ namespace DOL.GS.Commands
 				{
 					if (player != client.Player)
 					{
-						ushort headingtotarget = player.GetHeading(client.Player);
-						if( headingtotarget < 0 )
-							headingtotarget += 4096;
-                        
-                        string direction = "";
-                        if( headingtotarget >= 3840 || headingtotarget <= 256  ) direction = LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.South");
-                        else if( headingtotarget > 256   && headingtotarget <= 768  ) direction = LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.SouthWest");
-                        else if( headingtotarget > 768   && headingtotarget <= 1280 ) direction = LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.West");
-                        else if( headingtotarget > 1280  && headingtotarget <= 1792 ) direction = LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.NorthWest");
-                        else if( headingtotarget > 1792  && headingtotarget <= 2304 ) direction = LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.North");
-                        else if( headingtotarget > 2304  && headingtotarget <= 2816 ) direction = LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.NorthEast");
-                        else if( headingtotarget > 2816  && headingtotarget <= 3328 ) direction = LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.East");
-                        else if( headingtotarget > 3328  && headingtotarget <= 3840 ) direction = LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.SouthEast");
-
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.FromDirection", client.Player.Name, direction), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
+                        var directionToTarget = player.Location.GetOrientationTo(client.Player.Location);
+                        var cardinalDirection = LanguageMgr.GetCardinalDirection(player.Client.Account.Language, directionToTarget);
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.FromDirection", client.Player.Name, cardinalDirection), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
                     }
 					else
                         client.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.YouYell"), eChatType.CT_Help, eChatLoc.CL_SystemWindow);

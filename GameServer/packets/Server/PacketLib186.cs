@@ -20,6 +20,7 @@ using System;
 using log4net;
 using DOL.GS.Quests;
 using System.Reflection;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.PacketHandler
 {
@@ -112,21 +113,21 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 		}
-		
-		public override void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z)
-		{
-			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MinotaurRelicMapUpdate)))
-			{
 
-				pak.WriteIntLowEndian((uint)id);
-	            pak.WriteIntLowEndian((uint)region);
-	            pak.WriteIntLowEndian((uint)x);
-	            pak.WriteIntLowEndian((uint)y);
-	            pak.WriteIntLowEndian((uint)z);
-	
-				SendTCP(pak);
-			}
-		}
+        public override void SendMinotaurRelicMapUpdate(byte id, Position position)
+        {
+            using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MinotaurRelicMapUpdate)))
+            {
+
+                pak.WriteIntLowEndian((uint)id);
+                pak.WriteIntLowEndian((uint)position.RegionID);
+                pak.WriteIntLowEndian((uint)position.X);
+                pak.WriteIntLowEndian((uint)position.Y);
+                pak.WriteIntLowEndian((uint)position.Z);
+
+                SendTCP(pak);
+            }
+        }
 		
 		public override void SendMinotaurRelicWindow(GamePlayer player, int effect, bool flag)
 		{

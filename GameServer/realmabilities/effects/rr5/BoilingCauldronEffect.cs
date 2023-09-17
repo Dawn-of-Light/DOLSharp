@@ -70,15 +70,11 @@ namespace DOL.GS.Effects
         private void SummonCauldron()
         {
             Cauldron = new GameStaticItem();
-            Cauldron.CurrentRegion = EffectOwner.CurrentRegion;
-            Cauldron.Heading = (ushort)((EffectOwner.Heading + 2048) % 4096);
             Cauldron.Level = cauldronLevel;
             Cauldron.Realm = EffectOwner.Realm;
             Cauldron.Name = cauldronName;
             Cauldron.Model = cauldronModel;
-            Cauldron.X = EffectOwner.X;
-            Cauldron.Y = EffectOwner.Y;
-            Cauldron.Z = EffectOwner.Z;
+            Cauldron.Position = EffectOwner.Position.TurnedAround();
             Cauldron.AddToWorld();
 
             new RegionTimer(EffectOwner, new RegionTimerCallback(CauldronCallBack), RealmAbilities.BoilingCauldronAbility.DURATION - 1000);

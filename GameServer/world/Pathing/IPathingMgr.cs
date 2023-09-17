@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Threading.Tasks;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -16,23 +17,9 @@ namespace DOL.GS
 		/// </summary>
 		void Stop();
 
-		/// <summary>
-		///   Returns a path that prevents collisions with the navmesh, but floats freely otherwise
-		/// </summary>
-		/// <param name="zone"></param>
-		/// <param name="start">Start in GlobalXYZ</param>
-		/// <param name="end">End in GlobalXYZ</param>
-		/// <returns></returns>
-		WrappedPathingResult GetPathStraightAsync(Zone zone, Vector3 start, Vector3 end);
+        (LinePath Path,PathingError Error) GetPathStraightAsync(Zone zone, Coordinate start, Coordinate end);
 
-		/// <summary>
-		///   Returns a random point on the navmesh around the given position
-		/// </summary>
-		/// <param name="zone">Zone</param>
-		/// <param name="position">Start in GlobalXYZ</param>
-		/// <param name="radius">End in GlobalXYZ</param>
-		/// <returns>null if no point found, Vector3 with point otherwise</returns>
-		Vector3? GetRandomPointAsync(Zone zone, Vector3 position, float radius);
+		Vector3? GetRandomPointAsync(Zone zone, Coordinate centerLocation, float radius);
 
 		/// <summary>
 		///   Returns the closest point on the navmesh, if available, or no point found.

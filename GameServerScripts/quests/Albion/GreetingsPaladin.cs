@@ -24,6 +24,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Quests.Albion
 {
@@ -281,7 +282,6 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + sirStrain.Name + ", creating him ...");
                 sirStrain.GuildName = "Part of " + questTitle + " Quest";
                 sirStrain.Realm = eRealm.Albion;
-                sirStrain.CurrentRegionID = 27;
 
                 GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
                 template.AddNPCEquipment(eInventorySlot.HandsArmor, 696);
@@ -295,10 +295,7 @@ namespace DOL.GS.Quests.Albion
 
                 sirStrain.Size = 50;
                 sirStrain.Level = 50;
-                sirStrain.X = 98507;
-                sirStrain.Y = 90637;
-                sirStrain.Z = 5716;
-                sirStrain.Heading = 147;
+                sirStrain.Position = Position.Create(regionID: 27, x: 98507, y: 90637, z: 5716, heading: 147);
 
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following

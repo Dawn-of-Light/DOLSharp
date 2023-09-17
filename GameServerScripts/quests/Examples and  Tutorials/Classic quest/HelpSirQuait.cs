@@ -36,8 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
-	namespace DOL.GS.Quests.Examples {
+namespace DOL.GS.Quests.Examples {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -118,15 +119,11 @@ using DOL.AI.Brain;
 				log.Warn("Could not find " + SirQuait.Name + ", creating ...");
 			SirQuait.GuildName = "Part of " + questTitle + " Quest";
 			SirQuait.Realm = eRealm.Albion;
-			SirQuait.CurrentRegionID = 1;
 			SirQuait.Size = 50;
 			SirQuait.Level = 10;
 			SirQuait.MaxSpeedBase = 100;
 			SirQuait.Faction = FactionMgr.GetFactionByID(0);
-			SirQuait.X = 531971;
-			SirQuait.Y = 478955;
-			SirQuait.Z = 0;
-			SirQuait.Heading = 3570;
+            SirQuait.Position = Position.Create(regionID: 1, x: 531971, y: 478955, z: 0, heading: 3570);
 			SirQuait.RespawnInterval = 0;
 			SirQuait.BodyType = 0;
 			
@@ -160,15 +157,11 @@ using DOL.AI.Brain;
 				log.Warn("Could not find " + EvilThiefoftheShadowclan.Name + ", creating ...");
 			EvilThiefoftheShadowclan.GuildName = "Part of " + questTitle + " Quest";
 			EvilThiefoftheShadowclan.Realm = eRealm.None;
-			EvilThiefoftheShadowclan.CurrentRegionID = 1;
 			EvilThiefoftheShadowclan.Size = 50;
 			EvilThiefoftheShadowclan.Level = 1;
 			EvilThiefoftheShadowclan.MaxSpeedBase = 100;
 			EvilThiefoftheShadowclan.Faction = FactionMgr.GetFactionByID(0);
-			EvilThiefoftheShadowclan.X = 532571;
-			EvilThiefoftheShadowclan.Y = 479055;
-			EvilThiefoftheShadowclan.Z = 2200;
-			EvilThiefoftheShadowclan.Heading = 3570;
+            EvilThiefoftheShadowclan.Position = Position.Create(regionID: 1, x: 532571, y: 479055, z: 2200, heading: 3570);
 			EvilThiefoftheShadowclan.RespawnInterval = 0;
 			EvilThiefoftheShadowclan.BodyType = 0;
 			

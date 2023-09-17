@@ -72,10 +72,7 @@ namespace DOL.GS
 			cat.Level = Convert.ToByte(Level);
 			cat.Name = Name;
 			cat.Model = (ushort) Model;
-			cat.X = player.X;
-			cat.Y = player.Y;
-			cat.Z = player.Z;
-			cat.CurrentRegion = player.CurrentRegion;
+			cat.Position = player.Position;
 			cat.Realm = player.Realm;
 			cat.AddToWorld();
 

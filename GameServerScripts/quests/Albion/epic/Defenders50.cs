@@ -17,6 +17,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -99,7 +100,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 466464 && npc.Y == 634554)
+					if (npc.CurrentRegionID == 1)
 					{
 						Lidmann = npc;
 						break;
@@ -117,13 +118,9 @@ namespace DOL.GS.Quests.Albion
 
 				Lidmann.GuildName = "";
 				Lidmann.Realm = eRealm.Albion;
-				Lidmann.CurrentRegionID = 1;
 				Lidmann.Size = 50;
 				Lidmann.Level = 50;
-				Lidmann.X = 466464;
-				Lidmann.Y = 634554;
-				Lidmann.Z = 1954;
-				Lidmann.Heading = 1809;
+                Lidmann.Position = Position.Create(regionID: 1, x: 466464, y: 634554, z: 1954, heading: 1809);
 				Lidmann.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -137,7 +134,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 316218 && npc.Y == 664484)
+					if (npc.CurrentRegionID == 1)
 					{
 						Uragaig = npc;
 						break;
@@ -152,13 +149,9 @@ namespace DOL.GS.Quests.Albion
 				Uragaig.Name = "Cailleach Uragaig";
 				Uragaig.GuildName = "";
 				Uragaig.Realm = eRealm.None;
-				Uragaig.CurrentRegionID = 1;
 				Uragaig.Size = 55;
 				Uragaig.Level = 70;
-				Uragaig.X = 316218;
-				Uragaig.Y = 664484;
-				Uragaig.Z = 2736;
-				Uragaig.Heading = 3072;
+                Uragaig.Position = Position.Create(regionID: 1, x: 316218, y: 664484, z: 2736, heading: 3072);
 				Uragaig.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -1537,7 +1530,7 @@ namespace DOL.GS.Quests.Albion
         *#26 seek out Loken in Raumarik Loc 47k, 25k, 4k, and kill him purp and 2 blue adds 
         *#27 return to Lidmann 
         *#28 give her the ball of flame
-        *#29 talk with Lidmann about Loken’s demise
+        *#29 talk with Lidmann about Loken's demise
         *#30 go to MorlinCaan in Jordheim 
         *#31 give her the sealed pouch
         *#32 you get your epic armor as a reward

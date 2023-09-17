@@ -29,6 +29,7 @@ using DOL.Language;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -92,6 +93,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort yOffsetInZone = packet.ReadShort();
 			ushort currentZoneID = packet.ReadShort();
 
+			var headingflag = packet.ReadShort();
+			var flyingflag = packet.ReadShort();
+			var flags = (byte)packet.ReadByte();
+
 
 			//Dinberg - Instance considerations.
 			//Now this gets complicated, so listen up! We have told the client a lie when it comes to the zoneID.
@@ -128,18 +133,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// move to bind if player fell through the floor
 			if (realZ == 0)
 			{
-				client.Player.MoveTo(
-					(ushort)client.Player.BindRegion,
-					client.Player.BindXpos,
-					client.Player.BindYpos,
-					(ushort)client.Player.BindZpos,
-					(ushort)client.Player.BindHeading
-				);
+                client.Player.MoveTo(client.Player.BindPosition);
 				return;
 			}
 
-			int realX = newZone.XOffset + xOffsetInZone;
-			int realY = newZone.YOffset + yOffsetInZone;
+            var newLocation = Coordinate.Create(
+                x: newZone.Offset.X + xOffsetInZone,
+                y: newZone.Offset.Y + yOffsetInZone,
+                z: realZ);
 
 			bool zoneChange = newZone != client.Player.LastPositionUpdateZone;
 			if (zoneChange)
@@ -181,17 +182,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			int coordsPerSec = 0;
 			int jumpDetect = 0;
-			int timediff = Environment.TickCount - client.Player.LastPositionUpdateTick;
+			int timediff = Environment.TickCount - client.Player.MovementStartTick;
 			int distance = 0;
 
 			if (timediff > 0)
 			{
-				distance = client.Player.LastPositionUpdatePoint.GetDistanceTo(new Point3D(realX, realY, realZ));
+				distance = (int)client.Player.LastUpdateLocation.DistanceTo(newLocation);
 				coordsPerSec = distance * 1000 / timediff;
 
-				if (distance < 100 && client.Player.LastPositionUpdatePoint.Z > 0)
+				if (distance < 100 && client.Player.LastUpdateLocation.Z > 0)
 				{
-					jumpDetect = realZ - client.Player.LastPositionUpdatePoint.Z;
+					jumpDetect = realZ - client.Player.LastUpdateLocation.Z;
 				}
 			}
 
@@ -207,11 +208,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			#endif
 			#endregion DEBUG
-
-			client.Player.LastPositionUpdateTick = Environment.TickCount;
-			client.Player.LastPositionUpdatePoint.X = realX;
-			client.Player.LastPositionUpdatePoint.Y = realY;
-			client.Player.LastPositionUpdatePoint.Z = realZ;
 
 			int tolerance = ServerProperties.Properties.CPS_TOLERANCE;
 
@@ -313,24 +309,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.TempProperties.setProperty(LASTCPSTICK, environmentTick);
 			}
 
-			var headingflag = packet.ReadShort();
-			var flyingflag = packet.ReadShort();
-			var flags = (byte)packet.ReadByte();
-
-			client.Player.Heading = (ushort)(headingflag & 0xFFF);
-			if (client.Player.X != realX || client.Player.Y != realY)
+			if (client.Player.Location.X != newLocation.X || client.Player.Location.Y != newLocation.Y)
+            {
 				client.Player.TempProperties.setProperty(LASTMOVEMENTTICK, client.Player.CurrentRegion.Time);
-			client.Player.X = realX;
-			client.Player.Y = realY;
-			client.Player.Z = realZ;
+            }
+            client.Player.Position = Position.Create(newZone.ZoneRegion.ID, coordinate: newLocation, heading: (ushort)(headingflag & 0xFFF));
 
 			// update client zone information for waterlevel and diving
 			if (zoneChange)
 				client.Out.SendPlayerPositionAndObjectID();
-
-			// used to predict current position, should be before
-			// any calculation (like fall damage)
-			client.Player.MovementStartTick = Environment.TickCount;
 
 			// Begin ---------- New Area System -----------
 			if (client.Player.CurrentRegion.Time > client.Player.AreaUpdateTick) // check if update is needed
@@ -340,7 +327,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				// Because we may be in an instance we need to do the area check from the current region
 				// rather than relying on the zone which is in the skinned region.  - Tolakram
 
-				var newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player);
+				var newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player.Location);
 
 				// Check for left areas
 				if (oldAreas != null)
@@ -521,21 +508,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Player.TempProperties.setProperty(SHLASTFLY, SHlastFly);
 			client.Player.TempProperties.setProperty(SHLASTSTATUS, SHlastStatus);
 			client.Player.TempProperties.setProperty(SHSPEEDCOUNTER, SHcount);
-			lock (client.Player.LastUniqueLocations)
+			lock (client.Player.LastUniquePositions)
 			{
-				GameLocation[] locations = client.Player.LastUniqueLocations;
-				GameLocation loc = locations[0];
-				if (loc.X != realX || loc.Y != realY || loc.Z != realZ || loc.RegionID != client.Player.CurrentRegionID)
-				{
-					loc = locations[locations.Length - 1];
-					Array.Copy(locations, 0, locations, 1, locations.Length - 1);
-					locations[0] = loc;
-					loc.X = realX;
-					loc.Y = realY;
-					loc.Z = realZ;
-					loc.Heading = client.Player.Heading;
-					loc.RegionID = client.Player.CurrentRegionID;
-				}
+				var positions = client.Player.LastUniquePositions;
+				var pos = positions[0];
+                var newPosition = client.Player.Position.With(coordinate: newLocation);
+                if (pos.Coordinate != newPosition.Coordinate)
+                {
+                    pos = positions[positions.Length - 1];
+                    Array.Copy(positions, 0, positions, 1, positions.Length - 1);
+                    positions[0] = newPosition;
+                }
 			}
 
 			//**************//
@@ -566,24 +549,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 						fallDamage = client.Player.CalcFallDamage(fallPercent);
 					}
 
-					client.Player.MaxLastZ = client.Player.Z;
+					client.Player.MaxLastZ = client.Player.Position.Z;
 				}
 
 				else
 				{
 					// always set Z if on the ground
 					if (flyingflag == 0)
-						client.Player.MaxLastZ = client.Player.Z;
+						client.Player.MaxLastZ = client.Player.Position.Z;
 					// set Z if in air and higher than old Z
-					else if (maxLastZ < client.Player.Z)
-						client.Player.MaxLastZ = client.Player.Z;
+					else if (maxLastZ < client.Player.Position.Z)
+						client.Player.MaxLastZ = client.Player.Position.Z;
 				}
 			}
 			//**************//
 
             //Riding is set here!
             if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
-				client.Player.Heading = client.Player.Steed.Heading;
+				client.Player.Orientation = client.Player.Steed.Orientation;
 
 			var outpak = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
 			outpak.WriteShort((ushort)client.SessionID);
@@ -615,9 +598,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				outpak.WriteShort(content);
 			}
-			outpak.WriteShort((ushort)client.Player.Z);
-			outpak.WriteShort((ushort)(client.Player.X - client.Player.CurrentZone.XOffset));
-			outpak.WriteShort((ushort)(client.Player.Y - client.Player.CurrentZone.YOffset));
+            var zoneCoord = client.Player.Location - client.Player.CurrentZone.Offset;
+			outpak.WriteShort((ushort)zoneCoord.Z);
+			outpak.WriteShort((ushort)zoneCoord.X);
+			outpak.WriteShort((ushort)zoneCoord.Y);
 			// Write Zone
 			outpak.WriteShort(client.Player.CurrentZone.ZoneSkinID);
 
@@ -630,7 +614,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			else
 			{
 				// Set Player always on ground, this is an "anti lag" packet
-				ushort contenthead = (ushort)(client.Player.Heading + (true ? 0x1000 : 0));
+				ushort contenthead = (ushort)(client.Player.Orientation.InHeading + (true ? 0x1000 : 0));
 				outpak.WriteShort(contenthead);
 				outpak.WriteShort(0); // No Fall Speed.
 			}
@@ -681,16 +665,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (client.Player.IsStealthed)
 				playerAction |= 0x02;
 			ushort playerState = 0;
-			outpak1124.WriteFloatLowEndian(client.Player.X);
-			outpak1124.WriteFloatLowEndian(client.Player.Y);
-			outpak1124.WriteFloatLowEndian(client.Player.Z);
+			outpak1124.WriteFloatLowEndian(client.Player.Position.X);
+			outpak1124.WriteFloatLowEndian(client.Player.Position.Y);
+			outpak1124.WriteFloatLowEndian(client.Player.Position.Z);
 			outpak1124.WriteFloatLowEndian(client.Player.CurrentSpeed);
 			outpak1124.WriteFloatLowEndian(fallSpeed);
 			outpak1124.WriteShort((ushort)client.SessionID);
 			outpak1124.WriteShort(currentZoneID);
 			outpak1124.WriteShort(playerState);
 			outpak1124.WriteShort((ushort)(client.Player.Steed?.RiderSlot(client.Player) ?? 0)); // fall damage flag coming in, steed seat position going out
-			outpak1124.WriteShort(client.Player.Heading);
+			outpak1124.WriteShort(client.Player.Orientation.InHeading);
 			outpak1124.WriteByte(playerAction);
 			outpak1124.WriteByte((byte)(client.Player.RPFlag ? 1 : 0));
 			outpak1124.WriteByte(0);
@@ -864,29 +848,29 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.LastPositionUpdateZone = newZone;
 			}
 
+            var newPosition = Position.Create(
+                regionID: newZone.ZoneRegion.ID,
+                x: (int)newPlayerX,
+                y: (int)newPlayerY,
+                z: (int)newPlayerZ,
+                heading: (ushort)(newHeading & 0xFFF)
+            );
+
 			int coordsPerSec = 0;
 			int jumpDetect = 0;
-			int timediff = Environment.TickCount - client.Player.LastPositionUpdateTick;
+			int timediff = Environment.TickCount - client.Player.MovementStartTick;
 			int distance = 0;
 
 			if (timediff > 0)
 			{
-				distance = client.Player.LastPositionUpdatePoint.GetDistanceTo(new Point3D(newPlayerX, newPlayerY, newPlayerZ));
+				distance = (int)client.Player.LastUpdateLocation.DistanceTo(newPosition.Coordinate);
 				coordsPerSec = distance * 1000 / timediff;
 
-				if (distance < 100 && client.Player.LastPositionUpdatePoint.Z > 0)
+				if (distance < 100 && client.Player.LastUpdateLocation.Z > 0)
 				{
-					jumpDetect = (int)newPlayerZ - client.Player.LastPositionUpdatePoint.Z;
+					jumpDetect = (int)newPlayerZ - client.Player.LastUpdateLocation.Z;
 				}
 			}
-
-			client.Player.LastPositionUpdateTick = Environment.TickCount;
-			client.Player.LastPositionUpdatePoint.X = (int)newPlayerX;
-			client.Player.LastPositionUpdatePoint.Y = (int)newPlayerY;
-			client.Player.LastPositionUpdatePoint.Z = (int)newPlayerZ;
-			client.Player.X = (int)newPlayerX;
-			client.Player.Y = (int)newPlayerY;
-			client.Player.Z = (int)newPlayerZ;
 
 			int tolerance = ServerProperties.Properties.CPS_TOLERANCE;
 
@@ -993,19 +977,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			//client.Player.Heading = (ushort)(newHeading & 0xFFF); //patch 0024 expermental
 
-			if (client.Player.X != newPlayerX || client.Player.Y != newPlayerY)
+			if (client.Player.Position.X != newPosition.X || client.Player.Position.Y != newPosition.Y)
 			{
 				client.Player.TempProperties.setProperty(LASTMOVEMENTTICK, client.Player.CurrentRegion.Time);
 			}
 
-			client.Player.X = (int)newPlayerX;
-			client.Player.Y = (int)newPlayerY;
-			client.Player.Z = (int)newPlayerZ;
-			client.Player.Heading = (ushort)(newHeading & 0xFFF);
-
-			// used to predict current position, should be before
-			// any calculation (like fall damage)
-			client.Player.MovementStartTick = Environment.TickCount; // experimental 0024
+            client.Player.Position = newPosition;
 
 			// Begin ---------- New Area System -----------
 			if (client.Player.CurrentRegion.Time > client.Player.AreaUpdateTick) // check if update is needed
@@ -1015,7 +992,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				// Because we may be in an instance we need to do the area check from the current region
 				// rather than relying on the zone which is in the skinned region.  - Tolakram
 
-				var newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player);
+				var newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player.Location);
 
 				// Check for left areas
 				if (oldAreas != null)
@@ -1095,20 +1072,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return;
 				}
 			}
-			lock (client.Player.LastUniqueLocations)
+			lock (client.Player.LastUniquePositions)
 			{
-				GameLocation[] locations = client.Player.LastUniqueLocations;
-				GameLocation loc = locations[0];
-				if (loc.X != (int)newPlayerX || loc.Y != (int)newPlayerY || loc.Z != (int)newPlayerZ || loc.RegionID != client.Player.CurrentRegionID)
+				var positions = client.Player.LastUniquePositions;
+				var pos = positions[0];
+				if (pos.Coordinate != newPosition.Coordinate)
 				{
-					loc = locations[locations.Length - 1];
-					Array.Copy(locations, 0, locations, 1, locations.Length - 1);
-					locations[0] = loc;
-					loc.X = (int)newPlayerX;
-					loc.Y = (int)newPlayerY;
-					loc.Z = (int)newPlayerZ;
-					loc.Heading = client.Player.Heading;
-					loc.RegionID = client.Player.CurrentRegionID;
+					pos = positions[positions.Length - 1];
+					Array.Copy(positions, 0, positions, 1, positions.Length - 1);
+					positions[0] = newPosition;
 				}
 			}
 
@@ -1136,10 +1108,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Player.CalcFallDamage(fallPercent);
 						}
 
-						client.Player.MaxLastZ = client.Player.Z;
+						client.Player.MaxLastZ = client.Player.Position.Z;
 					}
-					else if (maxLastZ < client.Player.Z || client.Player.IsRiding || newPlayerZSpeed > -150) // is riding, for dragonflys
-						client.Player.MaxLastZ = client.Player.Z;
+					else if (maxLastZ < client.Player.Position.Z || client.Player.IsRiding || newPlayerZSpeed > -150) // is riding, for dragonflys
+						client.Player.MaxLastZ = client.Player.Position.Z;
 				}
 				catch
 				{
@@ -1151,7 +1123,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
 			{
-				client.Player.Heading = client.Player.Steed.Heading;
+				client.Player.Orientation = client.Player.Steed.Orientation;
 				newHeading = (ushort)client.Player.Steed.ObjectID;
 			}
 			else if ((playerState >> 10) == 4) // patch 0062 fix bug on release preventing players from receiving res sickness
@@ -1209,9 +1181,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			outpak190.WriteShort((ushort)client.SessionID);
 			outpak190.WriteShort((ushort)(client.Player.CurrentSpeed & 0x1FF));
 			outpak190.WriteShort((ushort)newPlayerZ);
-			var xoff = (ushort)(newPlayerX - (client.Player.CurrentZone?.XOffset ?? 0));
+			var xoff = (ushort)(newPlayerX - (client.Player.CurrentZone?.Offset.X ?? 0));
 			outpak190.WriteShort(xoff);
-			var yoff = (ushort)(newPlayerY - (client.Player.CurrentZone?.YOffset ?? 0));
+			var yoff = (ushort)(newPlayerY - (client.Player.CurrentZone?.Offset.Y ?? 0));
 			outpak190.WriteShort(yoff);
 			outpak190.WriteShort(currentZoneID);
 			outpak190.WriteShort(newHeading);

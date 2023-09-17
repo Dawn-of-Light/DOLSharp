@@ -37,6 +37,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using log4net;
@@ -161,14 +162,10 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + hyndla.Name + ", creating ...");
 				hyndla.GuildName = "Part of " + questTitle + " Quest";
 				hyndla.Realm = eRealm.Midgard;
-				hyndla.CurrentRegionID = 100;
 
 				hyndla.Size = 50;
 				hyndla.Level = 40;
-				hyndla.X = GameLocation.ConvertLocalXToGlobalX(53049, 100);
-				hyndla.Y = GameLocation.ConvertLocalYToGlobalY(58068, 100);
-				hyndla.Z = 4985;
-				hyndla.Heading = 150;
+                hyndla.Position = Position.CreateInZone(zoneID: 100, x: 53049, y: 58068, z: 4985, heading: 150);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -192,7 +189,6 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + njiedi.Name + ", creating ...");
 				njiedi.GuildName = "Stable Master";
 				njiedi.Realm = eRealm.Midgard;
-				njiedi.CurrentRegionID = 100;
 				njiedi.Size = 51;
 				njiedi.Level = 50;
 
@@ -208,10 +204,7 @@ namespace DOL.GS.Quests.Midgard
 //				njiedi.AddNPCEquipment(Slot.FEET, 84, 10, 0, 0);
 //				njiedi.AddNPCEquipment(Slot.CLOAK, 57, 32, 0, 0);
 
-				njiedi.X = GameLocation.ConvertLocalXToGlobalX(55561, 100);
-				njiedi.Y = GameLocation.ConvertLocalYToGlobalY(58225, 100);
-				njiedi.Z = 5005;
-				njiedi.Heading = 126;
+                njiedi.Position = Position.CreateInZone(zoneID: 100, x: 55561, y: 58225, z: 5005, heading: 126);
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -237,14 +230,10 @@ namespace DOL.GS.Quests.Midgard
 				askefruerTrainer = new GameNPC();
 
                 askefruerTrainer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCAskefruerTrainer");
-                askefruerTrainer.X = GameLocation.ConvertLocalXToGlobalX(54739, 100);
-				askefruerTrainer.Y = GameLocation.ConvertLocalYToGlobalY(18264, 100);
-				askefruerTrainer.Z = 5195;
-				askefruerTrainer.Heading = 79;
+                askefruerTrainer.Position = Position.CreateInZone(zoneID: 100, x: 54739, y: 18264, z: 5195, heading: 79);
 				askefruerTrainer.Model = 678;
 				//askefruerTrainer.GuildName = "Part of " + questTitle + " Quest";
 				askefruerTrainer.Realm = eRealm.None;
-				askefruerTrainer.CurrentRegionID = 100;
 				askefruerTrainer.Size = 49;
 				askefruerTrainer.Level = 3;
 
@@ -541,13 +530,9 @@ namespace DOL.GS.Quests.Midgard
             grifflet.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.InitGrifflet.NPCGrifflet");
             //grifflet.GuildName = "Part of " + m_questPlayer.GetName(0, false) + "'s " + questTitle + " Quest";
 			grifflet.Flags ^= GameNPC.eFlags.PEACE;
-			grifflet.CurrentRegionID = askefruerTrainer.CurrentRegionID;
 			grifflet.Size = 20;
 			grifflet.Level = 3;
-			grifflet.X = askefruerTrainer.X + Util.Random(-150, 150);
-			grifflet.Y = askefruerTrainer.Y + Util.Random(-150, 150);
-			grifflet.Z = askefruerTrainer.Z;
-			grifflet.Heading = 93;
+			grifflet.Position = askefruerTrainer.Position.With(heading: 93) + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 			grifflet.MaxSpeedBase = 200;
 
 			StandardMobBrain brain = new StandardMobBrain();

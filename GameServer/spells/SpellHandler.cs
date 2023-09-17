@@ -33,6 +33,7 @@ using DOL.GS.Utils;
 using DOL.Language;
 
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Spells
 {
@@ -749,7 +750,7 @@ namespace DOL.GS.Spells
 			}
 			if (targetType == "area")
 			{
-				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
+				if (m_caster.Location.DistanceTo(m_caster.GroundTargetLocation) > CalculateSpellRange())
 				{
 					if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -1015,7 +1016,7 @@ namespace DOL.GS.Spells
 
 			if (m_spell.Target.ToLower() == "area")
 			{
-				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
+				if (m_caster.Location.DistanceTo(m_caster.GroundTargetLocation) > CalculateSpellRange())
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -1185,7 +1186,7 @@ namespace DOL.GS.Spells
 
 			if (m_spell.Target.ToLower() == "area")
 			{
-				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
+				if (m_caster.Location.DistanceTo(m_caster.GroundTargetLocation) > CalculateSpellRange())
 				{
 					if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -1390,7 +1391,7 @@ namespace DOL.GS.Spells
 
 			if (m_spell.Target.ToLower() == "area")
 			{
-				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
+				if (m_caster.Location.DistanceTo(m_caster.GroundTargetLocation) > CalculateSpellRange())
 				{
 					if (!quiet) MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -2107,7 +2108,7 @@ namespace DOL.GS.Spells
 					else
 						if (modifiedRadius > 0)
 					{
-						foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, modifiedRadius))
+						foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTargetLocation, modifiedRadius))
 						{
 							if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
 							{
@@ -2125,7 +2126,7 @@ namespace DOL.GS.Spells
 								else list.Add(player);
 							}
 						}
-						foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, modifiedRadius))
+						foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTargetLocation, modifiedRadius))
 						{
 							if (npc is GameStorm)
 								list.Add(npc);
@@ -2572,7 +2573,7 @@ namespace DOL.GS.Spells
 				}
 				else if (Spell.Target.ToLower() == "area")
 				{
-					int dist = t.GetDistanceTo(Caster.GroundTarget);
+					int dist = (int)t.Location.DistanceTo(Caster.GroundTargetLocation);
 					if (dist >= 0)
 						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(t, dist, Spell.Radius)));
 				}

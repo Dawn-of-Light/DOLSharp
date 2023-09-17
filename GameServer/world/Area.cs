@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {		
@@ -104,60 +105,28 @@ namespace DOL.GS
 			/// <returns></returns>
 			public override bool IsIntersectingZone(Zone zone)
 			{
-				if (X+Width < zone.XOffset)
+				if (X+Width < zone.Offset.X)
 					return false;
-				if (X-Width >= zone.XOffset + 65536)
+				if (X-Width >= zone.Offset.X + 65536)
 					return false;
-				if (Y+Height < zone.YOffset)
+				if (Y+Height < zone.Offset.Y)
 					return false;
-				if (Y-Height >= zone.YOffset + 65536)
+				if (Y-Height >= zone.Offset.Y + 65536)
 					return false;
 
 				return true;
 			}	
 
-			/// <summary>
-			/// Checks wether given point is within area boundaries
-			/// </summary>
-			/// <param name="p"></param>
-			/// <returns></returns>
-			public override bool IsContaining(IPoint3D p)
-			{
-				return IsContaining(p, true);
-			}
+            public override bool IsContaining(Coordinate spot, bool ignoreZ = false)
+            {
+                long m_xdiff = (long)spot.X - X;
+                if (m_xdiff < 0 || m_xdiff > Width) return false;
 
-			public override bool IsContaining(int x, int y, int z)
-			{
-				return IsContaining(x, y, z, true);
-			}
+                long m_ydiff = (long)spot.Y - Y;
+                if (m_ydiff < 0 || m_ydiff > Height) return false;
 
-			public override bool IsContaining(IPoint3D p, bool checkZ)
-			{
-				return IsContaining(p.X, p.Y, p.Z, checkZ);
-			}
-
-			public override bool IsContaining(int x, int y, int z, bool checkZ)
-			{
-				long m_xdiff = (long)x - X;
-				if (m_xdiff < 0 || m_xdiff > Width)
-					return false;
-
-				long m_ydiff = (long)y - Y;
-				if (m_ydiff < 0 || m_ydiff > Height)
-					return false;
-
-				/*
-				//SH: Removed Z checks when one of the two Z values is zero(on ground)
-				if (Z != 0 && spotZ != 0)
-				{
-					long m_zdiff = (long) spotZ - Z;
-					if (m_zdiff> Radius)
-						return false;
-				}
-				*/
-
-				return true;
-			}
+                return true;
+            }
 
 			public override void LoadFromDatabase(DBArea area)
 			{
@@ -173,25 +142,6 @@ namespace DOL.GS
 
 		public class Circle : AbstractArea
 		{
-			
-			/// <summary>
-			/// The X coordinate of this Area
-			/// </summary>
-			protected int m_X;
-
-			/// <summary>
-			/// The Y coordinate of this Area
-			/// </summary>
-			protected int m_Y;
-
-			/// <summary>
-			/// The Z coordinate of this Area
-			/// </summary>
-			protected int m_Z;
-
-			/// <summary>
-			/// The radius of the area in Coordinates
-			/// </summary>
 			protected int m_Radius;
 
 			protected long m_distSq;
@@ -204,37 +154,26 @@ namespace DOL.GS
 			public Circle( string desc, int x, int y, int z, int radius) : base(desc)
 			{															
 				m_Description = desc;
-				m_X = x;
-				m_Y = y;
-				m_Z= z;
-				m_Radius= radius;
+                Center = Coordinate.Create(x, y, z);
+                m_Radius = radius;
 					
 				m_RadiusRadius = radius*radius;
 			}
 
-			/// <summary>
-			/// Returns the X Coordinate of this Area
-			/// </summary>
-			public int X
-			{
-				get { return m_X; }
-			}
+            public Circle(string desc, Coordinate center, int radius) : base(desc)
+            {
+                m_Description = desc;
+                Center = center;
+                m_Radius = radius;
 
-			/// <summary>
-			/// Returns the Y Coordinate of this Area
-			/// </summary>
-			public int Y
-			{
-				get { return m_Y; }
-			}
+                m_RadiusRadius = radius * radius;
+            }
 
-			/// <summary>
-			/// Returns the Width of this Area
-			/// </summary>
-			public int Z
-			{
-				get { return m_Z; }
-			}
+            public Coordinate Center { get; private set; }
+
+            public int X => Center.X;
+            public int Y => Center.Y;
+            public int Z => Center.Z;
 
 			/// <summary>
 			/// Returns the Height of this Area
@@ -258,74 +197,51 @@ namespace DOL.GS
 			/// <returns></returns>
 			public override bool IsIntersectingZone(Zone zone)
 			{
-				if (X+Radius < zone.XOffset)
+				if (X+Radius < zone.Offset.X)
 					return false;
-				if (X-Radius >= zone.XOffset + 65536)
+				if (X-Radius >= zone.Offset.X + 65536)
 					return false;
-				if (Y+Radius < zone.YOffset)
+				if (Y+Radius < zone.Offset.Y)
 					return false;
-				if (Y-Radius >= zone.YOffset + 65536)
+				if (Y-Radius >= zone.Offset.Y + 65536)
 					return false;
 
 				return true;
 			}
 
-			public override bool IsContaining(IPoint3D spot)
-			{
-				return IsContaining(spot, true);
-			}
+            public override bool IsContaining(Coordinate spot, bool ignoreZ = false)
+            {
+                // spot is not in square around circle no need to check for circle...
+                long m_xdiff = (long)spot.X - X;
+                if (m_xdiff > Radius)
+                    return false;
 
-			public override bool IsContaining(int x, int y, int z, bool checkZ)
-			{
-				// spot is not in square around circle no need to check for circle...
-				long m_xdiff = (long)x - X;
-				if (m_xdiff > Radius)
-					return false;
-
-				long m_ydiff = (long)y - Y;
-				if (m_ydiff > Radius)
-					return false;
+                long m_ydiff = (long)spot.Y - Y;
+                if (m_ydiff > Radius)
+                    return false;
 
 
-				// check if spot is in circle
-				m_distSq = m_xdiff * m_xdiff + m_ydiff * m_ydiff;
+                // check if spot is in circle
+                m_distSq = m_xdiff * m_xdiff + m_ydiff * m_ydiff;
 
-				if (Z != 0 && z != 0 && checkZ)
-				{
-					long m_zdiff = (long)z - Z;
-					m_distSq += m_zdiff * m_zdiff;
-				}
+                if (Z != 0 && spot.Z != 0 && !ignoreZ)
+                {
+                    long m_zdiff = (long)spot.Z - Z;
+                    m_distSq += m_zdiff * m_zdiff;
+                }
 
-				return (m_distSq <= m_RadiusRadius);
-			}
+                return (m_distSq <= m_RadiusRadius);
+            }
 
-			public override bool IsContaining(int x, int y, int z)
-			{
-				return IsContaining(x, y, z, true);
-			}
-
-			/// <summary>
-			/// Checks wether given point is within area boundaries
-			/// </summary>
-			/// <param name="p"></param>
-			/// <param name="checkZ"></param>
-			/// <returns></returns>
-			public override bool IsContaining(IPoint3D p, bool checkZ)
-			{
-				return IsContaining(p.X, p.Y, p.Z, checkZ);
-			}
-
-			public override void LoadFromDatabase(DBArea area)
-			{
+            public override void LoadFromDatabase(DBArea area)
+            {
                 m_translationId = area.TranslationId;
-				m_Description = area.Description;
-				m_X = area.X;
-				m_Y = area.Y;
-				m_Z = area.Z;
-				m_Radius = area.Radius;
-				m_RadiusRadius = area.Radius * area.Radius;
-			}
-		}
+                m_Description = area.Description;
+                Center = Coordinate.Create(area.X, area.Y, area.Z);
+                m_Radius = area.Radius;
+                m_RadiusRadius = area.Radius * area.Radius;
+            }
+        }
 
         public class Polygon : AbstractArea
         {
@@ -360,7 +276,7 @@ namespace DOL.GS
             /// <summary>
             /// The Points list
             /// </summary>
-            protected IList<Point2D> m_points;
+            protected IList<Coordinate> m_points;
 
             public Polygon()
                 : base()
@@ -405,7 +321,7 @@ namespace DOL.GS
                 set
                 {
                     m_stringpoints = value;
-                    m_points = new List<Point2D>();
+                    m_points = new List<Coordinate>();
                     if (m_stringpoints.Length < 1) return;
                     string[] points = m_stringpoints.Split('|');
                     foreach (string point in points)
@@ -414,7 +330,7 @@ namespace DOL.GS
                         if (pts.Length != 2) continue;
                         int x = Convert.ToInt32(pts[0]);
                         int y = Convert.ToInt32(pts[1]);
-                        Point2D p = new Point2D(x, y);
+                        var p = Coordinate.Create(x, y);
                         if (!m_points.Contains(p)) m_points.Add(p);
                     }
                 }
@@ -428,53 +344,38 @@ namespace DOL.GS
             public override bool IsIntersectingZone(Zone zone)
             {
                 // TODO if needed
-                if (X + Radius < zone.XOffset)
+                if (X + Radius < zone.Offset.X)
                     return false;
-                if (X - Radius >= zone.XOffset + 65536)
+                if (X - Radius >= zone.Offset.X + 65536)
                     return false;
-                if (Y + Radius < zone.YOffset)
+                if (Y + Radius < zone.Offset.Y)
                     return false;
-                if (Y - Radius >= zone.YOffset + 65536)
+                if (Y - Radius >= zone.Offset.Y + 65536)
                     return false;
 
                 return true;
             }
 
-            public override bool IsContaining(int x, int y, int z, bool checkZ)
-            {
-                return IsContaining(new Point3D(x, y, z));
-            }
-
-            public override bool IsContaining(int x, int y, int z)
-            {
-                return IsContaining(new Point3D(x, y, z));
-            }
-
-            public override bool IsContaining(IPoint3D obj, bool checkZ)
-            {
-                return IsContaining(obj);
-            }
-
-            public override bool IsContaining(IPoint3D obj)
+            public override bool IsContaining(Coordinate spot, bool ignoreZ = false)
             {
                 if (m_points.Count < 3) return false;
-                Point2D p1, p2;
+                Coordinate p1, p2;
                 bool inside = false;
 
-                Point2D oldpt = new Point2D(m_points[m_points.Count - 1].X, m_points[m_points.Count - 1].Y);
+                var lastPoint = m_points[m_points.Count - 1];
 
-                foreach (Point2D pt in m_points)
+                foreach (var currentPoint in m_points)
                 {
-                    Point2D newpt = new Point2D(pt.X, pt.Y);
+                    var newpt = currentPoint;
 
-                    if (newpt.X > oldpt.X) { p1 = oldpt; p2 = newpt; }
-                    else { p1 = newpt; p2 = oldpt; }
+                    if (currentPoint.X > lastPoint.X) { p1 = lastPoint; p2 = currentPoint; }
+                    else { p1 = currentPoint; p2 = lastPoint; }
 
-                    if ((newpt.X < obj.X) == (obj.X <= oldpt.X)
-                        && (obj.Y - p1.Y) * (p2.X - p1.X) < (p2.Y - p1.Y) * (obj.X - p1.X))
+                    if ((currentPoint.X < spot.X) == (spot.X <= lastPoint.X)
+                        && (spot.Y - p1.Y) * (p2.X - p1.X) < (p2.Y - p1.Y) * (spot.X - p1.X))
                         inside = !inside;
 
-                    oldpt = newpt;
+                    lastPoint = currentPoint;
                 }
                 return inside;
             }

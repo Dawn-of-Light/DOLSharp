@@ -35,6 +35,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -152,7 +153,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + eowylnAstos.Name + ", creating him ...");
 				eowylnAstos.GuildName = "Part of " + questTitle + " Quest";
 				eowylnAstos.Realm = eRealm.Albion;
-				eowylnAstos.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 40);
@@ -161,10 +161,7 @@ namespace DOL.GS.Quests.Albion
 
 				eowylnAstos.Size = 54;
 				eowylnAstos.Level = 17;
-				eowylnAstos.X = 559680;
-				eowylnAstos.Y = 513793;
-				eowylnAstos.Z = 2619;
-				eowylnAstos.Heading = 3185;
+                eowylnAstos.Position = Position.Create(regionID: 1, x: 559680, y: 513793, z: 2619, heading: 3185);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -564,14 +561,10 @@ namespace DOL.GS.Quests.Albion
 								sephucoth.Model = 136;
 								sephucoth.Name = "Sephucoth";
 								sephucoth.Realm = eRealm.None;
-								sephucoth.CurrentRegionID = 1;
 
 								sephucoth.Size = 55;
 								sephucoth.Level = 7;
-								sephucoth.X = 560836;
-								sephucoth.Y = 527260;
-								sephucoth.Z = 2082;
-								sephucoth.Heading = 1480;
+                                sephucoth.Position = Position.Create(regionID: 1, x: 560836, y: 527260, z: 2082, heading: 1480);
 
 								StandardMobBrain brain = new StandardMobBrain();  // set a brain witch find a lot mob friend to attack the player
 								sephucoth.SetOwnBrain(brain);					  // so this mob must be abble to cast 

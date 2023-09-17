@@ -17,16 +17,15 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Behaviour.Attributes;
-using DOL.GS.Behaviour;
 using DOL.Language;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Behaviour.Actions
 {
+    [Obsolete("This is going to be removed.")]
     [ActionAttribute(ActionType = eActionType.Teleport,DefaultValueQ=0)]
     public class TeleportAction : AbstractAction<GameLocation,int>
     {               
@@ -53,9 +52,8 @@ namespace DOL.GS.Behaviour.Actions
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Behaviour.TeleportAction.TeleportedToLoc", player, location.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
 
-            location.X += Util.Random(-radius, radius);
-            location.Y += Util.Random(-radius, radius);
-            player.MoveTo(location.RegionID, location.X, location.Y, location.Z, location.Heading);
+            var randomOffset = Vector.Create(x: Util.Random(-radius, radius), y: Util.Random(-radius, radius));
+            player.MoveTo(location.Position + randomOffset);
         }
     }
 }

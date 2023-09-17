@@ -36,6 +36,7 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Quests.Midgard
 {
@@ -125,15 +126,11 @@ namespace DOL.GS.Quests.Midgard
 						log.Warn("Could not find " + ToroldSterkkriger.Name + ", creating ...");
 					ToroldSterkkriger.GuildName = "Part of " + questTitle + " Quest";
 					ToroldSterkkriger.Realm = eRealm.Midgard;
-					ToroldSterkkriger.CurrentRegionID = 151;
 					ToroldSterkkriger.Size = 50;
 					ToroldSterkkriger.Level = 55;
 					ToroldSterkkriger.MaxSpeedBase = 191;
 					ToroldSterkkriger.Faction = FactionMgr.GetFactionByID(0);
-					ToroldSterkkriger.X = 287623;
-					ToroldSterkkriger.Y = 355226;
-					ToroldSterkkriger.Z = 3488;
-					ToroldSterkkriger.Heading = 3788;
+                    ToroldSterkkriger.Position = Position.Create(regionID: 151, x: 287623, y: 355226, z: 3488, heading: 3788);
 					ToroldSterkkriger.RespawnInterval = -1;
 					ToroldSterkkriger.BodyType = 0;
 
@@ -170,15 +167,11 @@ namespace DOL.GS.Quests.Midgard
 						log.Warn("Could not find " + JorundBruttstein.Name + ", creating ...");
 					JorundBruttstein.GuildName = "Part of " + questTitle + " Quest";
 					JorundBruttstein.Realm = eRealm.Midgard;
-					JorundBruttstein.CurrentRegionID = 151;
 					JorundBruttstein.Size = 52;
 					JorundBruttstein.Level = 50;
 					JorundBruttstein.MaxSpeedBase = 191;
 					JorundBruttstein.Faction = FactionMgr.GetFactionByID(0);
-					JorundBruttstein.X = 287884;
-					JorundBruttstein.Y = 356307;
-					JorundBruttstein.Z = 3488;
-					JorundBruttstein.Heading = 3163;
+                    JorundBruttstein.Position = Position.Create(regionID: 151, x: 287884, y: 356307, z: 3488, heading: 3163);
 					JorundBruttstein.RespawnInterval = -1;
 					JorundBruttstein.BodyType = 0;
 

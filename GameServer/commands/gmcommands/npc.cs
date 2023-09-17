@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Commands
 {
@@ -199,16 +200,12 @@ namespace DOL.GS.Commands
 							speed = Convert.ToInt16(args[3]);
 						}
 
-						int X = 0;
-						int Y = 0;
-						int Z = 0;
+                        var location = Coordinate.Nowhere;
 						switch (args[2].ToLower())
 						{
 							case "me":
 								{
-									X = client.Player.X;
-									Y = client.Player.Y;
-									Z = client.Player.Z;
+                                    location = client.Player.Location;
 									break;
 								}
 
@@ -219,9 +216,7 @@ namespace DOL.GS.Commands
 									{
 										if (targetplayer.Name.ToLower() == args[2].ToLower())
 										{
-											X = targetplayer.X;
-											Y = targetplayer.Y;
-											Z = targetplayer.Z;
+                                            location = targetplayer.Location;
 											break;
 										}
 									}
@@ -230,9 +225,7 @@ namespace DOL.GS.Commands
 									{
 										if (target.Name.ToLower() == args[2].ToLower())
 										{
-											X = target.X;
-											Y = target.Y;
-											Z = target.Z;
+                                            location = target.Location;
 											break;
 										}
 									}
@@ -240,13 +233,13 @@ namespace DOL.GS.Commands
 								}
 						}
 
-						if (X == 0 && Y == 0 && Z == 0)
+						if (location.Equals(Coordinate.Nowhere))
 						{
 							client.Out.SendMessage("Can't find name " + args[2].ToLower() + " near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 
-						npc.PathTo(new Point3D(X, Y, Z), speed);
+						npc.PathTo(location, speed);
 						client.Out.SendMessage("Your target is walking to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}

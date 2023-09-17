@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
@@ -82,45 +83,43 @@ namespace DOL.GS
 
         #region Token return
 
-        private static readonly Dictionary<string, GameLocation> _itemXdestination =
-            new Dictionary<string, GameLocation>
+        private static readonly Dictionary<string, Position> _itemXdestination =
+            new Dictionary<string, Position>
                 {
                     // Item Id_nb, new Tuple<>(Region, X, Y, Z, Heading)
                     // ALBION
-                    {"entrancehousingalb", new GameLocation("", 2, 584832, 561279, 3576, 2144)},
-                    {"marketcaerwent", new GameLocation("", 2, 557035, 560048, 3624, 1641)},
-                    {"marketrilan", new GameLocation("", 2, 559906, 491141, 3392, 1829)},
-                    {"marketbrisworthy", new GameLocation("", 2, 489474, 489323, 3600, 3633)},
-                    {"marketstoneleigh", new GameLocation("", 2, 428964, 490962, 3624, 1806)},
-                    {"marketchiltern", new GameLocation("", 2, 428128, 557606, 3624, 3888)},
-                    {"marketsherborne", new GameLocation("", 2, 428840, 622221, 3248, 1813)},
-                    {"marketaylesbury", new GameLocation("", 2, 492794, 621373, 3624, 1643)},
-                    {"marketoldsarum", new GameLocation("", 2, 560030, 622022, 3624, 1819)},
-                    {"marketdalton", new GameLocation("", 2, 489334, 559242, 3720, 1821)},
-
+                    {"entrancehousingalb", Position.Create(regionID: 2, x: 584832, y: 561279, z: 3576, heading: 2144)},
+                    {"marketcaerwent", Position.Create(regionID: 2, x: 557035, y: 560048, z: 3624, heading: 1641)},
+                    {"marketrilan", Position.Create(regionID: 2, x: 559906, y: 491141, z: 3392, heading: 1829)},
+                    {"marketbrisworthy", Position.Create(regionID: 2, x: 489474, y: 489323, z: 3600, heading: 3633)},
+                    {"marketstoneleigh", Position.Create(regionID: 2, x: 428964, y: 490962, z: 3624, heading: 1806)},
+                    {"marketchiltern", Position.Create(regionID: 2, x: 428128, y: 557606, z: 3624, heading: 3888)},
+                    {"marketsherborne", Position.Create(regionID: 2, x: 428840, y: 622221, z: 3248, heading: 1813)},
+                    {"marketaylesbury", Position.Create(regionID: 2, x: 492794, y: 621373, z: 3624, heading: 1643)},
+                    {"marketoldsarum", Position.Create(regionID: 2, x: 560030, y: 622022, z: 3624, heading: 1819)},
+                    {"marketdalton", Position.Create(regionID: 2, x: 489334, y: 559242, z: 3720, heading: 1821)},
                     // MIDGARD
-                    {"entrancehousingmid", new GameLocation("", 102, 526881, 561661, 3633, 80)},
-                    {"marketerikstaad", new GameLocation("", 102, 554099, 565239, 3624, 504)},
-                    {"marketarothi", new GameLocation("", 102, 558093, 485250, 3488, 1231)},
-                    {"marketkaupang", new GameLocation("", 102, 625574, 483303, 3592, 2547)},
-                    {"marketstavgaard", new GameLocation("", 102, 686901, 490396, 3744, 332)},
-                    {"marketcarlingford", new GameLocation("", 102, 625056, 557887, 3696, 1366)},
-                    {"marketholmestrand", new GameLocation("", 102, 686903, 556050, 3712, 313)},
-                    {"marketnittedal", new GameLocation("", 102, 689199, 616329, 3488, 1252)},
-                    {"marketfrisia", new GameLocation("", 102, 622620, 615491, 3704, 804)},
-                    {"marketwyndham", new GameLocation("", 102, 555839, 621432, 3744, 314)},
-
+                    {"entrancehousingmid", Position.Create(regionID: 102, x: 526881, y: 561661, z: 3633, heading: 80)},
+                    {"marketerikstaad", Position.Create(regionID: 102, x: 554099, y: 565239, z: 3624, heading: 504)},
+                    {"marketarothi", Position.Create(regionID: 102, x: 558093, y: 485250, z: 3488, heading: 1231)},
+                    {"marketkaupang", Position.Create(regionID: 102, x: 625574, y: 483303, z: 3592, heading: 2547)},
+                    {"marketstavgaard", Position.Create(regionID: 102, x: 686901, y: 490396, z: 3744, heading: 332)},
+                    {"marketcarlingford", Position.Create(regionID: 102, x: 625056, y: 557887, z: 3696, heading: 1366)},
+                    {"marketholmestrand", Position.Create(regionID: 102, x: 686903, y: 556050, z: 3712, heading: 313)},
+                    {"marketnittedal", Position.Create(regionID: 102, x: 689199, y: 616329, z: 3488, heading: 1252)},
+                    {"marketfrisia", Position.Create(regionID: 102, x: 622620, y: 615491, z: 3704, heading: 804)},
+                    {"marketwyndham", Position.Create(regionID: 102, x: 555839, y: 621432, z: 3744, heading: 314)},
                     // HIBERNIA
-                    {"entrancehousinghib", new GameLocation("", 202, 555246, 526470, 3008, 1055)},
-                    {"marketmeath", new GameLocation("", 202, 564448, 559995, 3008, 1024)},
-                    {"marketkilcullen", new GameLocation("", 202, 618653, 561227, 3032, 3087)},
-                    {"marketaberillan", new GameLocation("", 202, 615145, 619457, 3008, 3064)},
-                    {"markettorrylin", new GameLocation("", 202, 566890, 620027, 3008, 1500)},
-                    {"markettullamore", new GameLocation("", 202, 560999, 692301, 3032, 1030)},
-                    {"marketbroughshane", new GameLocation("", 202, 618653, 692296, 3032, 3090)},
-                    {"marketmoycullen", new GameLocation("", 202, 495552, 686733, 2960, 1077)},
-                    {"marketsaeranthal", new GameLocation("", 202, 493148, 620361, 2952, 2471)},
-                    {"marketdunshire", new GameLocation("", 202, 495494, 555646, 2960, 1057)},
+                    {"entrancehousinghib", Position.Create(regionID: 202, x: 555246, y: 526470, z: 3008, heading: 1055)},
+                    {"marketmeath", Position.Create(regionID: 202, x: 564448, y: 559995, z: 3008, heading: 1024)},
+                    {"marketkilcullen", Position.Create(regionID: 202, x: 618653, y: 561227, z: 3032, heading: 3087)},
+                    {"marketaberillan", Position.Create(regionID: 202, x: 615145, y: 619457, z: 3008, heading: 3064)},
+                    {"markettorrylin", Position.Create(regionID: 202, x: 566890, y: 620027, z: 3008, heading: 1500)},
+                    {"markettullamore", Position.Create(regionID: 202, x: 560999, y: 692301, z: 3032, heading: 1030)},
+                    {"marketbroughshane", Position.Create(regionID: 202, x: 618653, y: 692296, z: 3032, heading: 3090)},
+                    {"marketmoycullen", Position.Create(regionID: 202, x: 495552, y: 686733, z: 2960, heading: 1077)},
+                    {"marketsaeranthal", Position.Create(regionID: 202, x: 493148, y: 620361, z: 2952, heading: 2471)},
+                    {"marketdunshire", Position.Create(regionID: 202, x: 495494, y: 555646, z: 2960, heading: 1057)},
                 };
 
         public override bool ReceiveItem(GameLiving source, InventoryItem item)
@@ -138,8 +137,7 @@ namespace DOL.GS
 
             if (item != null)
             {
-                GameLocation destination;
-                if (_itemXdestination.TryGetValue(item.Id_nb, out destination))
+                if (_itemXdestination.TryGetValue(item.Id_nb, out Position destination))
                 {
                     player.MoveTo(destination);
                     player.Inventory.RemoveItem(item);

@@ -23,6 +23,7 @@ using log4net;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.Appeal;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Commands
 {
@@ -404,9 +405,9 @@ namespace DOL.GS.Commands
                             GamePlayer p = client.Player.TempProperties.getProperty<GamePlayer>("AppealAssist");
                             if (p.ObjectState == GameObject.eObjectState.Active)
                             {
-                                GameLocation oldlocation = new GameLocation("old", client.Player.CurrentRegionID, client.Player.X, client.Player.Y, client.Player.Z);
-                                client.Player.TempProperties.setProperty("AppealJumpOld", oldlocation);
-                                client.Player.MoveTo(p.CurrentRegionID, p.X, p.Y, p.Z, p.Heading);
+                                var oldPosition = client.Player.Position;
+                                client.Player.TempProperties.setProperty("AppealJumpOld", oldPosition);
+                                client.Player.MoveTo(p.Position);
                             }
                             break;
                         }
@@ -418,9 +419,9 @@ namespace DOL.GS.Commands
                     }
                 case "jumpback":
                     {
-                        GameLocation jumpback = client.Player.TempProperties.getProperty<GameLocation>("AppealJumpOld");
+                        var jumpback = client.Player.TempProperties.getProperty<Position>("AppealJumpOld", Position.Nowhere);
 
-                        if (jumpback != null)
+                        if (jumpback != Position.Nowhere)
                         {
                             client.Player.MoveTo(jumpback);
                             //client.Player.TempProperties.removeProperty("AppealJumpOld");

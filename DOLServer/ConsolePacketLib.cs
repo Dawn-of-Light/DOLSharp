@@ -31,6 +31,7 @@ using DOL.GS.Quests;
 using log4net;
 using DOL.Database;
 using DOL.GS.Profession;
+using DOL.GS.Geometry;
 
 namespace DOLGameServerConsole
 {
@@ -179,7 +180,9 @@ namespace DOLGameServerConsole
 		public void SendConcentrationList() { }
 		public void SendUpdateCraftingSkills() { }
 		public void SendChangeTarget(GameObject newTarget) { }
+        [Obsolete("Use .SendChangeGroundTarget(Coordinate) instead!")]
 		public void SendChangeGroundTarget(Point3D newTarget) { }
+		public void SendChangeGroundTarget(Coordinate newTarget) { }
 		public void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState) { }
 		public void SendKeepInfo(IGameKeep keep) { }
 		public void SendKeepRealmUpdate(IGameKeep keep) { }
@@ -243,6 +246,7 @@ namespace DOLGameServerConsole
 		public void SendConsignmentMerchantMoney(long money) { }
         public void SendMinotaurRelicMapRemove(byte id) { }
         public void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z) { }
+        public void SendMinotaurRelicMapUpdate(byte id, Position position) { }
         public virtual void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag) { }
         public virtual void SendMinotaurRelicBarUpdate(GamePlayer player, int xp) { }
         public virtual void SendBlinkPanel(byte flag) { }

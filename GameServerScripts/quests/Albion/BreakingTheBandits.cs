@@ -34,6 +34,7 @@ using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 /* I suggest you declare yourself some namespaces for your quests
 * Like: DOL.GS.Quests.Albion
 *       DOL.GS.Quests.Midgard
@@ -157,13 +158,9 @@ namespace DOL.GS.Quests.Albion
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + atheleys.Name + ", creating him ...");
                 atheleys.Realm = eRealm.Albion;
-                atheleys.CurrentRegionID = 1;
                 atheleys.Size = 50;
                 atheleys.Level = 30;
-                atheleys.X = 574375;
-                atheleys.Y = 530243;
-                atheleys.Z = 2906;
-                atheleys.Heading = 1922;
+                atheleys.Position = Position.Create(regionID: 1, x: 574375, y: 530243, z: 2906, heading: 1922);
 
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -191,13 +188,9 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find Mostram, creating him ...");
                 mostram.GuildName = "";
                 mostram.Realm = eRealm.None;
-                mostram.CurrentRegionID = 1;
                 mostram.Size = 52;
                 mostram.Level = 9;
-                mostram.X = 574338;
-                mostram.Y = 536865;
-                mostram.Z = 2361;
-                mostram.Heading = 57;
+                mostram.Position = Position.Create(regionID: 1, x: 574338, y: 536865, z: 2361, heading: 57);
 
                 StandardMobBrain brain = new StandardMobBrain();
                 brain.AggroLevel = 0;

@@ -31,6 +31,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -159,13 +160,9 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + marlinThuler.Name + ", creating him ...");
                 marlinThuler.GuildName = "Instrument Merchant";
                 marlinThuler.Realm = eRealm.Albion;
-                marlinThuler.CurrentRegionID = 1;
                 marlinThuler.Size = 52;
                 marlinThuler.Level = 40;
-                marlinThuler.X = 578189;
-                marlinThuler.Y = 557031;
-                marlinThuler.Z = 2340;
-                marlinThuler.Heading = 1513;
+                marlinThuler.Position = Position.Create(regionID: 1, x: 578189, y: 557031, z: 2340, heading: 1513);
 
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following

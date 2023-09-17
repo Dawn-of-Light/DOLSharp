@@ -26,6 +26,7 @@ using System.Text;
 
 using DOL.Database;
 using DOL.GS;
+using DOL.GS.Geometry;
 using log4net;
 
 namespace DOL.Language
@@ -447,6 +448,23 @@ namespace DOL.Language
         #endregion ReadLanguageDirectory
 
         #endregion Initialization
+
+        public static string GetCardinalDirection(string languageID, Angle direction)
+        {
+            var clockwiseDirectionIndexBeginningFromSouth = ((direction.InHeading + 256) % 4096) / 512;
+            switch (clockwiseDirectionIndexBeginningFromSouth)
+            {
+                case 0: return LanguageMgr.GetTranslation(languageID, "Scripts.Players.Yell.South");
+                case 1: return LanguageMgr.GetTranslation(languageID, "Scripts.Players.Yell.SouthWest");
+                case 2: return LanguageMgr.GetTranslation(languageID, "Scripts.Players.Yell.West");
+                case 3: return LanguageMgr.GetTranslation(languageID, "Scripts.Players.Yell.NorthWest");
+                case 4: return LanguageMgr.GetTranslation(languageID, "Scripts.Players.Yell.North");
+                case 5: return LanguageMgr.GetTranslation(languageID, "Scripts.Players.Yell.NorthEast");
+                case 6: return LanguageMgr.GetTranslation(languageID, "Scripts.Players.Yell.East");
+                case 7: return LanguageMgr.GetTranslation(languageID, "Scripts.Players.Yell.SouthEast");
+            }
+            return "";
+        }
 
         #region GetLanguageDataObject
         public static LanguageDataObject GetLanguageDataObject(string language, string translationId, LanguageDataObject.eTranslationIdentifier translationIdentifier)

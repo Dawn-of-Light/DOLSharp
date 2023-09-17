@@ -36,8 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
-	namespace DOL.GS.Quests.Midgard {
+namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -120,14 +121,10 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + AmbientRatStatua.Name + ", creating ...");
 				AmbientRatStatua.GuildName = "Part of " + questTitle + " Quest";
 				AmbientRatStatua.Realm = eRealm.None;
-				AmbientRatStatua.CurrentRegionID = 229;
 				AmbientRatStatua.Size = 1;
 				AmbientRatStatua.Level = 1;
 				AmbientRatStatua.MaxSpeedBase = 0;
-				AmbientRatStatua.X = 40887;
-				AmbientRatStatua.Y = 39276;
-				AmbientRatStatua.Z = 17040;
-				AmbientRatStatua.Heading = 0;
+                AmbientRatStatua.Position = Position.Create(regionID: 229, x: 40887, y: 39276, z: 17040, heading: 0);
 				AmbientRatStatua.RespawnInterval = -1;
 				AmbientRatStatua.BodyType = 0;
 				
@@ -161,15 +158,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + Ballach.Name + ", creating ...");
 				Ballach.GuildName = "Part of " + questTitle + " Quest";
 				Ballach.Realm = eRealm.Midgard;
-				Ballach.CurrentRegionID = 243;
 				Ballach.Size = 48;
 				Ballach.Level = 20;
 				Ballach.MaxSpeedBase = 0;
 				Ballach.Faction = FactionMgr.GetFactionByID(0);
-				Ballach.X = 27723;
-				Ballach.Y = 39184;
-				Ballach.Z = 20156;
-				Ballach.Heading = 2070;
+                Ballach.Position = Position.Create(regionID: 243, x: 27723, y: 39184, z: 20156, heading: 2070);
 				Ballach.RespawnInterval = -1;
 				Ballach.BodyType = 0;
 				

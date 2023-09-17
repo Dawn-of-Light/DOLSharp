@@ -23,6 +23,7 @@
  * Desc:	Implements /faceloc command
  *
  */
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -64,11 +65,10 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Faceloc.Invalid"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			int Xoffset = client.Player.CurrentZone.XOffset;
-			int Yoffset = client.Player.CurrentZone.YOffset;
-            Point2D gloc = new Point2D( Xoffset + x, Yoffset + y );
-			ushort direction = client.Player.GetHeading(gloc);
-			client.Player.Heading = direction;
+			int xOffset = client.Player.CurrentZone.Offset.X;
+			int yOffset = client.Player.CurrentZone.Offset.Y;
+            var gloc = Coordinate.Create(x: x + xOffset, y: y + yOffset );
+            client.Player.TurnTo(gloc);
 			client.Out.SendPlayerJump(true);
 		}
 	}

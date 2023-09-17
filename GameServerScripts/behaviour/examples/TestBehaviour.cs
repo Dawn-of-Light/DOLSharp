@@ -11,6 +11,7 @@ using DOL.GS;
 using DOL.GS.Quests;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Behaviour.Examples
 {
@@ -43,15 +44,11 @@ namespace DOL.GS.Behaviour.Examples
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + SirQuait.Name + ", creating ...");                
                 SirQuait.Realm = eRealm.Albion;
-                SirQuait.CurrentRegionID = 1;
                 SirQuait.Size = 50;
                 SirQuait.Level = 10;
                 SirQuait.MaxSpeedBase = 100;
                 SirQuait.Faction = FactionMgr.GetFactionByID(0);
-                SirQuait.X = 531971;
-                SirQuait.Y = 478955;
-                SirQuait.Z = 0;
-                SirQuait.Heading = 3570;
+                SirQuait.Position = Position.Create(regionID: 1, x: 531971, y: 478955, z: 0, heading: 3570);
                 SirQuait.RespawnInterval = 0;
                 SirQuait.BodyType = 0;
 

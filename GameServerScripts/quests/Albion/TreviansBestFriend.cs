@@ -31,6 +31,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -171,7 +172,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + trevian.Name + ", creating him ...");
 				trevian.GuildName = "Part of " + questTitle + " Quest";
 				trevian.Realm = eRealm.Albion;
-				trevian.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 798, 36);
@@ -185,10 +185,7 @@ namespace DOL.GS.Quests.Albion
 //				trevian.AddNPCEquipment((byte) eVisibleItems.TWO_HANDED, 19, 0, 0, 0);
 				trevian.Size = 52;
 				trevian.Level = 20;
-				trevian.X = 456104;
-				trevian.Y = 633914;
-				trevian.Z = 1693;
-				trevian.Heading = 289;
+                trevian.Position = Position.Create(regionID: 1, x: 456104, y: 633914, z: 1693, heading: 289);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -212,13 +209,9 @@ namespace DOL.GS.Quests.Albion
 				puppy.Name = "Trevian's Puppy";
 				puppy.GuildName = "Part of " + questTitle + " Quest";
 				puppy.Realm = eRealm.Albion;
-				puppy.CurrentRegionID = 1;
 				puppy.Size = 22;
 				puppy.Level = 5;
-				puppy.X = 456051;
-				puppy.Y = 633858;
-				puppy.Z = 1728;
-				puppy.Heading = 3781;
+                puppy.Position = Position.Create(regionID: 1, x: 456051, y: 633858, z: 1728, heading: 3781);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -241,7 +234,6 @@ namespace DOL.GS.Quests.Albion
 				guardBrydus.Name = "Guard Brydus";
 				guardBrydus.GuildName = "Part of " + questTitle + " Quest";
 				guardBrydus.Realm = eRealm.Albion;
-				guardBrydus.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 6);
@@ -253,10 +245,7 @@ namespace DOL.GS.Quests.Albion
 //				guardBrydus.AddNPCEquipment((byte) eVisibleItems.CLOAK, 91, 0, 0, 0);
 				guardBrydus.Size = 52;
 				guardBrydus.Level = 30;
-				guardBrydus.X = 436698;
-				guardBrydus.Y = 650425;
-				guardBrydus.Z = 2448;
-				guardBrydus.Heading = 184;
+                guardBrydus.Position = Position.Create(regionID: 1, x: 436698, y: 650425, z: 2448, heading: 184);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -282,8 +271,6 @@ namespace DOL.GS.Quests.Albion
 				banditAbductorLeader.GuildName = "Part of " + questTitle + " Quest";
 				banditAbductorLeader.Realm = eRealm.None;
 
-				banditAbductorLeader.CurrentRegionID = 1;
-
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 4);
 				template.AddNPCEquipment(eInventorySlot.Cloak, 57);
@@ -295,10 +282,7 @@ namespace DOL.GS.Quests.Albion
 
 				banditAbductorLeader.Size = 52;
 				banditAbductorLeader.Level = 10;
-				banditAbductorLeader.X = 438629;
-				banditAbductorLeader.Y = 644884;
-				banditAbductorLeader.Z = 1904;
-				banditAbductorLeader.Heading = 6;
+                banditAbductorLeader.Position = Position.Create(regionID: 1, x: 438629, y: 644884, z: 1904, heading: 6);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -322,7 +306,6 @@ namespace DOL.GS.Quests.Albion
 				banditAbductor1.Name = banditAbductorName;
 				banditAbductor1.GuildName = "Part of " + questTitle + " Quest";
 				banditAbductor1.Realm = eRealm.None;
-				banditAbductor1.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 4);
@@ -332,10 +315,7 @@ namespace DOL.GS.Quests.Albion
 //				banditAbductor1.AddNPCEquipment((byte) eVisibleItems.RIGHT_HAND, 4, 0, 0, 0);
 				banditAbductor1.Size = 50;
 				banditAbductor1.Level = 9;
-				banditAbductor1.X = banditAbductorLeader.X + 100;
-				banditAbductor1.Y = banditAbductorLeader.Y - 100;
-				banditAbductor1.Z = banditAbductorLeader.Z;
-				banditAbductor1.Heading = 50;
+				banditAbductor1.Position = banditAbductorLeader.Position.With(heading: 50) + Vector.Create(x: 100, y: -100);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -353,7 +333,6 @@ namespace DOL.GS.Quests.Albion
 				banditAbductor2.Name = banditAbductorName;
 				banditAbductor2.GuildName = "Part of " + questTitle + " Quest";
 				banditAbductor2.Realm = eRealm.None;
-				banditAbductor2.CurrentRegionID = 1;
 
 				template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 4);
@@ -363,10 +342,7 @@ namespace DOL.GS.Quests.Albion
 //				banditAbductor2.AddNPCEquipment((byte) eVisibleItems.RIGHT_HAND, 4, 0, 0, 0);
 				banditAbductor2.Size = 50;
 				banditAbductor2.Level = 9;
-				banditAbductor2.X = banditAbductorLeader.X - 150;
-				banditAbductor2.Y = banditAbductorLeader.Y - 150;
-				banditAbductor2.Z = banditAbductorLeader.Z;
-				banditAbductor2.Heading = 0;
+				banditAbductor2.Position = banditAbductorLeader.Position.With(Angle.Zero) - Vector.Create(x: 150, y: 150);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -984,7 +960,7 @@ namespace DOL.GS.Quests.Albion
 				if (quest.Step == 6)
 				{
 					quest.AddLilybet();
-					quest.lilybet.MoveTo(player.CurrentRegionID, player.X + 100, player.Y, player.Z, player.Heading);
+					quest.lilybet.MoveTo(player.Position + Vector.Create(x: 100));
 
 					InventoryItem cloak = player.Inventory.GetItem(eInventorySlot.Cloak);
 					if (cloak != null && cloak.Id_nb == treviansHoodedCloak.Id_nb)
@@ -1032,7 +1008,7 @@ namespace DOL.GS.Quests.Albion
 						trevian.SayTo(player, "Thank you so very much! I thought I would never see Lilybet again. She has been such a faithful companion to me considering I am an amateur Sorcerer; I could not bear the thought of [losing her]. Lilybet, go back to the Wharf for some much needed rest.");
 						quest.Step = 7;
 						quest.lilybet.StopFollowing();
-						quest.lilybet.WalkTo(455433, 633010, 1736, quest.lilybet.MaxSpeed);
+						quest.lilybet.WalkTo(Coordinate.Create(x: 455433, y: 633010, z: 1736), quest.lilybet.MaxSpeed);
 					}
 					else if (quest.Step == 1) // resume talk with trevian 
 					{
@@ -1414,6 +1390,7 @@ namespace DOL.GS.Quests.Albion
 
 		private void AddLilybet()
 		{
+            var lilybetPosition = banditAbductorLeader.Position.With(heading: 330) - Vector.Create(x: 300, y: 500);
 			if (lilybet == null)
 			{
 				lilybet = new GameNPC();
@@ -1424,11 +1401,7 @@ namespace DOL.GS.Quests.Albion
 				lilybet.CurrentRegionID = 1;
 				lilybet.Size = 43;
 				lilybet.Level = 6;
-				lilybet.X = banditAbductorLeader.X - 300;
-				lilybet.Y = banditAbductorLeader.Y - 500;
-				lilybet.Z = banditAbductorLeader.Z;
-				lilybet.Heading = 330;
-
+				lilybet.Position = lilybetPosition;
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -1446,17 +1419,15 @@ namespace DOL.GS.Quests.Albion
 				// if lilybet is alive move here to origial position
 				if (lilybet.IsAlive)
 				{
-					lilybet.MoveTo(1, banditAbductorLeader.X - 300, banditAbductorLeader.Y - 500, banditAbductorLeader.Z, 330);
+					lilybet.MoveTo(lilybetPosition);
 				}
 				else
 				{
-					// if she died respawn here to oiginal position
+					// if she died respawn here to original position
 					lilybet.Health = lilybet.MaxHealth;
 					lilybet.Mana = lilybet.MaxMana;
 					lilybet.Endurance = lilybet.MaxEndurance;
-					lilybet.X = banditAbductorLeader.X - 300;
-					lilybet.Y = banditAbductorLeader.Y - 500;
-					lilybet.Z = banditAbductorLeader.Z;
+					lilybet.Position = lilybetPosition;
 
 					lilybet.AddToWorld();
 				}

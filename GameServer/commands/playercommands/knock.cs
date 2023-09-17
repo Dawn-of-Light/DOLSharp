@@ -53,7 +53,7 @@ namespace DOL.GS.Commands
 			}
 
 			bool done = false;
-			foreach (House house in HouseMgr.GetHousesCloseToSpot(client.Player.CurrentRegionID, client.Player.X, client.Player.Y, 650))
+			foreach (House house in HouseMgr.GetHousesCloseToSpot(client.Player.Position, 650))
 			{
 				client.Player.Emote(eEmote.Knock);
 				foreach (GamePlayer player in house.GetAllPlayersInHouse())

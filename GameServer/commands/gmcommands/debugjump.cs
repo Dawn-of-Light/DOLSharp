@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -44,23 +45,24 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			Zone z = WorldMgr.GetZone(zoneID);
-			if (z == null)
+			var zone = WorldMgr.GetZone(zoneID);
+			if (zone == null)
 			{
 				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.DebugJump.UnknownZoneID", args[1]));
 				return;
 			}
-			
-			ushort RegionID = z.ZoneRegion.ID;
-			int X = z.XOffset + Convert.ToInt32(args[2]);
-			int Y = z.YOffset + Convert.ToInt32(args[3]);
-			int Z = Convert.ToInt32(args[4]);
-			ushort Heading = Convert.ToUInt16(args[5]);
 
-			if (!CheckExpansion(client, RegionID))
-				return;
+            if (!CheckExpansion(client, zone.ZoneRegion.ID))
+                return;
 
-			client.Player.MoveTo(RegionID, X, Y, Z, Heading);
+            var jumpPositionInZone = Position.Create(
+                x: Convert.ToInt32(args[2]),
+                y: Convert.ToInt32(args[3]),
+                z: Convert.ToInt32(args[4]),
+                heading: Convert.ToUInt16(args[4]),
+                regionID: zone.ZoneRegion.ID);
+            var jumpPosition = jumpPositionInZone + zone.Offset;
+			client.Player.MoveTo(jumpPosition);
 		}
 
 		public bool CheckExpansion(GameClient client, ushort RegionID)

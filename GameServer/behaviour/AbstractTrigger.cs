@@ -17,9 +17,8 @@
  *
  */
 using System;
-using System.Text;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
 using System.Reflection;
 using log4net;
 

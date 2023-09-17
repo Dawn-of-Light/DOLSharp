@@ -34,6 +34,7 @@ using System;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -154,7 +155,6 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + addrir.Name + ", creating him ...");
 				addrir.GuildName = "Part of Addrir Quests";
 				addrir.Realm = eRealm.Hibernia;
-				addrir.CurrentRegionID = 200;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 35);
@@ -169,11 +169,8 @@ namespace DOL.GS.Quests.Hibernia
 
 				addrir.Size = 50;
 				addrir.Level = 50;
-				addrir.X = GameLocation.ConvertLocalXToGlobalX(26955, 200);
-				addrir.Y = GameLocation.ConvertLocalYToGlobalY(7789, 200);
-				addrir.Z = 5196;
-				addrir.Heading = 22;
-
+                var loughDerg = WorldMgr.GetZone(200);
+                addrir.Position = Position.Create(regionID: 200, x: 26955, y: 7789, z: 5196, heading: 22) + loughDerg.Offset;
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
 				brain.AggroRange = 0;

@@ -35,6 +35,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -157,13 +158,9 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find" + abohas.Name + " , creating her ...");
 				abohas.GuildName = "Part of " + questTitle + " Quest";
 				abohas.Realm = eRealm.Midgard;
-				abohas.CurrentRegionID = 100;
 				abohas.Size = 49;
 				abohas.Level = 21;
-				abohas.X = GameLocation.ConvertLocalXToGlobalX(52274, 100);
-				abohas.Y = GameLocation.ConvertLocalYToGlobalY(29985, 100);
-				abohas.Z = 4960;
-				abohas.Heading = 123;
+                abohas.Position = Position.CreateInZone(zoneID: 100, x: 52274, y: 29985, z: 4960, heading: 123);
 				//abohas.EquipmentTemplateID = "1707754";
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -185,13 +182,9 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + harlfug.Name + ", creating her ...");
 				harlfug.GuildName = "Stable Master";
 				harlfug.Realm = eRealm.Midgard;
-				harlfug.CurrentRegionID = 100;
 				harlfug.Size = 52;
 				harlfug.Level = 41;
-				harlfug.X = 773458;
-				harlfug.Y = 754240;
-				harlfug.Z = 4600;
-				harlfug.Heading = 2707;
+                harlfug.Position = Position.Create(regionID: 100, x: 773458, y: 754240, z: 4600, heading: 2707);
 				harlfug.EquipmentTemplateID = "5100798";
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -214,13 +207,9 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + gularg.Name + ", creating her ...");
 				gularg.GuildName = "Stable Master";
 				gularg.Realm = eRealm.Midgard;
-				gularg.CurrentRegionID = 100;
 				gularg.Size = 50;
 				gularg.Level = 41;
-				gularg.X = 803766;
-				gularg.Y = 721959;
-				gularg.Z = 4686;
-				gularg.Heading = 3925;
+                gularg.Position = Position.Create(regionID: 100, x: 803766, y: 721959, z: 4686, heading: 3925);
 				gularg.EquipmentTemplateID = "5100798";
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -244,13 +233,9 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + yolafson.Name + ", creating her ...");
 				yolafson.GuildName = "Stable Master";
 				yolafson.Realm = eRealm.Midgard;
-				yolafson.CurrentRegionID = 100;
 				yolafson.Size = 51;
 				yolafson.Level = 41;
-				yolafson.X = 805721;
-				yolafson.Y = 700414;
-				yolafson.Z = 4960;
-				yolafson.Heading = 1206;
+                yolafson.Position = Position.Create(regionID: 100, x: 805721, y: 700414, z: 4960, heading: 1206);
 				yolafson.EquipmentTemplateID = "5100798";
 
 				//You don't have to store the created mob in the db if you don't want,

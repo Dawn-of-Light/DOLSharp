@@ -43,6 +43,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -166,13 +167,9 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + stewardWillie.Name + ", creating him ...");
 				stewardWillie.GuildName = "Part of " + questTitle;
 				stewardWillie.Realm = eRealm.Albion;
-				stewardWillie.CurrentRegionID = 1;
 				stewardWillie.Size = 52;
 				stewardWillie.Level = 35;
-				stewardWillie.X = 503547;
-				stewardWillie.Y = 474330;
-				stewardWillie.Z = 2788;
-				stewardWillie.Heading = 3163;
+                stewardWillie.Position = Position.Create(regionID: 1, x: 503547, y: 474330, z: 2788, heading: 3163);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -198,7 +195,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + lynnet.Name + ", creating ...");
 				lynnet.GuildName = "Part of " + questTitle;
 				lynnet.Realm = eRealm.Albion; //Needs to be none, else we can't kill him ;-)
-				lynnet.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 30);
@@ -207,10 +203,7 @@ namespace DOL.GS.Quests.Albion
 //				lynnet.AddNPCEquipment((byte) eEquipmentItems.TORSO, 58, 30, 0, 0);
 				lynnet.Size = 48;
 				lynnet.Level = 15;
-				lynnet.X = 530112;
-				lynnet.Y = 478662;
-				lynnet.Z = 2200;
-				lynnet.Heading = 3203;
+                lynnet.Position = Position.Create(regionID: 1, x: 530112, y: 478662, z: 2200, heading: 3203);
 
 				//You don't have to store the creted mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -233,7 +226,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + don.Name + ", creating ...");
 				don.GuildName = "Part of " + questTitle;
 				don.Realm = eRealm.Albion; //Needs to be none, else we can't kill him ;-)
-				don.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58, 44);
@@ -242,10 +234,7 @@ namespace DOL.GS.Quests.Albion
 //				don.AddNPCEquipment((byte) eEquipmentItems.TORSO, 58, 44, 0, 0);
 				don.Size = 48;
 				don.Level = 15;
-				don.X = 505411;
-				don.Y = 495024;
-				don.Z = 2495;
-				don.Heading = 2048;
+                don.Position = Position.Create(regionID: 1, x: 505411, y: 495024, z: 2495, heading: 2048);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

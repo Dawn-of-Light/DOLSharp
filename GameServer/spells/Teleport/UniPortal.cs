@@ -23,6 +23,7 @@ using DOL.GS.Effects;
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.PacketHandler;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Spells
 {
@@ -76,7 +77,7 @@ namespace DOL.GS.Spells
 			effect.Start(player);
 
 			player.LeaveHouse();
-			player.MoveTo((ushort)m_destination.RegionID, m_destination.X, m_destination.Y, m_destination.Z, (ushort)m_destination.Heading);
+			player.MoveTo(m_destination.GetPosition());
 		}
 	}
 }

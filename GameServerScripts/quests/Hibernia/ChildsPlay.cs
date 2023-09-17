@@ -38,6 +38,7 @@ using DOL.Events;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using DOL.Language;
@@ -77,7 +78,7 @@ namespace DOL.GS.Quests.Hibernia
         private static ItemTemplate daringstuddedjerkin_hib = null;
         private static ItemTemplate daringstuddedleggings_hib = null;
         private static ItemTemplate daringstuddedsleeves_hib = null;
-        private static GameLocation Hib_Statue = new GameLocation("Childs Play (Hib)", 489, 27580, 40006, 14483);
+        private static Position Hib_Statue = Position.Create(regionID: 489, x: 27580, y: 40006, z: 14483);
 
         private static IArea Hib_Statue_Area = null;
 
@@ -121,15 +122,11 @@ namespace DOL.GS.Quests.Hibernia
                 if (log.IsWarnEnabled)
                     log.Warn("Could not find " + Charles.Name + ", creating ...");
                 Charles.Realm = eRealm.Hibernia;
-                Charles.CurrentRegionID = 200;
                 Charles.Size = 37;
                 Charles.Level = 1;
                 Charles.MaxSpeedBase = 191;
                 Charles.Faction = FactionMgr.GetFactionByID(0);
-                Charles.X = 348034;
-                Charles.Y = 490940;
-                Charles.Z = 5200;
-                Charles.Heading = 1149;
+                Charles.Position = Position.Create(regionID: 200, x: 348034, y: 490940, z: 5200, heading: 1149);
                 Charles.RespawnInterval = -1;
                 Charles.BodyType = 0;
 
@@ -1473,7 +1470,7 @@ namespace DOL.GS.Quests.Hibernia
             #endregion
 
             #region defineAreas
-            Hib_Statue_Area = WorldMgr.GetRegion(Hib_Statue.RegionID).AddArea(new Area.Circle("", Hib_Statue.X, Hib_Statue.Y, Hib_Statue.Z, 500));
+            Hib_Statue_Area = WorldMgr.GetRegion(Hib_Statue.RegionID).AddArea(new Area.Circle("", Hib_Statue.Coordinate, 500));
             Hib_Statue_Area.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterStatueArea));
 
             #endregion

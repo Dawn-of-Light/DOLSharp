@@ -26,6 +26,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Albion
@@ -311,7 +312,6 @@ namespace DOL.GS.Quests.Albion
 				//k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
 				//Rheda.GuildName = "Part of " + questTitle + " Quest";
 				Rheda.Realm = eRealm.Albion;
-				Rheda.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 80);
@@ -324,10 +324,7 @@ namespace DOL.GS.Quests.Albion
 
 				Rheda.Size = 52;
 				Rheda.Level = 25;
-				Rheda.X = 559712;
-				Rheda.Y = 513513;
-				Rheda.Z = 2428;
-				Rheda.Heading = 3822;
+                Rheda.Position = Position.Create(regionID: 1, x: 559712, y: 513513, z: 2428, heading: 3822);
 
 				if (SAVE_INTO_DATABASE)
 					Rheda.SaveIntoDatabase();

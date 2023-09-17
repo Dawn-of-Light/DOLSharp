@@ -34,6 +34,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -148,7 +149,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + brotherLawrence.Name + ", creating him ...");
 				brotherLawrence.GuildName = "Part of " + questTitle + " Quest";
 				brotherLawrence.Realm = eRealm.Albion;
-				brotherLawrence.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 14, 20);
@@ -158,10 +158,7 @@ namespace DOL.GS.Quests.Albion
 
 				brotherLawrence.Size = 54;
 				brotherLawrence.Level = 29;
-				brotherLawrence.X = 560559;
-				brotherLawrence.Y = 511892;
-				brotherLawrence.Z = 2344;
-				brotherLawrence.Heading = 662;
+                brotherLawrence.Position = Position.Create(regionID: 1, x: 560559, y: 511892, z: 2344, heading: 662);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

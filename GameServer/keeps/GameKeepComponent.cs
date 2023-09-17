@@ -26,6 +26,7 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Keeps
 {
@@ -115,7 +116,13 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public int ComponentHeading { get; set; }
 
-		protected int m_oldMaxHealth;
+        public Angle RelativeOrientationToKeep 
+        {
+            get => Angle.Degrees(ComponentHeading * 90);
+            set => ComponentHeading = value.InDegrees / 90;
+        }
+
+        protected int m_oldMaxHealth;
 
 		public override byte Level => (byte)(Keep.BaseLevel-10 + (Keep.Level * 3));
 
@@ -150,7 +157,7 @@ namespace DOL.GS.Keeps
 
 			if (player.Client.Account.PrivLevel > 1)
 			{
-				list.Add(Name + " with a Z of " + Z.ToString());
+				list.Add($"{Name} with a Z of {Position.Z}");
 			}
 
 			return list;
@@ -203,19 +210,18 @@ namespace DOL.GS.Keeps
 			Keep = keep;
 			//this.DBKeepComponent = component;
 			base.LoadFromDatabase(component);
-			//this x and y is for get object in radius
-			double angle = keep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-			X = (int)(keep.X + ((sbyte)component.X * 148 * Math.Cos(angle) + (sbyte)component.Y * 148 * Math.Sin(angle)));
-			Y = (int)(keep.Y - ((sbyte)component.Y * 148 * Math.Cos(angle) - (sbyte)component.X * 148 * Math.Sin(angle)));
-			Z = keep.Z;
+            //this x and y is for get object in radius
+            var angle = keep.Orientation;
+            var offset = Vector.Create(148 * (sbyte)component.X, -148 * (sbyte)component.Y, 0)
+                .RotatedClockwise(angle);
+
+            //need check to be sure for heading
+            angle += Angle.Degrees(component.Heading * 90);
+            Position = keep.Position.With(angle) + offset;
 			// and this one for packet sent
 			ComponentX = component.X;
 			ComponentY = component.Y;
 			ComponentHeading = (ushort)component.Heading;
-			//need check to be sure for heading
-			angle = (component.Heading * 90 + keep.Heading);
-			if (angle > 360) angle -= 360;
-			Heading = (ushort)(angle / 0.08789);
 			Name = keep.Name;
 			Model = INVISIBLE_MODEL;
 			Skin = component.Skin;
@@ -223,7 +229,6 @@ namespace DOL.GS.Keeps
 			Health = MaxHealth;
 			//			this.Health = component.Health;
 			m_oldHealthPercent = HealthPercent;
-			CurrentRegion = myregion;
 			ID = component.ID;
 			SaveInDB = false;
 			IsRaized = false;
@@ -403,12 +408,12 @@ namespace DOL.GS.Keeps
 				if (guard.PatrolGroup != null)
 					continue;
 				if (guard.HookPoint != null) continue;
-				if (guard.Position == null) continue;
-				if (guard.Position.Height > guard.Component.Height)
+				if (guard.DbKeepPosition == null) continue;
+				if (guard.DbKeepPosition.Height > guard.Component.Height)
 					guard.RemoveFromWorld();
 				else
 				{
-					if (guard.Position.Height <= guard.Component.Height &&
+					if (guard.DbKeepPosition.Height <= guard.Component.Height &&
 						guard.ObjectState != GameObject.eObjectState.Active && !guard.IsRespawning)
 						guard.AddToWorld();
 				}
@@ -416,12 +421,12 @@ namespace DOL.GS.Keeps
 
 			foreach (var banner in Keep.Banners.Values)
 			{
-				if (banner.Position == null) continue;
-				if (banner.Position.Height > banner.Component.Height)
+				if (banner.DbKeepPosition == null) continue;
+				if (banner.DbKeepPosition.Height > banner.Component.Height)
 					banner.RemoveFromWorld();
 				else
 				{
-					if (banner.Position.Height <= banner.Component.Height &&
+					if (banner.DbKeepPosition.Height <= banner.Component.Height &&
 						banner.ObjectState != GameObject.eObjectState.Active)
 						banner.AddToWorld();
 				}
@@ -555,8 +560,8 @@ namespace DOL.GS.Keeps
 
 					foreach (var guard in Keep.Guards.Values)
 					{
-						guard.MoveTo(guard.CurrentRegionID, guard.X, guard.Y, Keep.Z, guard.Heading);
-						guard.SpawnPoint.Z = Keep.Z;
+						guard.MoveTo(guard.Position);
+						guard.SpawnPosition = guard.SpawnPosition.With(z: Keep.Z);
 					}
 				}
 			}
@@ -713,8 +718,8 @@ namespace DOL.GS.Keeps
 				.Append(" ComponentID=").Append(ID)
 				.Append(" Skin=").Append(Skin)
 				.Append(" Height=").Append(Height)
-				.Append(" Heading=").Append(Heading)
-				.Append(" nComponentX=").Append((sbyte)ComponentX)
+				.Append(" Heading=").Append(Orientation.InHeading)
+				.Append(" ComponentX=").Append((sbyte)ComponentX)
 				.Append(" ComponentY=").Append((sbyte)ComponentY)
 				.Append(" ComponentHeading=").Append(ComponentHeading)
 				.ToString();

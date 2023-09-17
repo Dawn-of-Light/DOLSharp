@@ -64,15 +64,15 @@ namespace DOL.GS.Commands
                             return;
                         }
 
-                        DBMinotaurRelic relic = new DBMinotaurRelic();
+                        var relic = new DBMinotaurRelic();
 
                         relic.Name = args[2];
 
-                        relic.SpawnHeading = client.Player.Heading;
-                        relic.SpawnX = client.Player.X;
-                        relic.SpawnY = client.Player.Y;
-                        relic.SpawnZ = client.Player.Z;
-                        relic.SpawnRegion = client.Player.CurrentRegionID;
+                        relic.SpawnHeading = client.Player.Position.Orientation.InHeading;
+                        relic.SpawnX = client.Player.Position.X;
+                        relic.SpawnY = client.Player.Position.Y;
+                        relic.SpawnZ = client.Player.Position.Z;
+                        relic.SpawnRegion = client.Player.Position.RegionID;
 
                         relic.relicTarget = args[4].ToLower();
 
@@ -110,17 +110,7 @@ namespace DOL.GS.Commands
 
                         MinotaurRelic relic = client.Player.TargetObject as MinotaurRelic;
 
-                        relic.Heading = client.Player.Heading;
-                        relic.X = client.Player.X;
-                        relic.Y = client.Player.Y;
-                        relic.Z = client.Player.Z;
-                        relic.CurrentRegionID = client.Player.CurrentRegionID;
-
-                        relic.SpawnHeading = client.Player.Heading;
-                        relic.SpawnX = client.Player.X;
-                        relic.SpawnY = client.Player.Y;
-                        relic.SpawnZ = client.Player.Z;
-                        relic.SpawnRegion = client.Player.CurrentRegionID;
+                        relic.Position = client.Player.Position;
 
                         relic.SaveIntoDatabase();
 
@@ -246,11 +236,11 @@ namespace DOL.GS.Commands
                         info.Add("===========================");
 						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.PositionInfo"));
                         info.Add("===========================");
-						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnX", relic.SpawnX));
-						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnY", relic.SpawnX));
-						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnZ", relic.SpawnZ));
-						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnHeading" + relic.SpawnHeading));
-						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnRegion", relic.SpawnRegion));
+						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnX", relic.SpawnPosition.X));
+						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnY", relic.SpawnPosition.Y));
+						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnZ", relic.SpawnPosition.Z));
+						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnHeading" + relic.SpawnPosition.Orientation.InHeading));
+						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpawnRegion", relic.SpawnPosition.RegionID));
                         info.Add("===========================");
 						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.MinoRelic.Info.SpellInfo"));
                         info.Add("===========================");

@@ -40,14 +40,14 @@ namespace DOL.GS.Commands
 
 			DBRelic relic = new DBRelic();
 
-			relic.Heading = client.Player.Heading;
+			relic.Heading = client.Player.Orientation.InHeading;
 			relic.OriginalRealm = int.Parse(args[2]);
 			relic.Realm = 0;
-			relic.Region = client.Player.CurrentRegionID;
+			relic.Region = client.Player.Position.RegionID;
 			relic.relicType = (args[1] == "strength") ? 0 : 1;
-			relic.X = client.Player.X;
-			relic.Y = client.Player.Y;
-			relic.Z = client.Player.Z;
+			relic.X = client.Player.Position.X;
+			relic.Y = client.Player.Position.Y;
+			relic.Z = client.Player.Position.Z;
 			relic.RelicID = Util.Random(100);
 			GameServer.Database.AddObject(relic);
 			RelicMgr.Init();

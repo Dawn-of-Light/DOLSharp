@@ -40,6 +40,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using DOL.GS.Effects;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 
@@ -54,13 +55,7 @@ namespace DOL.GS
         {
             //foreman fogo doesn't leave the room.
             TetherRange = 1000;
-
-            X = 49293;
-            Y = 42208;
-            Z = 27562;
-            Heading = 2057;
-            CurrentRegionID = 245;
-
+            Position = Position.Create(regionID: 245, x: 49293, y: 42208, z: 27562,heading: 2057);
             Flags = 0;
 
             Level = 56;

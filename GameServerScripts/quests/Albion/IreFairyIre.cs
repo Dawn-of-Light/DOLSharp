@@ -37,6 +37,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -159,14 +160,10 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + nob.Name + ", creating him ...");
 				nob.GuildName = "Part of " + questTitle + " Quest";
 				nob.Realm = eRealm.Albion;
-				nob.CurrentRegionID = 1;
 
 				nob.Size = 45;
 				nob.Level = 4;
-				nob.X = 573019;
-				nob.Y = 504485;
-				nob.Z = 2199;
-				nob.Heading = 10;
+                nob.Position = Position.Create(regionID: 1, x: 573019, y: 504485, z: 2199, heading: 10);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -189,7 +186,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + colm.Name + ", creating ...");
 				colm.GuildName = "Stable Master";
 				colm.Realm = eRealm.Albion;
-				colm.CurrentRegionID = 1;
 				colm.Size = 51;
 				colm.Level = 50;
 
@@ -205,10 +201,7 @@ namespace DOL.GS.Quests.Albion
 //				colm.AddNPCEquipment(Slot.FEET, 84, 10, 0, 0);
 //				colm.AddNPCEquipment(Slot.CLOAK, 57, 32, 0, 0);
 
-				colm.X = 562775;
-				colm.Y = 512453;
-				colm.Z = 2438;
-				colm.Heading = 158;
+                colm.Position = Position.Create(regionID: 1, x: 562775, y: 512453, z: 2438, heading: 158);
 				colm.MaxSpeedBase = 200;
 
 				StandardMobBrain brain = new StandardMobBrain();
@@ -238,14 +231,9 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + haruld.Name + ", creating ...");
 				haruld.GuildName = "Stable Master";
 				haruld.Realm = eRealm.Albion;
-				haruld.CurrentRegionID = 1;
 				haruld.Size = 49;
 				haruld.Level = 4;
-
-				haruld.X = 572479;
-				haruld.Y = 504410;
-				haruld.Z = 2184;
-				haruld.Heading = 944;
+                haruld.Position = Position.Create(regionID: 1, x: 572479, y: 504410, z: 2184, heading: 944);
 				haruld.MaxSpeedBase = 100;
 
 				StandardMobBrain brain = new StandardMobBrain();
@@ -274,14 +262,10 @@ namespace DOL.GS.Quests.Albion
 				fairyDragonflyHandler.Name = "Fairy Dragonfly Handler";
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + fairyDragonflyHandler.Name + ", creating ...");
-				fairyDragonflyHandler.X = 575334;
-				fairyDragonflyHandler.Y = 506403;
-				fairyDragonflyHandler.Z = 2331;
-				fairyDragonflyHandler.Heading = 114;
+                fairyDragonflyHandler.Position = Position.Create(regionID: 1, x: 575334, y: 506403, z: 2331, heading: 114);
 				fairyDragonflyHandler.Model = 603;
 				fairyDragonflyHandler.GuildName = "Part of " + questTitle + " Quest";
 				fairyDragonflyHandler.Realm = eRealm.None;
-				fairyDragonflyHandler.CurrentRegionID = 1;
 				fairyDragonflyHandler.Size = 49;
 				fairyDragonflyHandler.Level = 3;
 
@@ -620,13 +604,9 @@ namespace DOL.GS.Quests.Albion
 			dragonflyHatchling.Name = "Dragonfly Hatchling";
 			dragonflyHatchling.GuildName = "Part of " + questTitle + " Quest";
 			dragonflyHatchling.Flags ^= GameNPC.eFlags.PEACE;
-			dragonflyHatchling.CurrentRegionID = 1;
 			dragonflyHatchling.Size = 25;
 			dragonflyHatchling.Level = 3;
-			dragonflyHatchling.X = fairyDragonflyHandler.X + Util.Random(-150, 150);
-			dragonflyHatchling.Y = fairyDragonflyHandler.Y + Util.Random(-150, 150);
-			dragonflyHatchling.Z = fairyDragonflyHandler.Z;
-			dragonflyHatchling.Heading = 93;
+            dragonflyHatchling.Position = fairyDragonflyHandler.Position.With(heading: 93) + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 			dragonflyHatchling.MaxSpeedBase = 200;
 
 			StandardMobBrain brain = new StandardMobBrain();

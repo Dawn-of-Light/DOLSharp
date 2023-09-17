@@ -19,6 +19,7 @@
 using System;
 using DOL.Events;
 using DOL.GS;
+using DOL.GS.Geometry;
 
 namespace DOL.AI.Brain
 {
@@ -121,57 +122,48 @@ namespace DOL.AI.Brain
 			if (!Body.AttackState && Body.Attackers.Count == 0)
 			{
 				GameNPC commander = (GameNPC)Owner;
-				double heading = ((double)commander.Heading) * Point2D.HEADING_TO_RADIAN;
+				var heading = commander.Orientation.InRadians;
+                var commanderOrientation = commander.Orientation;
 				//Get which place we should put minion
 				int i = 0;
 				//How much do we want to slide back and left/right
-				int perp_slide = 0;
-				int par_slide = 0;
 				for (; i < commander.ControlledNpcList.Length; i++)
 				{
 					if (commander.ControlledNpcList[i] == this)
 						break;
 				}
-				switch (commander.Formation)
-				{
-					case GameNPC.eFormationType.Triangle:
-						par_slide = BASEFORMATIONDIST;
-						perp_slide = BASEFORMATIONDIST;
-						if (i != 0)
-							par_slide = BASEFORMATIONDIST * 2;
-						break;
-					case GameNPC.eFormationType.Line:
-						par_slide = BASEFORMATIONDIST * (i + 1);
-						break;
-					case GameNPC.eFormationType.Protect:
-						switch (i)
-						{
-							case 0:
-								par_slide = -BASEFORMATIONDIST * 2;
-								break;
-							case 1:
-							case 2:
-								par_slide = -BASEFORMATIONDIST;
-								perp_slide = BASEFORMATIONDIST;
-								break;
-						}
-						break;
-				}
-				//Slide backwards - every pet will need to do this anyways
-				x += (int)(((double)commander.FormationSpacing * par_slide) * Math.Cos(heading - Math.PI / 2));
-				y += (int)(((double)commander.FormationSpacing * par_slide) * Math.Sin(heading - Math.PI / 2));
-				//In addition with sliding backwards, slide the other two pets sideways
-				switch (i)
-				{
-					case 1:
-						x += (int)(((double)commander.FormationSpacing * perp_slide) * Math.Cos(heading - Math.PI));
-						y += (int)(((double)commander.FormationSpacing * perp_slide) * Math.Sin(heading - Math.PI));
-						break;
-					case 2:
-						x += (int)(((double)commander.FormationSpacing * perp_slide) * Math.Cos(heading));
-						y += (int)(((double)commander.FormationSpacing * perp_slide) * Math.Sin(heading));
-						break;
-				}
+                var offset = Vector.Zero;
+                var spacing = BASEFORMATIONDIST * commander.FormationSpacing;
+                switch (commander.Formation)
+                {
+                    case GameNPC.eFormationType.Triangle:
+                        switch (i)
+                        {
+                            case 0: offset = Vector.Create(0, -spacing); break;
+                            case 1: offset = Vector.Create(spacing, -spacing * 2); break;
+                            case 2: offset = Vector.Create(-spacing, -spacing * 2); break;
+                        }
+                        break;
+                    case GameNPC.eFormationType.Line:
+                        switch (i)
+                        {
+                            case 0: offset = Vector.Create(0, -spacing); break;
+                            case 1: offset = Vector.Create(0, -spacing * 2); break;
+                            case 2: offset = Vector.Create(0, -spacing * 3); break;
+                        }
+                        break;
+                    case GameNPC.eFormationType.Protect:
+                        switch (i)
+                        {
+                            case 0: offset = Vector.Create(0, spacing * 2); break;
+                            case 1: offset = Vector.Create(spacing, spacing); break;
+                            case 2: offset = Vector.Create(-spacing, spacing); break;
+                        }
+                        break;
+                }
+                offset = offset.RotatedClockwise(commanderOrientation);
+                x += offset.X;
+                y += offset.Y;
 				return true;
 			}
 			return false;

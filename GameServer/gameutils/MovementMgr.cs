@@ -156,21 +156,20 @@ namespace DOL.GS.Movement
 	            PathPoint prev = null;
 	            PathPoint first = null;
 	
-				foreach (DBPathPoint pp in pathPoints.Values)
+				foreach (DBPathPoint dbPathPoint in pathPoints.Values)
 				{
-					PathPoint p = new PathPoint(pp.X, pp.Y, pp.Z, pp.MaxSpeed, pathType);
-					p.WaitTime = pp.WaitTime;
+					var pathPoint = new PathPoint(dbPathPoint, pathType);
 	
 					if (first == null)
 					{
-						first = p;
+						first = pathPoint;
 					}
-					p.Prev = prev;
+					pathPoint.Prev = prev;
 					if (prev != null)
 					{
-						prev.Next = p;
+						prev.Next = pathPoint;
 					}
-					prev = p;
+					prev = pathPoint;
 				}
 
             	return first;
@@ -211,11 +210,10 @@ namespace DOL.GS.Movement
             int i = 1;
             do
             {
-                DBPathPoint dbpp = new DBPathPoint(path.X, path.Y, path.Z, path.MaxSpeed);
-                dbpp.Step = i++;
-                dbpp.PathID = pathID;
-                dbpp.WaitTime = path.WaitTime;
-                GameServer.Database.AddObject(dbpp);
+                var dbPathPoint = path.GenerateDbEntry();
+                dbPathPoint.Step = i++;
+                dbPathPoint.PathID = pathID;
+                GameServer.Database.AddObject(dbPathPoint);
                 path = path.Next;
             }
 			while (path != null && path != root);

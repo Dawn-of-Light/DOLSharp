@@ -39,6 +39,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -116,7 +117,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 201 && npc.X == 32927 && npc.Y == 32743)
+					if (npc.CurrentRegionID == 201)
 					{
 						Brigit = npc;
 						break;
@@ -131,13 +132,9 @@ namespace DOL.GS.Quests.Hibernia
 				Brigit.Name = "Brigit";
 				Brigit.GuildName = "";
 				Brigit.Realm = eRealm.Hibernia;
-				Brigit.CurrentRegionID = 201;
 				Brigit.Size = 51;
 				Brigit.Level = 50;
-				Brigit.X = 32927;
-				Brigit.Y = 32743;
-				Brigit.Z = 8008;
-				Brigit.Heading = 3254;
+                Brigit.Position = Position.Create(regionID: 201, x: 32927, y: 32743, z: 8008, heading: 3254);
 				Brigit.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -150,7 +147,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 470547 && npc.Y == 531497)
+					if (npc.Position.RegionID == 200)
 					{
 						Caithor = npc;
 						break;
@@ -165,13 +162,9 @@ namespace DOL.GS.Quests.Hibernia
 				Caithor.Name = "Caithor";
 				Caithor.GuildName = "";
 				Caithor.Realm = eRealm.None;
-				Caithor.CurrentRegionID = 200;
 				Caithor.Size = 60;
 				Caithor.Level = 65;
-				Caithor.X = 470547;
-				Caithor.Y = 531497;
-				Caithor.Z = 4984;
-				Caithor.Heading = 3319;
+                Caithor.Position = Position.Create(regionID: 200, x: 470547, y: 531497, z: 4984, heading: 3319);
 				Caithor.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -1539,7 +1532,7 @@ namespace DOL.GS.Quests.Hibernia
         *#26 seek out Loken in Raumarik Loc 47k, 25k, 4k, and kill him purp and 2 blue adds 
         *#27 return to Brigit 
         *#28 give her the ball of flame
-        *#29 talk with Brigit about Loken’s demise
+        *#29 talk with Brigit about Loken's demise
         *#30 go to MorlinCaan in Jordheim 
         *#31 give her the sealed pouch
         *#32 you get your epic armor as a reward

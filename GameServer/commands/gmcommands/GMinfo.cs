@@ -141,7 +141,7 @@ namespace DOL.GS.Commands
 						if (respawn.Hours > 0)
 							hours = respawn.Hours + " hours ";
 						info.Add(" + Respawn: " + days + hours + respawn.Minutes + " minutes " + respawn.Seconds + " seconds");
-						info.Add(" + SpawnPoint:  " + target.SpawnPoint.X + ", " + target.SpawnPoint.Y + ", " + target.SpawnPoint.Z);
+						info.Add(" + SpawnPoint:  " + target.SpawnPosition.X + ", " + target.SpawnPosition.Y + ", " + target.SpawnPosition.Z);
 					}
 					
 					if (target.QuestListToGive.Count > 0)
@@ -228,7 +228,7 @@ namespace DOL.GS.Commands
 						
 					info.Add(" ");
 					info.Add(" + Mob_ID:  " + target.InternalID);
-					info.Add(" + Position:  " + target.X + ", " + target.Y + ", " + target.Z + ", " + target.Heading);
+					info.Add(" + Position:  " + target.Location + ", " + target.Orientation.InHeading);
 					info.Add(" + OID: " + target.ObjectID);
 					info.Add(" + Package ID:  " + target.PackageID);
 					
@@ -450,7 +450,7 @@ namespace DOL.GS.Commands
 					}
 
 					info.Add(" ");
-					info.Add(" Location: X= " + target.X + " ,Y= " + target.Y + " ,Z= " + target.Z);
+					info.Add(" Location: X= " + target.Position.X + " ,Y= " + target.Position.Y + " ,Z= " + target.Position.Z);
 				}
 
 				#endregion StaticItem
@@ -499,10 +499,10 @@ namespace DOL.GS.Commands
 					info.Add(" + Statut : " + statut);
 					info.Add(" + Type : " + DoorRequestHandler.m_handlerDoorID / 100000000);
 					info.Add(" ");
-					info.Add(" + X : " + target.X);  
-					info.Add(" + Y : " + target.Y);
-					info.Add(" + Z : " + target.Z);
-					info.Add(" + Heading : " + target.Heading);
+					info.Add(" + X : " + target.Position.X);  
+					info.Add(" + Y : " + target.Position.Y);
+					info.Add(" + Z : " + target.Position.Z);
+					info.Add(" + Heading : " + target.Orientation.InHeading);
 				}
 
 				#endregion Door
@@ -544,6 +544,8 @@ namespace DOL.GS.Commands
 					info.Add( " ");
 					info.Add( " + Climbing : " + target.Climbing);
 					info.Add( " ");
+					info.Add( " + X : " + target.Position.X);
+					info.Add( " + Y : " + target.Position.Y);
 					info.Add( " + ComponentX : " + target.ComponentX);
 					info.Add( " + ComponentY : " + target.ComponentY);
 					info.Add( " + ComponentHeading : " + target.ComponentHeading);
@@ -560,10 +562,10 @@ namespace DOL.GS.Commands
 						info.Add(" + Keep Manager : " + GameServer.KeepManager.GetType().FullName);
 						info.Add(" + Frontiers");
 					}
-					else if (GameServer.KeepManager.GetBattleground(target.CurrentRegionID) != null)
+					else if (GameServer.KeepManager.GetBattleground(target.Position.RegionID) != null)
 					{
 						info.Add(" + Keep Manager : " + GameServer.KeepManager.GetType().FullName);
-						Battleground bg = GameServer.KeepManager.GetBattleground(client.Player.CurrentRegionID);
+						Battleground bg = GameServer.KeepManager.GetBattleground(client.Player.Position.RegionID);
 						info.Add(" + Battleground (" + bg.MinLevel + " to " + bg.MaxLevel + ", max RL: " + bg.MaxRealmLevel + ")");
 					}
 					else
@@ -697,8 +699,8 @@ namespace DOL.GS.Commands
 					info.Add(" Zone ID: "+ client.Player.CurrentZone.ID);
 					info.Add(" Zone IsDungeon: "+ client.Player.CurrentZone.IsDungeon);
 					info.Add(" Zone SkinID: "+ client.Player.CurrentZone.ZoneSkinID);
-					info.Add(" Zone X: "+ client.Player.CurrentZone.XOffset);
-					info.Add(" Zone Y: "+ client.Player.CurrentZone.YOffset);
+					info.Add(" Zone X: "+ client.Player.CurrentZone.Offset.X);
+					info.Add(" Zone Y: "+ client.Player.CurrentZone.Offset.Y);
 					info.Add(" Zone Width: "+ client.Player.CurrentZone.Width);
 					info.Add(" Zone Height: "+ client.Player.CurrentZone.Height);
 					info.Add(" Zone DivingEnabled: " + client.Player.CurrentZone.IsDivingEnabled);

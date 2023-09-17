@@ -19,8 +19,8 @@
 using System;
 using DOL.GS.PacketHandler;
 using System.Reflection;
-using System.Collections;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 //By dinberg - so its him who you blame ;)
 namespace DOL.GS.Commands
@@ -88,10 +88,10 @@ namespace DOL.GS.Commands
 
 							//Create the database entry...
 							DBInstanceXElement element = new DBInstanceXElement();
-							element.Heading = client.Player.Heading;
-							element.X = client.Player.X;
-							element.Y = client.Player.Y;
-							element.Z = client.Player.Z;
+							element.Heading = client.Player.Orientation.InHeading;
+							element.X = client.Player.Position.X;
+							element.Y = client.Player.Position.Y;
+							element.Z = client.Player.Position.Z;
 							element.InstanceID = key;
 							element.ClassType = args[2];
 
@@ -155,12 +155,7 @@ namespace DOL.GS.Commands
 								obj.Name = element.ObjectId.Substring(0, 18);
 								obj.GuildName = element.ObjectId.Substring(18);
 
-								obj.X = element.X;
-								obj.Y = element.Y;
-								obj.Z = element.Z;
-								obj.Heading = element.Heading;
-
-								obj.CurrentRegion = client.Player.CurrentRegion;
+								obj.Position = Position.Create(client.Player.CurrentRegionID, element.X, element.Y, element.Z, element.Heading);
 
 								// now make sure model is visible
 								if (obj is GameNPC && obj.Model == 0)
@@ -296,31 +291,25 @@ namespace DOL.GS.Commands
 						else
 						{
 							// start with some generic coordinates that seem to work well in many instance zones
-							int x = 32361;
-							int y = 31744;
-							int z = 16003;
-							ushort heading = 1075;
+                            var entrancePosition = Position.Create(regionID: newInstance.ID, x: 32361, y: 31744, z: 16003, heading: 1075);
 
 							// If you're having trouble zoning into an instance then try adding an entrance element so it can be used here
-							if (newInstance.InstanceEntranceLocation != null)
+							if (newInstance.EntrancePosition.Coordinate != Coordinate.Nowhere)
 							{
-								x = newInstance.InstanceEntranceLocation.X;
-								y = newInstance.InstanceEntranceLocation.Y;
-								z = newInstance.InstanceEntranceLocation.Z;
-								heading = newInstance.InstanceEntranceLocation.Heading;
+                                entrancePosition = newInstance.EntrancePosition;
 							}
 
 							// save current position for use with /instance exit
-							GameLocation saveLocation = new GameLocation(player.Name + "_exit", player.CurrentRegionID, player.X, player.Y, player.Z);
-							player.TempProperties.setProperty(saveLocation.Name, saveLocation);
+							var savePosition = player.Position.With(orientation: Angle.Zero);
+							player.TempProperties.setProperty(player.Name + "_exit", savePosition);
 
 							bool success = true;
 
-							if (!player.MoveTo(newInstance.ID, x, y, z, heading))
+							if (!player.MoveTo(entrancePosition))
 							{
 								SendMessage(client, "MoveTo to entrance failed, now trying to move to current location inside the instance.");
 
-								if (!player.MoveTo(newInstance.ID, player.X, player.Y, player.Z, player.Heading))
+								if (!player.MoveTo(player.Position.With(regionID: newInstance.ID)))
 								{
 									SendMessage(client, "That failed as well.  Either add an entrance to this instance or move in the world to a corresponding instance location.");
 									success = false;
@@ -345,18 +334,18 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						GameLocation saveLocation = player.TempProperties.getProperty<object>(player.Name + "_exit", null) as GameLocation;
+						var savePosition = player.TempProperties.getProperty<Position>(player.Name + "_exit", Position.Nowhere);
 
-						if (saveLocation == null)
+						if (savePosition == Position.Nowhere)
 						{
 							ushort sourceRegion = (player.CurrentRegion as BaseInstance).Skin;
 
-							if (!player.MoveTo(sourceRegion, player.X, player.Y, player.Z, player.Heading))
-								player.MoveToBind();
+                            var wasZoningSuccessful = player.MoveTo(player.Position.With(regionID: sourceRegion));
+							if (!wasZoningSuccessful) player.MoveToBind();
 						}
 						else
 						{
-							player.MoveTo(saveLocation.RegionID, saveLocation.X, saveLocation.Y, saveLocation.Z, saveLocation.Heading);
+							player.MoveTo(savePosition);
 						}
 					}
 					break;

@@ -33,6 +33,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using DOL.Language;
@@ -119,15 +120,11 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + VikingKreimhilde.Name + ", creating ...");
 				VikingKreimhilde.GuildName = "Part of " + questTitle + " Quest";
 				VikingKreimhilde.Realm = eRealm.Midgard;
-				VikingKreimhilde.CurrentRegionID = 100;
 				VikingKreimhilde.Size = 51;
 				VikingKreimhilde.Level = 50;
 				VikingKreimhilde.MaxSpeedBase = 191;
 				VikingKreimhilde.Faction = FactionMgr.GetFactionByID(0);
-				VikingKreimhilde.X = 803999;
-				VikingKreimhilde.Y = 726551;
-				VikingKreimhilde.Z = 4752;
-				VikingKreimhilde.Heading = 2116;
+                VikingKreimhilde.Position = Position.Create(regionID: 100, x: 803999, y: 726551, z: 4752, heading: 2116);
 				VikingKreimhilde.RespawnInterval = -1;
 				VikingKreimhilde.BodyType = 0;
 

@@ -35,6 +35,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -109,7 +110,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 559690 && npc.Y == 510258)
+					if (npc.CurrentRegionID == 1)
 					{
 						Ferowl = npc;
 						break;
@@ -124,13 +125,9 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + Ferowl.Name + " , creating it ...");
 				Ferowl.GuildName = "";
 				Ferowl.Realm = eRealm.Albion;
-				Ferowl.CurrentRegionID = 1;
 				Ferowl.Size = 51;
 				Ferowl.Level = 40;
-				Ferowl.X = 559690;
-				Ferowl.Y = 510258;
-				Ferowl.Z = 2720;
-				Ferowl.Heading = 703;
+                Ferowl.Position = Position.Create(regionID: 1, x: 559690, y: 510258, z: 2720, heading: 703);
 				Ferowl.AddToWorld();
 
 				if (SAVE_INTO_DATABASE)
@@ -142,7 +139,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 306056 && npc.Y == 670106)
+					if (npc.CurrentRegionID == 1)
 					{
 						Morgana = npc;
 						break;
@@ -157,13 +154,9 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + Morgana.Name + " , creating it ...");
 				Morgana.GuildName = "";
 				Morgana.Realm = eRealm.None;
-				Morgana.CurrentRegionID = 1;
 				Morgana.Size = 51;
 				Morgana.Level = 90;
-				Morgana.X = 306056;
-				Morgana.Y = 670106;
-				Morgana.Z = 3095;
-				Morgana.Heading = 3261;
+                Morgana.Position = Position.Create(regionID: 1, x: 306056, y: 670106, z: 3095, heading: 3261);
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -189,7 +182,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 306025 && npc.Y == 670473)
+					if (npc.CurrentRegionID == 1)
 					{
 						Bechard = npc;
 						break;
@@ -204,13 +197,9 @@ namespace DOL.GS.Quests.Albion
 				Bechard.Name = "Bechard";
 				Bechard.GuildName = "";
 				Bechard.Realm = eRealm.None;
-				Bechard.CurrentRegionID = 1;
 				Bechard.Size = 50;
 				Bechard.Level = 63;
-				Bechard.X = 306025;
-				Bechard.Y = 670473;
-				Bechard.Z = 2863;
-				Bechard.Heading = 3754;
+                Bechard.Position = Position.Create(regionID: 1, x: 306025, y: 670473, z: 2863, heading: 3754);
 				Bechard.AddToWorld();
 
 				if (SAVE_INTO_DATABASE)
@@ -222,7 +211,7 @@ namespace DOL.GS.Quests.Albion
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 1 && npc.X == 306252 && npc.Y == 670274)
+					if (npc.CurrentRegionID == 1)
 					{
 						Silcharde = npc;
 						break;
@@ -237,13 +226,9 @@ namespace DOL.GS.Quests.Albion
 				Silcharde.Name = "Silcharde";
 				Silcharde.GuildName = "";
 				Silcharde.Realm = eRealm.None;
-				Silcharde.CurrentRegionID = 1;
 				Silcharde.Size = 50;
 				Silcharde.Level = 63;
-				Silcharde.X = 306252;
-				Silcharde.Y = 670274;
-				Silcharde.Z = 2857;
-				Silcharde.Heading = 3299;
+                Silcharde.Position = Position.Create(regionID: 1, x: 306252, y: 670274, z: 2857, heading: 3299);
 				Silcharde.AddToWorld();
 
 				if (SAVE_INTO_DATABASE)
@@ -1047,7 +1032,7 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
-			morganaArea = WorldMgr.GetRegion(Morgana.CurrentRegionID).AddArea(new Area.Circle(null, Morgana.X, Morgana.Y, 0, 1000));
+			morganaArea = WorldMgr.GetRegion(Morgana.CurrentRegionID).AddArea(new Area.Circle(null, Morgana.Location, 1000));
 			morganaArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterMorganaArea));
 
 			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
@@ -1120,13 +1105,9 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + Morgana.Name + " , creating it ...");
 				Morgana.GuildName = "";
 				Morgana.Realm = eRealm.None;
-				Morgana.CurrentRegionID = 1;
 				Morgana.Size = 51;
 				Morgana.Level = 90;
-				Morgana.X = 306056;
-				Morgana.Y = 670106;
-				Morgana.Z = 3095;
-				Morgana.Heading = 3261;
+                Morgana.Position = Position.Create(regionID: 1, x: 306056, y: 670106, z: 3095, heading: 3261);
 
 				
 				StandardMobBrain brain = new StandardMobBrain();
