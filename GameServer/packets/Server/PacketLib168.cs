@@ -810,6 +810,9 @@ namespace DOL.GS.PacketHandler
 							xOffsetInTargetZone = (ushort) (npc.TargetPosition.X - tz.XOffset);
 							yOffsetInTargetZone = (ushort) (npc.TargetPosition.Y - tz.YOffset);
 							zOffsetInTargetZone = (ushort) (npc.TargetPosition.Z);
+
+                            var overshootVector = Vector.Create(npc.Orientation, 20);
+                            targetZoneCoord += overshootVector;
 							//Dinberg:Instances - zoneSkinID for object positioning clientside.
 							targetZone = tz.ZoneSkinID;
 						}
