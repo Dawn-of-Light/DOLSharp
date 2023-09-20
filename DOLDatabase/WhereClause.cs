@@ -81,7 +81,7 @@ namespace DOL.Database
             }
         }
 
-        internal abstract List<TextAtom> IntermediateRepresentation { get; }
+        internal abstract IEnumerable<TextAtom> IntermediateRepresentation { get; }
 
         public virtual WhereClause And(WhereClause rightExpression)
             => rightExpression.Equals(Empty) ? this : new ChainingExpression(this, "AND", rightExpression);
@@ -134,13 +134,14 @@ namespace DOL.Database
             this.val = val;
         }
 
-        internal override List<TextAtom> IntermediateRepresentation
+        internal override IEnumerable<TextAtom> IntermediateRepresentation
         {
             get
             {
-                if (val is IEnumerable<object> valueCollection && valueCollection.Any())
+                if (val is IEnumerable<object> valueCollection)
                 {
                     var result = new List<TextAtom>() { new TextAtom(columnName), new TextAtom(op), new TextAtom("(") };
+                    if(!valueCollection.Any()) return result.Append(new TextAtom(")"));
                     result.Add(new ValueAtom(valueCollection.ElementAt(0)));
                     foreach(var element in valueCollection.Skip(1))
                     {
@@ -208,7 +209,7 @@ namespace DOL.Database
             this.chainingOperator = chainingOperator;
         }
 
-        internal override List<TextAtom> IntermediateRepresentation
+        internal override IEnumerable<TextAtom> IntermediateRepresentation
         {
             get
             {

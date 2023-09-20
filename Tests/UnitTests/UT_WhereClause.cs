@@ -59,7 +59,7 @@ namespace DOL.UnitTests.Database
         [Test]
         public void ParameterizedText_FooIsInOneAndTwo_FooIsInAtACommaAtB()
         {
-            var expr = DB.Column("foo").IsIn(new [] { 1, 2 });
+            var expr = DB.Column("foo").IsIn(new[] { 1, 2 });
             var placeHolder1 = expr.Parameters[0].Item1;
             var placeHolder2 = expr.Parameters[1].Item1;
             var actual = expr.ParameterizedText;
@@ -70,11 +70,20 @@ namespace DOL.UnitTests.Database
         [Test]
         public void ParameterizedText_FooIsInAandB_FooIsInAtACommaAtB()
         {
-            var expr = DB.Column("foo").IsIn(new [] { "a", "b" });
+            var expr = DB.Column("foo").IsIn(new[] { "a", "b" });
             var placeHolder1 = expr.Parameters[0].Item1;
             var placeHolder2 = expr.Parameters[1].Item1;
             var actual = expr.ParameterizedText;
             var expected = $"WHERE foo IN ( {placeHolder1} , {placeHolder2} )";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ParameterizedText_FooIsInEmptyArray_FooInEmptyParenthesis()
+        {
+            var expr = DB.Column("foo").IsIn(Array.Empty<object>());
+            var actual = expr.ParameterizedText;
+            var expected = $"WHERE foo IN ( )";
             Assert.AreEqual(expected, actual);
         }
 
