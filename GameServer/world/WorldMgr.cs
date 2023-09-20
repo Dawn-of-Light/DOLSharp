@@ -342,17 +342,19 @@ namespace DOL.GS
 			log.Debug("loading mobs from DB...");
 
 			var mobList = new List<Mob>();
-			if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
-			{
-				foreach (string loadRegion in Util.SplitCSV(ServerProperties.Properties.DEBUG_LOAD_REGIONS, true))
-				{
-					mobList.AddRange(DOLDB<Mob>.SelectObjects(DB.Column(nameof(Mob.Region)).IsEqualTo(loadRegion)));
-				}
-			}
-			else
-			{
-				mobList.AddRange(GameServer.Database.SelectAllObjects<Mob>());
-			}
+            var debugLoadRegions = Util.SplitCSV(ServerProperties.Properties.DEBUG_LOAD_REGIONS, true);
+
+            if (debugLoadRegions.Count > 0)
+            {
+                var whereClause = DB.Column(nameof(Mob.Region)).IsIn(debugLoadRegions);
+                mobList.AddRange(DOLDB<Mob>.SelectObjects(whereClause));
+            }
+            else
+            {
+                var disabledRegions = Util.SplitCSV(ServerProperties.Properties.DISABLED_REGIONS, true);
+                var whereClause = DB.Column(nameof(Mob.Region)).IsNotIn(disabledRegions);
+                mobList.AddRange(DOLDB<Mob>.SelectObjects(whereClause));
+            }
 
 			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);
 			foreach (Mob mob in mobList)
