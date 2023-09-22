@@ -11,7 +11,7 @@ public struct Angle
 
     private int steps;
 
-    //<remark>for internal use only</remark>
+    ///<remarks>for internal use only</remarks>
     private static Angle Steps(int steps)
     {
         steps %= STEPS_TO_CIRCUMVOLUTION; 
@@ -19,7 +19,6 @@ public struct Angle
         return new() { steps = steps };
     }
 
-    ///<remarks>2048 represents 180 degrees</remarks>
     public static Angle Heading(int heading)
         => Steps(heading * HEADING_TO_STEPS);
 
@@ -31,7 +30,6 @@ public struct Angle
 
     public double InRadians => steps / RADIANS_TO_STEPS;
     public ushort InDegrees => (ushort)(steps / DEGREE_TO_STEPS);
-    ///<remarks>2048 represents 180 degrees</remarks>
     public ushort InHeading => (ushort)(steps / HEADING_TO_STEPS);
 
     public override bool Equals(object obj)
