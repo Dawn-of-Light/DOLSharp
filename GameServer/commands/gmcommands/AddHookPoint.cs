@@ -53,7 +53,7 @@ namespace DOL.GS.Commands
 				DBKeepHookPoint dbkeephp = new DBKeepHookPoint();
 				dbkeephp.HookPointID = id;
 				dbkeephp.KeepComponentSkinID = skin;
-                var newHookPointLocation = comp.Location.GetOffsetTowards(client.Player.Location);
+                var newHookPointLocation = client.Player.Location - comp.Location;
 				dbkeephp.X = newHookPointLocation.X;
 				dbkeephp.Y = newHookPointLocation.Y;
 				dbkeephp.Z = newHookPointLocation.Z;

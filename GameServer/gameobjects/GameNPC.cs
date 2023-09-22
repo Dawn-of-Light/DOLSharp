@@ -1455,7 +1455,7 @@ namespace DOL.GS
 			}
 
 			//Calculate the difference between our position and the players position
-            var diffVec = Location.GetOffsetTowards(followTarget.Location);
+            var diffVec = followTarget.Location - Location;
 			var distance = diffVec.Length;
 
 			//if distance is greater then the max follow distance, stop following and return home

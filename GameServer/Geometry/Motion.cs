@@ -46,7 +46,7 @@ public class MotionToDestination : IMotion
 
         var progress = distanceTravelled / FullDistance;
         if (progress > 1) return Destination;
-        else return Start + Start.GetOffsetTowards(Destination) * progress;
+        else return Start + (Destination - Start) * progress;
     }
 
     public Angle GetDirection()

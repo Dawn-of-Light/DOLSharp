@@ -110,7 +110,7 @@ namespace DOL.GS.GameEvents
 				}
 
 				//Calculate the difference between our position and the players position
-                var diffVec = Location.GetOffsetTowards(m_playerToFollow.Location);
+                var diffVec = m_playerToFollow.Location - Location;
 
 				//Calculate the distance to the player
 				float distance = (float)Math.Sqrt(diffVec.X * diffVec.X + diffVec.Y * diffVec.Y);

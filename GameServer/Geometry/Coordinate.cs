@@ -23,21 +23,21 @@ public struct Coordinate
     {
         if (Equals(Nowhere) || loc.Equals(Nowhere)) return double.PositiveInfinity;
 
-        if (ignoreZ) return GetOffsetTowards(loc).Length2D;
-        else return GetOffsetTowards(loc).Length;
+        if (ignoreZ) return (loc - this).Length2D;
+        else return (loc - this).Length;
     }
 
     public Angle GetOrientationTo(Coordinate loc)
-        => GetOffsetTowards(loc).Orientation;
-
-    public Vector GetOffsetTowards(Coordinate coordinateB)
-        => Vector.Create(coordinateB.X - X, coordinateB.Y - Y, coordinateB.Z - Z);
+        => (loc - this).Orientation;
 
     public static Coordinate operator +(Coordinate loc, Vector v)
         => new() { coordinate = loc.coordinate + v };
 
     public static Coordinate operator -(Coordinate loc, Vector v)
         => new() { coordinate = loc.coordinate - v };
+
+    public static Vector operator -(Coordinate locA, Coordinate locB)
+        => Vector.Create(x: locA.X - locB.X, y: locA.Y - locB.Y, z: locA.Z - locB.Z);
 
     public static bool operator ==(Coordinate a, Coordinate b)
         => a.Equals(b);

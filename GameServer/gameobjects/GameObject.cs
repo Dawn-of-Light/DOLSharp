@@ -245,7 +245,7 @@ namespace DOL.GS
         {
             if (Position.RegionID != position.RegionID) return int.MaxValue;
 
-            var offset = Location.GetOffsetTowards(position.Coordinate);
+            var offset = position.Coordinate - Location;
             var dz = offset.Z * zfactor;
 
             return (int)(offset.Length2D + Math.Sqrt(dz*dz));

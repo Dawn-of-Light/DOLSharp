@@ -884,7 +884,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (player.CurrentHouse == null)
 				return;
 
-            var offset = player.CurrentHouse.Position.Coordinate.GetOffsetTowards(player.Location);
+            var offset = player.Location - player.CurrentHouse.Position.Coordinate;
 			var a = new HouseHookpointOffset
 			{
 				HouseModel = player.CurrentHouse.Model,

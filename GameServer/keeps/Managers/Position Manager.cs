@@ -96,7 +96,7 @@ namespace DOL.GS.Keeps
         public static Vector SaveXY(GameKeepComponent component, Coordinate keepPointLocation)
         {
             var angle = component.Keep.Orientation + component.RelativeOrientationToKeep;
-            var vector = component.Location.GetOffsetTowards(keepPointLocation);
+            var vector = keepPointLocation - component.Location;
             return vector.RotatedClockwise(angle - Angle.Degrees(90));
         }
 
