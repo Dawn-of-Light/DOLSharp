@@ -3561,7 +3561,7 @@ namespace DOL.GS.PacketHandler
 
         [Obsolete("Use .SendChangeGroundTarget(Coordinate) instead!")]
         public void SendChangeGroundTarget(Point3D newTarget)
-            => SendChangeGroundTarget(Coordinate.CreateFromPoint(newTarget));
+            => SendChangeGroundTarget(newTarget.ToCoordinate());
 
         public void SendChangeGroundTarget(Coordinate newTarget)
         {

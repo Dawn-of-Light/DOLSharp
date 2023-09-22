@@ -1629,7 +1629,7 @@ namespace DOL.GS
 
 		[Obsolete("Use GetPlayersCloseToSpot(ushort,Coordinate,ushort) instead!")]
 		public static IEnumerable GetPlayersCloseToSpot(ushort regionid, IPoint3D point, ushort radiusToCheck)
-            => GetPlayersCloseToSpot(regionid, Coordinate.CreateFromPoint(point), radiusToCheck);
+            => GetPlayersCloseToSpot(regionid, point.ToCoordinate(), radiusToCheck);
 
 		/// <summary>
 		/// Returns an IEnumerator of GamePlayers that are close to a certain

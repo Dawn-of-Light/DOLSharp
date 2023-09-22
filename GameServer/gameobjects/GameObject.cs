@@ -232,7 +232,7 @@ namespace DOL.GS
             var obj = point as GameObject;
             var regionID = Position.RegionID;
             if(obj != null) regionID = obj.Position.RegionID;
-            return GetDistanceTo(Position.Create(regionID, Coordinate.CreateFromPoint(point)),zfactor);
+            return GetDistanceTo(Position.Create(regionID, point.ToCoordinate()),zfactor);
         }
 
         /// <summary>

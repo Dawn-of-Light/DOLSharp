@@ -782,7 +782,7 @@ namespace DOL.GS
         public Point3D SpawnPoint
         {
             get => SpawnPosition.Coordinate.ToPoint3D();
-            set => SpawnPosition = Position.Create(CurrentRegionID, Coordinate.CreateFromPoint(value), SpawnPosition.Orientation.InHeading);
+            set => SpawnPosition = Position.Create(CurrentRegionID, value.ToCoordinate(), SpawnPosition.Orientation.InHeading);
         }
 
         [Obsolete("Use SpawnPosition.Heading instead!")]
@@ -1156,7 +1156,7 @@ namespace DOL.GS
 		[Obsolete("This is going to be removed.")]
 		public virtual int GetTicksToArriveAt(IPoint3D target, int speed)
 		{
-			return (int)Location.DistanceTo(Coordinate.CreateFromPoint(target)) * 1000 / speed;
+			return (int)Location.DistanceTo(target.ToCoordinate()) * 1000 / speed;
 		}
 
         /// <summary>
@@ -1167,7 +1167,7 @@ namespace DOL.GS
 
         [Obsolete("Use .SaveCurrentPosition() instead!")]
         private void SavePosition(IPoint3D target)
-            => Position = Position.Create(CurrentRegionID, Coordinate.CreateFromPoint(target), Orientation);
+            => Position = Position.Create(CurrentRegionID, target.ToCoordinate(), Orientation);
 
         [Obsolete("Use WalkTo(Coordinate, short) instead!")]
         public virtual void WalkTo(int targetX, int targetY, int targetZ, short speed)
@@ -1175,7 +1175,7 @@ namespace DOL.GS
 
         [Obsolete("Use WalkTo(Coordinate, short) instead!")]
         public virtual void WalkTo(IPoint3D target, short speed)
-            => WalkTo(Coordinate.CreateFromPoint(target), speed);
+            => WalkTo(target.ToCoordinate(), speed);
 
         public virtual void WalkTo(Coordinate destination, short speed)
 		{

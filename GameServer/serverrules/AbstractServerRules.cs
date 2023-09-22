@@ -2199,7 +2199,7 @@ namespace DOL.GS.ServerRules
 
         [Obsolete("Use .PlaceHousingNPC(House, ItemTemplate, Coordinate, ushort) instead!")]
 		public virtual GameNPC PlaceHousingNPC(DOL.GS.Housing.House house, ItemTemplate item, IPoint3D location, ushort heading)
-            => PlaceHousingNPC(house, item, Coordinate.CreateFromPoint(location), heading);
+            => PlaceHousingNPC(house, item, location.ToCoordinate(), heading);
 
 		/// <summary>
 		/// Get a housing hookpoint NPC
@@ -2292,7 +2292,7 @@ namespace DOL.GS.ServerRules
 
         [Obsolete("Use .PlaceHousingInteriorItem(House, ItemTemplate, Coordinate, ushort) instead!")]
 		public virtual GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, IPoint3D location, ushort heading)
-            => PlaceHousingInteriorItem(house, item, Coordinate.CreateFromPoint(location), heading);
+            => PlaceHousingInteriorItem(house, item, location.ToCoordinate(), heading);
 
         public virtual GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, Coordinate location, ushort heading)
 		{

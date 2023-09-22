@@ -638,7 +638,7 @@ namespace DOL.Tests
         [Obsolete("Use .SendChangeGroundTarget(Coordinate) instead!")]
 		public void SendChangeGroundTarget(Point3D newTarget)
 		{
-			if (SendChangeGroundTargetMethod != null) SendChangeGroundTargetMethod(this, Coordinate.CreateFromPoint(newTarget));
+			if (SendChangeGroundTargetMethod != null) SendChangeGroundTargetMethod(this, newTarget.ToCoordinate());
 		}
         public void SendChangeGroundTarget(Coordinate newTarget) => SendChangeGroundTarget(newTarget);
 		public Action<TestPacketLib, GameLiving, ePetWindowAction, eAggressionState, eWalkState> SendPetWindowMethod { get; set; }

@@ -1,5 +1,3 @@
-using System;
-
 namespace DOL.GS.Geometry;
 
 public struct Coordinate
@@ -59,14 +57,6 @@ public struct Coordinate
 
     public override string ToString()
         => $"{X}, {Y}, {Z}";
-
-    [Obsolete("This is going to be removed.")]
-    public Point3D ToPoint3D()
-        => new Point3D(X, Y, Z);
-
-    [Obsolete("This is going to be removed.")]
-    public static Coordinate CreateFromPoint(IPoint3D point)
-        => Create(x: point.X, y: point.Y, z: point.Z);
 
     public readonly static Coordinate Nowhere = Create(-1, -1, -1);
     public readonly static Coordinate Zero = Create(0, 0, 0);

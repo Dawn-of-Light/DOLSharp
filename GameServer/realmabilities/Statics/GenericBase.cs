@@ -24,7 +24,7 @@ namespace DOL.GS.RealmAbilities.Statics
 
         [Obsolete("Use .CreateStatic(GamePlayer,Coordinate,uint,ushort) instead!")]
 		public void CreateStatic(GamePlayer caster, Point3D gt, uint lifeTime, uint pulseFrequency, ushort radius)
-            => CreateStatic(caster, Coordinate.CreateFromPoint(gt), lifeTime, pulseFrequency, radius);
+            => CreateStatic(caster, gt.ToCoordinate(), lifeTime, pulseFrequency, radius);
 
         public void CreateStatic(GamePlayer caster, Coordinate gt, uint lifeTime, uint pulseFrequency, ushort radius) 
         {

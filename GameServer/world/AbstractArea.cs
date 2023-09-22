@@ -187,11 +187,11 @@ namespace DOL.GS
 
         [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
 		public virtual bool IsContaining(IPoint3D spot)
-            => IsContaining(Coordinate.CreateFromPoint(spot), ignoreZ: false);
+            => IsContaining(spot.ToCoordinate(), ignoreZ: false);
 
         [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
 		public virtual bool IsContaining(IPoint3D spot, bool checkZ)
-            => IsContaining(Coordinate.CreateFromPoint(spot), ignoreZ: !checkZ);
+            => IsContaining(spot.ToCoordinate(), ignoreZ: !checkZ);
 
         [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
 		public virtual bool IsContaining(int x, int y, int z)

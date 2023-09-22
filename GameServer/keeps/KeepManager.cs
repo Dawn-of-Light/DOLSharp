@@ -296,7 +296,7 @@ namespace DOL.GS.Keeps
 
         [Obsolete("Use .GetKeepCloseToSpot(Position, int) instead!")]
 		public virtual AbstractGameKeep GetKeepCloseToSpot(ushort regionid, IPoint3D point3d, int radius) 
-            => GetKeepCloseToSpot(Position.Create(regionid, Coordinate.CreateFromPoint(point3d)), radius);
+            => GetKeepCloseToSpot(Position.Create(regionid, point3d.ToCoordinate()), radius);
 
 		/// <summary>
 		/// Gets all keeps by a realm map /rw
