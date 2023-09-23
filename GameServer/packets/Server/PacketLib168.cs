@@ -807,14 +807,15 @@ namespace DOL.GS.PacketHandler
 				if (npc.IsMoving && !npc.IsAtTargetLocation)
 				{
 					speed = npc.CurrentSpeed;
-					if (!npc.Destination.Equals(Coordinate.Nowhere))
+					if (npc.Destination != Coordinate.Nowhere && npc.Destination != npc.Location)
 					{
 						Zone tz = npc.CurrentRegion.GetZone(npc.Destination);
 						if (tz != null)
 						{
                             targetZoneCoord = npc.Destination - tz.Offset;
 
-                            var overshootVector = Vector.Create(npc.Orientation, 20);
+                            var overshootVector = targetZoneCoord - currentZoneCoord;
+                            overshootVector = overshootVector * (100/overshootVector.Length);
                             targetZoneCoord += overshootVector;
 							//Dinberg:Instances - zoneSkinID for object positioning clientside.
 							targetZone = tz.ZoneSkinID;

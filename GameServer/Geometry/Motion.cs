@@ -34,8 +34,8 @@ public class MotionToDestination : IMotion
 
     public Coordinate CurrentLocation
         => GetLocationAfter(Environment.TickCount - StartTimeInMilliSeconds);
-    public double FullDistance => Start.DistanceTo(Destination);
-    public double RemainingDistance => CurrentLocation.DistanceTo(Destination);
+    public double FullDistance => Destination.DistanceTo(Start, ignoreZ: true);
+    public double RemainingDistance => Destination.DistanceTo(CurrentPosition, ignoreZ: true);
 
     public Coordinate GetLocationAfter(int elapsedTimeInMilliSeconds)
     {
