@@ -5744,34 +5744,34 @@ namespace DOL.GS
 
         public override Position Position
         {
-            get => Position.Create(CurrentRegionID, Motion.CurrentLocation, Motion.GetDirection());
-            set { CurrentRegionID = value.RegionID; Motion = Geometry.Motion.Create(value, Motion.Destination, Motion.Speed); }
+            get => Motion.CurrentPosition;
+            set { CurrentRegionID = value.RegionID; Motion = Motion.Create(value, Motion.Destination, Motion.Speed); }
         }
 
-        protected virtual IMotion Motion { get; set; } = new GoAheadMotion();
+        protected virtual Motion Motion { get; set; } = new Motion();
 
         [Obsolete("Use .Position.X instead!")]
         public override int X
         {
-            set => Position = Position.Create(CurrentRegionID, coordinate: Motion.Start.With(x: value), Orientation);
+            set => Position = Motion.Start.With(x: value);
         }
 
         [Obsolete("Use .Position.Y instead!")]
         public override int Y
         {
-            set => Position = Position.Create(CurrentRegionID, coordinate: Motion.Start.With(y: value), Orientation);
+            set => Position = Motion.Start.With(y: value);
         }
 
         [Obsolete("Use .Position.Z instead!")]
         public override int Z
         {
-            set => Position = Position.Create(CurrentRegionID, coordinate: Motion.Start.With(z: value), Orientation);
+            set => Position = Motion.Start.With(z: value);
         }
 
         public override Angle Orientation 
         {
-            get => Motion.GetDirection();
-            set => Position = Position.Create(CurrentRegionID, Motion.Start, value);
+            get => Position.Orientation;
+            set => Position = Motion.Start.With(orientation: value);
         }
 
         public override ushort CurrentRegionID 

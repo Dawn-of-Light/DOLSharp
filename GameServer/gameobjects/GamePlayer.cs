@@ -10329,7 +10329,7 @@ namespace DOL.GS
 			set { m_lastPositionUpdateZone = value; }
 		}
 
-        public Coordinate LastUpdateLocation => Motion.Start;
+        public Coordinate LastUpdateLocation => Motion.Start.Coordinate;
 
 		/// <summary>
 		/// Holds the players max Z for fall damage

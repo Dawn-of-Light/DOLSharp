@@ -5,7 +5,7 @@ public struct Position
     private const ushort NO_REGION_ID = ushort.MaxValue;
 
     public ushort RegionID { get; init; } = 0;
-    public Coordinate Coordinate { get; init; } = Coordinate.Nowhere;
+    public Coordinate Coordinate { get; init; } = Coordinate.Zero;
     public Angle Orientation { get; init; } = Angle.Zero;
 
     public int X => Coordinate.X;

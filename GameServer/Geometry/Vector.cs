@@ -76,5 +76,5 @@ public struct Vector
     public static Vector operator -(Vector vecA, Vector vecB)
         => Create(vecA.X - vecB.X, vecA.Y - vecB.Y, vecA.Z - vecB.Z);
 
-    public static Vector Zero => Vector.Create(0, 0, 0);
+    public static readonly Vector Zero = Vector.Create(0, 0, 0);
 }

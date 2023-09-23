@@ -795,7 +795,7 @@ namespace DOL.GS
         public short ZSpeedFactor
             => (short)((Motion.Destination.Z - Motion.Start.Z) / Motion.FullDistance);
 
-        protected override IMotion Motion
+        protected override Motion Motion
         {
             set
             {
