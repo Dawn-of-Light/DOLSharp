@@ -2,8 +2,6 @@ namespace DOL.GS.Geometry;
 
 public struct Position
 {
-    private const ushort NO_REGION_ID = ushort.MaxValue;
-
     public ushort RegionID { get; init; } = 0;
     public Coordinate Coordinate { get; init; } = Coordinate.Zero;
     public Angle Orientation { get; init; } = Angle.Zero;
@@ -32,10 +30,10 @@ public struct Position
     public static Position Create(ushort regionID, Coordinate coordinate, Angle orientation)
         => new() { RegionID = regionID, Coordinate = coordinate, Orientation = orientation };
 
-    public Position With(ushort regionID = NO_REGION_ID, int? x = null, int? y = null, int? z = null, ushort? heading = null)
+    public Position With(ushort? regionID = null, int? x = null, int? y = null, int? z = null, ushort? heading = null)
     {
         var newOrientation = heading != null ? Angle.Heading((ushort)heading) : Orientation;
-        var newRegionID = regionID != NO_REGION_ID ? regionID : RegionID;
+        var newRegionID = regionID ?? RegionID;
         return Create(newRegionID, Coordinate.With(x, y, z), newOrientation);
     }
 
@@ -77,6 +75,6 @@ public struct Position
     public override string ToString()
         => $"({Coordinate}, {Orientation.InHeading})";
 
-    public readonly static Position Nowhere = Create(regionID: NO_REGION_ID, Coordinate.Nowhere, Angle.Zero);
+    public readonly static Position Nowhere = Create(regionID: ushort.MaxValue, Coordinate.Nowhere, Angle.Zero);
     public readonly static Position Zero = new();
 }
