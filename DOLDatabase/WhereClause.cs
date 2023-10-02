@@ -262,6 +262,5 @@ namespace DOL.Database
         public WhereClause IsNull() => new PlainTextExpression(Name, "IS NULL");
         public WhereClause IsNotNull() => new PlainTextExpression(Name, "IS NOT NULL");
         public WhereClause IsIn<T>(IEnumerable<T> values) => new FilterExpression(Name, "IN", values.Cast<object>());
-        public WhereClause IsNotIn<T>(IEnumerable<T> values) => new FilterExpression(Name, "NOT IN", values.Cast<object>());
     }
 }
