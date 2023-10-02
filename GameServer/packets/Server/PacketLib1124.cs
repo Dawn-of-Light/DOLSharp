@@ -475,6 +475,51 @@ namespace DOL.GS.PacketHandler
 					return;
 				}
 			}
+			else if (q is DQRewardQ)
+            {
+                DQRewardQ quest = q as DQRewardQ;
+                using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry)))
+                {
+                    pak.WriteByte((byte)index);
+                    pak.WriteByte((byte)quest.Name.Length);
+                    pak.WriteShort(0x00); // unknown
+                    pak.WriteByte((byte)quest.Goals.Count);
+                    pak.WriteByte((byte)quest.Level);
+                    pak.WriteStringBytes(quest.Name);
+                    pak.WritePascalString(quest.Description);
+                    int goalindex = 0;
+                    foreach (DQRQuestGoal goal in quest.Goals)
+                    {
+                        goalindex++;
+                        String goalDesc = String.Format("{0}\r", goal.Description);
+                        pak.WriteShortLowEndian((ushort)goalDesc.Length);
+                        pak.WriteStringBytes(goalDesc);
+                        // TODO commented out until i find out what these are used for
+                        //pak.WriteShortLowEndian((ushort)goal.ZoneID2);
+                        //pak.WriteShortLowEndian((ushort)goal.XOffset2);
+                        //pak.WriteShortLowEndian((ushort)goal.YOffset2);
+                        pak.Fill(0, 6);
+                        pak.WriteShortLowEndian(0x00);  // unknown
+                        pak.WriteShortLowEndian((ushort)goal.Type);
+                        pak.WriteShortLowEndian(0x00);  // unknown
+                        pak.WriteShortLowEndian((ushort)goal.ZoneID1);
+                        pak.WriteShortLowEndian((ushort)goal.XOffset1);
+                        pak.WriteShortLowEndian((ushort)goal.YOffset1);
+                        pak.WriteByte((byte)((goal.IsAchieved) ? 0x01 : 0x00));
+                        if (goal.QuestItem == null)
+                        {
+                            pak.WriteByte(0x00);
+                        }
+                        else
+                        {
+                            pak.WriteByte((byte)goalindex);
+                            WriteTemplateData(pak, goal.QuestItem, 1);
+                        }
+                    }
+                    SendTCP(pak);
+                    return;
+                }
+            }
 			else if (q is RewardQuest)
 			{
 				RewardQuest quest = q as RewardQuest;

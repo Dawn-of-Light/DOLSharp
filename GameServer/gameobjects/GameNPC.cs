@@ -2717,6 +2717,36 @@ namespace DOL.GS
 			get { return false; }
 		}
 
+
+        /// <summary>
+        /// check if mob shows interact indicator for 
+        /// DQ reward quest
+        /// </summary>		
+        public bool CanShowInteractIndicator(GamePlayer player)
+        {
+            // browse Quests. // patch 0031
+            List<AbstractQuest> dqs;
+            lock (((ICollection)player.QuestList).SyncRoot)
+            {
+                dqs = new List<AbstractQuest>(player.QuestList);
+            }
+
+            foreach (AbstractQuest q in dqs)
+            {
+                DQRewardQ dqrQuest = null;
+                if (q is DQRewardQ)
+                {
+                    dqrQuest = (DQRewardQ)q;
+
+                    if (dqrQuest != null && dqrQuest.CheckInteractPendingIcon(this))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+		
 		/// <summary>
 		/// Should the NPC show a quest indicator, this can be overriden for custom handling
 		/// Checks both scripted and data quests
@@ -2729,6 +2759,13 @@ namespace DOL.GS
 			if (CanShowOneQuest(player))
 				return eQuestIndicator.Available;
 
+            // Interact goal?
+            if (CanShowInteractIndicator(player))
+            {
+                return eQuestIndicator.Pending; 
+            }
+			
+			
 			// Finishing one ?
 			if (CanFinishOneQuest(player))
 				return eQuestIndicator.Finish;
@@ -2768,6 +2805,18 @@ namespace DOL.GS
 					}
 				}
 			}
+
+            // Data driven reward quests 
+            lock (m_dqRewardQs)
+            {
+                foreach (DQRewardQ quest in DQRewardQList)
+                {
+                    if (quest.CheckQuestQualification(player))
+                    {
+                        return true;
+                    }
+                }
+            }
 
 			return false;
 		}
@@ -2809,6 +2858,20 @@ namespace DOL.GS
 							return true;
 					}
 				}
+
+
+                // Handle Data Reward Quest here.
+
+                DQRewardQ dqrQuest = null;
+                if (q is DQRewardQ)
+                {
+                    dqrQuest = (DQRewardQ)q;
+
+                    if (dqrQuest != null && dqrQuest.CheckGoalsCompleted() && dqrQuest.FinishName == Name) 
+                    {
+                        return true;
+                    }
+                }
 
 				// Handle Reward Quest here.
 
