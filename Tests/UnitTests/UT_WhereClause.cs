@@ -83,7 +83,7 @@ namespace DOL.UnitTests.Database
         {
             var expr = DB.Column("foo").IsIn(Array.Empty<object>());
             var actual = expr.ParameterizedText;
-            var expected = $"WHERE foo IN ( )";
+            var expected = $"WHERE false";
             Assert.AreEqual(expected, actual);
         }
 

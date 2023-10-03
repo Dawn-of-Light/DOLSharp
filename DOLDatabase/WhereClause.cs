@@ -141,7 +141,7 @@ namespace DOL.Database
                 if (val is IEnumerable<object> valueCollection)
                 {
                     var result = new List<TextAtom>() { new TextAtom(columnName), new TextAtom(op), new TextAtom("(") };
-                    if(!valueCollection.Any()) return result.Append(new TextAtom(")"));
+                    if(!valueCollection.Any()) return new[] { new TextAtom("false") };
                     result.Add(new ValueAtom(valueCollection.ElementAt(0)));
                     foreach(var element in valueCollection.Skip(1))
                     {
@@ -262,6 +262,5 @@ namespace DOL.Database
         public WhereClause IsNull() => new PlainTextExpression(Name, "IS NULL");
         public WhereClause IsNotNull() => new PlainTextExpression(Name, "IS NOT NULL");
         public WhereClause IsIn<T>(IEnumerable<T> values) => new FilterExpression(Name, "IN", values.Cast<object>());
-        public WhereClause IsNotIn<T>(IEnumerable<T> values) => new FilterExpression(Name, "NOT IN", values.Cast<object>());
     }
 }
