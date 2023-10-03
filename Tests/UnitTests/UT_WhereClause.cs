@@ -79,11 +79,20 @@ namespace DOL.UnitTests.Database
         }
 
         [Test]
-        public void ParameterizedText_FooIsInEmptyArray_FooInEmptyParenthesis()
+        public void ParameterizedText_FooIsInEmptyArray_WhereFalse()
         {
             var expr = DB.Column("foo").IsIn(Array.Empty<object>());
             var actual = expr.ParameterizedText;
             var expected = $"WHERE false";
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ParameterizedText_FooIsNotInEmptyArray_WhereTrue()
+        {
+            var expr = DB.Column("foo").IsNotIn(Array.Empty<object>());
+            var actual = expr.ParameterizedText;
+            var expected = $"WHERE true";
             Assert.AreEqual(expected, actual);
         }
 
