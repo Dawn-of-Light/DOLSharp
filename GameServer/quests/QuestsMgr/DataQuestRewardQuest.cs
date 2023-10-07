@@ -256,7 +256,6 @@ namespace DOL.GS.Quests
         /// <param name="dataQuest"></param>
         /// <param name="charQuest"></param>
         public DQRewardQ(GamePlayer questingPlayer, DBDQRewardQ dataQuest, CharacterXDQRewardQ charQuest)
-			: this(questingPlayer, null, dataQuest, charQuest)
 		{
             m_questPlayer = questingPlayer;
             m_step = 1;
