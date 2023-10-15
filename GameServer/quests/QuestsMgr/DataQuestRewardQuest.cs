@@ -1795,9 +1795,10 @@ namespace DOL.GS.Quests
 
                     if (RewardMoney > 0)
                     {
-                        m_questPlayer.AddMoney(RewardMoney);
-                        m_questPlayer.SendSystemMessage("You are awarded {0}!");
-                        InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", QuestPlayer, eInventoryActionType.Quest, RewardMoney);
+                        var rewardMoney = Currency.Copper.Mint(RewardMoney);
+                        m_questPlayer.AddMoney(rewardMoney);
+                        m_questPlayer.SendSystemMessage($"You are awarded {rewardMoney.ToText()}!");
+                        InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", QuestPlayer, eInventoryActionType.Quest, rewardMoney.Amount);
                     }
                 }
                 else
