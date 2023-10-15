@@ -24,7 +24,7 @@ namespace DOL.Database
 {
     public class WhereClause
     {
-        internal virtual ParameterizedExpression expression { get; init; }
+        internal virtual ParameterizedExpression expression { get; }
 
         private WhereClause(ParameterizedExpression expr)
         {
@@ -125,8 +125,8 @@ namespace DOL.Database
 
     internal class ParameterizedExpression
     {
-        public string QueryText { get; init; }
-        public object[] Parameters { get; init; }
+        public string QueryText { get; }
+        public object[] Parameters { get; }
 
         public ParameterizedExpression(string queryText, params object[] parameters)
         {
