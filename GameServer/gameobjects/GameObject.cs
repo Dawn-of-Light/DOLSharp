@@ -1244,7 +1244,7 @@ namespace DOL.GS
         /// <summary>
         /// A cache of every DBDataQuest object
         /// </summary>
-        protected static ILookup<ushort, DBDQRewardQ> m_dqRewardQCache = null;
+        protected static ILookup<ushort, DBRewardQuest> m_dqRewardQCache = null;
 
 
         /// <summary>
@@ -1267,14 +1267,14 @@ namespace DOL.GS
                 m_dqRewardQCache = null;
             }
 
-            m_dqRewardQCache = GameServer.Database.SelectAllObjects<DBDQRewardQ>()
+            m_dqRewardQCache = GameServer.Database.SelectAllObjects<DBRewardQuest>()
                 .ToLookup(k => k.StartRegionID);
         }
 
         /// <summary>
         /// Get a preloaded list of all data quests
         /// </summary>
-        public static IList<DBDQRewardQ> DQRewardCache
+        public static IList<DBRewardQuest> DQRewardCache
         {
             get { return m_dqRewardQCache.SelectMany(k => k).ToList(); }
         }
@@ -1293,7 +1293,7 @@ namespace DOL.GS
 
             try
             {
-                foreach (DBDQRewardQ quest in m_dqRewardQCache[CurrentRegionID])
+                foreach (DBRewardQuest quest in m_dqRewardQCache[CurrentRegionID])
                 {
                     if (quest.StartNPC == Name)
                     {
@@ -1314,7 +1314,7 @@ namespace DOL.GS
 
             try
             {
-                foreach (DBDQRewardQ quest in m_dqRewardQCache[0])
+                foreach (DBRewardQuest quest in m_dqRewardQCache[0])
                 {
                     if (quest.StartNPC == Name)
                     {

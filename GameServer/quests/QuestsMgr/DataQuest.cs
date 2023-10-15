@@ -560,18 +560,21 @@ namespace DOL.GS.Quests
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
 					{
-						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(str);
-						if (item != null)
+						if (str != null && !str.Equals(""))
 						{
-							m_finalRewards.Add(item);
-						}
-						else
-						{
-                            string errorText = string.Format("DataQuest: Final reward ItemTemplate not found: {0}", str);
-                            log.Error(errorText);
-                            m_lastErrorText += " " + errorText;
+                            ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(str);
+                            if (item != null)
+                            {
+                                m_finalRewards.Add(item);
+                            }
+                            else
+                            {
+                                string errorText = string.Format("DataQuest: Final reward ItemTemplate not found: {0}", str);
+                                log.Error(errorText);
+                                m_lastErrorText += " " + errorText;
+                            }
                         }
-					}
+                    }
 				}
 
 				lastParse = m_dataQuest.QuestDependency;

@@ -43,8 +43,8 @@ namespace DOL.GS.Quests
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected int m_step = 1;
-		protected DBDQRewardQ m_dataQuest = null;
-		protected CharacterXDQRewardQ m_charQuest = null;
+		protected DBRewardQuest m_dataQuest = null;
+		protected CharacterXRewardQuest m_charQuest = null;
 		protected GameObject m_startObject = null;
 		protected GameNPC m_startNPC = null;
 		protected IDQRewardQStep m_customQuestStep = null;
@@ -197,7 +197,7 @@ namespace DOL.GS.Quests
         /// DQRewardQ object used for delving RewardItems or other information
         /// </summary>
         /// <param name="dataQuest"></param>
-        public DQRewardQ(DBDQRewardQ dataQuest)
+        public DQRewardQ(DBRewardQuest dataQuest)
         {
             m_questPlayer = null;
             m_step = 1;
@@ -209,7 +209,7 @@ namespace DOL.GS.Quests
 		/// DQRewardQ object assigned to an object or NPC that is used to start or offer the quest
 		/// </summary>
 		/// <param name="dbQuest"></param>
-		public DQRewardQ(DBDQRewardQ dataQuest, GameObject startingObject)
+		public DQRewardQ(DBRewardQuest dataQuest, GameObject startingObject)
 		{
 			m_questPlayer = null;
 			m_step = 1;
@@ -255,7 +255,7 @@ namespace DOL.GS.Quests
         /// <param name="questingPlayer"></param>
         /// <param name="dataQuest"></param>
         /// <param name="charQuest"></param>
-        public DQRewardQ(GamePlayer questingPlayer, DBDQRewardQ dataQuest, CharacterXDQRewardQ charQuest)
+        public DQRewardQ(GamePlayer questingPlayer, DBRewardQuest dataQuest, CharacterXRewardQuest charQuest)
 		{
             m_questPlayer = questingPlayer;
             m_step = 1;
@@ -282,7 +282,7 @@ namespace DOL.GS.Quests
 		/// <param name="questingPlayer"></param>
 		/// <param name="dbQuest"></param>
 		/// <param name="charQuest"></param>
-		public DQRewardQ(GamePlayer questingPlayer, GameObject sourceObject, DBDQRewardQ dataQuest, CharacterXDQRewardQ charQuest)
+		public DQRewardQ(GamePlayer questingPlayer, GameObject sourceObject, DBRewardQuest dataQuest, CharacterXRewardQuest charQuest)
 		{
 			m_questPlayer = questingPlayer;
 			m_step = 1;
@@ -699,7 +699,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// The DBDQRewardQ for this quest
 		/// </summary>
-		public virtual DBDQRewardQ DBDataQuest
+		public virtual DBRewardQuest DBDataQuest
 		{
 			get { return m_dataQuest; }
 		}
@@ -708,7 +708,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// The CharacterXDQRewardQ entry for the player doing this quest
 		/// </summary>
-		public virtual CharacterXDQRewardQ CharDataQuest
+		public virtual CharacterXRewardQuest CharDataQuest
 		{
 			get { return m_charQuest; }
 		}
@@ -883,13 +883,13 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public static CharacterXDQRewardQ GetCharacterQuest(GamePlayer player, int ID, bool create)
+		public static CharacterXRewardQuest GetCharacterQuest(GamePlayer player, int ID, bool create)
 		{
-			CharacterXDQRewardQ charQuest = DOLDB<CharacterXDQRewardQ>.SelectObject(DB.Column(nameof(CharacterXDQRewardQ.Character_ID)).IsEqualTo(player.QuestPlayerID).And(DB.Column(nameof(CharacterXDQRewardQ.DataQuestID)).IsEqualTo(ID)));
+			CharacterXRewardQuest charQuest = DOLDB<CharacterXRewardQuest>.SelectObject(DB.Column(nameof(CharacterXRewardQuest.Character_ID)).IsEqualTo(player.QuestPlayerID).And(DB.Column(nameof(CharacterXRewardQuest.DataQuestID)).IsEqualTo(ID)));
 
 			if (charQuest == null && create)
 			{
-				charQuest = new CharacterXDQRewardQ(player.QuestPlayerID, ID);
+				charQuest = new CharacterXRewardQuest(player.QuestPlayerID, ID);
 				charQuest.Count = 0;
 				charQuest.Step = 0;
 				GameServer.Database.AddObject(charQuest);
@@ -1683,11 +1683,11 @@ namespace DOL.GS.Quests
                     GamePlayer player = qargs.Player;
                     GameLiving giver = qargs.Source;
 
-                    foreach (DBDQRewardQ quest in GameObject.DQRewardCache)
+                    foreach (DBRewardQuest quest in GameObject.DQRewardCache)
                     {
                         if ((quest.ID + DQREWARDQ_CLIENTOFFSET) == qargs.QuestID)
                         {
-                            CharacterXDQRewardQ charQuest = GetCharacterQuest(player, quest.ID, true);
+                            CharacterXRewardQuest charQuest = GetCharacterQuest(player, quest.ID, true);
                             var dq = new DQRewardQ(player, giver, quest, charQuest);
                             dq.Step = 1;
                             player.AddQuest(dq);
@@ -2224,7 +2224,7 @@ namespace DOL.GS.Quests
 		{
 			if (m_charQuest == null || m_charQuest.IsPersisted == false) return;
 
-			CharacterXDQRewardQ charQuest = GameServer.Database.FindObjectByKey<CharacterXDQRewardQ>(m_charQuest.ID);
+			CharacterXRewardQuest charQuest = GameServer.Database.FindObjectByKey<CharacterXRewardQuest>(m_charQuest.ID);
 			if (charQuest != null)
 			{
 				GameServer.Database.DeleteObject(charQuest);

@@ -24,9 +24,9 @@ namespace DOL.Database
 	/// <summary>
 	/// Holds all the DQRewardquest types for DataQuests available
 	/// </summary>
-	[DataTable(TableName = "DataQuestRewardQuest")]
+	[DataTable(TableName = "RewardQuest")]
 	
-	public class DBDQRewardQ : DataObject
+	public class DBRewardQuest : DataObject
 	{
 		private int m_id;
 		private string m_questName;		
@@ -62,7 +62,7 @@ namespace DOL.Database
 		private string m_yOffset;
 		private string m_zoneID;		
 		
-		public DBDQRewardQ()
+		public DBRewardQuest()
 		{
 		}
 

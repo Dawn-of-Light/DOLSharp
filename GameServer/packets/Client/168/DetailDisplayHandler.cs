@@ -525,7 +525,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		 
 		
 
-                            foreach (DBDQRewardQ d in GameObject.DQRewardCache)
+                            foreach (DBRewardQuest d in GameObject.DQRewardCache)
                             {
                                 if (d.ID == questID)
                                 {

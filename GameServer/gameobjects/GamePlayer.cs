@@ -13272,10 +13272,10 @@ namespace DOL.GS
 			}
 			
 			// Reward data driven quests for this player 
-            var dqRewardQ = DOLDB<CharacterXDQRewardQ>.SelectObjects(DB.Column(nameof(CharacterXDQRewardQ.Character_ID)).IsEqualTo(QuestPlayerID));
-            foreach (CharacterXDQRewardQ quest in dqRewardQ)
+            var dqRewardQ = DOLDB<CharacterXRewardQuest>.SelectObjects(DB.Column(nameof(CharacterXRewardQuest.Character_ID)).IsEqualTo(QuestPlayerID));
+            foreach (CharacterXRewardQuest quest in dqRewardQ)
             {
-                DBDQRewardQ dbDQRQ = GameServer.Database.FindObjectByKey<DBDQRewardQ>(quest.DataQuestID);
+                DBRewardQuest dbDQRQ = GameServer.Database.FindObjectByKey<DBRewardQuest>(quest.DataQuestID);
                 if (dbDQRQ != null)
                 {
                     DQRewardQ dqrq = new DQRewardQ(this, dbDQRQ, quest);

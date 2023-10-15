@@ -24,9 +24,9 @@ namespace DOL.Database
 	/// <summary>
 	/// Holds all the GenericQuests available
 	/// </summary>
-	[DataTable(TableName = "CharacterXDQRewardQ")]
+	[DataTable(TableName = "CharacterXRewardQuest")]
 	
-	public class CharacterXDQRewardQ : DataObject
+	public class CharacterXRewardQuest : DataObject
 	{
 		private int m_id;
 		private string m_characterID;
@@ -35,7 +35,7 @@ namespace DOL.Database
 		private short m_count;
 		private string m_customPropertiesString; 
 		
-		public CharacterXDQRewardQ()
+		public CharacterXRewardQuest()
 		{
 		}
 
@@ -44,7 +44,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="characterID"></param>
 		/// <param name="dataQuestID"></param>
-		public CharacterXDQRewardQ(string characterID, int dataQuestID)
+		public CharacterXRewardQuest(string characterID, int dataQuestID)
 		{
 			m_characterID = characterID;
 			m_dataQuestID = dataQuestID;

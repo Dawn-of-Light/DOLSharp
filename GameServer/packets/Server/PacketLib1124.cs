@@ -1016,7 +1016,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// patch 0020
 		/// </summary>       
-		protected virtual void WriteItemData(GSTCPPacketOut pak, InventoryItem item, int questID)
+		protected override void WriteItemData(GSTCPPacketOut pak, InventoryItem item, int questID)
 		{
 			if (item == null)
 			{
