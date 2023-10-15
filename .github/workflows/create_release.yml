@@ -20,7 +20,7 @@ jobs:
       - name: Generate Release Info
         id: release_info
         run: |
-          version="2.1"
+          version="2.2"
           last_version_tag=$(git tag -l --sort=creatordate | grep -E '^([0-9]+\.){3}[0-9]+$' | tail -n1)
           major_version=$(echo "$last_version_tag" | cut -d. -f1)
           minor_version=$(echo "$last_version_tag" | cut -d. -f2)
