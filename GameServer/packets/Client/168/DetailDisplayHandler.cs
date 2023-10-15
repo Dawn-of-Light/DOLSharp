@@ -513,35 +513,74 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							if (questID == 0)
 								return;
-							questID = (ushort)(objectId >> 4);
 
-							DataQuest dq = null;
-							questID = (ushort)(objectId >> 4);
-							foreach (DBDataQuest d in GameObject.DataQuestCache)
-							{
-								if (d.ID == questID)
-								{
-									dq = new DataQuest(d);
-									break;
-								}
-							}
+                            DQRewardQ dqrq = null;
+                            questID = (ushort)(objectId >> 4);
+														   
+		
+							
+		 
+							   
+			   
+		 
+		
 
-							if (dq != null && dq.StartType == DataQuest.eStartType.RewardQuest)
-							{
-								List<ItemTemplate> rewards = null;
-								if (index < 8)
-									rewards = dq.FinalRewards;
-								else
-								{
-									rewards = dq.OptionalRewards;
-									index -= 8;
-								}
-								if (rewards != null && index >= 0 && index < rewards.Count)
-								{
-									item = rewards[index];
-								}
-							}
-						}
+                            foreach (DBRewardQuest d in GameObject.DQRewardCache)
+                            {
+                                if (d.ID == questID)
+                                {
+                                    dqrq = new DQRewardQ(d);
+                                    break;
+                                }
+                            }
+
+                            if (dqrq != null)
+                            {
+                                List<ItemTemplate> rewards = null;
+                                if (index < 8)
+                                    rewards = dqrq.FinalRewards;
+                                else
+                                {
+                                    rewards = dqrq.OptionalRewards;
+                                    index -= 8;
+                                }
+                                if (rewards != null && index >= 0 && index < rewards.Count)
+                                {
+                                    item = rewards[index];
+                                }
+                            }
+                            else // Data quest support, check for RewardQuest type
+                            {
+                                DataQuest dq = null;
+                                questID = (ushort)(objectId >> 4);
+                                //int index = (ushort)(objectID - DataQuest.DATAQUEST_CLIENTOFFSET - questID);
+                                //questID = (ushort)(DataQuest.ClientQuestID - DataQuest.DATAQUEST_CLIENTOFFSET);
+                                foreach (DBDataQuest d in GameObject.DataQuestCache)
+                                {
+                                    if (d.ID == questID)
+                                    {
+                                        dq = new DataQuest(d);
+                                        break;
+                                    }
+                                }
+
+                                if (dq != null && dq.StartType == DataQuest.eStartType.RewardQuest)
+                                {
+                                    List<ItemTemplate> rewards = null;
+                                    if (index < 8)
+                                        rewards = dq.FinalRewards;
+                                    else
+                                    {
+                                        rewards = dq.OptionalRewards;
+                                        index -= 8;
+                                    }
+                                    if (rewards != null && index >= 0 && index < rewards.Count)
+                                    {
+                                        item = rewards[index];
+                                    }
+                                }
+                            }
+                        }
 
 						if (item == null)
 							return;

@@ -13270,6 +13270,26 @@ namespace DOL.GS
 					}
 				}
 			}
+			
+			// Reward data driven quests for this player 
+            var dqRewardQ = DOLDB<CharacterXRewardQuest>.SelectObjects(DB.Column(nameof(CharacterXRewardQuest.Character_ID)).IsEqualTo(QuestPlayerID));
+            foreach (CharacterXRewardQuest quest in dqRewardQ)
+            {
+                DBRewardQuest dbDQRQ = GameServer.Database.FindObjectByKey<DBRewardQuest>(quest.DataQuestID);
+                if (dbDQRQ != null)
+                {
+                    DQRewardQ dqrq = new DQRewardQ(this, dbDQRQ, quest);
+
+                    if (quest.Step > 0)
+                    {
+                        m_questList.Add((AbstractQuest)dqrq);
+                    }
+                    else if (quest.Count > 0)
+                    {
+                        m_questListFinished.Add((AbstractQuest)dqrq);
+                    }
+                }
+            }
 		}
 
 		/// <summary>

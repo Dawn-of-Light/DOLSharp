@@ -798,6 +798,7 @@ namespace DOL.GS
 			{
 				// for optimization just load these once
 				LoadDataQuests();
+				LoadDQRewardQs();
 				m_isDataQuestsLoaded = true;
 			}
 
@@ -1035,6 +1036,12 @@ namespace DOL.GS
 				q.Notify(GameObjectEvent.Interact, this, new InteractEventArgs(player));
 			}
 
+            foreach (DQRewardQ q in DQRewardQList) 
+            {
+                // Notify all our potential quests of the interaction so we can check for quest offers
+                q.Notify(GameObjectEvent.Interact, this, new InteractEventArgs(player));
+            }
+			
 			return true;
 		}
 
@@ -1232,6 +1239,120 @@ namespace DOL.GS
 		{
 			return GetNPCsInRadius(true, radiusToCheck, false, ignoreZ);
 		}
+
+       // some logic for new DQ reward quest system, needs refactoring
+        /// <summary>
+        /// A cache of every DBDataQuest object
+        /// </summary>
+        protected static ILookup<ushort, DBRewardQuest> m_dqRewardQCache = null;
+
+
+        /// <summary>
+        /// List of DataQuests available for this object
+        /// </summary>
+        protected List<DQRewardQ> m_dqRewardQs = new List<DQRewardQ>();
+
+        /// <summary>
+        /// Flag to prevent loading quests on every respawn
+        /// </summary>
+        protected bool m_isDQRewardQsLoaded = false;
+
+        /// <summary>
+        /// Fill the data quest cache with all DBDataQuest objects
+        /// </summary>
+        public static void FillDQRewardQCache()
+        {
+            if (m_dqRewardQCache != null)
+            {
+                m_dqRewardQCache = null;
+            }
+
+            m_dqRewardQCache = GameServer.Database.SelectAllObjects<DBRewardQuest>()
+                .ToLookup(k => k.StartRegionID);
+        }
+
+        /// <summary>
+        /// Get a preloaded list of all data quests
+        /// </summary>
+        public static IList<DBRewardQuest> DQRewardCache
+        {
+            get { return m_dqRewardQCache.SelectMany(k => k).ToList(); }
+        }
+
+        /// <summary>
+        /// Load any data driven quests for this object
+        /// </summary>
+        public void LoadDQRewardQs(GamePlayer player = null)
+        {
+            if (m_dqRewardQCache == null)
+            {
+                FillDQRewardQCache();
+            }
+
+            m_dqRewardQs.Clear();
+
+            try
+            {
+                foreach (DBRewardQuest quest in m_dqRewardQCache[CurrentRegionID])
+                {
+                    if (quest.StartNPC == Name)
+                    {
+                        DQRewardQ dq = new DQRewardQ(quest, this);
+                        AddDQRewardq(dq);
+
+                        // if a player forced the reload report any errors
+                        if (player != null && dq.LastErrorText != "")
+                        {
+                            ChatUtil.SendErrorMessage(player, dq.LastErrorText);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            try
+            {
+                foreach (DBRewardQuest quest in m_dqRewardQCache[0])
+                {
+                    if (quest.StartNPC == Name)
+                    {
+                        DQRewardQ dq = new DQRewardQ(quest, this);
+                        AddDQRewardq(dq);
+
+                        // if a player forced the reload report any errors
+                        if (player != null && dq.LastErrorText != "")
+                        {
+                            ChatUtil.SendErrorMessage(player, dq.LastErrorText);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        public void AddDQRewardq(DQRewardQ quest)
+        {
+            if (!m_dqRewardQs.Contains(quest))
+                m_dqRewardQs.Add(quest);
+        }
+
+        public void RemoveDQRewardQ(DQRewardQ quest)
+        {
+            if (m_dqRewardQs.Contains(quest))
+                m_dqRewardQs.Remove(quest);
+        }
+
+        /// <summary>
+        /// All the data driven quests for this object
+        /// </summary>
+        public List<DQRewardQ> DQRewardQList
+        {
+            get { return m_dqRewardQs; }
+        }
 
 		/// <summary>
 		/// Gets all npcs close to this object inside a certain radius

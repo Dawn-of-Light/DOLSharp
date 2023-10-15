@@ -262,5 +262,7 @@ namespace DOLGameServerConsole
 		/// both dual weapons hit animation
 		/// </summary>
 		public int BothDualWeaponHit { get { return 0; } }
+		public void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DQRewardQ quest) { }
+        public void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DQRewardQ quest) { }
 	}
 }

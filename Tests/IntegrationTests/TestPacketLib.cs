@@ -938,6 +938,8 @@ namespace DOL.Tests
 		{
 			if (SendBlinkPanelMethod != null) SendBlinkPanelMethod(this, flag);
 		}
+		public void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DQRewardQ quest) { }// patch 0026
+        public void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DQRewardQ quest) { }// patch 0026
 
 		public TestPacketLib()
 		{

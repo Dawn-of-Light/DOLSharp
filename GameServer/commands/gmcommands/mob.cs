@@ -1633,8 +1633,18 @@ namespace DOL.GS.Commands
 					player.Out.SendNPCsQuestEffect(targetMob, targetMob.GetQuestIndicator(player));
 				}
 				client.Out.SendMessage(targetMob.DataQuestList.Count + " Data Quests loaded for this mob.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-			catch (Exception ex)
+
+                // dataquest reward quests
+                GameObject.FillDQRewardQCache();
+                targetMob.LoadDQRewardQs(client.Player);
+                foreach (GamePlayer player in targetMob.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                {
+                    player.Out.SendNPCsQuestEffect(targetMob, targetMob.GetQuestIndicator(player));
+                }
+
+                client.Out.SendMessage(targetMob.DQRewardQList.Count + " DQRewardsQs loaded for this mob.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            catch (Exception ex)
 			{
 				Log.Error("Error refreshing quests.", ex);
 				throw;

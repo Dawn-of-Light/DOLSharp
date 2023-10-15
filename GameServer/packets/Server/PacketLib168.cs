@@ -40,12 +40,17 @@ using log4net;
 using DOL.GS.ServerProperties;
 using DOL.GS.Finance;
 using DOL.GS.Profession;
+using DOL.GS.Behaviour;
 
 namespace DOL.GS.PacketHandler
 {
 	[PacketLib(168, GameClient.eClientVersion.Version168)]
+	
 	public class PacketLib168 : AbstractPacketLib, IPacketLib
 	{
+        private const ushort MAX_STORY_LENGTH = 1000;   // Via trial and error, 1.108 client.
+                                                        // Often will cut off text around 990 but longer strings do not result in any errors. -Tolakram
+														
 		private const int MaxPacketLength = 2048;
 
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -1422,25 +1427,489 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest)
+        /// <summary>
+        /// New item data packet for 1.119
+        /// </summary>		
+        protected virtual void WriteItemData(GSTCPPacketOut pak, InventoryItem item)
+        {
+            if (item == null)
+            {
+                pak.Fill(0x00, 24); // +1 item.Effect changed to short
+                return;
+            }
+            pak.WriteShort((ushort)0); // item uniqueID
+            pak.WriteByte((byte)item.Level);
+
+            int value1; // some object types use this field to display count
+            int value2; // some object types use this field to display count
+            switch (item.Object_Type)
+            {
+                case (int)eObjectType.GenericItem:
+                    value1 = item.Count & 0xFF;
+                    value2 = (item.Count >> 8) & 0xFF;
+                    break;
+                case (int)eObjectType.Arrow:
+                case (int)eObjectType.Bolt:
+                case (int)eObjectType.Poison:
+                    value1 = item.Count;
+                    value2 = item.SPD_ABS;
+                    break;
+                case (int)eObjectType.Thrown:
+                    value1 = item.DPS_AF;
+                    value2 = item.Count;
+                    break;
+                case (int)eObjectType.Instrument:
+                    value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF);
+                    value2 = 0;
+                    break; // unused
+                case (int)eObjectType.Shield:
+                    value1 = item.Type_Damage;
+                    value2 = item.DPS_AF;
+                    break;
+                case (int)eObjectType.AlchemyTincture:
+                case (int)eObjectType.SpellcraftGem:
+                    value1 = 0;
+                    value2 = 0;
+                    /*
+					must contain the quality of gem for spell craft and think same for tincture
+					*/
+                    break;
+                case (int)eObjectType.HouseWallObject:
+                case (int)eObjectType.HouseFloorObject:
+                case (int)eObjectType.GardenObject:
+                    value1 = 0;
+                    value2 = item.SPD_ABS;
+                    /*
+					Value2 byte sets the width, only lower 4 bits 'seem' to be used (so 1-15 only)
+
+					The byte used for "Hand" (IE: Mini-delve showing a weapon as Left-Hand
+					usabe/TwoHanded), the lower 4 bits store the height (1-15 only)
+					*/
+                    break;
+
+                default:
+                    value1 = item.DPS_AF;
+                    value2 = item.SPD_ABS;
+                    break;
+            }
+            pak.WriteByte((byte)value1);
+            pak.WriteByte((byte)value2);
+
+            if (item.Object_Type == (int)eObjectType.GardenObject)
+                pak.WriteByte((byte)(item.DPS_AF));
+            else
+                pak.WriteByte((byte)(item.Hand << 6));
+
+            pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
+            pak.WriteByte(0x00); //unk 1.112
+            pak.WriteShort((ushort)item.Weight);
+            pak.WriteByte(item.ConditionPercent); // % of con
+            pak.WriteByte(item.DurabilityPercent); // % of dur
+            pak.WriteByte((byte)item.Quality); // % of qua
+            pak.WriteByte((byte)item.Bonus); // % bonus
+            pak.WriteByte((byte)item.BonusLevel); // 1.109
+            pak.WriteShort((ushort)item.Model);
+            pak.WriteByte((byte)item.Extension);
+            int flag = 0;
+            int emblem = item.Emblem;
+            int color = item.Color;
+            if (emblem != 0)
+            {
+                pak.WriteShort((ushort)emblem);
+                flag |= (emblem & 0x010000) >> 16; // = 1 for newGuildEmblem
+            }
+            else
+            {
+                pak.WriteShort((ushort)color);
+            }
+            //flag |= 0x01; // newGuildEmblem
+            // Enable craft button if the item can be modified and the player has alchemy or spellcrafting
+            eCraftingSkill skill = CraftingMgr.GetCraftingSkill(item);
+            switch (skill)
+            {
+                case eCraftingSkill.ArmorCrafting:
+                case eCraftingSkill.Fletching:
+                case eCraftingSkill.Tailoring:
+                case eCraftingSkill.WeaponCrafting:
+                    if (m_gameClient.Player.CraftingSkills.ContainsKey(eCraftingSkill.Alchemy)
+                        || m_gameClient.Player.CraftingSkills.ContainsKey(eCraftingSkill.SpellCrafting))
+                        flag |= 0x04; // enable craft button
+                    break;
+
+                default:
+                    break;
+            }
+
+            ushort icon1 = 0;
+            ushort icon2 = 0;
+            string spell_name1 = "";
+            string spell_name2 = "";
+            if (item.Object_Type != (int)eObjectType.AlchemyTincture)
+            {
+                if (item.SpellID > 0/* && item.Charges > 0*/)
+                {
+                    SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+                    if (chargeEffectsLine != null)
+                    {
+                        List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+                        foreach (Spell spl in spells)
+                        {
+                            if (spl.ID == item.SpellID)
+                            {
+                                flag |= 0x08;
+                                icon1 = spl.Icon;
+                                spell_name1 = spl.Name; // or best spl.Name ?
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (item.SpellID1 > 0/* && item.Charges > 0*/)
+                {
+                    SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+                    if (chargeEffectsLine != null)
+                    {
+                        List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+                        foreach (Spell spl in spells)
+                        {
+                            if (spl.ID == item.SpellID1)
+                            {
+                                flag |= 0x10;
+                                icon2 = spl.Icon;
+                                spell_name2 = spl.Name; // or best spl.Name ?
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            pak.WriteByte((byte)flag);
+            if ((flag & 0x08) == 0x08)
+            {
+                pak.WriteShort((ushort)icon1);
+                pak.WritePascalString(spell_name1);
+            }
+            if ((flag & 0x10) == 0x10)
+            {
+                pak.WriteShort((ushort)icon2);
+                pak.WritePascalString(spell_name2);
+            }
+            pak.WriteShort((ushort)item.Effect); // item effect changed to short
+            string name = item.Name;
+            if (item.Count > 1)
+                name = item.Count + " " + name;
+            if (item.SellPrice > 0)
+            {
+                if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
+                    name += "[" + item.SellPrice.ToString() + " BP]";
+                else
+                    name += "[" + Money.GetString(item.SellPrice) + "]";
+            }
+            if (name == null) name = "";
+            if (name.Length > 55)
+                name = name.Substring(0, 55);
+            pak.WritePascalString(name);
+        }
+
+        protected virtual void SendQuestWindow(GameNPC questNPC, GamePlayer player, DQRewardQ quest, bool offer) // patch 0026
+        {
+            using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog)))
+            {
+                ushort QuestID = quest.ClientQuestID;
+                pak.WriteShort((offer) ? (byte)0x22 : (byte)0x21); // Dialog
+                pak.WriteShort(QuestID);
+                pak.WriteShort((ushort)questNPC.ObjectID);
+                pak.WriteByte(0x00); // unknown
+                pak.WriteByte(0x00); // unknown
+                pak.WriteByte(0x00); // unknown
+                pak.WriteByte(0x00); // unknown
+                pak.WriteByte((offer) ? (byte)0x02 : (byte)0x01); // Accept/Decline or Finish/Not Yet
+                pak.WriteByte(0x01); // Wrap
+                pak.WritePascalString(quest.Name);
+
+				String personalizedSummary = BehaviourUtils.GetPersonalizedMessage(quest.Description, player);
+                if (personalizedSummary.Length > 255)
+                {
+                    pak.WritePascalString(personalizedSummary.Substring(0, 255)); // Summary is max 255 bytes or client will crash !
+                }
+                else
+                {
+                    pak.WritePascalString(personalizedSummary);
+                }
+
+                if (offer)
+                {
+					String personalizedStory = BehaviourUtils.GetPersonalizedMessage(quest.Story, player);
+
+                    if (personalizedStory.Length > MAX_STORY_LENGTH)
+                    {
+                        pak.WriteShort(MAX_STORY_LENGTH);
+                        pak.WriteStringBytes(personalizedStory.Substring(0, MAX_STORY_LENGTH));
+                    }
+                    else
+                    {
+                        pak.WriteShort((ushort)personalizedStory.Length);
+                        pak.WriteStringBytes(personalizedStory);
+                    }
+                }
+                else
+                {
+                    if (quest.FinishText.Length > MAX_STORY_LENGTH)
+                    {
+                        pak.WriteShort(MAX_STORY_LENGTH);
+                        pak.WriteStringBytes(quest.FinishText.Substring(0, MAX_STORY_LENGTH));
+                    }
+                    else
+                    {
+                        pak.WriteShort((ushort)quest.FinishText.Length);
+                        pak.WriteStringBytes(quest.FinishText);
+                    }
+                }
+
+                pak.WriteShort(QuestID);
+                pak.WriteByte((byte)quest.Goals.Count); // #goals count
+                foreach (DQRQuestGoal goal in quest.Goals)
+                {
+                    pak.WritePascalString(String.Format("{0}\r", goal.Description));
+                }
+                pak.WriteInt((uint)(quest.RewardMoney));
+                pak.WriteByte((byte)quest.ExperiencePercent(player));
+                pak.WriteByte((byte)quest.FinalRewards.Count);
+                int rewardLoc = 0;
+                int optionalRewardLoc = 7;
+                foreach (ItemTemplate reward in quest.FinalRewards)
+                {
+                    WriteItemData(pak, GameInventoryItem.Create(reward), (quest.ID * 16 + rewardLoc));
+                    ++rewardLoc;
+                }
+                pak.WriteByte((byte)quest.NumOptionalRewardsChoice);
+                pak.WriteByte((byte)quest.OptionalRewards.Count);
+                foreach (ItemTemplate reward in quest.OptionalRewards)
+                {
+                    ++optionalRewardLoc;
+                    WriteItemData(pak, GameInventoryItem.Create(reward), (quest.ID * 16 + optionalRewardLoc));
+                }
+                SendTCP(pak);
+            }
+        }
+
+        /// <summary>
+        /// patch 0020
+        /// </summary>       
+        protected virtual void WriteItemData(GSTCPPacketOut pak, InventoryItem item, int questID)
+        {
+            if (item == null)
+            {
+                pak.Fill(0x00, 24); //item.Effect changed to short 1.119
+                return;
+            }
+
+            pak.WriteShort((ushort)questID); // need to send an objectID for reward quest delve to work 1.115+
+            pak.WriteByte((byte)item.Level);
+
+            int value1; // some object types use this field to display count
+            int value2; // some object types use this field to display count
+            switch (item.Object_Type)
+            {
+                case (int)eObjectType.GenericItem:
+                    value1 = item.Count & 0xFF;
+                    value2 = (item.Count >> 8) & 0xFF;
+                    break;
+                case (int)eObjectType.Arrow:
+                case (int)eObjectType.Bolt:
+                case (int)eObjectType.Poison:
+                    value1 = item.Count;
+                    value2 = item.SPD_ABS;
+                    break;
+                case (int)eObjectType.Thrown:
+                    value1 = item.DPS_AF;
+                    value2 = item.Count;
+                    break;
+                case (int)eObjectType.Instrument:
+                    value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF);
+                    value2 = 0;
+                    break; // unused
+                case (int)eObjectType.Shield:
+                    value1 = item.Type_Damage;
+                    value2 = item.DPS_AF;
+                    break;
+                case (int)eObjectType.AlchemyTincture:
+                case (int)eObjectType.SpellcraftGem:
+                    value1 = 0;
+                    value2 = 0;
+                    /*
+					must contain the quality of gem for spell craft and think same for tincture
+					*/
+                    break;
+                case (int)eObjectType.HouseWallObject:
+                case (int)eObjectType.HouseFloorObject:
+                case (int)eObjectType.GardenObject:
+                    value1 = 0;
+                    value2 = item.SPD_ABS;
+                    /*
+					Value2 byte sets the width, only lower 4 bits 'seem' to be used (so 1-15 only)
+
+					The byte used for "Hand" (IE: Mini-delve showing a weapon as Left-Hand
+					usabe/TwoHanded), the lower 4 bits store the height (1-15 only)
+					*/
+                    break;
+
+                default:
+                    value1 = item.DPS_AF;
+                    value2 = item.SPD_ABS;
+                    break;
+            }
+            pak.WriteByte((byte)value1);
+            pak.WriteByte((byte)value2);
+
+            if (item.Object_Type == (int)eObjectType.GardenObject)
+                pak.WriteByte((byte)(item.DPS_AF));
+            else
+                pak.WriteByte((byte)(item.Hand << 6));
+
+            pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
+            pak.WriteByte(0x00); //unk 1.112
+            pak.WriteShort((ushort)item.Weight);
+            pak.WriteByte(item.ConditionPercent); // % of con
+            pak.WriteByte(item.DurabilityPercent); // % of dur
+            pak.WriteByte((byte)item.Quality); // % of qua
+            pak.WriteByte((byte)item.Bonus); // % bonus
+            pak.WriteByte((byte)item.BonusLevel); // 1.109
+            pak.WriteShort((ushort)item.Model);
+            pak.WriteByte((byte)item.Extension);
+            int flag = 0;
+            int emblem = item.Emblem;
+            int color = item.Color;
+            if (emblem != 0)
+            {
+                pak.WriteShort((ushort)emblem);
+                flag |= (emblem & 0x010000) >> 16; // = 1 for newGuildEmblem
+            }
+            else
+            {
+                pak.WriteShort((ushort)color);
+            }
+            //flag |= 0x01; // newGuildEmblem
+            // Enable craft button if the item can be modified and the player has alchemy or spellcrafting
+            eCraftingSkill skill = CraftingMgr.GetCraftingSkill(item);
+            switch (skill)
+            {
+                case eCraftingSkill.ArmorCrafting:
+                case eCraftingSkill.Fletching:
+                case eCraftingSkill.Tailoring:
+                case eCraftingSkill.WeaponCrafting:
+                    if (m_gameClient.Player.CraftingSkills.ContainsKey(eCraftingSkill.Alchemy)
+                        || m_gameClient.Player.CraftingSkills.ContainsKey(eCraftingSkill.SpellCrafting))
+                        flag |= 0x04; // enable craft button
+                    break;
+
+                default:
+                    break;
+            }
+
+            ushort icon1 = 0;
+            ushort icon2 = 0;
+            string spell_name1 = "";
+            string spell_name2 = "";
+            if (item.Object_Type != (int)eObjectType.AlchemyTincture)
+            {
+                if (item.SpellID > 0/* && item.Charges > 0*/)
+                {
+                    SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+                    if (chargeEffectsLine != null)
+                    {
+                        List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+                        foreach (Spell spl in spells)
+                        {
+                            if (spl.ID == item.SpellID)
+                            {
+                                flag |= 0x08;
+                                icon1 = spl.Icon;
+                                spell_name1 = spl.Name; // or best spl.Name ?
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (item.SpellID1 > 0/* && item.Charges > 0*/)
+                {
+                    SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+                    if (chargeEffectsLine != null)
+                    {
+                        List<Spell> spells = SkillBase.GetSpellList(chargeEffectsLine.KeyName);
+                        foreach (Spell spl in spells)
+                        {
+                            if (spl.ID == item.SpellID1)
+                            {
+                                flag |= 0x10;
+                                icon2 = spl.Icon;
+                                spell_name2 = spl.Name; // or best spl.Name ?
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            pak.WriteByte((byte)flag);
+            if ((flag & 0x08) == 0x08)
+            {
+                pak.WriteShort((ushort)icon1);
+                pak.WritePascalString(spell_name1);
+            }
+            if ((flag & 0x10) == 0x10)
+            {
+                pak.WriteShort((ushort)icon2);
+                pak.WritePascalString(spell_name2);
+            }
+            pak.WriteShort((ushort)item.Effect); // changed to short 1.119
+            string name = item.Name;
+            if (item.Count > 1)
+                name = item.Count + " " + name;
+            if (item.SellPrice > 0)
+            {
+                if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
+                    name += "[" + item.SellPrice.ToString() + " BP]";
+                else
+                    name += "[" + Money.GetString(item.SellPrice) + "]";
+            }
+            if (name == null) name = "";
+            if (name.Length > 55)
+                name = name.Substring(0, 55);
+            pak.WritePascalString(name);
+        }
+
+        public virtual void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest)
 		{
-		}
+            SendQuestWindow(questNPC, player, quest, true);
+        }
 
 		public virtual void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest)
 		{
-		}
-
+            SendQuestWindow(questNPC, player, quest, false);
+        }
 		public virtual void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DataQuest quest)
 		{
-		}
+            SendQuestWindow(questNPC, player, quest, true);
+        }
 
 		public virtual void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DataQuest quest)
 		{
-		}
+            SendQuestWindow(questNPC, player, quest, false);
+        }
+		
+		public virtual void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DQRewardQ quest)
+        {
+            SendQuestWindow(questNPC, player, quest, false);
+        }
 
+        public virtual void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DQRewardQ quest)
+        {
+            SendQuestWindow(questNPC, player, quest, true);
+        }
 		protected virtual void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest, bool offer)
 		{
-		}
+            SendQuestWindow(questNPC, player, quest, offer);
+        }
 
 		protected virtual void SendQuestWindow(GameNPC questNPC, GamePlayer player, DataQuest quest, bool offer)
 		{
