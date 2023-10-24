@@ -164,6 +164,7 @@ namespace DOLGameServerConsole
 		public void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount) { }
 		public void SendLevelUpSound() { }
 		public void SendRegionEnterSound(byte soundId) { }
+        public void SendSoundEffect(ushort soundId, Position position, ushort radius) { }
 		public void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius) { }
 		public void SendDebugMessage(string format, params object[] parameters) { }
 		public void SendDebugPopupMessage(string format, params object[] parameters) { }

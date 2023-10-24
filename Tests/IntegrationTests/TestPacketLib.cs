@@ -696,6 +696,7 @@ namespace DOL.Tests
 		{
 			if (SendLivingDataUpdateMethod != null) SendLivingDataUpdateMethod(this, living, updateStrings);
 		}
+        public void SendSoundEffect(ushort soundId, Position position, ushort radius) { }
 		public Action<TestPacketLib, ushort, ushort, ushort, ushort, ushort, ushort> SendSoundEffectMethod { get; set; }
 		public void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius)
 		{

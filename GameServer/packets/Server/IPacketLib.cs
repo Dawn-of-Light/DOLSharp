@@ -765,6 +765,8 @@ namespace DOL.GS.PacketHandler
 		void SendSiegeWeaponCloseInterface();
 		void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon, int time);
 		void SendLivingDataUpdate(GameLiving living, bool updateStrings);
+        void SendSoundEffect(ushort soundId, Position position, ushort radius);
+        [Obsolete("Use .SendSoundEffect(ushort,Position,ushort) instead!")]
 		void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius);
 		//keep
 		void SendKeepInfo(IGameKeep keep);

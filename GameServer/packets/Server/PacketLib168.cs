@@ -4153,6 +4153,18 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
+        public virtual void SendSoundEffect(ushort soundId, Position pos, ushort radius)
+        {
+            var region = WorldMgr.GetRegion(pos.RegionID);
+            if(region == null) return;
+
+            var zone = region.GetZone(pos.Coordinate);
+            if(zone == null) return;
+
+            var zoneCoord = pos - zone.Offset;
+            SendSoundEffect(soundId, zone.ID, (ushort)zoneCoord.X, (ushort)zoneCoord.Y, (ushort)zoneCoord.Z, radius);
+        }
+
 		public virtual void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SoundEffect)))
