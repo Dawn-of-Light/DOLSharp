@@ -245,7 +245,7 @@ namespace DOL.GS.Housing
 		{
 			get
 			{
-				foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(RegionID, Position.Coordinate.With(z: 25000), WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Position.With(z: 25000), WorldMgr.VISIBILITY_DISTANCE))
 				{
 					if (player.CurrentHouse == this && player.InHouse)
 					{
@@ -345,7 +345,7 @@ namespace DOL.GS.Housing
 		/// </summary>
 		public void SendUpdate()
 		{
-			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Position.RegionID, Position.Coordinate, HousingConstants.HouseViewingDistance))
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Position, HousingConstants.HouseViewingDistance))
 			{
 				player.Out.SendHouse(this);
 				player.Out.SendGarden(this);
@@ -366,7 +366,7 @@ namespace DOL.GS.Housing
 			IList<GamePlayer> list = GetAllPlayersInHouse();
 			if (list.Count == 0)
 			{
-				foreach (GamePlayer pl in WorldMgr.GetPlayersCloseToSpot(Position.RegionID, Position.Coordinate, HousingConstants.HouseViewingDistance))
+				foreach (GamePlayer pl in WorldMgr.GetPlayersCloseToSpot(Position, HousingConstants.HouseViewingDistance))
 				{
 					pl.Out.SendHouseOccupied(this, true);
 				}
@@ -457,7 +457,7 @@ namespace DOL.GS.Housing
 			IList<GamePlayer> list = GetAllPlayersInHouse();
 			if (list.Count == 0)
 			{
-				foreach (GamePlayer pl in WorldMgr.GetPlayersCloseToSpot(Position.RegionID, Position.Coordinate, HousingConstants.HouseViewingDistance))
+				foreach (GamePlayer pl in WorldMgr.GetPlayersCloseToSpot(Position, HousingConstants.HouseViewingDistance))
 				{
 					pl.Out.SendHouseOccupied(this, false);
 				}
@@ -565,7 +565,7 @@ namespace DOL.GS.Housing
 		public IList<GamePlayer> GetAllPlayersInHouse()
 		{
 			var ret = new List<GamePlayer>();
-			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(RegionID, Position.Coordinate.With(z: 25000), WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Position.With(z: 25000), WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if (player.CurrentHouse == this && player.InHouse)
 				{

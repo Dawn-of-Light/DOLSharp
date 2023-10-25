@@ -307,13 +307,13 @@ namespace DOL.GS.Spells
 			if ((effect.Owner is GamePlayer))
 			{
 				GamePlayer casterPlayer = effect.Owner as GamePlayer;
-				if (casterPlayer.GroundTargetLocation != Coordinate.Nowhere && casterPlayer.GroundTargetInView)
+				if (casterPlayer.GroundTargetPosition != Position.Nowhere && casterPlayer.GroundTargetInView)
 				{
 					GameEventMgr.AddHandler(casterPlayer, GamePlayerEvent.Moving, new DOLEventHandler(PlayerMoves));
 					GameEventMgr.AddHandler(warder, GameLivingEvent.Dying, new DOLEventHandler(BattleWarderDie));
 					GameEventMgr.AddHandler(casterPlayer, GamePlayerEvent.CastStarting, new DOLEventHandler(PlayerMoves));
 					GameEventMgr.AddHandler(casterPlayer, GamePlayerEvent.AttackFinished, new DOLEventHandler(PlayerMoves));
-					warder.Position = casterPlayer.Position.With(coordinate: casterPlayer.GroundTargetLocation);
+					warder.Position = casterPlayer.GroundTargetPosition;
 					warder.AddBrain(new MLBrain());
 					warder.AddToWorld();
 				}
@@ -372,7 +372,7 @@ namespace DOL.GS.Spells
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (!base.CheckBeginCast(selectedTarget)) return false;
-			if (!(m_caster.GroundTargetLocation != Coordinate.Nowhere && m_caster.GroundTargetInView))
+			if (!(m_caster.GroundTargetPosition != Position.Nowhere && m_caster.GroundTargetInView))
 			{
 				MessageToCaster("Your area target is out of range.  Set a closer ground position.", eChatType.CT_SpellResisted);
 				return false;
@@ -616,7 +616,7 @@ namespace DOL.GS.Spells
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private Coordinate location = Coordinate.Nowhere;
+        private Position position = Position.Nowhere;
 		GameNPC summoned = null;
 		RegionTimer m_growTimer;
 		private const int C_GROWTIMER = 2000;
@@ -668,9 +668,9 @@ namespace DOL.GS.Spells
 			summoned.SetOwnBrain(controlledBrain);
 			//Suncheck:
 			//	Is needed, else it can cause error (i.e. /cast-command)
-			if (location == Coordinate.Nowhere) CheckCastLocation();
+			if (position == Position.Nowhere) CheckCastLocation();
 
-            summoned.Position = player.Position.With(coordinate: location).TurnedAround();
+            summoned.Position = position.With(orientation: Caster.Orientation + Angle.Degrees(180));
 			summoned.Realm = player.Realm;
 			summoned.CurrentSpeed = 0;
 			summoned.Size = 10;
@@ -701,16 +701,16 @@ namespace DOL.GS.Spells
 		
 		private bool CheckCastLocation()
 		{
-            location = Caster.Location;
+            position = Caster.Position;
 			if (Spell.Target.ToLower() == "area")
 			{
-				if (Caster.GroundTargetInView && Caster.GroundTargetLocation != Coordinate.Nowhere)
+				if (Caster.GroundTargetInView && Caster.GroundTargetPosition != Position.Nowhere)
 				{
-                    location = Caster.GroundTargetLocation;
+                    position = Caster.GroundTargetPosition;
 				}
 				else
 				{
-					if (Caster.GroundTargetLocation == Coordinate.Nowhere)
+					if (Caster.GroundTargetPosition == Position.Nowhere)
 					{
 						MessageToCaster("You must set a groundtarget!", eChatType.CT_SpellResisted);
 						return false;

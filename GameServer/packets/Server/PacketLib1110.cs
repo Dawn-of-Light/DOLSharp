@@ -188,8 +188,8 @@ namespace DOL.GS.PacketHandler
 				return;
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
 			{
-                var targetLocation = siegeWeapon.TargetObject.Location;
-                if(targetLocation == Coordinate.Nowhere) targetLocation = siegeWeapon.GroundTargetLocation;
+                var targetLocation = siegeWeapon.TargetObject.Position;
+                if(targetLocation == Position.Nowhere) targetLocation = siegeWeapon.GroundTargetPosition;
 				pak.WriteInt((uint) siegeWeapon.ObjectID);
 				pak.WriteInt((uint) (targetLocation.X));
 				pak.WriteInt((uint) (targetLocation.Y));

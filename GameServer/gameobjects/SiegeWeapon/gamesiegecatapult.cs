@@ -66,14 +66,14 @@ namespace DOL.GS
 		{
 			ArrayList list = new ArrayList(20);
 
-			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(this.CurrentRegionID, GroundTargetLocation, (ushort)150))
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(GroundTargetPosition, (ushort)150))
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(Owner, player, true))
 				{
 					list.Add(player);
 				}
 			}
-			foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(this.CurrentRegionID, GroundTargetLocation, (ushort)150))
+			foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(GroundTargetPosition, (ushort)150))
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(Owner, npc, true))
 				{
@@ -94,7 +94,7 @@ namespace DOL.GS
 			//todo remove ammo + spell in db and uncomment
 			//m_spellHandler.StartSpell(player);
 			base.DoDamage();//anim mut be called after damage
-			if (GroundTargetLocation == Coordinate.Nowhere) return;
+			if (GroundTargetPosition == Position.Nowhere) return;
 			IList targets = SelectTargets();
 
 			foreach (GameLiving living in targets)

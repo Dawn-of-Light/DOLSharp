@@ -43,7 +43,7 @@ namespace DOL.GS
 			Effect = 0x8A1;
 			Model = 0xA2F;
 			CurrentState = eState.Aimed;
-			GroundTargetLocation = Location - Vector.Create(z: 100);
+			GroundTargetPosition = Position - Vector.Create(z: 100);
 			ActionDelay = new int[]
                 {
                     0, //none
@@ -56,7 +56,7 @@ namespace DOL.GS
 
 		public override bool AddToWorld()
 		{
-			GroundTargetLocation = Location.With(z: Component.Keep.Z);
+			GroundTargetPosition = Position.With(z: Component.Keep.Z);
 			return base.AddToWorld();
 		}
 

@@ -29,7 +29,7 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-            if ( caster.GroundTargetLocation == Coordinate.Nowhere || caster.Location.DistanceTo(caster.GroundTargetLocation) > 1500)
+            if ( caster.GroundTargetPosition == Position.Nowhere || caster.Location.DistanceTo(caster.GroundTargetPosition) > 1500)
             {
 				caster.Out.SendMessage("You groundtarget is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -105,7 +105,7 @@ namespace DOL.GS.RealmAbilities
             if (!castWasSuccess)
                 return 0;
 			Statics.NegativeMaelstromBase nm = new Statics.NegativeMaelstromBase(dmgValue);
-			nm.CreateStatic(player, player.GroundTargetLocation, duration, 5, 350);
+			nm.CreateStatic(player, player.GroundTargetPosition.Coordinate, duration, 5, 350);
             DisableSkill(player); 
 			timer.Stop();
 			timer = null;

@@ -5674,13 +5674,13 @@ namespace DOL.GS
 
         [Obsolete("Use GroundTargetLocation instead!")]
         public virtual Point3D GroundTarget
-            => GroundTargetLocation.ToPoint3D();
+            => GroundTargetPosition.Coordinate.ToPoint3D();
 
         [Obsolete("Use GroundTargetLocation_set instead!")]
         public virtual void SetGroundTarget(int groundX, int groundY, int groundZ)
-            => GroundTargetLocation = Coordinate.Create(groundX, groundY, groundZ);
+            => GroundTargetPosition = Position.Create(Position.RegionID, groundX, groundY, groundZ);
 
-        public virtual Coordinate GroundTargetLocation { get; set; } = Coordinate.Nowhere;
+        public virtual Position GroundTargetPosition { get; set; } = Position.Nowhere;
 
 		/// <summary>
 		/// Gets or Sets the current level of the Object

@@ -59,9 +59,9 @@ namespace DOL.GS.RealmAbilities
 				}
 			}
 
-			if (living.GroundTargetLocation == Coordinate.Nowhere)
+			if (living.GroundTargetPosition == Position.Nowhere)
 				return;
-			if (living.Location.DistanceTo(living.GroundTargetLocation) > 1500 )
+			if (living.Location.DistanceTo(living.GroundTargetPosition) > 1500 )
 				return;
 			GamePlayer player = living as GamePlayer;
 			if (player == null)
@@ -136,14 +136,14 @@ namespace DOL.GS.RealmAbilities
 
 		private void getTargets()
 		{
-			foreach (GamePlayer target in WorldMgr.GetPlayersCloseToSpot(region, Coordinate.Create(traparea.X, traparea.Y, traparea.Z), 350))
+			foreach (GamePlayer target in WorldMgr.GetPlayersCloseToSpot(Position.Create(region, traparea.X, traparea.Y, traparea.Z), 350))
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(owner, target, true))
 				{
 					DamageTarget(target);
 				}
 			}
-			foreach (GameNPC target in WorldMgr.GetNPCsCloseToSpot(region, Coordinate.Create(traparea.X, traparea.Y, traparea.Z), 350))
+			foreach (GameNPC target in WorldMgr.GetNPCsCloseToSpot(Position.Create(region, traparea.X, traparea.Y, traparea.Z), 350))
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(owner, target, true))
 				{

@@ -10853,13 +10853,13 @@ namespace DOL.GS
 			UpdatePlayerStatus();
 		}
 
-        public override Coordinate GroundTargetLocation
+        public override Position GroundTargetPosition
         {
             set
             {
-                base.GroundTargetLocation = value;
+                base.GroundTargetPosition = value;
                 Out.SendMessage(String.Format("You ground-target {0},{1},{2}", value.X, value.Y, value.Z), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                if (SiegeWeapon != null) SiegeWeapon.GroundTargetLocation = value;
+                if (SiegeWeapon != null) SiegeWeapon.GroundTargetPosition = value;
             }
         }
 

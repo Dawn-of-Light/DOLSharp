@@ -72,7 +72,7 @@ namespace DOL.GS.Commands
 				#region Jump to GT
 				if (args.Length == 3 && args[1].ToLower() == "to" && args[2].ToLower() == "gt")
 				{
-					client.Player.MoveTo(Position.Create(client.Player.CurrentRegionID, client.Player.GroundTargetLocation, client.Player.Orientation));
+					client.Player.MoveTo(client.Player.GroundTargetPosition.With(orientation: client.Player.Orientation));
 					return;
 				}
 				#endregion Jump to GT

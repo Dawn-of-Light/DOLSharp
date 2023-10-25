@@ -34,9 +34,9 @@ namespace DOL.GS.Commands
 			if (IsSpammingCommand(client.Player, "gtrange"))
 				return;
 
-			if (client.Player.GroundTargetLocation != Coordinate.Nowhere)
+			if (client.Player.GroundTargetPosition != Position.Nowhere)
 			{
-                var range = (int)client.Player.Location.DistanceTo(client.Player.GroundTargetLocation);
+                var range = (int)client.Player.Location.DistanceTo(client.Player.GroundTargetPosition);
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Gtrange.Range", range), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else

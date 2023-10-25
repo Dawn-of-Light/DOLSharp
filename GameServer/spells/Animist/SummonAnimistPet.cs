@@ -30,7 +30,7 @@ namespace DOL.GS.Spells
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (Caster.GroundTargetLocation == Coordinate.Nowhere)
+			if (Caster.GroundTargetPosition == Position.Nowhere)
 			{
                 if (Caster is GamePlayer)
                     MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNull"), eChatType.CT_SpellResisted);
@@ -44,7 +44,7 @@ namespace DOL.GS.Spells
                 return false;
 			}
 
-			if (Caster.Location.DistanceTo(Caster.GroundTargetLocation) > CalculateSpellRange())
+			if (Caster.Location.DistanceTo(Caster.GroundTargetPosition) > CalculateSpellRange())
 			{
                 if (Caster is GamePlayer)
                     MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange"), eChatType.CT_SpellResisted);
@@ -55,7 +55,7 @@ namespace DOL.GS.Spells
 		}
 		public override void FinishSpellCast(GameLiving target)
 		{
-			if (Caster.GroundTargetLocation == Coordinate.Nowhere)
+			if (Caster.GroundTargetPosition == Position.Nowhere)
 			{
                 if (Caster is GamePlayer)
                     MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNull"), eChatType.CT_SpellResisted);
@@ -76,7 +76,7 @@ namespace DOL.GS.Spells
 				return;
 			}
 
-			if (Caster.Location.DistanceTo(Caster.GroundTargetLocation) > CalculateSpellRange())
+			if (Caster.Location.DistanceTo(Caster.GroundTargetPosition) > CalculateSpellRange())
 			{
                 if (Caster is GamePlayer)
                     MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange"), eChatType.CT_SpellResisted);
@@ -113,7 +113,7 @@ namespace DOL.GS.Spells
 		}
 
 		protected override Position GetSummonPosition()
-            => Caster.Position.With(coordinate: Caster.GroundTargetLocation);
+            => Caster.GroundTargetPosition;
 
 		public override void CastSubSpells(GameLiving target) { }
 	}

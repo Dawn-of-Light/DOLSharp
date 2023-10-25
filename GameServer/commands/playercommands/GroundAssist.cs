@@ -65,13 +65,13 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			if (target.GroundTargetLocation == Coordinate.Nowhere)
+			if (target.GroundTargetPosition == Position.Nowhere)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Groundassist.NoTarget", target.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			client.Player.Out.SendChangeGroundTarget(target.GroundTargetLocation);
-			client.Player.GroundTargetLocation = target.GroundTargetLocation;
+			client.Player.Out.SendChangeGroundTarget(target.GroundTargetPosition.Coordinate);
+			client.Player.GroundTargetPosition = target.GroundTargetPosition;
 		}
 	}
 }
