@@ -1380,6 +1380,10 @@ namespace DOL.GS
             }
         }
 
+        [Obsolete("Use .GetAreasOfSpot(Coordinate) instead!")]
+        public IList<IArea> GetAreasOfSpot(int x, int y, int z)
+            => GetAreasOfSpot(Coordinate.Create(x, y, z));
+
         public IList<IArea> GetAreasOfSpot(Coordinate location)
         {
             var zone = GetZone(location);
@@ -1447,6 +1451,10 @@ namespace DOL.GS
         #region Object in Radius (Added by Konik & WitchKing)
 
         #region New Get in radius
+        [Obsolete("Use .GetInRadius(eGameObjectType,Coordinate,ushort,bool,bool) instead!)")]
+        protected IEnumerable GetInRadius(Zone.eGameObjectType type, int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
+            => GetInRadius(type, Coordinate.Create(x, y, z), radius, withDistance, ignoreZ);
+
         protected IEnumerable GetInRadius(Zone.eGameObjectType type, Coordinate center, ushort radius, bool withDistance, bool ignoreZ)
         {
             // check if we are around borders of a zone
@@ -1538,6 +1546,22 @@ namespace DOL.GS
 
             return (distance <= squareRadius);
         }
+
+        [Obsolete("Use .GetItemsInRadius(Coordinate,ushort,bool) instead!")]
+        public IEnumerable GetItemsInRadius(int x, int y, int z, ushort radius, bool withDistance)
+            => GetItemsInRadius(Coordinate.Create(x,y,z), radius, withDistance);
+
+        [Obsolete("Use .GetNPCsInRadius(Coordinate,ushort,bool,bool) instead!")]
+        public IEnumerable GetNPCsInRadius(int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
+            => GetNPCsInRadius(Coordinate.Create(x,y,z), radius, withDistance, ignoreZ);
+
+        [Obsolete("Use .GetPlayersInRadius(Coordinate,ushort,bool,bool) instead!")]
+        public IEnumerable GetPlayersInRadius(int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
+            => GetPlayersInRadius(Coordinate.Create(x,y,z), radius, withDistance, ignoreZ);
+
+        [Obsolete("Use .GetDoorsInRadius(Coordinate,ushort,bool) instead!")]
+        public IEnumerable GetDoorsInRadius(int x, int y, int z, ushort radius, bool withDistance)
+            => GetDoorsInRadius(Coordinate.Create(x,y,z), radius, withDistance);
 
         public IEnumerable GetItemsInRadius(Coordinate center, ushort radius, bool withDistance)
             => GetInRadius(Zone.eGameObjectType.ITEM, center, radius, withDistance, false);

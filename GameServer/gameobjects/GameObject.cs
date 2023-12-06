@@ -219,15 +219,11 @@ namespace DOL.GS
         public Angle GetAngleTo(Coordinate coordinate)
             => Location.GetOrientationTo(coordinate) - Orientation;
 
-        public int GetDistanceTo(GameObject obj)
-        {
-            if (this.CurrentRegionID != obj.CurrentRegionID) return int.MaxValue;
-
-            return (int)Location.DistanceTo(obj.Location);
-        }
+        public int GetDistanceTo(GameObject obj, double zfactor = 1)
+            => GetDistanceTo(obj.Position, zfactor);
 
         [Obsolete("Use .GetDistanceTo(Position,double) instead!")]
-        public virtual int GetDistanceTo(IPoint3D point, double zfactor)
+        public virtual int GetDistanceTo(IPoint3D point, double zfactor = 1)
         {
             var obj = point as GameObject;
             var regionID = Position.RegionID;
@@ -1639,5 +1635,28 @@ namespace DOL.GS
 			else
 				return m_boat_ownerid;
 		}
-	}
+
+        [Obsolete("Use .Position.Coordinate.GetOrientationTo(Coordinate).InHeading instead!")]
+        public ushort GetHeading(Point2D p)
+        {
+            return Position.Coordinate.GetOrientationTo(Coordinate.Create(p.X, p.Y)).InHeading;
+        }
+
+        [Obsolete("Use .Location.DistanceTo(Coordinate) instead!")]
+        public bool IsWithinRadius(Point3D p, int radius, bool ignoreZ = false)
+        {
+            return Location.DistanceTo(Coordinate.Create(p.X, p.Y, p.Z)) <= radius;
+        }
+
+        [Obsolete("Use Vector addition instead!")]
+        public Point2D GetPointFromHeading(ushort heading, int distance)
+        {
+            return (Location + Vector.Create(Angle.Heading(heading), distance)).ToPoint3D();
+        }
+
+        public int GetDistance(GameObject obj2, double zFactor = 1)
+        {
+            return GetDistanceTo(obj2.Position, zFactor);
+        }
+    }
 }
