@@ -89,7 +89,8 @@ namespace DOL.GS.Keeps
         public static void LoadKeepItemPosition(DBKeepPosition pos, IKeepItem item)
         {
             var keepPositionOffset = Vector.Create(pos.XOff, -pos.YOff, pos.ZOff).RotatedClockwise(item.Component.Orientation);
-            item.Position = (item.Component.Position + keepPositionOffset).With(item.Component.Orientation);
+            var orientation = item.Component.Orientation + Angle.Heading(pos.HOff);
+            item.Position = (item.Component.Position + keepPositionOffset).With(orientation);
             item.DbKeepPosition = pos;
         }
 
