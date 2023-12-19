@@ -313,7 +313,7 @@ namespace DOL.GS.PacketHandler.Client.v168
             {
 				client.Player.TempProperties.setProperty(LASTMOVEMENTTICK, client.Player.CurrentRegion.Time);
             }
-            client.Player.Position = Position.Create(newZone.ZoneRegion.ID, coordinate: newLocation, heading: (ushort)(headingflag & 0xFFF));
+            client.Player.Position = Position.Create(client.Player.Position.RegionID, coordinate: newLocation, heading: (ushort)(headingflag & 0xFFF));
 
 			// update client zone information for waterlevel and diving
 			if (zoneChange)
