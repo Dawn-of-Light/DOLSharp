@@ -1409,8 +1409,8 @@ namespace DOL.GS
 			else if (m_attackers.Count == 0 && this.Spells.Count > 0 && this.TargetObject != null && GameServer.ServerRules.IsAllowedToAttack(this, (this.TargetObject as GameLiving), true))
 			{
 				if (TargetObject.Realm == 0 || Realm == 0)
-					m_lastAttackTickPvE = m_CurrentRegion.Time;
-				else m_lastAttackTickPvP = m_CurrentRegion.Time;
+					m_lastAttackTickPvE = CurrentRegion.Time;
+				else m_lastAttackTickPvP = CurrentRegion.Time;
 				if (this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
 				{
 					// Aredhel: Erm, checking for spells in a follow method, what did we create
@@ -3037,25 +3037,21 @@ namespace DOL.GS
 			return true;
 		}
 
-		/// <summary>
-		/// Gets or Sets the current Region of the Object
-		/// </summary>
-		public override Region CurrentRegion
-		{
-			get { return base.CurrentRegion; }
-			set
+        public override Position Position
+        {
+            set
 			{
-				Region oldRegion = CurrentRegion;
-				base.CurrentRegion = value;
-				Region newRegion = CurrentRegion;
-				if (oldRegion != newRegion && newRegion != null)
+				var oldRegionID = Position.RegionID;
+				base.Position = value;
+				var newRegion = value.RegionID;
+				if (oldRegionID != newRegion && newRegion != 0)
 				{
 					if (m_followTimer != null) m_followTimer.Stop();
 					m_followTimer = new RegionTimer(this);
 					m_followTimer.Callback = new RegionTimerCallback(FollowTimerCallback);
 				}
 			}
-		}
+        }
 
 		/// <summary>
 		/// Marks this object as deleted!
@@ -3801,9 +3797,9 @@ namespace DOL.GS
 		public void SetLastMeleeAttackTick()
 		{
 			if (TargetObject.Realm == 0 || Realm == 0)
-				m_lastAttackTickPvE = m_CurrentRegion.Time;
+				m_lastAttackTickPvE = CurrentRegion.Time;
 			else
-				m_lastAttackTickPvP = m_CurrentRegion.Time;
+				m_lastAttackTickPvP = CurrentRegion.Time;
 		}
 
 		private void StartMeleeAttackTimer()

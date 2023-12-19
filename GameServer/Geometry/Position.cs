@@ -10,6 +10,8 @@ public struct Position
     public int Y => Coordinate.Y;
     public int Z => Coordinate.Z;
 
+    public Region Region => WorldMgr.GetRegion(RegionID);
+
     public Position() { }
 
     public static Position Create(ushort regionID, int x, int y, int z, ushort heading)

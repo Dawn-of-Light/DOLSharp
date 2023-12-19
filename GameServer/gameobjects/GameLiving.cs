@@ -5745,7 +5745,7 @@ namespace DOL.GS
         public override Position Position
         {
             get => Motion.CurrentPosition;
-            set { CurrentRegionID = value.RegionID; Motion = Motion.Create(value, Motion.Destination, Motion.Speed); }
+            set => Motion = Motion.Create(value, Motion.Destination, Motion.Speed);
         }
 
         protected virtual Motion Motion { get; set; } = new Motion();
@@ -5772,12 +5772,6 @@ namespace DOL.GS
         {
             get => Position.Orientation;
             set => Position = Motion.Start.With(orientation: value);
-        }
-
-        public override ushort CurrentRegionID 
-        {
-            get => CurrentRegion == null ? (ushort)0 : CurrentRegion.ID;
-            set { if (CurrentRegionID != value) CurrentRegion = WorldMgr.GetRegion(value); }
         }
 
         public override bool MoveTo(Position position)

@@ -66,7 +66,7 @@ namespace DOL.GS.Keeps
 			{
 				if (m_component != null)
 					return m_component.Keep.Realm;
-				if (m_CurrentRegion.ID == 163)
+				if (CurrentRegion.ID == 163)
 					return CurrentZone.Realm;
 				return base.Realm;
 			}

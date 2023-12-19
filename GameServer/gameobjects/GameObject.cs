@@ -29,6 +29,7 @@ using DOL.GS.Quests;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 using DOL.GS.Geometry;
+using DOL.GS.Keeps;
 
 namespace DOL.GS
 {
@@ -95,11 +96,6 @@ namespace DOL.GS
 		#region Position
 
 		/// <summary>
-		/// The Object's current Region
-		/// </summary>
-		protected Region m_CurrentRegion;
-
-		/// <summary>
 		/// Holds the realm of this object
 		/// </summary>
 		protected eRealm m_Realm;
@@ -113,13 +109,14 @@ namespace DOL.GS
 			set { m_Realm = value; }
 		}
 
-		/// <summary>
-		/// Gets or Sets the current Region of the Object
-		/// </summary>
 		public virtual Region CurrentRegion
 		{
-			get { return m_CurrentRegion; }
-			set { m_CurrentRegion = value; }
+			get => Position.Region;
+			set
+            {
+                if(value == null) Position = Position.With(regionID: 0);
+                Position = Position.With(regionID: value.ID);
+            }
 		}
 
 		protected string m_ownerID;
@@ -143,32 +140,15 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (m_CurrentRegion != null)
+				if (CurrentRegion != null)
 				{
-					return m_CurrentRegion.GetZone(Location);
+					return CurrentRegion.GetZone(Location);
 				}
 				return null;
 			}
 		}
 
-        private Position positionWithoutRegionID = Position.Nowhere;
-
-        private Position currentPosition { get; set; } = Position.Nowhere;
-
-        public virtual Position Position
-        {
-            get
-            {
-                if(CurrentRegion == null && currentPosition.RegionID != 0) return currentPosition.With(regionID: 0);
-
-                return currentPosition;
-            }
-            set
-            {
-                currentPosition = value;
-                CurrentRegion = WorldMgr.GetRegion(value.RegionID);
-            }
-        }
+        public virtual Position Position { get; set; }
 
         public Coordinate Location => Position.Coordinate;
 
@@ -766,7 +746,7 @@ namespace DOL.GS
 		{
 			if (m_ObjectState == eObjectState.Active)
 				return false;
-            currentPosition = Position.Create(regionID, x, y, z, heading);
+            Position = Position.Create(regionID, x, y, z, heading);
 			return AddToWorld();
 		}
 
@@ -780,11 +760,14 @@ namespace DOL.GS
 			Zone currentZone = CurrentZone;
 			// CurrentZone checks for null Region.
 			// Should it be the case, currentZone will be null as well.
+            if(this is GameKeepDoor && currentZone == null) Console.WriteLine($"Current Zone does not exist");
 			if (currentZone == null || m_ObjectState == eObjectState.Active)
 				return false;
 
-			if (!m_CurrentRegion.AddObject(this))
+			if (!CurrentRegion.AddObject(this))
+            {
 				return false;
+            }
 			Notify(GameObjectEvent.AddToWorld, this);
 			ObjectState = eObjectState.Active;
 
@@ -809,11 +792,11 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool RemoveFromWorld()
 		{
-			if (m_CurrentRegion == null || ObjectState != eObjectState.Active)
+			if (CurrentRegion == null || ObjectState != eObjectState.Active)
 				return false;
 			Notify(GameObjectEvent.RemoveFromWorld, this);
 			ObjectState = eObjectState.Inactive;
-			m_CurrentRegion.RemoveObject(this);
+			CurrentRegion.RemoveObject(this);
 			return true;
 		}
 
