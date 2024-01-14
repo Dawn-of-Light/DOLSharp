@@ -71,7 +71,7 @@ namespace DOL.GS.GameEvents
 
 				//Now we turn the npc into the direction of the person it is
 				//speaking to.
-				TurnTo(player.Location);
+				TurnTo(player.Coordinate);
 
 				//We send a message to player and make it appear in a popup
 				//window. Text inside the [brackets] is clickable in popup
@@ -98,7 +98,7 @@ namespace DOL.GS.GameEvents
 
 				//Now we turn the npc into the direction of the person it is
 				//speaking to.
-				TurnTo(t.Location);
+				TurnTo(t.Coordinate);
 
 				//We test what the player whispered to the npc and
 				//send a reply. The Method SendReply used here is

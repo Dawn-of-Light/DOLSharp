@@ -79,7 +79,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						break;
 
 					case 1:
-						if (player.Location.DistanceTo(_house.Position) > WorldMgr.VISIBILITY_DISTANCE
+						if (player.Coordinate.DistanceTo(_house.Position) > WorldMgr.VISIBILITY_DISTANCE
                             || (player.CurrentRegionID != _house.RegionID))
 						{
 							ChatUtil.SendSystemMessage(player, string.Format("You are too far away to enter house {0}.", _house.HouseNumber));

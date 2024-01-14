@@ -980,7 +980,7 @@ namespace DOL.GS
         internal bool AddObject(GameObject obj)
         {
             //Thread.Sleep(10000);
-            Zone zone = GetZone(obj.Location);
+            Zone zone = GetZone(obj.Coordinate);
             if (zone == null)
             {
                 if (log.IsWarnEnabled)
@@ -1226,12 +1226,12 @@ namespace DOL.GS
             return m_objects[id - 1];
         }
 
-        public Zone GetZone(Coordinate location)
+        public Zone GetZone(Coordinate coordinate)
         {
             foreach (var zone in m_zones)
             {
-                var isInZone = zone.Offset.X <= location.X && zone.Offset.Y <= location.Y 
-                    && (zone.Offset.X + zone.Width) > location.X && (zone.Offset.Y + zone.Height) > location.Y;
+                var isInZone = zone.Offset.X <= coordinate.X && zone.Offset.Y <= coordinate.Y 
+                    && (zone.Offset.X + zone.Width) > coordinate.X && (zone.Offset.Y + zone.Height) > coordinate.Y;
                 if (isInZone) return zone;
             }
             return null;
@@ -1384,10 +1384,10 @@ namespace DOL.GS
         public IList<IArea> GetAreasOfSpot(int x, int y, int z)
             => GetAreasOfSpot(Coordinate.Create(x, y, z));
 
-        public IList<IArea> GetAreasOfSpot(Coordinate location)
+        public IList<IArea> GetAreasOfSpot(Coordinate coordinate)
         {
-            var zone = GetZone(location);
-            return GetAreasOfZone(zone, location);
+            var zone = GetZone(coordinate);
+            return GetAreasOfZone(zone, coordinate);
         }
 
         public virtual IList<IArea> GetAreasOfZone(Zone zone, Coordinate spot)
@@ -1515,7 +1515,7 @@ namespace DOL.GS
             }
         }
 
-        private static bool CheckShortestDistance(Zone zone, Coordinate location, uint squareRadius)
+        private static bool CheckShortestDistance(Zone zone, Coordinate coordinate, uint squareRadius)
         {
             //  coordinates of zone borders
             int xLeft = zone.Offset.X;
@@ -1524,22 +1524,22 @@ namespace DOL.GS
             int yBottom = zone.Offset.Y + zone.Height;
             long distance = 0;
 
-            if ((location.Y >= yTop) && (location.Y <= yBottom))
+            if ((coordinate.Y >= yTop) && (coordinate.Y <= yBottom))
             {
-                int xdiff = Math.Min(FastMath.Abs(location.X - xLeft), FastMath.Abs(location.X - xRight));
+                int xdiff = Math.Min(FastMath.Abs(coordinate.X - xLeft), FastMath.Abs(coordinate.X - xRight));
                 distance = (long)xdiff * xdiff;
             }
             else
             {
-                if ((location.X >= xLeft) && (location.X <= xRight))
+                if ((coordinate.X >= xLeft) && (coordinate.X <= xRight))
                 {
-                    int ydiff = Math.Min(FastMath.Abs(location.Y - yTop), FastMath.Abs(location.Y - yBottom));
+                    int ydiff = Math.Min(FastMath.Abs(coordinate.Y - yTop), FastMath.Abs(coordinate.Y - yBottom));
                     distance = (long)ydiff * ydiff;
                 }
                 else
                 {
-                    int xdiff = Math.Min(FastMath.Abs(location.X - xLeft), FastMath.Abs(location.X - xRight));
-                    int ydiff = Math.Min(FastMath.Abs(location.Y - yTop), FastMath.Abs(location.Y - yBottom));
+                    int xdiff = Math.Min(FastMath.Abs(coordinate.X - xLeft), FastMath.Abs(coordinate.X - xRight));
+                    int ydiff = Math.Min(FastMath.Abs(coordinate.Y - yTop), FastMath.Abs(coordinate.Y - yBottom));
                     distance = (long)xdiff * xdiff + (long)ydiff * ydiff;
                 }
             }
@@ -1569,8 +1569,8 @@ namespace DOL.GS
         public IEnumerable GetNPCsInRadius(Coordinate center, ushort radius, bool withDistance, bool ignoreZ)
             => GetInRadius(Zone.eGameObjectType.NPC, center, radius, withDistance, ignoreZ);
 
-        public IEnumerable GetPlayersInRadius(Coordinate location, ushort radius, bool withDistance, bool ignoreZ)
-            => GetInRadius(Zone.eGameObjectType.PLAYER, location, radius, withDistance, ignoreZ);
+        public IEnumerable GetPlayersInRadius(Coordinate coordinate, ushort radius, bool withDistance, bool ignoreZ)
+            => GetInRadius(Zone.eGameObjectType.PLAYER, coordinate, radius, withDistance, ignoreZ);
 
         public virtual IEnumerable GetDoorsInRadius(Coordinate center, ushort radius, bool withDistance)
             => GetInRadius(Zone.eGameObjectType.DOOR, center, radius, withDistance, false);
@@ -1712,15 +1712,15 @@ namespace DOL.GS
 
         public abstract class DistanceEnumerator : ObjectEnumerator
         {
-            protected Coordinate location;
+            protected Coordinate coordinate;
 
             public DistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : this(Coordinate.Create(x, y, z), elements) { }
 
-            public DistanceEnumerator(Coordinate location, ArrayList elements) 
+            public DistanceEnumerator(Coordinate coordinate, ArrayList elements) 
                 : base(elements)
             {
-                this.location = location;
+                this.coordinate = coordinate;
             }
         }
 
@@ -1729,15 +1729,15 @@ namespace DOL.GS
             public PlayerDistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : base(Coordinate.Create(x, y, z), elements) { }
 
-            public PlayerDistanceEnumerator(Coordinate location, ArrayList elements)
-                : base(location,elements) { }
+            public PlayerDistanceEnumerator(Coordinate coordinate, ArrayList elements)
+                : base(coordinate,elements) { }
 
             public override object Current
             {
                 get
                 {
                     GamePlayer obj = (GamePlayer)m_currentObj;
-                    return new PlayerDistEntry(obj, (int)obj.Location.DistanceTo(location));
+                    return new PlayerDistEntry(obj, (int)obj.Coordinate.DistanceTo(coordinate));
                 }
             }
         }
@@ -1747,15 +1747,15 @@ namespace DOL.GS
             public NPCDistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : base(Coordinate.Create(x, y, z), elements) { }
 
-            public NPCDistanceEnumerator(Coordinate location, ArrayList elements)
-                : base(location,elements) { }
+            public NPCDistanceEnumerator(Coordinate coordinate, ArrayList elements)
+                : base(coordinate,elements) { }
 
             public override object Current
             {
                 get
                 {
                     GameNPC obj = (GameNPC)m_currentObj;
-                    return new NPCDistEntry(obj, (int)obj.Location.DistanceTo(location));
+                    return new NPCDistEntry(obj, (int)obj.Coordinate.DistanceTo(coordinate));
                 }
             }
         }
@@ -1765,15 +1765,15 @@ namespace DOL.GS
             public ItemDistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : base(Coordinate.Create(x, y, z), elements) { }
 
-            public ItemDistanceEnumerator(Coordinate location, ArrayList elements)
-                : base(location,elements) { }
+            public ItemDistanceEnumerator(Coordinate coordinate, ArrayList elements)
+                : base(coordinate,elements) { }
 
             public override object Current
             {
                 get
                 {
                     GameStaticItem obj = (GameStaticItem)m_currentObj;
-                    return new ItemDistEntry(obj, (int)obj.Location.DistanceTo(location));
+                    return new ItemDistEntry(obj, (int)obj.Coordinate.DistanceTo(coordinate));
                 }
             }
         }
@@ -1783,15 +1783,15 @@ namespace DOL.GS
             public DoorDistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : base(Coordinate.Create(x, y, z), elements) { }
 
-            public DoorDistanceEnumerator(Coordinate location, ArrayList elements)
-                : base(location,elements) { }
+            public DoorDistanceEnumerator(Coordinate coordinate, ArrayList elements)
+                : base(coordinate,elements) { }
 
             public override object Current
             {
                 get
                 {
                     IDoor obj = (IDoor)m_currentObj;
-                    return new DoorDistEntry(obj, (int)obj.Location.DistanceTo(location));
+                    return new DoorDistEntry(obj, (int)obj.Coordinate.DistanceTo(coordinate));
                 }
             }
         }

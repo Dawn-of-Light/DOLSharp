@@ -131,7 +131,7 @@ namespace DOL.GS
                     String destination = item.Name.Substring(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.TicketTo").Length);
 					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
 					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name + "=>" + destination);
-                    if ((path != null) && ((Math.Abs(path.Coordinate.X - Location.X)) < 500) && ((Math.Abs(path.Coordinate.Y - Location.Y)) < 500))
+                    if ((path != null) && ((Math.Abs(path.Coordinate.X - Coordinate.X)) < 500) && ((Math.Abs(path.Coordinate.Y - Coordinate.Y)) < 500))
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);
                         InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);

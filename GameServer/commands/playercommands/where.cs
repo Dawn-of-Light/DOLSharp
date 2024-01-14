@@ -47,7 +47,7 @@ namespace DOL.GS.Commands
 					return;
 				}
 				GameNPC npc = npcs[0];
-				var orientation = targetnpc.Location.GetOrientationTo(npc.Location);
+				var orientation = targetnpc.Coordinate.GetOrientationTo(npc.Coordinate);
 				string directionstring = LanguageMgr.GetCardinalDirection(client.Account.Language, orientation);
 				targetnpc.SayTo(client.Player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(client, "Scripts.Players.Where.Found", npc.Name, directionstring));
 				targetnpc.TurnTo(npc, 10000);

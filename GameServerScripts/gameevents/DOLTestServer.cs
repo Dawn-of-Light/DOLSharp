@@ -97,7 +97,7 @@ namespace DOL.GS.GameEvents
 			//If the player is > 10.000 coordinates away or in another region
 			//we send a dialog to the player and register a dialog-callback
             var doltopiaLocation = Coordinate.Create(x: 531405, y: 479515);
-			if (player.CurrentRegionID != 1 || player.Location.DistanceTo(doltopiaLocation, ignoreZ: true) > 10000)
+			if (player.CurrentRegionID != 1 || player.Coordinate.DistanceTo(doltopiaLocation, ignoreZ: true) > 10000)
 				player.Out.SendCustomDialog("Do you want to be teleported to DOLTopia?", new CustomDialogResponse(TeleportToDOLTopia));
 		}
 

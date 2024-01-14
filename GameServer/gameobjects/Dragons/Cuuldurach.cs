@@ -59,9 +59,9 @@ namespace DOL.GS
 			for (int glimmer = 1; glimmer <= 10; ++glimmer)
 			{
 				isMessenger = Util.Chance(25);
-                var spawnLocation = Location + Vector.Create(x: Util.Random(300, 600), y: Util.Random(300, 600));
+                var spawnCoordinate = Coordinate + Vector.Create(x: Util.Random(300, 600), y: Util.Random(300, 600));
 				glimmerSpawn = SpawnTimedAdd((isMessenger) ? 620 : 621+Util.Random(2),
-					(isMessenger) ? Util.Random(47, 53) : Util.Random(57, 63), spawnLocation, 60, isMessenger);
+					(isMessenger) ? Util.Random(47, 53) : Util.Random(57, 63), spawnCoordinate, 60, isMessenger);
 
 				// We got a messenger, tell it who its master is and which exit
 				// to run to.
@@ -113,7 +113,7 @@ namespace DOL.GS
 			// Spawn nasty adds.
 
 			if (m_messengerList.Contains(sender))
-				SpawnGlimmers(Util.Random(7, 10), sender.Location);
+				SpawnGlimmers(Util.Random(7, 10), sender.Coordinate);
 		}
 
 		/// <summary>
@@ -121,13 +121,13 @@ namespace DOL.GS
 		/// retriever has reported back from, then make these spawns aggro the
 		/// raid inside the lair.
 		/// </summary>
-		private void SpawnGlimmers(int numAdds, Coordinate location)
+		private void SpawnGlimmers(int numAdds, Coordinate coordinate)
 		{
 			GameNPC glimmer;
 			for (int add = 0; add < numAdds; ++add)
 			{
-                var randomSpawnLocation = location + Vector.Create(x: Util.Random(250), y: Util.Random(250));
-				glimmer = SpawnTimedAdd(624+Util.Random(2), Util.Random(62, 68), randomSpawnLocation, 120, false);
+                var randomSpawnCoordinate = coordinate + Vector.Create(x: Util.Random(250), y: Util.Random(250));
+				glimmer = SpawnTimedAdd(624+Util.Random(2), Util.Random(62, 68), randomSpawnCoordinate, 120, false);
 
 				if (glimmer != null && glimmer.Brain is StandardMobBrain && this.Brain is DragonBrain)
 				{

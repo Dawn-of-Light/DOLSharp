@@ -2140,7 +2140,7 @@ namespace DOL.GS.Commands
 							(door as GameObject).RemoveFromWorld();
 							GameKeepDoor d = new GameKeepDoor();
 							d.Name = door.Name;
-							d.Position = Position.Create(keep.Region, door.Location, door.Orientation);
+							d.Position = Position.Create(keep.Region, door.Coordinate, door.Orientation);
 							d.Level = 0;
 							d.Model = 0xFFFF;
 							d.DoorID = door.DoorID;

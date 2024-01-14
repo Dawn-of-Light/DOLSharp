@@ -238,8 +238,8 @@ namespace DOL.GS.PacketHandler
 							Region reg = WorldMgr.GetRegion((ushort) characters[j].Region);
 							if (reg != null)
 							{
-                                var location = characters[j].GetPosition().Coordinate;
-								var description = GamePlayerUtils.GetTranslatedSpotDescription(reg, m_gameClient, location);
+                                var coordinate = characters[j].GetPosition().Coordinate;
+								var description = GamePlayerUtils.GetTranslatedSpotDescription(reg, m_gameClient, coordinate);
 								pak.FillString(description, 24);
 							}
 							else
@@ -665,10 +665,10 @@ namespace DOL.GS.PacketHandler
 		}
 
         protected ushort GetXOffsetInZone(GamePlayer player)
-            => (ushort)(player.Location.X - player.CurrentZone.Offset.X);
+            => (ushort)(player.Coordinate.X - player.CurrentZone.Offset.X);
 
         protected ushort GetYOffsetInZone(GamePlayer player)
-            => (ushort)(player.Location.Y - player.CurrentZone.Offset.Y);
+            => (ushort)(player.Coordinate.Y - player.CurrentZone.Offset.Y);
 
 		public virtual void SendPlayerCreate(GamePlayer playerToCreate)
 		{
@@ -771,7 +771,7 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
-            var currentZoneCoord = obj.Location - z.Offset;
+            var currentZoneCoord = obj.Coordinate - z.Offset;
             var targetZoneCoord = Coordinate.Zero;
 
 			int speed = 0;
@@ -807,7 +807,7 @@ namespace DOL.GS.PacketHandler
 				if (npc.IsMoving && !npc.IsAtTargetLocation)
 				{
 					speed = npc.CurrentSpeed;
-					if (npc.Destination != Coordinate.Nowhere && npc.Destination != npc.Location)
+					if (npc.Destination != Coordinate.Nowhere && npc.Destination != npc.Coordinate)
 					{
 						Zone tz = npc.CurrentRegion.GetZone(npc.Destination);
 						if (tz != null)
@@ -2582,7 +2582,7 @@ namespace DOL.GS.PacketHandler
 				}
 
 				// Get Off Corrd
-                var zoneCoord = player.Location - player.CurrentZone.Offset;
+                var zoneCoord = player.Coordinate - player.CurrentZone.Offset;
 
 				pak.WriteShort((ushort)zoneCoord.Z);
 				pak.WriteShort((ushort)zoneCoord.X);
@@ -4092,10 +4092,10 @@ namespace DOL.GS.PacketHandler
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
 			{
 				pak.WriteInt((uint) siegeWeapon.ObjectID);
-                var aimLocation = siegeWeapon.AimLocation;
-                pak.WriteInt((uint)aimLocation.X);
-                pak.WriteInt((uint)aimLocation.Y);
-                pak.WriteInt((uint)aimLocation.Z);
+                var aimCoordinate = siegeWeapon.AimCoordinate;
+                pak.WriteInt((uint)aimCoordinate.X);
+                pak.WriteInt((uint)aimCoordinate.Y);
+                pak.WriteInt((uint)aimCoordinate.Z);
 				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
 				pak.WriteShort(siegeWeapon.Effect);
 				pak.WriteShort((ushort) (siegeWeapon.SiegeWeaponTimer.TimeUntilElapsed/100));

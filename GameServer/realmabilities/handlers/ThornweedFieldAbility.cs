@@ -36,7 +36,7 @@ namespace DOL.GS.RealmAbilities
                 caster.Out.SendMessage( "You must set a ground target to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
                 return;
             }
-            else if(caster.Location.DistanceTo(caster.GroundTargetPosition) > 1500)
+            else if(caster.Coordinate.DistanceTo(caster.GroundTargetPosition) > 1500)
 			{
 				caster.Out.SendMessage("Your ground target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

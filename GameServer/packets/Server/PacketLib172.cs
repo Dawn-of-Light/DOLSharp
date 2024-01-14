@@ -168,7 +168,7 @@ namespace DOL.GS.PacketHandler
 					pak.WriteShort(content);
 				}
 
-                var zoneCoord = player.Location - player.CurrentZone.Offset;
+                var zoneCoord = player.Coordinate - player.CurrentZone.Offset;
 				pak.WriteShort((ushort)zoneCoord.Z);
 				pak.WriteShort((ushort)zoneCoord.X);
 				pak.WriteShort((ushort)zoneCoord.Y);

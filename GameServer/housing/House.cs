@@ -635,15 +635,15 @@ namespace DOL.GS.Housing
 			}
 		}
 
-        [Obsolete("Use GetHookPointLocation(uint) instead! (Note: capitalization is different as well as return type)")]
+        [Obsolete("Use GetHookPointCoordinate(uint) instead!")]
 		public Point3D GetHookpointLocation(uint n)
         {
-            var loc = GetHookPointLocation(n);
+            var loc = GetHookPointCoordinate(n);
             if(loc == Coordinate.Nowhere) return null;
             else return loc.ToPoint3D();
         }
 
-        public Coordinate GetHookPointLocation(uint number)
+        public Coordinate GetHookPointCoordinate(uint number)
         {
             if (number > HousingConstants.MaxHookpointLocations) return Coordinate.Nowhere;
 
@@ -702,8 +702,8 @@ namespace DOL.GS.Housing
 				return false;
 
 			//get location from slot
-			var location = GetHookPointLocation(position);
-			if (location == Coordinate.Nowhere) return false;
+			var coordinate = GetHookPointCoordinate(position);
+			if (coordinate == Coordinate.Nowhere) return false;
 
 			GameObject hookpointObject = null;
 
@@ -718,7 +718,7 @@ namespace DOL.GS.Housing
 					}
 				case eObjectType.HouseNPC:
 					{
-						hookpointObject = GameServer.ServerRules.PlaceHousingNPC(this, item, location, GetHookpointHeading(position));
+						hookpointObject = GameServer.ServerRules.PlaceHousingNPC(this, item, coordinate, GetHookpointHeading(position));
 						break;
 					}
 				case eObjectType.HouseBindstone:
@@ -727,7 +727,7 @@ namespace DOL.GS.Housing
 						hookpointObject.CurrentHouse = this;
 						hookpointObject.InHouse = true;
 						hookpointObject.OwnerID = templateID;
-                        hookpointObject.Position = Position.Create(RegionID, location, heading);
+                        hookpointObject.Position = Position.Create(RegionID, coordinate, heading);
 						hookpointObject.Name = item.Name;
 						hookpointObject.Model = (ushort) item.Model;
 						hookpointObject.AddToWorld();
@@ -737,7 +737,7 @@ namespace DOL.GS.Housing
 					}
 				case eObjectType.HouseInteriorObject:
 					{
-						hookpointObject = GameServer.ServerRules.PlaceHousingInteriorItem(this, item, location, heading);
+						hookpointObject = GameServer.ServerRules.PlaceHousingInteriorItem(this, item, coordinate, heading);
 						break;
 					}
 			}
@@ -759,7 +759,7 @@ namespace DOL.GS.Housing
 				return;
 			}
 
-			int position = GetHookpointPosition(obj.Location);
+			int position = GetHookpointPosition(obj.Coordinate);
 
 			if (position < 0)
 			{

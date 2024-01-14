@@ -246,7 +246,7 @@ namespace DOL.GS
 		/// <param name="open"></param>
 		public virtual void NPCManipulateDoorRequest(GameNPC npc, bool open)
 		{
-			npc.TurnTo(Location);
+			npc.TurnTo(Coordinate);
 			if (open && m_state != eDoorState.Open)
 				this.Open();
 			else if (!open && m_state != eDoorState.Closed)

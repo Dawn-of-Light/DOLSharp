@@ -61,7 +61,7 @@ namespace DOL.GS.RealmAbilities
 
 			if (living.GroundTargetPosition == Position.Nowhere)
 				return;
-			if (living.Location.DistanceTo(living.GroundTargetPosition) > 1500 )
+			if (living.Coordinate.DistanceTo(living.GroundTargetPosition) > 1500 )
 				return;
 			GamePlayer player = living as GamePlayer;
 			if (player == null)
@@ -92,7 +92,7 @@ namespace DOL.GS.RealmAbilities
 			if (!owner.IsAlive)
 				return 0;
 
-			traparea = new Area.Circle("decimation trap", owner.Location, 50);
+			traparea = new Area.Circle("decimation trap", owner.Coordinate, 50);
 
 			owner.CurrentRegion.AddArea(traparea);
 			region = owner.CurrentRegionID;
@@ -163,7 +163,7 @@ namespace DOL.GS.RealmAbilities
 				ticktimer.Stop();
 				removeHandlers();
 			}
-			var dist = (int)target.Location.DistanceTo(Coordinate.Create(traparea.X, traparea.Y, traparea.Z));
+			var dist = (int)target.Coordinate.DistanceTo(Coordinate.Create(traparea.X, traparea.Y, traparea.Z));
 			double mod = 1;
 			if (dist > 0)
 				mod = 1 - ((double)dist / 350);

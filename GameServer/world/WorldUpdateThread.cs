@@ -424,7 +424,7 @@ namespace DOL.GS
 			IDictionary<int, House> housesDict = HouseMgr.GetHouses(player.CurrentRegionID);
 			// Build Vincinity List
 			var houses = housesDict.Values
-                .Where(h => h != null && player.Location.DistanceTo(h.Position) <= HousingConstants.HouseViewingDistance)
+                .Where(h => h != null && player.Coordinate.DistanceTo(h.Position) <= HousingConstants.HouseViewingDistance)
                 .ToArray();
 			
 			try

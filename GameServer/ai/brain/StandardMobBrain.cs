@@ -119,7 +119,7 @@ namespace DOL.AI.Brain
 			// check for returning to home if to far away
 			if (Body.MaxDistance != 0 && !Body.IsReturningHome)
 			{
-				int distance = (int)Body.Location.DistanceTo(Body.SpawnPosition);
+				int distance = (int)Body.Coordinate.DistanceTo(Body.SpawnPosition);
 				int maxdistance = Body.MaxDistance > 0 ? Body.MaxDistance : -Body.MaxDistance * AggroRange / 100;
 				if (maxdistance > 0 && distance > maxdistance)
 				{
@@ -132,7 +132,7 @@ namespace DOL.AI.Brain
 			if (!Body.AttackState && CanRandomWalk && !Body.IsRoaming && Util.Chance(DOL.GS.ServerProperties.Properties.GAMENPC_RANDOMWALK_CHANCE))
 			{
                 var target = GetRandomWalkTarget();
-                if (target.DistanceTo(Body.Location) <= GameNPC.CONST_WALKTOTOLERANCE)
+                if (target.DistanceTo(Body.Coordinate) <= GameNPC.CONST_WALKTOTOLERANCE)
                 {
                     Body.TurnTo(target);
                 }
@@ -146,7 +146,7 @@ namespace DOL.AI.Brain
 			//If the npc can move, and the npc is not casting, not moving, and not attacking or in combat
 			else if (Body.MaxSpeedBase > 0 && Body.CurrentSpellHandler == null && !Body.IsMoving && !Body.AttackState && !Body.InCombat && !Body.IsMovingOnPath)
 			{
-                if (Body.Location.DistanceTo(Body.SpawnPosition) > GameNPC.CONST_WALKTOTOLERANCE)
+                if (Body.Coordinate.DistanceTo(Body.SpawnPosition) > GameNPC.CONST_WALKTOTOLERANCE)
 					Body.WalkToSpawn();
 				else if (Body.Orientation != Body.SpawnPosition.Orientation)
 					Body.Orientation = Body.SpawnPosition.Orientation;
@@ -170,7 +170,7 @@ namespace DOL.AI.Brain
 			}
 
 			//If we are not attacking, and not casting, and not moving, and we aren't facing our spawn heading, we turn to the spawn heading
-			if( !Body.IsMovingOnPath && !Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && Body.Location.DistanceTo(Body.SpawnPosition) > 500)
+			if( !Body.IsMovingOnPath && !Body.InCombat && !Body.AttackState && !Body.IsCasting && !Body.IsMoving && Body.Coordinate.DistanceTo(Body.SpawnPosition) > 500)
 			{
 				Body.WalkToSpawn(); // Mobs do not walk back at 2x their speed..
 				Body.IsReturningHome = false; // We are returning to spawn but not the long walk home, so aggro still possible
@@ -320,7 +320,7 @@ namespace DOL.AI.Brain
 			return false;
 		}
 
-        public virtual Coordinate GetFormationLocation(Coordinate loc)
+        public virtual Coordinate GetFormationCoordinate(Coordinate loc)
         {
             var x = loc.X;
             var y = loc.Y;
@@ -1567,7 +1567,7 @@ namespace DOL.AI.Brain
             if (PathCalculator.IsSupported(Body))
             {
                 int radius = Body.RoamingRange > 0 ? Body.RoamingRange : 500;
-                var target = PathingMgr.Instance.GetRandomPointAsync(Body.CurrentZone, Body.Location, radius);
+                var target = PathingMgr.Instance.GetRandomPointAsync(Body.CurrentZone, Body.Coordinate, radius);
                 if (target.HasValue)
                     return Coordinate.Create(x: (int)target.Value.X, y: (int)target.Value.Y, z: (int)target.Value.Z);
             }
@@ -1589,7 +1589,7 @@ namespace DOL.AI.Brain
 		{
 			ushort range= (ushort)((ThinkInterval/800)*Body.CurrentWayPoint.MaxSpeed);
 			
-			foreach (IDoor door in Body.CurrentRegion.GetDoorsInRadius(Body.Location, range, false))
+			foreach (IDoor door in Body.CurrentRegion.GetDoorsInRadius(Body.Coordinate, range, false))
 			{
 				if (door is GameKeepDoor)
 				{

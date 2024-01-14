@@ -36,7 +36,7 @@ namespace DOL.GS.Commands
 
 			if (client.Player.GroundTargetPosition != Position.Nowhere)
 			{
-                var range = (int)client.Player.Location.DistanceTo(client.Player.GroundTargetPosition);
+                var range = (int)client.Player.Coordinate.DistanceTo(client.Player.GroundTargetPosition);
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Gtrange.Range", range), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else

@@ -312,7 +312,7 @@ namespace DOL.GS.Spells
             if (Caster is GamePlayer)
             {
                 //Calculate random target
-                m_loc = m_npc.Location + Vector.Create(x: Util.Random(-1500, 1500), y: Util.Random(-1500, 1500));;
+                m_loc = m_npc.Coordinate + Vector.Create(x: Util.Random(-1500, 1500), y: Util.Random(-1500, 1500));;
 				(Caster as GamePlayer).Out.SendCheckLOS((Caster as GamePlayer), m_npc, new CheckLOSResponse(ZephyrCheckLOS));
             }
         }

@@ -228,7 +228,7 @@ namespace DOL.GS.Commands
 						
 					info.Add(" ");
 					info.Add(" + Mob_ID:  " + target.InternalID);
-					info.Add(" + Position:  " + target.Location + ", " + target.Orientation.InHeading);
+					info.Add(" + Position:  " + target.Coordinate + ", " + target.Orientation.InHeading);
 					info.Add(" + OID: " + target.ObjectID);
 					info.Add(" + Package ID:  " + target.PackageID);
 					
@@ -450,7 +450,7 @@ namespace DOL.GS.Commands
 					}
 
 					info.Add(" ");
-					info.Add(" Location: X= " + target.Position.X + " ,Y= " + target.Position.Y + " ,Z= " + target.Position.Z);
+					info.Add(" Coordinate: X= " + target.Position.X + " ,Y= " + target.Position.Y + " ,Z= " + target.Position.Z);
 				}
 
 				#endregion StaticItem

@@ -634,10 +634,10 @@ namespace DOL.GS.PacketHandler
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
 			{
 				pak.WriteInt((uint)siegeWeapon.ObjectID);
-                var aimLocation = siegeWeapon.AimLocation;
-                pak.WriteInt((uint)aimLocation.X);
-                pak.WriteInt((uint)aimLocation.Y);
-                pak.WriteInt((uint)aimLocation.Z);
+                var aimCoordinate = siegeWeapon.AimCoordinate;
+                pak.WriteInt((uint)aimCoordinate.X);
+                pak.WriteInt((uint)aimCoordinate.Y);
+                pak.WriteInt((uint)aimCoordinate.Z);
 				pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
 				pak.WriteShort(siegeWeapon.Effect);
 				pak.WriteShort((ushort)(siegeWeapon.SiegeWeaponTimer.TimeUntilElapsed));
@@ -824,7 +824,7 @@ namespace DOL.GS.PacketHandler
 			if (living.CurrentSpeed != 0)
 			{
 				Zone zone = living.CurrentZone;
-                var zoneCoordinate = living.Location - zone.Offset;
+                var zoneCoordinate = living.Coordinate - zone.Offset;
 				if (zone == null)
 					return;
 				pak.WriteByte((byte)(0x40 | living.GroupIndex));

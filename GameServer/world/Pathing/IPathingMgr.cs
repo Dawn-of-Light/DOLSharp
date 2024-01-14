@@ -19,7 +19,7 @@ namespace DOL.GS
 
         (LinePath Path,PathingError Error) GetPathStraightAsync(Zone zone, Coordinate start, Coordinate end);
 
-		Vector3? GetRandomPointAsync(Zone zone, Coordinate centerLocation, float radius);
+		Vector3? GetRandomPointAsync(Zone zone, Coordinate center, float radius);
 
 		/// <summary>
 		///   Returns the closest point on the navmesh, if available, or no point found.

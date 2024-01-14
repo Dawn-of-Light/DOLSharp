@@ -80,8 +80,8 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-            var locationOffset = Vector.Create(x: xoff, y: yoff, z: zoff);
-			targetNPC.WalkTo(targetNPC.Location + locationOffset, speed);
+            var offset = Vector.Create(x: xoff, y: yoff, z: zoff);
+			targetNPC.WalkTo(targetNPC.Coordinate + offset, speed);
 		}
 	}
 }

@@ -48,7 +48,7 @@ namespace DOL.AI.Brain
 
 		protected virtual void CalculateFleeTarget(GameLiving target)
 		{
-			var targetAngle = Body.Location.GetOrientationTo(target.Location) + Angle.Degrees(180);
+			var targetAngle = Body.Coordinate.GetOrientationTo(target.Coordinate) + Angle.Degrees(180);
 
 			Body.StopFollowing();
 			Body.StopAttack();

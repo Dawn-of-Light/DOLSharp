@@ -555,7 +555,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 
 							// if the hookpoint doesn't exist, prompt player to Log it in the database for us
-							if (house.GetHookPointLocation((uint)_position) == Coordinate.Nowhere)
+							if (house.GetHookPointCoordinate((uint)_position) == Coordinate.Nowhere)
 							{
 								client.Out.SendInventorySlotsUpdate(new[] { slot });
 
@@ -575,7 +575,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									}
 								}
 							}
-							else if (house.GetHookPointLocation((uint)_position) != Coordinate.Nowhere)
+							else if (house.GetHookPointCoordinate((uint)_position) != Coordinate.Nowhere)
 							{
 								var point = new DBHouseHookpointItem
 												{
@@ -698,7 +698,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 
 							// if hookpoint doesn't exist, prompt player to Log it in the database for us
-							if (house.GetHookPointLocation((uint)_position) == Coordinate.Nowhere)
+							if (house.GetHookPointCoordinate((uint)_position) == Coordinate.Nowhere)
 							{
 								client.Out.SendInventorySlotsUpdate(new[] { slot });
 
@@ -884,7 +884,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (player.CurrentHouse == null)
 				return;
 
-            var offset = player.Location - player.CurrentHouse.Position.Coordinate;
+            var offset = player.Coordinate - player.CurrentHouse.Position.Coordinate;
 			var a = new HouseHookpointOffset
 			{
 				HouseModel = player.CurrentHouse.Model,

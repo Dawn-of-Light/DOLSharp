@@ -1964,7 +1964,7 @@ namespace DOL.GS
 						bool preCheck = false;
 						if (ad.Target is GamePlayer) //only start if we are behind the player
 						{
-							var angle = ad.Target.GetAngleTo(ad.Attacker.Location);
+							var angle = ad.Target.GetAngleTo(ad.Attacker.Coordinate);
 							if (angle.InDegrees >= 150 && angle.InDegrees < 210) preCheck = true;
 						}
 						else preCheck = true;
@@ -5663,8 +5663,8 @@ namespace DOL.GS
 			}
 		}
 
-        public virtual void TurnTo(Coordinate location, bool sendUpdate = true)
-            => Orientation = Location.GetOrientationTo(location);
+        public virtual void TurnTo(Coordinate coordinate, bool sendUpdate = true)
+            => Orientation = Coordinate.GetOrientationTo(coordinate);
 
 		public virtual bool IsSitting
 		{
@@ -5672,11 +5672,11 @@ namespace DOL.GS
 			set { }
 		}
 
-        [Obsolete("Use GroundTargetLocation instead!")]
+        [Obsolete("Use GroundTargetPosition instead!")]
         public virtual Point3D GroundTarget
             => GroundTargetPosition.Coordinate.ToPoint3D();
 
-        [Obsolete("Use GroundTargetLocation_set instead!")]
+        [Obsolete("Use GroundTargetPosition_set instead!")]
         public virtual void SetGroundTarget(int groundX, int groundY, int groundZ)
             => GroundTargetPosition = Position.Create(Position.RegionID, groundX, groundY, groundZ);
 

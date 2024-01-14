@@ -200,12 +200,12 @@ namespace DOL.GS.Commands
 							speed = Convert.ToInt16(args[3]);
 						}
 
-                        var location = Coordinate.Nowhere;
+                        var coordinate = Coordinate.Nowhere;
 						switch (args[2].ToLower())
 						{
 							case "me":
 								{
-                                    location = client.Player.Location;
+                                    coordinate = client.Player.Coordinate;
 									break;
 								}
 
@@ -216,7 +216,7 @@ namespace DOL.GS.Commands
 									{
 										if (targetplayer.Name.ToLower() == args[2].ToLower())
 										{
-                                            location = targetplayer.Location;
+                                            coordinate = targetplayer.Coordinate;
 											break;
 										}
 									}
@@ -225,7 +225,7 @@ namespace DOL.GS.Commands
 									{
 										if (target.Name.ToLower() == args[2].ToLower())
 										{
-                                            location = target.Location;
+                                            coordinate = target.Coordinate;
 											break;
 										}
 									}
@@ -233,13 +233,13 @@ namespace DOL.GS.Commands
 								}
 						}
 
-						if (location.Equals(Coordinate.Nowhere))
+						if (coordinate.Equals(Coordinate.Nowhere))
 						{
 							client.Out.SendMessage("Can't find name " + args[2].ToLower() + " near your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 
-						npc.PathTo(location, speed);
+						npc.PathTo(coordinate, speed);
 						client.Out.SendMessage("Your target is walking to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						break;
 					}

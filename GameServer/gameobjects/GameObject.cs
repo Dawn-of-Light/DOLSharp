@@ -142,7 +142,7 @@ namespace DOL.GS
 			{
 				if (CurrentRegion != null)
 				{
-					return CurrentRegion.GetZone(Location);
+					return CurrentRegion.GetZone(Coordinate);
 				}
 				return null;
 			}
@@ -150,7 +150,7 @@ namespace DOL.GS
 
         public virtual Position Position { get; set; }
 
-        public Coordinate Location => Position.Coordinate;
+        public Coordinate Coordinate => Position.Coordinate;
 
         [Obsolete("Use .Position.X instead!")]
         public virtual int X
@@ -197,7 +197,7 @@ namespace DOL.GS
             => GetAngleTo(Coordinate.Create(point.X, point.Y)).InDegrees;
 
         public Angle GetAngleTo(Coordinate coordinate)
-            => Location.GetOrientationTo(coordinate) - Orientation;
+            => Coordinate.GetOrientationTo(coordinate) - Orientation;
 
         public int GetDistanceTo(GameObject obj, double zfactor = 1)
             => GetDistanceTo(obj.Position, zfactor);
@@ -221,7 +221,7 @@ namespace DOL.GS
         {
             if (Position.RegionID != position.RegionID) return int.MaxValue;
 
-            var offset = position.Coordinate - Location;
+            var offset = position.Coordinate - Coordinate;
             var dz = offset.Z * zfactor;
 
             return (int)(offset.Length2D + Math.Sqrt(dz*dz));
@@ -234,8 +234,8 @@ namespace DOL.GS
             if (this.CurrentRegionID != obj.CurrentRegionID) return false;
 
             double distance;
-            if (ignoreZ) distance = Location.DistanceTo(obj.Location, ignoreZ: true);
-            else distance = Location.DistanceTo(obj.Location);
+            if (ignoreZ) distance = Coordinate.DistanceTo(obj.Coordinate, ignoreZ: true);
+            else distance = Coordinate.DistanceTo(obj.Coordinate);
 
             return distance < radius;
         }
@@ -252,7 +252,7 @@ namespace DOL.GS
 		{
 			if (target == null)
 				return false;
-			var angle = GetAngleTo(target.Location);
+			var angle = GetAngleTo(target.Coordinate);
             var isInFront = angle.InDegrees >= 360 - viewangle / 2 || angle.InDegrees < viewangle / 2;
 			if (isInFront) return true;
 			// if target is closer than 32 units it is considered always in view
@@ -305,10 +305,10 @@ namespace DOL.GS
 				{
                     foreach(var area in hardcodedUnderWaterAreas)
                     {
-                        if(Location.X > area.BottomLeft.X 
-                            && Location.Y > area.BottomLeft.Y
-                            && Location.X < area.TopRight.X
-                            && Location.Y > area.TopRight.Y)
+                        if(Coordinate.X > area.BottomLeft.X 
+                            && Coordinate.Y > area.BottomLeft.Y
+                            && Coordinate.X < area.TopRight.X
+                            && Coordinate.Y > area.TopRight.Y)
                         {
                             return false;
                         }
@@ -327,7 +327,7 @@ namespace DOL.GS
 			get
 			{
 				if (CurrentZone != null)
-					return CurrentZone.GetAreasOfSpot(Location);
+					return CurrentZone.GetAreasOfSpot(Coordinate);
 				return new List<IArea>();
 			}
 			set { }
@@ -1185,7 +1185,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					return CurrentRegion.GetPlayersInRadius(Location, radiusToCheck, withDistance, ignoreZ);
+					return CurrentRegion.GetPlayersInRadius(Coordinate, radiusToCheck, withDistance, ignoreZ);
 				}
 			}
 			return new Region.EmptyEnumerator();
@@ -1359,7 +1359,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					IEnumerable result = CurrentRegion.GetNPCsInRadius(Location, radiusToCheck, withDistance, ignoreZ);
+					IEnumerable result = CurrentRegion.GetNPCsInRadius(Coordinate, radiusToCheck, withDistance, ignoreZ);
 					return result;
 				}
 			}
@@ -1402,7 +1402,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					return CurrentRegion.GetItemsInRadius(Location, radiusToCheck, withDistance);
+					return CurrentRegion.GetItemsInRadius(Coordinate, radiusToCheck, withDistance);
 				}
 			}
 			return new Region.EmptyEnumerator();
@@ -1441,7 +1441,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					return CurrentRegion.GetDoorsInRadius(Location, radiusToCheck, withDistance);
+					return CurrentRegion.GetDoorsInRadius(Coordinate, radiusToCheck, withDistance);
 				}
 			}
 			return new Region.EmptyEnumerator();
@@ -1555,7 +1555,7 @@ namespace DOL.GS
 				.Append(" oid=").Append(ObjectID.ToString())
 				.Append(" state=").Append(ObjectState.ToString())
 				.Append(" reg=").Append(reg == null ? "null" : reg.ID.ToString())
-				.Append(" loc=").Append(Location)
+				.Append(" loc=").Append(Coordinate)
 				.ToString();
 		}
 
@@ -1625,16 +1625,16 @@ namespace DOL.GS
             return Position.Coordinate.GetOrientationTo(Coordinate.Create(p.X, p.Y)).InHeading;
         }
 
-        [Obsolete("Use .Location.DistanceTo(Coordinate) instead!")]
+        [Obsolete("Use .Coordinate.DistanceTo(Coordinate) instead!")]
         public bool IsWithinRadius(Point3D p, int radius, bool ignoreZ = false)
         {
-            return Location.DistanceTo(Coordinate.Create(p.X, p.Y, p.Z)) <= radius;
+            return Coordinate.DistanceTo(Coordinate.Create(p.X, p.Y, p.Z)) <= radius;
         }
 
         [Obsolete("Use Vector addition instead!")]
         public Point2D GetPointFromHeading(ushort heading, int distance)
         {
-            return (Location + Vector.Create(Angle.Heading(heading), distance)).ToPoint3D();
+            return (Coordinate + Vector.Create(Angle.Heading(heading), distance)).ToPoint3D();
         }
 
         public int GetDistance(GameObject obj2, double zFactor = 1)

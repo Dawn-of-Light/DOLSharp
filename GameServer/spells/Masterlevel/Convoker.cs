@@ -625,7 +625,7 @@ namespace DOL.GS.Spells
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if(!CheckCastLocation())
+			if(!CheckCastCoordinate())
 				return false;
 			return base.CheckBeginCast(selectedTarget);
 		}
@@ -668,7 +668,7 @@ namespace DOL.GS.Spells
 			summoned.SetOwnBrain(controlledBrain);
 			//Suncheck:
 			//	Is needed, else it can cause error (i.e. /cast-command)
-			if (position == Position.Nowhere) CheckCastLocation();
+			if (position == Position.Nowhere) CheckCastCoordinate();
 
             summoned.Position = position.With(orientation: Caster.Orientation + Angle.Degrees(180));
 			summoned.Realm = player.Realm;
@@ -699,7 +699,7 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 		
-		private bool CheckCastLocation()
+		private bool CheckCastCoordinate()
 		{
             position = Caster.Position;
 			if (Spell.Target.ToLower() == "area")

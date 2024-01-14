@@ -444,12 +444,12 @@ namespace DOL.GS.ServerRules
         [Obsolete("Use .PlayerHousingNPC(House,ItemTemplate,Coordinate,ushort) instead!")]
 		GameNPC PlaceHousingNPC(DOL.GS.Housing.House house, ItemTemplate item, IPoint3D location, ushort heading);
 
-		GameNPC PlaceHousingNPC(DOL.GS.Housing.House house, ItemTemplate item, Coordinate location, ushort heading);
+		GameNPC PlaceHousingNPC(DOL.GS.Housing.House house, ItemTemplate item, Coordinate coordinate, ushort heading);
 
         [Obsolete("Use .PlaceHousingInteriorItem(House,ItemTemplate,Coordinate,ushort) instead!")]
 		GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, IPoint3D location, ushort heading);
 
-		GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, Coordinate location, ushort heading);
+		GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, Coordinate coordinate, ushort heading);
 
 		/// <summary>
 		/// Create a new consignment merchant for housing

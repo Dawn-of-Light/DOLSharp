@@ -871,7 +871,7 @@ namespace DOL.GS
 			{
 				if (TetherRange > 0)
 				{
-					if (Location.DistanceTo(SpawnPosition) <= TetherRange)
+					if (Coordinate.DistanceTo(SpawnPosition) <= TetherRange)
 						return false;
 					else
 						return true;
@@ -971,16 +971,16 @@ namespace DOL.GS
 		}
 
         public bool IsAtTargetLocation
-            => Motion.Destination.Equals(Location);
+            => Motion.Destination.Equals(Coordinate);
 
-        public override void TurnTo(Coordinate location, bool sendUpdate = true)
+        public override void TurnTo(Coordinate coordinate, bool sendUpdate = true)
         {
             if (IsStunned || IsMezzed) return;
 
-            Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(location.X, location.Y));
+            Notify(GameNPCEvent.TurnTo, this, new TurnToEventArgs(coordinate.X, coordinate.Y));
 
-            if (sendUpdate) Orientation = Location.GetOrientationTo(location);
-            else base.Orientation = Location.GetOrientationTo(location);
+            if (sendUpdate) Orientation = Coordinate.GetOrientationTo(coordinate);
+            else base.Orientation = Coordinate.GetOrientationTo(coordinate);
         }
 
         [Obsolete("Use TurnTo(Coordinate[,bool]) instead.")]
@@ -1025,7 +1025,7 @@ namespace DOL.GS
 			if (target == null || target.CurrentRegion != CurrentRegion)
 				return;
 
-			TurnTo(target.Location, sendUpdate);
+			TurnTo(target.Coordinate, sendUpdate);
 		}
 
 		/// <summary>
@@ -1075,7 +1075,7 @@ namespace DOL.GS
 				: base(actionSource)
 			{
                 oldOrientation = actionSource.Orientation;
-				m_oldPosition = actionSource.Location;
+				m_oldPosition = actionSource.Coordinate;
 			}
 
 			protected override void OnTick()
@@ -1156,7 +1156,7 @@ namespace DOL.GS
 		[Obsolete("This is going to be removed.")]
 		public virtual int GetTicksToArriveAt(IPoint3D target, int speed)
 		{
-			return (int)Location.DistanceTo(target.ToCoordinate()) * 1000 / speed;
+			return (int)Coordinate.DistanceTo(target.ToCoordinate()) * 1000 / speed;
 		}
 
         /// <summary>
@@ -1195,7 +1195,7 @@ namespace DOL.GS
 
 			CancelWalkToTimer();
 
-            var notifyDestination = TargetObject != null ? TargetObject.Location : Coordinate.Nowhere;
+            var notifyDestination = TargetObject != null ? TargetObject.Coordinate : Coordinate.Nowhere;
 			Notify(GameNPCEvent.WalkTo, this, new WalkToEventArgs(notifyDestination, speed));
 
 			StartArriveAtTargetAction((int)(Motion.RemainingDistance * 1000 / speed));
@@ -1455,7 +1455,7 @@ namespace DOL.GS
 			}
 
 			//Calculate the difference between our position and the players position
-            var diffVec = followTarget.Location - Location;
+            var diffVec = followTarget.Coordinate - Coordinate;
 			var distance = diffVec.Length;
 
 			//if distance is greater then the max follow distance, stop following and return home
@@ -1491,10 +1491,10 @@ namespace DOL.GS
 				}
 
 				//If we're part of a formation, we can get out early.
-                var formationLocation = brain.GetFormationLocation(followTarget.Location);
-				if (formationLocation != Coordinate.Nowhere)
+                var formationCoordinate = brain.GetFormationCoordinate(followTarget.Coordinate);
+				if (formationCoordinate != Coordinate.Nowhere)
 				{
-                    WalkTo(formationLocation, MaxSpeed);
+                    WalkTo(formationCoordinate, MaxSpeed);
 					return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
 				}
 			}
@@ -1526,14 +1526,14 @@ namespace DOL.GS
 			//Subtract the offset from the target's position to get
 			//our target position
 
-            var destination = followTarget.Location - followOffset;
+            var destination = followTarget.Coordinate - followOffset;
             if (InCombat || Brain is BomberBrain) 
             {
                 PathTo(destination, MaxSpeed);
             }
             else 
             {
-                var speed = (short)Location.DistanceTo(destination, ignoreZ: true);
+                var speed = (short)Coordinate.DistanceTo(destination, ignoreZ: true);
                 PathTo(destination, speed);
             }
             return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;
@@ -1612,7 +1612,7 @@ namespace DOL.GS
 
 			PathingNormalSpeed = speed;
 
-			if (Location.DistanceTo(CurrentWayPoint.Coordinate) < 100)
+			if (Coordinate.DistanceTo(CurrentWayPoint.Coordinate) < 100)
 			{
 				// reaching a waypoint can start an ambient sentence
 				FireAmbientSentence(eAmbientTrigger.moving);
@@ -5379,7 +5379,7 @@ namespace DOL.GS
 			// broadcasted , yelled or talked ?
 			if (chosen.Voice.StartsWith("b"))
 			{
-				foreach (GamePlayer player in CurrentRegion.GetPlayersInRadius(Location, 25000, false, false))
+				foreach (GamePlayer player in CurrentRegion.GetPlayersInRadius(Coordinate, 25000, false, false))
 				{
 					player.Out.SendMessage(text, eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
 				}

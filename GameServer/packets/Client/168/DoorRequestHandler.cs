@@ -262,7 +262,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							if (player.Location.DistanceTo(mydoor.Location) < m_radius)
+							if (player.Coordinate.DistanceTo(mydoor.Coordinate) < m_radius)
 							{
 								if (m_doorState == 0x01)
 									mydoor.Open(player);

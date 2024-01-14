@@ -1499,7 +1499,7 @@ namespace DOL.GS
 						//if we aren't releasing anywhere, release to the border keeps
 						if (releasePosition.Coordinate == Coordinate.Zero)
 						{
-							releasePosition = GameServer.KeepManager.GetBorderKeepLocation(((byte)Realm * 2) / 1);
+							releasePosition = GameServer.KeepManager.GetBorderKeepPosition(((byte)Realm * 2) / 1);
 						}
 						break;
 					}
@@ -1577,17 +1577,17 @@ namespace DOL.GS
 										{
 											case eRealm.Albion:
 												{
-													releasePosition = GameServer.KeepManager.GetBorderKeepLocation(1);
+													releasePosition = GameServer.KeepManager.GetBorderKeepPosition(1);
 													break;
 												}
 											case eRealm.Midgard:
 												{
-													releasePosition = GameServer.KeepManager.GetBorderKeepLocation(3);
+													releasePosition = GameServer.KeepManager.GetBorderKeepPosition(3);
 													break;
 												}
 											case eRealm.Hibernia:
 												{
-													releasePosition = GameServer.KeepManager.GetBorderKeepLocation(5);
+													releasePosition = GameServer.KeepManager.GetBorderKeepPosition(5);
 													break;
 												}
 										}
@@ -9980,7 +9980,7 @@ namespace DOL.GS
 				Out.SendPlayerJump(false);
 
 				// are we jumping far enough to force a complete refresh?
-				if (Location.DistanceTo(positionBeforePort) > WorldMgr.REFRESH_DISTANCE)
+				if (Coordinate.DistanceTo(positionBeforePort) > WorldMgr.REFRESH_DISTANCE)
 				{
 					RefreshWorld();
 				}
@@ -10013,7 +10013,7 @@ namespace DOL.GS
 						if (petBody.ControlledNpcList != null)
 							foreach (IControlledBrain icb in petBody.ControlledNpcList)
 								if (icb != null && icb.Body is GameNPC petBody2
-									&& petBody2.Location.DistanceTo(positionBeforePort) < 500)
+									&& petBody2.Coordinate.DistanceTo(positionBeforePort) < 500)
 										petBody2.MoveWithoutRemovingFromWorld(destination, false);
 					}
 				}
@@ -10329,7 +10329,7 @@ namespace DOL.GS
 			set { m_lastPositionUpdateZone = value; }
 		}
 
-        public Coordinate LastUpdateLocation => Motion.Start.Coordinate;
+        public Coordinate LastUpdateCoordinate => Motion.Start.Coordinate;
 
 		/// <summary>
 		/// Holds the players max Z for fall damage
@@ -12296,10 +12296,10 @@ namespace DOL.GS
 			//important, use CurrentRegion property
 			//instead because it sets the Region too
 			CurrentRegionID = (ushort)DBCharacter.Region;
-			if (CurrentRegion == null || CurrentRegion.GetZone(Location) == null)
+			if (CurrentRegion == null || CurrentRegion.GetZone(Coordinate) == null)
 			{
                 log.WarnFormat("Invalid region/zone on char load ({0}): x={1} y={2} z={3} reg={4}; moving to bind point."
-                    , DBCharacter.Name, Location.X, Location.Y, Location.Z, DBCharacter.Region);
+                    , DBCharacter.Name, Coordinate.X, Coordinate.Y, Coordinate.Z, DBCharacter.Region);
                 Position = DBCharacter.GetBindPosition();
 			}
 
@@ -12854,7 +12854,7 @@ namespace DOL.GS
 						fieldOfListen += (npc.Level - player.Level) * 3;
 					}
 
-					var angle = npc.GetAngleTo(player.Location);
+					var angle = npc.GetAngleTo(player.Coordinate);
 
 					//player in front
 					fieldOfView /= 2.0;

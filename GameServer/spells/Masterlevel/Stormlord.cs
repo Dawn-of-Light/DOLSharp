@@ -154,7 +154,7 @@ namespace DOL.GS.Spells
                     int range = Util.Random(0, 750);
                     double angle = Util.RandomDouble() * 2 * Math.PI;
                     var offset = Vector.Create(x: (int)(range * Math.Cos(angle)), y: (int)(range * Math.Sin(angle)) );
-                    targetNPC.WalkTo(targetNPC.Location + offset, targetNPC.MaxSpeed);
+                    targetNPC.WalkTo(targetNPC.Coordinate + offset, targetNPC.MaxSpeed);
                 }
             }
         }

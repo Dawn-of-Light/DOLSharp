@@ -44,7 +44,7 @@ namespace DOL.GS.Spells
                 return false;
 			}
 
-			if (Caster.Location.DistanceTo(Caster.GroundTargetPosition) > CalculateSpellRange())
+			if (Caster.Coordinate.DistanceTo(Caster.GroundTargetPosition) > CalculateSpellRange())
 			{
                 if (Caster is GamePlayer)
                     MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange"), eChatType.CT_SpellResisted);
@@ -76,7 +76,7 @@ namespace DOL.GS.Spells
 				return;
 			}
 
-			if (Caster.Location.DistanceTo(Caster.GroundTargetPosition) > CalculateSpellRange())
+			if (Caster.Coordinate.DistanceTo(Caster.GroundTargetPosition) > CalculateSpellRange())
 			{
                 if (Caster is GamePlayer)
                     MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange"), eChatType.CT_SpellResisted);

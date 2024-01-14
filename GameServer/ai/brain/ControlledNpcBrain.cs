@@ -275,7 +275,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public virtual void Stay()
 		{
-            tempPosition = Body.Location;
+            tempPosition = Body.Coordinate;
 			WalkState = eWalkState.Stay;
 			Body.StopFollowing();
 		}
@@ -285,10 +285,10 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public virtual void ComeHere()
 		{
-            tempPosition = Body.Location;
+            tempPosition = Body.Coordinate;
 			WalkState = eWalkState.ComeHere;
 			Body.StopFollowing();
-			Body.PathTo(Owner.Location, Body.MaxSpeed);
+			Body.PathTo(Owner.Coordinate, Body.MaxSpeed);
 		}
 
 		/// <summary>
@@ -297,10 +297,10 @@ namespace DOL.AI.Brain
 		/// <param name="target"></param>
 		public virtual void Goto(GameObject target)
 		{
-			tempPosition = Body.Location;
+			tempPosition = Body.Coordinate;
 			WalkState = eWalkState.GoTarget;
 			Body.StopFollowing();
-			Body.PathTo(target.Location, Body.MaxSpeed);
+			Body.PathTo(target.Coordinate, Body.MaxSpeed);
 		}
 
 		public virtual void SetAggressionState(eAggressionState state)

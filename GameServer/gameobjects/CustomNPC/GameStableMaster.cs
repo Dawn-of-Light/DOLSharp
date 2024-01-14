@@ -130,7 +130,7 @@ namespace DOL.GS
 				{
 					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
 
-					if ((path != null) && ((Math.Abs(path.Coordinate.X - Location.X)) < 500) && ((Math.Abs(path.Coordinate.Y - Location.Y)) < 500))
+					if ((path != null) && ((Math.Abs(path.Coordinate.X - Coordinate.X)) < 500) && ((Math.Abs(path.Coordinate.Y - Coordinate.Y)) < 500))
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);
                         InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);

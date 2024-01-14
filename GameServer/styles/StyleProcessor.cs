@@ -138,7 +138,7 @@ namespace DOL.GS.Styles
 							return false;
 
 						// get players angle on target
-                        var angle = target.GetAngleTo(living.Location);
+                        var angle = target.GetAngleTo(living.Coordinate);
 						//player.Out.SendDebugMessage("Positional check: "+style.OpeningRequirementValue+" angle "+angle+" target heading="+target.Heading);						
 
 						switch ((Style.eOpeningPosition)style.OpeningRequirementValue)

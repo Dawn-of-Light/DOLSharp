@@ -156,30 +156,30 @@ namespace DOL.GS.GameEvents
 
 			//We set the position, model and size of our trainees
 			m_guardTrainee[0].Position = m_guardMaster.Position + Vector.Create(-70, -66);
-			m_guardTrainee[0].TurnTo(m_guardMaster.Location);
+			m_guardTrainee[0].TurnTo(m_guardMaster.Coordinate);
 			m_guardTrainee[0].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[0].Size = (byte) (45 + m_rnd.Next(10));
 
 			m_guardTrainee[1].Position = m_guardMaster.Position + Vector.Create(76, -29);
-			m_guardTrainee[1].TurnTo(m_guardMaster.Location);
+			m_guardTrainee[1].TurnTo(m_guardMaster.Coordinate);
 
 			m_guardTrainee[1].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[1].Size = (byte) (45 + m_rnd.Next(10));
 
 			m_guardTrainee[2].Position = m_guardMaster.Position + Vector.Create(-110, 22);
-			m_guardTrainee[2].TurnTo(m_guardMaster.Location);
+			m_guardTrainee[2].TurnTo(m_guardMaster.Coordinate);
 
 			m_guardTrainee[2].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[2].Size = (byte) (45 + m_rnd.Next(10));
 
 			m_guardTrainee[3].Position = m_guardMaster.Position + Vector.Create(-34, 88);
-			m_guardTrainee[3].TurnTo(m_guardMaster.Location);
+			m_guardTrainee[3].TurnTo(m_guardMaster.Coordinate);
 
 			m_guardTrainee[3].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[3].Size = (byte) (45 + m_rnd.Next(10));
 
 			m_guardTrainee[4].Position = m_guardMaster.Position + Vector.Create(52, 64);
-			m_guardTrainee[4].TurnTo(m_guardMaster.Location);
+			m_guardTrainee[4].TurnTo(m_guardMaster.Coordinate);
 
 			m_guardTrainee[4].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[4].Size = (byte) (45 + m_rnd.Next(10));

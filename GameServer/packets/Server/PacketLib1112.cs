@@ -610,7 +610,7 @@ namespace DOL.GS.PacketHandler
 					pak.WriteShort(content);
 				}
 
-                var zoneCoordinate = player.Location - player.CurrentZone.Offset;
+                var zoneCoordinate = player.Coordinate - player.CurrentZone.Offset;
 				pak.WriteShort((ushort)zoneCoordinate.Z);
 				pak.WriteShort((ushort)zoneCoordinate.X);
 				pak.WriteShort((ushort)zoneCoordinate.Y);

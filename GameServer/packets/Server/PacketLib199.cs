@@ -117,8 +117,8 @@ namespace DOL.GS.PacketHandler
 								Region reg = WorldMgr.GetRegion((ushort)characters[j].Region);
 								if (reg != null)
 								{
-                                    var location = characters[j].GetPosition().Coordinate;
-									var description = GamePlayerUtils.GetTranslatedSpotDescription(reg, m_gameClient, location);
+                                    var coordinate = characters[j].GetPosition().Coordinate;
+									var description = GamePlayerUtils.GetTranslatedSpotDescription(reg, m_gameClient, coordinate);
 									pak.FillString(description, 24);
 								}
 								else

@@ -20,7 +20,7 @@ namespace DOL.GS
         public (LinePath, PathingError) GetPathStraightAsync(Zone zone, Coordinate start, Coordinate end)
             => (new LinePath(), PathingError.NavmeshUnavailable);
 
-        public Vector3? GetRandomPointAsync(Zone zone, Coordinate centerLocation, float radius)
+        public Vector3? GetRandomPointAsync(Zone zone, Coordinate center, float radius)
             => null;
 
 		public Vector3? GetClosestPointAsync(Zone zone, Vector3 position, float xRange = 256, float yRange = 256, float zRange = 256)

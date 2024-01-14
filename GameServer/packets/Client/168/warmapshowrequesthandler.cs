@@ -139,7 +139,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							case 5: //ligen
 							case 6: //cain
 								{
-									portPosition = GameServer.KeepManager.GetBorderKeepLocation(keepId);
+									portPosition = GameServer.KeepManager.GetBorderKeepPosition(keepId);
 									break;
 								}
 							default:

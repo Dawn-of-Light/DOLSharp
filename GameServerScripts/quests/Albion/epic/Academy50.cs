@@ -1032,7 +1032,7 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
-			morganaArea = WorldMgr.GetRegion(Morgana.CurrentRegionID).AddArea(new Area.Circle(null, Morgana.Location, 1000));
+			morganaArea = WorldMgr.GetRegion(Morgana.CurrentRegionID).AddArea(new Area.Circle(null, Morgana.Coordinate, 1000));
 			morganaArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterMorganaArea));
 
 			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));

@@ -499,7 +499,7 @@ namespace DOL.GS.Quests.Albion
 
 						GameEventMgr.AddHandler(pigHerderWyatt, GameNPCEvent.ArriveAtTarget, new DOLEventHandler(OnCloseToDeadWilbur));
                         var offset = Vector.Create(x: -90, y: 90 );
-						pigHerderWyatt.WalkTo(gArgs.Target.Location + offset, 200);
+						pigHerderWyatt.WalkTo(gArgs.Target.Coordinate + offset, 200);
 						
 						return;
 					}

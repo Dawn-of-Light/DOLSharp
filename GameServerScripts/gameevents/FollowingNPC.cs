@@ -110,7 +110,7 @@ namespace DOL.GS.GameEvents
 				}
 
 				//Calculate the difference between our position and the players position
-                var diffVec = m_playerToFollow.Location - Location;
+                var diffVec = m_playerToFollow.Coordinate - Coordinate;
 
 				//Calculate the distance to the player
 				float distance = (float)Math.Sqrt(diffVec.X * diffVec.X + diffVec.Y * diffVec.Y);
@@ -141,7 +141,7 @@ namespace DOL.GS.GameEvents
 					speed = 50;
 
 				//Make the mob walk to the new spot
-                var destination = m_playerToFollow.Location - Vector.Create((int)(diffVec.X/distance*50),(int)(diffVec.X/distance*50));
+                var destination = m_playerToFollow.Coordinate - Vector.Create((int)(diffVec.X/distance*50),(int)(diffVec.X/distance*50));
 				PathTo(destination, (short)speed);
 			}
 		}

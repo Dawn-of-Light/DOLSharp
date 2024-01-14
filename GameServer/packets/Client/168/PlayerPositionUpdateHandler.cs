@@ -137,7 +137,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 			}
 
-            var newLocation = Coordinate.Create(
+            var newCoordinate = Coordinate.Create(
                 x: newZone.Offset.X + xOffsetInZone,
                 y: newZone.Offset.Y + yOffsetInZone,
                 z: realZ);
@@ -187,12 +187,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (timediff > 0)
 			{
-				distance = (int)client.Player.LastUpdateLocation.DistanceTo(newLocation);
+				distance = (int)client.Player.LastUpdateCoordinate.DistanceTo(newCoordinate);
 				coordsPerSec = distance * 1000 / timediff;
 
-				if (distance < 100 && client.Player.LastUpdateLocation.Z > 0)
+				if (distance < 100 && client.Player.LastUpdateCoordinate.Z > 0)
 				{
-					jumpDetect = realZ - client.Player.LastUpdateLocation.Z;
+					jumpDetect = realZ - client.Player.LastUpdateCoordinate.Z;
 				}
 			}
 
@@ -309,11 +309,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.TempProperties.setProperty(LASTCPSTICK, environmentTick);
 			}
 
-			if (client.Player.Location.X != newLocation.X || client.Player.Location.Y != newLocation.Y)
+			if (client.Player.Coordinate.X != newCoordinate.X || client.Player.Coordinate.Y != newCoordinate.Y)
             {
 				client.Player.TempProperties.setProperty(LASTMOVEMENTTICK, client.Player.CurrentRegion.Time);
             }
-            client.Player.Position = Position.Create(client.Player.Position.RegionID, coordinate: newLocation, heading: (ushort)(headingflag & 0xFFF));
+            client.Player.Position = Position.Create(client.Player.Position.RegionID, coordinate: newCoordinate, heading: (ushort)(headingflag & 0xFFF));
 
 			// update client zone information for waterlevel and diving
 			if (zoneChange)
@@ -327,7 +327,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				// Because we may be in an instance we need to do the area check from the current region
 				// rather than relying on the zone which is in the skinned region.  - Tolakram
 
-				var newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player.Location);
+				var newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player.Coordinate);
 
 				// Check for left areas
 				if (oldAreas != null)
@@ -512,7 +512,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				var positions = client.Player.LastUniquePositions;
 				var pos = positions[0];
-                var newPosition = client.Player.Position.With(coordinate: newLocation);
+                var newPosition = client.Player.Position.With(coordinate: newCoordinate);
                 if (pos.Coordinate != newPosition.Coordinate)
                 {
                     pos = positions[positions.Length - 1];
@@ -598,7 +598,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				outpak.WriteShort(content);
 			}
-            var zoneCoord = client.Player.Location - client.Player.CurrentZone.Offset;
+            var zoneCoord = client.Player.Coordinate - client.Player.CurrentZone.Offset;
 			outpak.WriteShort((ushort)zoneCoord.Z);
 			outpak.WriteShort((ushort)zoneCoord.X);
 			outpak.WriteShort((ushort)zoneCoord.Y);
@@ -863,12 +863,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (timediff > 0)
 			{
-				distance = (int)client.Player.LastUpdateLocation.DistanceTo(newPosition.Coordinate);
+				distance = (int)client.Player.LastUpdateCoordinate.DistanceTo(newPosition.Coordinate);
 				coordsPerSec = distance * 1000 / timediff;
 
-				if (distance < 100 && client.Player.LastUpdateLocation.Z > 0)
+				if (distance < 100 && client.Player.LastUpdateCoordinate.Z > 0)
 				{
-					jumpDetect = (int)newPlayerZ - client.Player.LastUpdateLocation.Z;
+					jumpDetect = (int)newPlayerZ - client.Player.LastUpdateCoordinate.Z;
 				}
 			}
 
@@ -992,7 +992,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				// Because we may be in an instance we need to do the area check from the current region
 				// rather than relying on the zone which is in the skinned region.  - Tolakram
 
-				var newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player.Location);
+				var newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player.Coordinate);
 
 				// Check for left areas
 				if (oldAreas != null)

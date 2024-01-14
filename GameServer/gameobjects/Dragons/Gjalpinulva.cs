@@ -61,8 +61,8 @@ namespace DOL.GS
 			for (int dog = 1; dog <= 10; ++dog)
 			{
 				isRetriever = Util.Chance(25);
-                var spawnLocation = Location + Vector.Create(x: Util.Random(300, 600), y: Util.Random(300, 600));
-				dogSpawn = SpawnTimedAdd((isRetriever) ? 610 : 611, (isRetriever) ? Util.Random(47, 53) : 37, spawnLocation, 60, isRetriever);
+                var spawnCoordinate = Coordinate + Vector.Create(x: Util.Random(300, 600), y: Util.Random(300, 600));
+				dogSpawn = SpawnTimedAdd((isRetriever) ? 610 : 611, (isRetriever) ? Util.Random(47, 53) : 37, spawnCoordinate, 60, isRetriever);
 
 				// We got a retriever, tell it who its master is and which exit
 				// to run to.
@@ -114,7 +114,7 @@ namespace DOL.GS
 			// Spawn nasty adds.
 
 			if (m_retrieverList.Contains(sender))
-                SpawnDrakulvs(Util.Random(7, 10), sender.Location);
+                SpawnDrakulvs(Util.Random(7, 10), sender.Coordinate);
 		}
 
 		/// <summary>
@@ -125,15 +125,15 @@ namespace DOL.GS
 		/// <param name="numAdds"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		private void SpawnDrakulvs(int numAdds, Coordinate location)
+		private void SpawnDrakulvs(int numAdds, Coordinate coordinate)
 		{
 			GameNPC drakulv;
 			bool isDisciple = false;
 			for (int add = 0; add < numAdds; ++add)
 			{
 				isDisciple = Util.Chance(25);
-                var randomLocation = location + Vector.Create(x: Util.Random(250), y: Util.Random(250));
-				drakulv = SpawnTimedAdd((isDisciple) ? 613 : 612, Util.Random(62, 68), randomLocation, 120, false);
+                var randomCoordinate = coordinate + Vector.Create(x: Util.Random(250), y: Util.Random(250));
+				drakulv = SpawnTimedAdd((isDisciple) ? 613 : 612, Util.Random(62, 68), randomCoordinate, 120, false);
 
 				if (drakulv != null && drakulv.Brain is StandardMobBrain && this.Brain is DragonBrain)
 				{

@@ -29,7 +29,7 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-            if ( caster.GroundTargetPosition == Position.Nowhere || caster.Location.DistanceTo(caster.GroundTargetPosition) > 1500)
+            if ( caster.GroundTargetPosition == Position.Nowhere || caster.Coordinate.DistanceTo(caster.GroundTargetPosition) > 1500)
             {
 				caster.Out.SendMessage("You groundtarget is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

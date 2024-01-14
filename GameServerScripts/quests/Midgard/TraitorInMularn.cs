@@ -439,7 +439,7 @@ namespace DOL.GS.Quests.Midgard
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == necklaceOfDoppelganger.Id_nb)
 				{
-                    if (player.Location.DistanceTo(hindaEnd) <= 2500)
+                    if (player.Coordinate.DistanceTo(hindaEnd) <= 2500)
 					{
 						foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{

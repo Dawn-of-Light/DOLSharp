@@ -75,18 +75,18 @@ namespace DOL.AI.Brain
 				// Tolakram - always clear the aggro list so if this is done by mistake the list will correctly re-fill on next think
 				ClearAggroList();
 
-				if (guard.Location.DistanceTo(guard.SpawnPosition, ignoreZ: true) > 50)
+				if (guard.Coordinate.DistanceTo(guard.SpawnPosition, ignoreZ: true) > 50)
 				{
 					guard.WalkToSpawn();
 				}
 			}
 			//Eden - Portal Keeps Guards max distance
-            if (guard.Level > 200 && guard.Location.DistanceTo(guard.SpawnPosition) > 2000)
+            if (guard.Level > 200 && guard.Coordinate.DistanceTo(guard.SpawnPosition) > 2000)
 			{
 				ClearAggroList();
 				guard.WalkToSpawn();
 			}
-            else if (guard.InCombat == false && guard.Location.DistanceTo(guard.SpawnPosition) > 6000)
+            else if (guard.InCombat == false && guard.Coordinate.DistanceTo(guard.SpawnPosition) > 6000)
 			{
 				ClearAggroList();
 				guard.WalkToSpawn();

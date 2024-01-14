@@ -36,9 +36,9 @@ namespace DOL.GS.Movement
         [Obsolete("This is going to be removed.")]
         public PathPoint(PathPoint pp) : this(pp.Coordinate, pp.MaxSpeed, pp.Type) { }
 
-        public PathPoint(Coordinate location, int maxspeed, ePathType type)
+        public PathPoint(Coordinate coordinate, int maxspeed, ePathType type)
         {
-            Coordinate = location;
+            Coordinate = coordinate;
             MaxSpeed = maxspeed;
             Type = type;
         }

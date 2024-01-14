@@ -195,7 +195,7 @@ namespace DOL.GS
             return new[] { value.X * LocalPathingMgr.CONVERSION_FACTOR, value.Z * LocalPathingMgr.CONVERSION_FACTOR, value.Y * LocalPathingMgr.CONVERSION_FACTOR };
         }
 
-        private static float[] LocationToRecastFloatArray(Coordinate loc)
+        private static float[] CoordinateToRecastFloatArray(Coordinate loc)
             => new[] {
                 loc.X * LocalPathingMgr.CONVERSION_FACTOR,
                 (loc.Z + 8) * LocalPathingMgr.CONVERSION_FACTOR,
@@ -213,8 +213,8 @@ namespace DOL.GS
                 query = new NavMeshQuery(_navmeshPtrs[zone.ID]);
                 _navmeshQueries.Value.Add(zone.ID, query);
             }
-            var startFloats = LocationToRecastFloatArray(start);
-            var endFloats = LocationToRecastFloatArray(destination);
+            var startFloats = CoordinateToRecastFloatArray(start);
+            var endFloats = CoordinateToRecastFloatArray(destination);
 
             var numNodes = 0;
             var buffer = new float[MAX_POLY * 3];
@@ -234,7 +234,7 @@ namespace DOL.GS
         }
 
 
-        public Vector3? GetRandomPointAsync(Zone zone, Coordinate centerLocation, float radius)
+        public Vector3? GetRandomPointAsync(Zone zone, Coordinate center, float radius)
         {
             if (!_navmeshPtrs.ContainsKey(zone.ID))
                 return null;
@@ -249,7 +249,7 @@ namespace DOL.GS
                 _navmeshQueries.Value.Add(zone.ID, query);
             }
             var ptrs = _navmeshPtrs[zone.ID];
-            var center = LocationToRecastFloatArray(centerLocation);
+            var centerAsFloatArray = CoordinateToRecastFloatArray(center);
             var cradius = (radius * CONVERSION_FACTOR);
             var outVec = new float[3];
 
@@ -259,7 +259,7 @@ namespace DOL.GS
 
             var polyPickEx = new float[3] { 2.0f, 4.0f, 2.0f };
 
-            var status = FindRandomPointAroundCircle(query, center, cradius, polyPickEx, filter, outVec);
+            var status = FindRandomPointAroundCircle(query, centerAsFloatArray, cradius, polyPickEx, filter, outVec);
 
             if ((status & dtStatus.DT_SUCCESS) != 0)
                 result = new Vector3(outVec[0] * INV_FACTOR, outVec[2] * INV_FACTOR, outVec[1] * INV_FACTOR);

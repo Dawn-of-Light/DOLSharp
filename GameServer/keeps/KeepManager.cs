@@ -679,14 +679,14 @@ namespace DOL.GS.Keeps
 
         public virtual void GetBorderKeepLocation(int keepid, out int x, out int y, out int z, out ushort heading)
         {
-            var result = GetBorderKeepLocation(keepid);
+            var result = GetBorderKeepPosition(keepid);
             x = result.X;
             y = result.Y;
             z = result.Z;
             heading = result.Orientation.InHeading;
         }
 
-		public virtual Position GetBorderKeepLocation(int keepid)
+		public virtual Position GetBorderKeepPosition(int keepid)
 		{
             var newFrontierRegionID = (ushort)163;
 			switch (keepid)

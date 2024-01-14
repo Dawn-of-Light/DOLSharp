@@ -99,7 +99,7 @@ namespace DOL.GS
         /// </summary>
         public static bool ShouldPath(GameNPC owner, Coordinate destination)
         {
-            if (owner.Location.DistanceTo(destination) < MIN_PATHING_DISTANCE)
+            if (owner.Coordinate.DistanceTo(destination) < MIN_PATHING_DISTANCE)
                 return false; // too close to path
             if (owner.IsFlying)
                 return false;
@@ -134,7 +134,7 @@ namespace DOL.GS
             try
             {
                 var currentZone = Owner.CurrentZone;
-                var pathingResult = PathingMgr.Instance.GetPathStraightAsync(currentZone, Owner.Location, destination);
+                var pathingResult = PathingMgr.Instance.GetPathStraightAsync(currentZone, Owner.Coordinate, destination);
 
                 if (pathingResult.Error != PathingError.NoPathFound && pathingResult.Error != PathingError.NavmeshUnavailable &&
                     !pathingResult.Path.Start.Equals(Coordinate.Nowhere))
@@ -167,7 +167,7 @@ namespace DOL.GS
                 ReplotPath(destination);
             }
 
-            while (path.PointCount > 0 && Owner.Location.DistanceTo(path.CurrentWayPoint) <= NODE_REACHED_DISTANCE)
+            while (path.PointCount > 0 && Owner.Coordinate.DistanceTo(path.CurrentWayPoint) <= NODE_REACHED_DISTANCE)
             {
                 path.SelectNextWayPoint();
             }

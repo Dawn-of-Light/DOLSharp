@@ -2005,7 +2005,7 @@ namespace DOL.GS.Commands
 
                         client.Out.SendMessage("\"" + player.Name + "\", " +
                                                player.CurrentRegionID + ", " +
-                                               player.Location + ", " +
+                                               player.Coordinate + ", " +
                                                player.Orientation.InHeading,
                                                eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     }

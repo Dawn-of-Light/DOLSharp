@@ -466,7 +466,7 @@ namespace DOL.GS
 		{
 
 			if (!m_initialized) InitializeZone();
-			int subZoneIndex = GetSubZoneIndex(p_Obj.Location);
+			int subZoneIndex = GetSubZoneIndex(p_Obj.Coordinate);
 			if ((subZoneIndex >= 0) && (subZoneIndex < SUBZONE_NBR))
 			{
 				SubNodeElement element = new SubNodeElement();
@@ -513,7 +513,7 @@ namespace DOL.GS
 		{
 
 			if (!m_initialized) InitializeZone();
-			int subZoneIndex = GetSubZoneIndex(element.data.Location);
+			int subZoneIndex = GetSubZoneIndex(element.data.Coordinate);
 
 			if (log.IsDebugEnabled)
 			{
@@ -539,16 +539,16 @@ namespace DOL.GS
         /// Gets the lists of objects, located in the current Zone and of the given type, that are at most at a 'radius' distance from (x,y,z)
         /// The found objects are appended to the given 'partialList'.
         /// </summary>
-        internal ArrayList GetObjectsInRadius(eGameObjectType type, Coordinate location, ushort radius, ArrayList partialList, bool ignoreZ)
+        internal ArrayList GetObjectsInRadius(eGameObjectType type, Coordinate coordinate, ushort radius, ArrayList partialList, bool ignoreZ)
 		{
 			if (!m_initialized) InitializeZone();
 			// initialise parameters
 			uint sqRadius = (uint)radius * (uint)radius;
-			int referenceSubzoneIndex = GetSubZoneIndex(location);
+			int referenceSubzoneIndex = GetSubZoneIndex(coordinate);
 			int typeIndex = (int)type;
 
-			int xInZone = location.X - Offset.X; // x in zone coordinates
-			int yInZone = location.Y - Offset.Y; // y in zone coordinates
+			int xInZone = coordinate.X - Offset.X; // x in zone coordinates
+			int yInZone = coordinate.Y - Offset.Y; // y in zone coordinates
 
 			int cellNbr = (radius >> SUBZONE_SHIFT) + 1; // radius in terms of subzone number
 			int xInCell = xInZone >> SUBZONE_SHIFT; // xInZone in terms of subzone coord
@@ -603,7 +603,7 @@ namespace DOL.GS
 							{
 								// we are in the subzone of the observation point
 								// => check all distances for all objects in the subzone
-								UnsafeAddToListWithDistanceCheck(startElement, location, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, ignoreZ);
+								UnsafeAddToListWithDistanceCheck(startElement, coordinate, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, ignoreZ);
 								UnsafeUpdateSubZoneTimestamp(currentSubZoneIndex, typeIndex);
 							}
 						}
@@ -636,7 +636,7 @@ namespace DOL.GS
 
 									lock (startElement)
 									{
-										UnsafeAddToListWithDistanceCheck(startElement, location, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, ignoreZ);
+										UnsafeAddToListWithDistanceCheck(startElement, coordinate, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, ignoreZ);
 										UnsafeUpdateSubZoneTimestamp(currentSubZoneIndex, typeIndex);
 									}
 								}
@@ -713,7 +713,7 @@ namespace DOL.GS
 
 		private void UnsafeAddToListWithDistanceCheck(
 			SubNodeElement startElement,
-			Coordinate location,
+			Coordinate coordinate,
 			uint sqRadius,
 			int typeIndex,
 			int subZoneIndex,
@@ -747,7 +747,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					if (CheckSquareDistance(location, currentObject.Location, sqRadius, ignoreZ) && !partialList.Contains(currentObject))
+					if (CheckSquareDistance(coordinate, currentObject.Coordinate, sqRadius, ignoreZ) && !partialList.Contains(currentObject))
 					{
 						// the current object exists, is Active and still in the current subzone
 						// moreover it is in the right range and not yet in the result set
@@ -872,7 +872,7 @@ namespace DOL.GS
 			{
 				// the current object exists, is Active and still in the Region where this Zone is located
 
-				int currentElementSubzoneIndex = GetSubZoneIndex(currentObject.Location);
+				int currentElementSubzoneIndex = GetSubZoneIndex(currentObject.Coordinate);
 
 				if (currentElementSubzoneIndex == -1)
 				{
@@ -973,7 +973,7 @@ namespace DOL.GS
 				for (int i = 0; i < currentList.Count; i++)
 				{
 					currentElement = (SubNodeElement)currentList[i];
-					currentZone = ZoneRegion.GetZone(currentElement.data.Location);
+					currentZone = ZoneRegion.GetZone(currentElement.data.Coordinate);
 
 					if (currentZone != null)
 					{

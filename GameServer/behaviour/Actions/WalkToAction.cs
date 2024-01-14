@@ -40,9 +40,9 @@ namespace DOL.GS.Behaviour.Actions
         public override void Perform(DOLEvent e, object sender, EventArgs args)
         {
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-            var location = (P is IPoint3D) ? P.ToCoordinate() : player.Location;
+            var destination = (P is IPoint3D) ? P.ToCoordinate() : player.Coordinate;
 
-            Q.WalkTo(location, Q.CurrentSpeed);
+            Q.WalkTo(destination, Q.CurrentSpeed);
             
         }
     }

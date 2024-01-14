@@ -218,7 +218,7 @@ namespace DOL.AI.Brain
         {
             GameDragon dragon = Body as GameDragon;
             if (dragon == null) return false;
-            return dragon.Location.DistanceTo(dragon.SpawnPosition) > dragon.TetherRange;
+            return dragon.Coordinate.DistanceTo(dragon.SpawnPosition) > dragon.TetherRange;
         }
 
         #endregion

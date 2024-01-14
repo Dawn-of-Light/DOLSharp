@@ -113,12 +113,12 @@ namespace DOL.GS
 
 			_hookedItem = hookedItem;
 
-			var location = house.GetHookPointLocation(hookedItem.HookpointID);
-			if (location == Coordinate.Nowhere) return false;
+			var coordinate = house.GetHookPointCoordinate(hookedItem.HookpointID);
+			if (coordinate == Coordinate.Nowhere) return false;
 
 			CurrentHouse = house;
 			InHouse = true;
-			Position = Position.Create(house.RegionID, location, hookedItem.Heading);
+			Position = Position.Create(house.RegionID, coordinate, hookedItem.Heading);
 			AddToWorld();
 
 			return true;

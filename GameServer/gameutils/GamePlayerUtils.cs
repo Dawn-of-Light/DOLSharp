@@ -40,15 +40,15 @@ namespace DOL.GS
         [Obsolete("This is going to be removed.")]
 		public static string GetSpotDescription(this Region reg, int x, int y, int z)
 		{
-            var location = Coordinate.Create(x,y,z);
+            var coordinate = Coordinate.Create(x,y,z);
 			if (reg != null)
 			{
-				var area = reg.GetAreasOfSpot(location).OfType<AbstractArea>().FirstOrDefault(a => a.DisplayMessage && !string.IsNullOrEmpty(a.Description));
+				var area = reg.GetAreasOfSpot(coordinate).OfType<AbstractArea>().FirstOrDefault(a => a.DisplayMessage && !string.IsNullOrEmpty(a.Description));
 				
 				if (area != null)
 					return area.Description;
 				
-				var zone = reg.GetZone(location);
+				var zone = reg.GetZone(coordinate);
 				
 				if (zone != null)
 					return zone.Description;
@@ -67,11 +67,11 @@ namespace DOL.GS
         public static string GetTranslatedSpotDescription(this Region reg, GameClient client, int x, int y, int z)
             => GetTranslatedSpotDescription(reg, client, Coordinate.Create(x, y, z));
 
-		public static string GetTranslatedSpotDescription(this Region reg, GameClient client, Coordinate location)
+		public static string GetTranslatedSpotDescription(this Region reg, GameClient client, Coordinate coordinate)
 		{
 			if (reg != null)
 			{
-				var area = reg.GetAreasOfSpot(location).OfType<AbstractArea>().FirstOrDefault(a => a.DisplayMessage);
+				var area = reg.GetAreasOfSpot(coordinate).OfType<AbstractArea>().FirstOrDefault(a => a.DisplayMessage);
 				
 				// Try Translate Area First
 				if (area != null)
@@ -84,7 +84,7 @@ namespace DOL.GS
 					return area.Description;
 				}
 				
-				var zone = reg.GetZone(location);
+				var zone = reg.GetZone(coordinate);
 				
 				// Try Translate Zone
 				if (zone != null)

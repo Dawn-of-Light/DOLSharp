@@ -78,7 +78,7 @@ namespace DOL.GS.RealmAbilities
 				}
 			}
             Statics.StaticTempestBase st = new Statics.StaticTempestBase(m_stunDuration);
-            st.CreateStatic(caster, caster.TargetObject.Location, m_duration, 5, 360);
+            st.CreateStatic(caster, caster.TargetObject.Coordinate, m_duration, 5, 360);
             DisableSkill(living);
         }
         public override int GetReUseDelay(int level)

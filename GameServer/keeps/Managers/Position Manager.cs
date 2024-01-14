@@ -94,10 +94,10 @@ namespace DOL.GS.Keeps
             item.DbKeepPosition = pos;
         }
 
-        public static Vector SaveXY(GameKeepComponent component, Coordinate keepPointLocation)
+        public static Vector SaveXY(GameKeepComponent component, Coordinate keepPointCoordinate)
         {
             var angle = component.Keep.Orientation + component.RelativeOrientationToKeep;
-            var vector = keepPointLocation - component.Location;
+            var vector = keepPointCoordinate - component.Coordinate;
             return vector.RotatedClockwise(angle - Angle.Degrees(90));
         }
 
@@ -141,7 +141,7 @@ namespace DOL.GS.Keeps
 			pos.ComponentRotation = component.ComponentHeading;
 			pos.TemplateID = templateID;
 
-			var keepPositionOffset = SaveXY(component, player.Location);
+			var keepPositionOffset = SaveXY(component, player.Coordinate);
 			pos.XOff = keepPositionOffset.X;
 			pos.YOff = keepPositionOffset.Y;
 			pos.ZOff = keepPositionOffset.Z;
@@ -236,7 +236,7 @@ namespace DOL.GS.Keeps
 				var pathPoint = new PathPoint(dbPathPoint, pathType);
                 var relativeOffset = Vector.Create(pathPoint.Coordinate.X, -pathPoint.Coordinate.Y, pathPoint.Coordinate.Z)
                     .RotatedClockwise(component.Orientation);
-                pathPoint.Coordinate = component.Location + relativeOffset;
+                pathPoint.Coordinate = component.Coordinate + relativeOffset;
 
 				if (first == null)
 				{
@@ -323,7 +323,7 @@ namespace DOL.GS.Keeps
 			pos.ComponentRotation = component.ComponentHeading;
 			pos.TemplateID = Guid.NewGuid().ToString();
 
-			var keepPositionOffset = SaveXY(component, player.Location);
+			var keepPositionOffset = SaveXY(component, player.Coordinate);
 			pos.XOff = keepPositionOffset.X;
 			pos.YOff = keepPositionOffset.Y;
 			pos.ZOff = keepPositionOffset.Z;

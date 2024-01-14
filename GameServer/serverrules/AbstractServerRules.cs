@@ -2204,7 +2204,7 @@ namespace DOL.GS.ServerRules
 		/// <summary>
 		/// Get a housing hookpoint NPC
 		/// </summary>
-        public virtual GameNPC PlaceHousingNPC(DOL.GS.Housing.House house, ItemTemplate item, Coordinate location, ushort heading)
+        public virtual GameNPC PlaceHousingNPC(DOL.GS.Housing.House house, ItemTemplate item, Coordinate coordinate, ushort heading)
 		{
 			NpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(item.Bonus);
 
@@ -2274,7 +2274,7 @@ namespace DOL.GS.ServerRules
 				npc.CurrentHouse = house;
 				npc.InHouse = true;
 				npc.OwnerID = item.Id_nb;
-				npc.Position = Position.Create(house.RegionID, location, heading);
+				npc.Position = Position.Create(house.RegionID, coordinate, heading);
 				if (!npc.IsPeaceful)
 				{
 					npc.Flags ^= GameNPC.eFlags.PEACE;
@@ -2294,13 +2294,13 @@ namespace DOL.GS.ServerRules
 		public virtual GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, IPoint3D location, ushort heading)
             => PlaceHousingInteriorItem(house, item, location.ToCoordinate(), heading);
 
-        public virtual GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, Coordinate location, ushort heading)
+        public virtual GameStaticItem PlaceHousingInteriorItem(DOL.GS.Housing.House house, ItemTemplate item, Coordinate coordinate, ushort heading)
 		{
 			GameStaticItem hookpointObject = new GameStaticItem();
 			hookpointObject.CurrentHouse = house;
 			hookpointObject.InHouse = true;
 			hookpointObject.OwnerID = item.Id_nb;
-			hookpointObject.Position = Position.Create(house.RegionID, location, heading);
+			hookpointObject.Position = Position.Create(house.RegionID, coordinate, heading);
 			hookpointObject.Name = item.Name;
 			hookpointObject.Model = (ushort)item.Model;
 			hookpointObject.AddToWorld();

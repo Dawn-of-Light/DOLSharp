@@ -94,7 +94,7 @@ namespace DOL.GS
 			String[] dragonName = Name.Split(new char[] { ' ' });
 			WorldMgr.GetRegion(CurrentRegionID).AddArea(new Area.Circle(String.Format("{0}'s Lair",
 				dragonName[0]),
-				Location, LairRadius + 200));
+				Coordinate, LairRadius + 200));
 		}
 
 		public override bool HasAbility(string keyName)
@@ -375,7 +375,7 @@ namespace DOL.GS
 
 		private INpcTemplate m_addTemplate;
 
-		protected GameNPC SpawnTimedAdd(int templateID, int level, Coordinate location, int uptime, bool isRetriever)
+		protected GameNPC SpawnTimedAdd(int templateID, int level, Coordinate coordinate, int uptime, bool isRetriever)
 		{
 			GameNPC add = null;
 
@@ -398,7 +398,7 @@ namespace DOL.GS
 						add.SetOwnBrain(new RetrieverMobBrain());
 					}
 					add.Realm = 0;
-                    add.Position = Position.Create(CurrentRegion.ID, location, Angle.Heading(Util.Random(0, 4095)));
+                    add.Position = Position.Create(CurrentRegion.ID, coordinate, Angle.Heading(Util.Random(0, 4095)));
 					add.CurrentSpeed = 0;
 					add.Level = (byte)level;
 					add.RespawnInterval = -1;

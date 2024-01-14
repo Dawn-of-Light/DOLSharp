@@ -183,7 +183,7 @@ namespace DOL.GS
 			set { m_itemId = value; }
 		} 
 
-        public Coordinate AimLocation
+        public Coordinate AimCoordinate
         {
             get
             {
@@ -272,7 +272,7 @@ namespace DOL.GS
 			if (!CanUse()) return;
 			if (!m_enableToMove) return;
 			if (Owner == null || Owner.GroundTargetPosition == Position.Nowhere) return;
-            if (Location.DistanceTo(Owner.GroundTargetPosition) > 1000)
+            if (Coordinate.DistanceTo(Owner.GroundTargetPosition) > 1000)
 			{
 				Owner.Out.SendMessage("Ground target is too far away to move to!", eChatType.CT_System,
 									  eChatLoc.CL_SystemWindow);

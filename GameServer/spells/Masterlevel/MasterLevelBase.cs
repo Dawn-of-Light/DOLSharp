@@ -1171,7 +1171,7 @@ namespace DOL.GS.Spells
             {
                 return;
             }
-            var ranged = (int)storm.Location.DistanceTo(effect.Owner.Location);
+            var ranged = (int)storm.Coordinate.DistanceTo(effect.Owner.Coordinate);
             if (ranged > 3000) return;
 
             if (s.Name == "Dazzling Array")

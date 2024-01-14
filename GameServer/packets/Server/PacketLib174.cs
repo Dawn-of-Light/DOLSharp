@@ -118,8 +118,8 @@ namespace DOL.GS.PacketHandler
 								Region reg = WorldMgr.GetRegion((ushort)characters[j].Region);
 								if (reg != null)
 								{
-                                    var location = characters[j].GetPosition().Coordinate;
-									var description = GamePlayerUtils.GetTranslatedSpotDescription(reg, m_gameClient, location);
+                                    var coordinate = characters[j].GetPosition().Coordinate;
+									var description = GamePlayerUtils.GetTranslatedSpotDescription(reg, m_gameClient, coordinate);
 									pak.FillString(description, 24);
 								}
 								else
@@ -382,7 +382,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)(0x40 | living.GroupIndex));
                 //Dinberg - ZoneSkinID for group members aswell.
 				pak.WriteShort(zone.ZoneSkinID);
-                var zoneCoord = living.Location - zone.Offset;
+                var zoneCoord = living.Coordinate - zone.Offset;
 				pak.WriteShort((ushort)(zoneCoord.X));
 				pak.WriteShort((ushort)(zoneCoord.Y));
 			}

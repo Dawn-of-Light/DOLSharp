@@ -50,7 +50,7 @@ namespace DOL.GS.Commands
 				{
 					if (player != client.Player)
 					{
-                        var directionToTarget = player.Location.GetOrientationTo(client.Player.Location);
+                        var directionToTarget = player.Coordinate.GetOrientationTo(client.Player.Coordinate);
                         var cardinalDirection = LanguageMgr.GetCardinalDirection(player.Client.Account.Language, directionToTarget);
                         player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Yell.FromDirection", client.Player.Name, cardinalDirection), eChatType.CT_Help, eChatLoc.CL_SystemWindow);
                     }

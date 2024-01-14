@@ -32,7 +32,7 @@ namespace DOL.GS
 	{
 		string Name	{get;}
 		uint Flag {get;}
-        Coordinate Location { get; }
+        Coordinate Coordinate { get; }
         Angle Orientation { get; }
 		ushort Heading	{get;}
 		ushort ZoneID { get; }

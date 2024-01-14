@@ -131,9 +131,9 @@ namespace DOL.GS.Keeps
         public void GetTeleportLocation(out int x, out int y)
         {
             var angle = Orientation + Angle.Heading(Util.Random(- 500, 500));
-            var portLocation = Position + Vector.Create(angle, length: Util.Random(50, 150));
-            x = portLocation.X;
-            y = portLocation.Y;
+            var portPosition = Position + Vector.Create(angle, length: Util.Random(50, 150));
+            x = portPosition.X;
+            y = portPosition.Y;
         }
 
 		public class TeleporterEffect : GameNPC

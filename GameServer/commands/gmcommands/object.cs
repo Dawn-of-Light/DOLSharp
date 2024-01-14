@@ -108,7 +108,7 @@ namespace DOL.GS.Commands
 						}
 
 						info.Add(" ");
-						info.Add(" Location: X= " + targetObject.Position.X + " ,Y= " + targetObject.Position.Y + " ,Z= " + targetObject.Position.Z);
+						info.Add(" Coordinate: X= " + targetObject.Position.X + " ,Y= " + targetObject.Position.Y + " ,Z= " + targetObject.Position.Z);
 						
 						client.Out.SendCustomTextWindow( "[ " + name + " ]", info );
 						break;
