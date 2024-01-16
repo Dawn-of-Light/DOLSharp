@@ -31,6 +31,7 @@ using System;
 using System.Reflection;
 using System.Timers;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -57,17 +58,13 @@ namespace DOL.GS.GameEvents
 				//npc in the constructor. You can set
 				//the npc position, model etc. in the
 				//StartEvent() method too if you want.
-				X = 505599;
-				Y = 437679;
-				Z = 0;
-				Heading = 0x0;
+                Position = Position.Create(regionID: 1, x: 505599, y: 437679, orientation: Angle.Zero);
 				Name = "Ugly Spider";
 				GuildName = "Rightclick me";
 				Model = 132;
 				Size = 30;
 				Level = 10;
 				Realm = eRealm.Albion;
-				CurrentRegionID = 1;
 
 				//At the beginning, the spider isn't following anyone
 				m_playerToFollow = null;
@@ -113,11 +110,10 @@ namespace DOL.GS.GameEvents
 				}
 
 				//Calculate the difference between our position and the players position
-				float diffx = (long) m_playerToFollow.X - X;
-				float diffy = (long) m_playerToFollow.Y - Y;
+                var diffVec = m_playerToFollow.Coordinate - Coordinate;
 
 				//Calculate the distance to the player
-				float distance = (float) Math.Sqrt(diffx*diffx + diffy*diffy);
+				float distance = (float)Math.Sqrt(diffVec.X * diffVec.X + diffVec.Y * diffVec.Y);
 
 				//If the player walks away too far, then we will stop following
 				if (distance > 3000)
@@ -135,13 +131,6 @@ namespace DOL.GS.GameEvents
 				//Our spot will be 50 coordinates from the player, so we
 				//calculate how much x and how much y we need to subtract
 				//from the player to get the right x and y to walk to 
-				diffx = (diffx/distance)*50;
-				diffy = (diffy/distance)*50;
-
-				//Subtract the offset from the players position to get
-				//our target position
-				int newX = (int) (m_playerToFollow.X - diffx);
-				int newY = (int) (m_playerToFollow.Y - diffy);
 
 				//Our speed is based on the distance to the player
 				//We will walk faster to the player if the player
@@ -152,7 +141,8 @@ namespace DOL.GS.GameEvents
 					speed = 50;
 
 				//Make the mob walk to the new spot
-				PathTo(new Point3D(newX, newY, 0), (short)speed);
+                var destination = m_playerToFollow.Coordinate - Vector.Create((int)(diffVec.X/distance*50),(int)(diffVec.X/distance*50));
+				PathTo(destination, (short)speed);
 			}
 		}
 

@@ -17,14 +17,12 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
 
 namespace DOL.GS.Behaviour.Actions
 {
+    [Obsolete("This is going to be removed.")]
 	[ActionAttribute(ActionType = eActionType.MoveTo)]
 	public class MoveToAction : AbstractAction<GameLocation,GameLiving>
 	{
@@ -42,13 +40,13 @@ namespace DOL.GS.Behaviour.Actions
 
 			if (P is GameLocation)
 			{
-				GameLocation location = (GameLocation)P;
-				npc.MoveTo(location.RegionID, location.X, location.Y, location.Z, location.Heading);
+				var location = (GameLocation)P;
+				npc.MoveTo(location.Position);
 			}
 			else
 			{
 				GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-				npc.MoveTo(player.CurrentRegionID, player.X, player.Y, player.Z, (ushort)player.Heading);
+				npc.MoveTo(player.Position);
 			}
 		}
 	}

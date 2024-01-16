@@ -24,7 +24,7 @@ using DOL.Events;
 using System.Reflection;
 using System.Collections;
 using DOL.AI.Brain;
-
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -61,9 +61,8 @@ namespace DOL.GS
 			for (int dog = 1; dog <= 10; ++dog)
 			{
 				isRetriever = Util.Chance(25);
-				dogSpawn = SpawnTimedAdd((isRetriever) ? 610 : 611, 
-					(isRetriever) ? Util.Random(47, 53) : 37, 
-					X + Util.Random(300, 600), Y + Util.Random(300, 600), 60, isRetriever);
+                var spawnCoordinate = Coordinate + Vector.Create(x: Util.Random(300, 600), y: Util.Random(300, 600));
+				dogSpawn = SpawnTimedAdd((isRetriever) ? 610 : 611, (isRetriever) ? Util.Random(47, 53) : 37, spawnCoordinate, 60, isRetriever);
 
 				// We got a retriever, tell it who its master is and which exit
 				// to run to.
@@ -86,7 +85,7 @@ namespace DOL.GS
 		/// 3 = SE, 4 = NE).
 		/// </summary>
 		/// <returns>Coordinates.</returns>
-		private Point3D GetExitCoordinates(int exitNo)
+		private Coordinate GetExitCoordinates(int exitNo)
 		{
 			// Get target coordinates (hardcoded). Yeah I know, this is
 			// ugly, but to get this right NPC pathing is a must; as it
@@ -95,11 +94,11 @@ namespace DOL.GS
 
 			switch (exitNo)
 			{
-				case 1: return new Point3D(707026, 1019564, 0);
-				case 2: return new Point3D(706924, 1023596, 0);
-				case 3: return new Point3D(711441, 1023175, 0);
-				case 4: return new Point3D(710708, 1018894, 0);
-				default: return SpawnPoint;
+                case 1: return Coordinate.Create(x: 707026, y: 1019564 );
+                case 2: return Coordinate.Create(x: 706924, y: 1023596 );
+                case 3: return Coordinate.Create(x: 711441, y: 1023175 );
+                case 4: return Coordinate.Create(x: 710708, y: 1018894 );
+                default: return SpawnPosition.Coordinate;
 			}
 		}
 
@@ -115,7 +114,7 @@ namespace DOL.GS
 			// Spawn nasty adds.
 
 			if (m_retrieverList.Contains(sender))
-                SpawnDrakulvs(Util.Random(7, 10), sender.X, sender.Y);
+                SpawnDrakulvs(Util.Random(7, 10), sender.Coordinate);
 		}
 
 		/// <summary>
@@ -126,14 +125,15 @@ namespace DOL.GS
 		/// <param name="numAdds"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		private void SpawnDrakulvs(int numAdds, int x, int y)
+		private void SpawnDrakulvs(int numAdds, Coordinate coordinate)
 		{
 			GameNPC drakulv;
 			bool isDisciple = false;
 			for (int add = 0; add < numAdds; ++add)
 			{
 				isDisciple = Util.Chance(25);
-				drakulv = SpawnTimedAdd((isDisciple) ? 613 : 612, Util.Random(62, 68), x + Util.Random(250), y + Util.Random(250), 120, false);
+                var randomCoordinate = coordinate + Vector.Create(x: Util.Random(250), y: Util.Random(250));
+				drakulv = SpawnTimedAdd((isDisciple) ? 613 : 612, Util.Random(62, 68), randomCoordinate, 120, false);
 
 				if (drakulv != null && drakulv.Brain is StandardMobBrain && this.Brain is DragonBrain)
 				{

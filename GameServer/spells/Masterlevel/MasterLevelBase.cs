@@ -24,6 +24,7 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Spells
 {
@@ -76,7 +77,7 @@ namespace DOL.GS.Spells
                 case "area":
                     if (Spell.Radius > 0)
                     {
-                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
                         {
                             if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
                             {
@@ -271,14 +272,14 @@ namespace DOL.GS.Spells
                 case "area":
                     if (Spell.Radius > 0)
                     {
-                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
                         {
                             if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
                             {
                                 list.Add(player);
                             }
                         }
-                        foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+                        foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
                         {
                             if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
                             {
@@ -460,14 +461,14 @@ namespace DOL.GS.Spells
                 case "area":
                     if (Spell.Radius > 0)
                     {
-                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
                         {
                             if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
                             {
                                 list.Add(player);
                             }
                         }
-                        foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+                        foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
                         {
                             if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
                             {
@@ -649,14 +650,14 @@ namespace DOL.GS.Spells
                 case "area":
                     if (Spell.Radius > 0)
                     {
-                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
                         {
                             if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
                             {
                                 list.Add(player);
                             }
                         }
-                        foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+                        foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
                         {
                             if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
                             {
@@ -859,14 +860,14 @@ namespace DOL.GS.Spells
                 case "area":
                     if (Spell.Radius > 0)
                     {
-                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+                        foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
                         {
                             if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
                             {
                                 list.Add(player);
                             }
                         }
-                        foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+                        foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
                         {
                             if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
                             {
@@ -1170,7 +1171,7 @@ namespace DOL.GS.Spells
             {
                 return;
             }
-            int ranged = storm.GetDistanceTo(new Point3D((int)effect.Owner.X, (int)effect.Owner.Y, (int)effect.Owner.Z));
+            var ranged = (int)storm.Coordinate.DistanceTo(effect.Owner.Coordinate);
             if (ranged > 3000) return;
 
             if (s.Name == "Dazzling Array")

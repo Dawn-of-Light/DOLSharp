@@ -31,6 +31,7 @@ using DOL.GS.Quests;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.PacketHandler
 {
@@ -299,7 +300,8 @@ namespace DOL.GS.PacketHandler
 								Region reg = WorldMgr.GetRegion((ushort)characters[j].Region);
 								if (reg != null)
 								{
-									var description = m_gameClient.GetTranslatedSpotDescription(reg, characters[j].Xpos, characters[j].Ypos, characters[j].Zpos);
+                                    var coordinate = characters[j].GetPosition().Coordinate;
+									var description = GamePlayerUtils.GetTranslatedSpotDescription(reg, m_gameClient, coordinate);
 									pak.FillString(description, 24);
 								}
 								else
@@ -446,13 +448,13 @@ namespace DOL.GS.PacketHandler
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepInfo)))
 			{
 
-				pak.WriteShort((ushort)keep.KeepID);
+				pak.WriteShort(keep.KeepID);
 				pak.WriteShort(0);
 				pak.WriteInt((uint)keep.X);
 				pak.WriteInt((uint)keep.Y);
-				pak.WriteShort((ushort)keep.Heading);
+				pak.WriteShort((ushort)keep.Orientation.InDegrees);
 				pak.WriteByte((byte)keep.Realm);
-				pak.WriteByte((byte)keep.Level);//level
+				pak.WriteByte(keep.Level);//level
 				pak.WriteShort(0);//unk
 				pak.WriteByte(0x52);//model
 				pak.WriteByte(0);//unk

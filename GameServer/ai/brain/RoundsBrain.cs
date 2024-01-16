@@ -52,7 +52,7 @@ namespace DOL.AI.Brain
 		{
 			//save current position in path go to here and reload path point
 			//insert path in pathpoint
-			PathPoint temporaryPathPoint = new PathPoint(Body.X, Body.Y, Body.Z, Body.CurrentSpeed, Body.CurrentWayPoint.Type);
+			PathPoint temporaryPathPoint = new PathPoint(Body.Coordinate, Body.CurrentSpeed, Body.CurrentWayPoint.Type);
 			temporaryPathPoint.Next = Body.CurrentWayPoint;
 			temporaryPathPoint.Prev = Body.CurrentWayPoint.Prev;
 			Body.CurrentWayPoint = temporaryPathPoint;

@@ -20,7 +20,6 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 
 using DOL.Database;
@@ -29,9 +28,8 @@ using DOL.Language;
 using DOL.GS.Quests;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
-using DOL.GS.Utils;
-
-using log4net;
+using DOL.GS.Geometry;
+using DOL.GS.Keeps;
 
 namespace DOL.GS
 {
@@ -39,7 +37,7 @@ namespace DOL.GS
 	/// This class holds all information that
 	/// EVERY object in the game world needs!
 	/// </summary>
-	public abstract class GameObject : Point3D
+	public abstract class GameObject
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -98,16 +96,6 @@ namespace DOL.GS
 		#region Position
 
 		/// <summary>
-		/// The Object's current Region
-		/// </summary>
-		protected Region m_CurrentRegion;
-
-		/// <summary>
-		/// The direction the Object is facing
-		/// </summary>
-		protected ushort m_Heading;
-
-		/// <summary>
 		/// Holds the realm of this object
 		/// </summary>
 		protected eRealm m_Realm;
@@ -121,13 +109,14 @@ namespace DOL.GS
 			set { m_Realm = value; }
 		}
 
-		/// <summary>
-		/// Gets or Sets the current Region of the Object
-		/// </summary>
 		public virtual Region CurrentRegion
 		{
-			get { return m_CurrentRegion; }
-			set { m_CurrentRegion = value; }
+			get => Position.Region;
+			set
+            {
+                if(value == null) Position = Position.With(regionID: 0);
+                Position = Position.With(regionID: value.ID);
+            }
 		}
 
 		protected string m_ownerID;
@@ -144,19 +133,6 @@ namespace DOL.GS
 			}
 		}
 
-
-		/// <summary>
-		/// Get's or sets the current Region by the ID
-		/// </summary>
-		public virtual ushort CurrentRegionID
-		{
-			get { return m_CurrentRegion == null ? (ushort)0 : m_CurrentRegion.ID; }
-			set
-			{
-				CurrentRegion = WorldMgr.GetRegion(value);
-			}
-		}
-
 		/// <summary>
 		/// Gets the current Zone of the Object
 		/// </summary>
@@ -164,59 +140,75 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (m_CurrentRegion != null)
+				if (CurrentRegion != null)
 				{
-					return m_CurrentRegion.GetZone(X, Y);
+					return CurrentRegion.GetZone(Coordinate);
 				}
 				return null;
 			}
 		}
 
-		/// <summary>
-		/// Gets the current direction the Object is facing
-		/// </summary>
-		public virtual ushort Heading
-		{
-			get { return m_Heading; }
-			set { m_Heading = (ushort)(value & 0xFFF); }
-		}
+        public virtual Position Position { get; set; }
 
-		/// <summary>
-		/// Returns the angle towards a target spot in degrees, clockwise
-		/// </summary>
-		/// <param name="tx">target x</param>
-		/// <param name="ty">target y</param>
-		/// <returns>the angle towards the spot</returns>
-		public float GetAngle( IPoint2D point )
-		{
-			float headingDifference = ( GetHeading( point ) & 0xFFF ) - ( this.Heading & 0xFFF );
+        public Coordinate Coordinate => Position.Coordinate;
 
-			if (headingDifference < 0)
-				headingDifference += 4096.0f;
-
-			return (headingDifference * 360.0f / 4096.0f);
-		}
-
-        /// <summary>
-        /// Get distance to a point
-        /// </summary>
-        /// <remarks>
-        /// If either Z-value is zero, the z-axis is ignored
-        /// </remarks>
-        /// <param name="point">Target point</param>
-        /// <returns>Distance or int.MaxValue if distance cannot be calculated</returns>
-        public override int GetDistanceTo( IPoint3D point )
+        [Obsolete("Use .Position.X instead!")]
+        public virtual int X
         {
-			GameObject obj = point as GameObject;
+            get => Position.X;
+            set => Position = Position.With(x: value);
+        }
 
-			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
-			{
-				return base.GetDistanceTo( point );
-			}
-			else
-			{
-				return int.MaxValue;
-			}
+        [Obsolete("Use .Position.Y instead!")]
+        public virtual int Y
+        {
+            get => Position.Y;
+            set => Position = Position.With(y: value);
+        }
+
+        [Obsolete("Use .Position.Z instead!")]
+        public virtual int Z
+        {
+            get => Position.Z;
+            set => Position = Position.With(z: value);
+        }
+
+        public virtual Angle Orientation
+        {
+            get => Position.Orientation;
+            set => Position = Position.With(value);
+        }
+
+        [Obsolete("Use .Orientation.Heading instead!")]
+        public virtual ushort Heading
+        {
+            get => Orientation.InHeading;
+            set => Orientation = Angle.Heading(value);
+        }
+
+        public virtual ushort CurrentRegionID
+        {
+            get => Position.RegionID;
+            set => Position = Position.With(regionID: value);
+        }
+
+        [Obsolete("Use .GetAngleTo(Coordinate) instead!")]
+        public float GetAngle(IPoint2D point)
+            => GetAngleTo(Coordinate.Create(point.X, point.Y)).InDegrees;
+
+        public Angle GetAngleTo(Coordinate coordinate)
+            => Coordinate.GetOrientationTo(coordinate) - Orientation;
+
+        public int GetDistanceTo(GameObject obj, double zfactor = 1)
+            => GetDistanceTo(obj.Position, zfactor);
+
+        [Obsolete("Use .GetDistanceTo(Position,double) instead!")]
+        public virtual int GetDistanceTo(IPoint3D point, double zfactor = 1)
+        {
+            var obj = point as GameObject;
+            var regionID = Position.RegionID;
+            if(obj != null) regionID = obj.Position.RegionID;
+            return GetDistanceTo(Position.Create(regionID, point.ToCoordinate()),zfactor);
         }
 
         /// <summary>
@@ -225,40 +217,28 @@ namespace DOL.GS
         /// <remarks>
         /// If either Z-value is zero, the z-axis is ignored
         /// </remarks>
-        /// <param name="point">Target point</param>
-        /// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease the influence of Z-axis</param>
-        /// <returns>Adjusted distance or int.MaxValue if distance cannot be calculated</returns>
-        public override int GetDistanceTo( IPoint3D point, double zfactor )
+        public virtual int GetDistanceTo(Position position, double zfactor)
         {
-			GameObject obj = point as GameObject;
+            if (Position.RegionID != position.RegionID) return int.MaxValue;
 
-			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
-			{
-				return base.GetDistanceTo( point, zfactor );
-			}
-			else
-			{
-				return int.MaxValue;
-			}
+            var offset = position.Coordinate - Coordinate;
+            var dz = offset.Z * zfactor;
+
+            return (int)(offset.Length2D + Math.Sqrt(dz*dz));
         }
 
-		/// <summary>
-		/// Checks if an object is within a given radius, optionally ignoring z values
-		/// </summary>
-		/// <param name="obj">Target object</param>
-		/// <param name="radius">Radius</param>
-		/// <param name="ignoreZ">Ignore Z values</param>
-		/// <returns>False if the object is null, in a different region, or outside the radius; otherwise true</returns>
-		public bool IsWithinRadius(GameObject obj, int radius, bool ignoreZ = false)
-		{
-			if (obj == null)
-				return false;
+        public bool IsWithinRadius(GameObject obj, int radius, bool ignoreZ = false)
+        {
+            if (obj == null) return false;
 
-			if (this.CurrentRegionID != obj.CurrentRegionID)
-				return false;
+            if (this.CurrentRegionID != obj.CurrentRegionID) return false;
 
-			return base.IsWithinRadius(obj, radius, ignoreZ);
-		}
+            double distance;
+            if (ignoreZ) distance = Coordinate.DistanceTo(obj.Coordinate, ignoreZ: true);
+            else distance = Coordinate.DistanceTo(obj.Coordinate);
+
+            return distance < radius;
+        }
 
 		/// <summary>
 		/// determines wether a target object is front
@@ -272,9 +252,9 @@ namespace DOL.GS
 		{
 			if (target == null)
 				return false;
-			float angle = this.GetAngle(target);
-			if (angle >= 360 - viewangle / 2 || angle < viewangle / 2)
-				return true;
+			var angle = GetAngleTo(target.Coordinate);
+            var isInFront = angle.InDegrees >= 360 - viewangle / 2 || angle.InDegrees < viewangle / 2;
+			if (isInFront) return true;
 			// if target is closer than 32 units it is considered always in view
 			// tested and works this way for normal evade, parry, block (in 1.69)
 			if (rangeCheck)
@@ -283,9 +263,37 @@ namespace DOL.GS
                 return false;
 		}
 
-		/// <summary>
-		/// Checks if object is underwater
-		/// </summary>
+        private static ((int X, int Y) BottomLeft, (int X, int Y) TopRight)[] hardcodedUnderWaterAreas = new[]
+        {
+            // Mount Collory
+            ((479000,664000),(488000,670000)),
+            ((472000,656000),(488000,664000)),
+            ((468500,624000),(488000,654000)),
+            ((431000,659000),(466000,683000)),
+            ((431000,646000),(460000,659001)),
+            ((431000,624000),(455000,646001)),
+            ((431000,671000),(471000,683000)),
+            // Breifine
+            ((456000,558000),(479000,618000)),
+            // Cruachan Gorge
+            ((360000,586000),(424000,618000)),
+            ((360000,563000),(424000,578000)),
+            // Emain Macha
+            ((428000,505000),(444000,555000)),
+            // Hadrian's Wall
+            ((603000,500000),(620000,553000)),
+            // Snowdonia
+            ((592000,633000),(617000,678000)),
+            ((581000,662000),(617000,678000)),
+            // Sauvage Forrest
+            ((626000,584000),(681000,615000)),
+            // Uppland
+            ((610000,297000),(652000,353000)),
+            // Yggdra
+            ((671000,408000),(693000,421000)),
+            ((674000,364000),(716000,394000))
+        };
+
 		public virtual bool IsUnderwater
 		{
 			get
@@ -295,36 +303,19 @@ namespace DOL.GS
 				// Special land areas below the waterlevel in NF
 				if (CurrentRegion.ID == 163)
 				{
-					// Mount Collory
-					if ((Y > 664000) && (Y < 670000) && (X > 479000) && (X < 488000)) return false;
-					if ((Y > 656000) && (Y < 664000) && (X > 472000) && (X < 488000)) return false;
-					if ((Y > 624000) && (Y < 654000) && (X > 468500) && (X < 488000)) return false;
-					if ((Y > 659000) && (Y < 683000) && (X > 431000) && (X < 466000)) return false;
-					if ((Y > 646000) && (Y < 659001) && (X > 431000) && (X < 460000)) return false;
-					if ((Y > 624000) && (Y < 646001) && (X > 431000) && (X < 455000)) return false;
-					if ((Y > 671000) && (Y < 683000) && (X > 431000) && (X < 471000)) return false;
-					// Breifine
-					if ((Y > 558000) && (Y < 618000) && (X > 456000) && (X < 479000)) return false;
-					// Cruachan Gorge
-					if ((Y > 586000) && (Y < 618000) && (X > 360000) && (X < 424000)) return false;
-					if ((Y > 563000) && (Y < 578000) && (X > 360000) && (X < 424000)) return false;
-					// Emain Macha
-					if ((Y > 505000) && (Y < 555000) && (X > 428000) && (X < 444000)) return false;
-					// Hadrian's Wall
-					if ((Y > 500000) && (Y < 553000) && (X > 603000) && (X < 620000)) return false;
-					// Snowdonia
-					if ((Y > 633000) && (Y < 678000) && (X > 592000) && (X < 617000)) return false;
-					if ((Y > 662000) && (Y < 678000) && (X > 581000) && (X < 617000)) return false;
-					// Sauvage Forrest
-					if ((Y > 584000) && (Y < 615000) && (X > 626000) && (X < 681000)) return false;
-					// Uppland
-					if ((Y > 297000) && (Y < 353000) && (X > 610000) && (X < 652000)) return false;
-					// Yggdra
-					if ((Y > 408000) && (Y < 421000) && (X > 671000) && (X < 693000)) return false;
-					if ((Y > 364000) && (Y < 394000) && (X > 674000) && (X < 716000)) return false;
+                    foreach(var area in hardcodedUnderWaterAreas)
+                    {
+                        if(Coordinate.X > area.BottomLeft.X 
+                            && Coordinate.Y > area.BottomLeft.Y
+                            && Coordinate.X < area.TopRight.X
+                            && Coordinate.Y > area.TopRight.Y)
+                        {
+                            return false;
+                        }
+                    }
 				}
 
-				return Z < CurrentZone.Waterlevel;
+				return Position.Z < CurrentZone.Waterlevel;
 			}
 		}
 
@@ -336,7 +327,7 @@ namespace DOL.GS
 			get
 			{
 				if (CurrentZone != null)
-					return CurrentZone.GetAreasOfSpot(this);
+					return CurrentZone.GetAreasOfSpot(Coordinate);
 				return new List<IArea>();
 			}
 			set { }
@@ -750,24 +741,12 @@ namespace DOL.GS
 
 		#region Add-/Remove-/Create-/Move-
 
-		/// <summary>
-		/// Creates this object in the gameworld
-		/// </summary>
-		/// <param name="regionID">region target</param>
-		/// <param name="x">x target</param>
-		/// <param name="y">y target</param>
-		/// <param name="z">z target</param>
-		/// <param name="heading">heading</param>
-		/// <returns>true if created successfully</returns>
+		[Obsolete("This is going to be removed.")]
 		public virtual bool Create(ushort regionID, int x, int y, int z, ushort heading)
 		{
 			if (m_ObjectState == eObjectState.Active)
 				return false;
-			CurrentRegionID = regionID;
-			m_x = x;
-			m_y = y;
-			m_z = z;
-			m_Heading = heading;
+            Position = Position.Create(regionID, x, y, z, heading);
 			return AddToWorld();
 		}
 
@@ -781,11 +760,14 @@ namespace DOL.GS
 			Zone currentZone = CurrentZone;
 			// CurrentZone checks for null Region.
 			// Should it be the case, currentZone will be null as well.
+            if(this is GameKeepDoor && currentZone == null) Console.WriteLine($"Current Zone does not exist");
 			if (currentZone == null || m_ObjectState == eObjectState.Active)
 				return false;
 
-			if (!m_CurrentRegion.AddObject(this))
+			if (!CurrentRegion.AddObject(this))
+            {
 				return false;
+            }
 			Notify(GameObjectEvent.AddToWorld, this);
 			ObjectState = eObjectState.Active;
 
@@ -810,54 +792,38 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool RemoveFromWorld()
 		{
-			if (m_CurrentRegion == null || ObjectState != eObjectState.Active)
+			if (CurrentRegion == null || ObjectState != eObjectState.Active)
 				return false;
 			Notify(GameObjectEvent.RemoveFromWorld, this);
 			ObjectState = eObjectState.Inactive;
-			m_CurrentRegion.RemoveObject(this);
+			CurrentRegion.RemoveObject(this);
 			return true;
 		}
 
-		/// <summary>
-		/// Move this object to a GameLocation
-		/// </summary>
-		/// <param name="loc"></param>
-		/// <returns></returns>
+		[Obsolete("Use MoveTo(Position) instead!")]
 		public virtual bool MoveTo(GameLocation loc)
-		{
-			return MoveTo(loc.RegionID, loc.X, loc.Y, loc.Z, loc.Heading);
-		}
+            => MoveTo(loc.Position);
 
-		/// <summary>
-		/// Moves the item from one spot to another spot, possible even
-		/// over region boundaries
-		/// </summary>
-		/// <param name="regionID">new regionid</param>
-		/// <param name="x">new x</param>
-		/// <param name="y">new y</param>
-		/// <param name="z">new z</param>
-		/// <param name="heading">new heading</param>
-		/// <returns>true if moved</returns>
-		public virtual bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
+        [Obsolete("Use MoveTo(Position) instead!")]
+        public virtual bool MoveTo(ushort regionID, int x, int y, int z, ushort heading)
+            => MoveTo(Position.Create(regionID, x, y, z, heading));
+
+        public virtual bool MoveTo(Position position)
 		{
 			if (m_ObjectState != eObjectState.Active)
 				return false;
 
-			Region rgn = WorldMgr.GetRegion(regionID);
+			Region rgn = WorldMgr.GetRegion(position.RegionID);
 			if (rgn == null)
 				return false;
-			if (rgn.GetZone(x, y) == null)
+			if (rgn.GetZone(position.Coordinate) == null)
 				return false;
 
-			Notify(GameObjectEvent.MoveTo, this, new MoveToEventArgs(regionID, x, y, z, heading));
+			Notify(GameObjectEvent.MoveTo, this, new MoveToEventArgs(position.RegionID, position.X, position.Y, position.Z, position.Orientation.InHeading));
 
 			if (!RemoveFromWorld())
 				return false;
-			m_x = x;
-			m_y = y;
-			m_z = z;
-			m_Heading = heading;
-			CurrentRegionID = regionID;
+            Position = position;
 			return AddToWorld();
 		}
 
@@ -1208,7 +1174,7 @@ namespace DOL.GS
 			if (CurrentRegion != null)
 			{
 				//Eden - avoid server freeze
-				if (CurrentRegion.GetZone(X, Y) == null)
+				if (CurrentZone == null)
 				{
 					if (this is GamePlayer && (this as GamePlayer).Client.Account.PrivLevel < 3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
@@ -1219,7 +1185,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					return CurrentRegion.GetPlayersInRadius(X, Y, Z, radiusToCheck, withDistance, ignoreZ);
+					return CurrentRegion.GetPlayersInRadius(Coordinate, radiusToCheck, withDistance, ignoreZ);
 				}
 			}
 			return new Region.EmptyEnumerator();
@@ -1382,7 +1348,7 @@ namespace DOL.GS
 			if (CurrentRegion != null)
 			{
 				//Eden - avoid server freeze
-				if (CurrentRegion.GetZone(X, Y) == null)
+				if (CurrentZone == null)
 				{
 					if (this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
@@ -1393,7 +1359,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					IEnumerable result = CurrentRegion.GetNPCsInRadius(X, Y, Z, radiusToCheck, withDistance, ignoreZ);
+					IEnumerable result = CurrentRegion.GetNPCsInRadius(Coordinate, radiusToCheck, withDistance, ignoreZ);
 					return result;
 				}
 			}
@@ -1425,7 +1391,7 @@ namespace DOL.GS
 			if (CurrentRegion != null)
 			{
 				//Eden - avoid server freeze
-				if (CurrentRegion.GetZone(X, Y) == null)
+				if (CurrentZone == null)
 				{
 					if (this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
@@ -1436,7 +1402,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					return CurrentRegion.GetItemsInRadius(X, Y, Z, radiusToCheck, withDistance);
+					return CurrentRegion.GetItemsInRadius(Coordinate, radiusToCheck, withDistance);
 				}
 			}
 			return new Region.EmptyEnumerator();
@@ -1464,7 +1430,7 @@ namespace DOL.GS
 			if (CurrentRegion != null)
 			{
 				//Eden : avoid server freeze
-				if (CurrentRegion.GetZone(X, Y) == null)
+				if (CurrentZone == null)
 				{
 					if (this is GamePlayer && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
@@ -1475,7 +1441,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					return CurrentRegion.GetDoorsInRadius(X, Y, Z, radiusToCheck, withDistance);
+					return CurrentRegion.GetDoorsInRadius(Coordinate, radiusToCheck, withDistance);
 				}
 			}
 			return new Region.EmptyEnumerator();
@@ -1589,7 +1555,7 @@ namespace DOL.GS
 				.Append(" oid=").Append(ObjectID.ToString())
 				.Append(" state=").Append(ObjectState.ToString())
 				.Append(" reg=").Append(reg == null ? "null" : reg.ID.ToString())
-				.Append(" loc=").Append(X.ToString()).Append(',').Append(Y.ToString()).Append(',').Append(Z.ToString())
+				.Append(" loc=").Append(Coordinate)
 				.ToString();
 		}
 
@@ -1616,7 +1582,7 @@ namespace DOL.GS
 			{
 				if (player == null)
 					continue;
-				
+
 				player.Out.SendObjectUpdate(this);
 			}
 		}
@@ -1652,5 +1618,28 @@ namespace DOL.GS
 			else
 				return m_boat_ownerid;
 		}
-	}
+
+        [Obsolete("Use .Position.Coordinate.GetOrientationTo(Coordinate).InHeading instead!")]
+        public ushort GetHeading(Point2D p)
+        {
+            return Position.Coordinate.GetOrientationTo(Coordinate.Create(p.X, p.Y)).InHeading;
+        }
+
+        [Obsolete("Use .Coordinate.DistanceTo(Coordinate) instead!")]
+        public bool IsWithinRadius(Point3D p, int radius, bool ignoreZ = false)
+        {
+            return Coordinate.DistanceTo(Coordinate.Create(p.X, p.Y, p.Z)) <= radius;
+        }
+
+        [Obsolete("Use Vector addition instead!")]
+        public Point2D GetPointFromHeading(ushort heading, int distance)
+        {
+            return (Coordinate + Vector.Create(Angle.Heading(heading), distance)).ToPoint3D();
+        }
+
+        public int GetDistance(GameObject obj2, double zFactor = 1)
+        {
+            return GetDistanceTo(obj2.Position, zFactor);
+        }
+    }
 }

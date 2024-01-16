@@ -31,6 +31,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -160,13 +161,9 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + brotherMaynard.Name + ", creating him ...");
                 brotherMaynard.GuildName = "Healer";
                 brotherMaynard.Realm = eRealm.Albion;
-                brotherMaynard.CurrentRegionID = 1;
                 brotherMaynard.Size = 52;
                 brotherMaynard.Level = 27;
-                brotherMaynard.X = 574190;
-                brotherMaynard.Y = 530721;
-                brotherMaynard.Z = 2896;
-                brotherMaynard.Heading = 1251;
+                brotherMaynard.Position = Position.Create(regionID: 1, x: 574190, y: 530721, z: 2896, heading: 1251);
 
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following

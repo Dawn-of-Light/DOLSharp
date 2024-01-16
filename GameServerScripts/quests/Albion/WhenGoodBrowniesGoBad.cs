@@ -26,6 +26,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Albion
@@ -209,7 +210,6 @@ namespace DOL.GS.Quests.Albion
 				//k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
 				//MasterKless.GuildName = "Part of " + questTitle + " Quest";
 				MasterKless.Realm = eRealm.Albion;
-				MasterKless.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 1005);  //Slot 25
@@ -220,10 +220,7 @@ namespace DOL.GS.Quests.Albion
 
 				MasterKless.Size = 51;
 				MasterKless.Level = 50;
-				MasterKless.X = 559370;
-				MasterKless.Y = 513587;
-				MasterKless.Z = 2428;
-				MasterKless.Heading = 2685;
+                MasterKless.Position = Position.Create(regionID: 1, x: 559370, y: 513587, z: 2428, heading: 2685);
 
 				if (SAVE_INTO_DATABASE)
 					MasterKless.SaveIntoDatabase();

@@ -20,6 +20,7 @@
 using System;
 
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS
@@ -49,18 +50,19 @@ namespace DOL.GS
 		/// <param name="zone"></param>
 		/// <returns></returns>
 		bool IsIntersectingZone(Zone zone);
-		
-		/// <summary>
-		/// Checks wether given spot is within areas range or not
-		/// </summary>
-		/// <param name="spot"></param>
-		/// <returns></returns>
+
+        bool IsContaining(Coordinate spot, bool ignoreZ = false);
+
+        [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
 		bool IsContaining(IPoint3D spot);
 
+        [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
 		bool IsContaining(IPoint3D spot, bool checkZ);
 
+        [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
 		bool IsContaining(int x, int y, int z);
 
+        [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
 		bool IsContaining(int x, int y, int z, bool checkZ);
 		
 		/// <summary>

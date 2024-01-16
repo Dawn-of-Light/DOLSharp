@@ -33,6 +33,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -146,7 +147,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + commanderBurcrif.Name + ", creating him ...");
 				commanderBurcrif.GuildName = "Part of " + questTitle + " Quest";
 				commanderBurcrif.Realm = eRealm.Albion;
-				commanderBurcrif.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 26);
@@ -162,10 +162,7 @@ namespace DOL.GS.Quests.Albion
 
 				commanderBurcrif.Size = 53;
 				commanderBurcrif.Level = 45;
-				commanderBurcrif.X = 517270;
-				commanderBurcrif.Y = 495711;
-				commanderBurcrif.Z = 3352;
-				commanderBurcrif.Heading = 2093;
+                commanderBurcrif.Position = Position.Create(regionID: 1, x: 517270, y: 495711, z: 3352, heading: 2093);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -476,14 +473,10 @@ namespace DOL.GS.Quests.Albion
 								slith.Model = 31;
 								slith.Name = "Slith";
 								slith.Realm = eRealm.None;
-								slith.CurrentRegionID = 1;
 
 								slith.Size = 50;
 								slith.Level = 7;
-								slith.X = 524840;
-								slith.Y = 490529;
-								slith.Z = 2545;
-								slith.Heading = 2082;
+                                slith.Position = Position.Create(regionID: 1, x: 524840, y: 490529, z: 2545, heading: 2082);
 
 								StandardMobBrain brain = new StandardMobBrain();  // set a brain witch find a lot mob friend to attack the player
 								slith.SetOwnBrain(brain);

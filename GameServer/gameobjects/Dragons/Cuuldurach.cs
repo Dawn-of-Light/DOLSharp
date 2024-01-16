@@ -24,7 +24,7 @@ using DOL.Events;
 using System.Reflection;
 using System.Collections;
 using DOL.AI.Brain;
-
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -59,9 +59,9 @@ namespace DOL.GS
 			for (int glimmer = 1; glimmer <= 10; ++glimmer)
 			{
 				isMessenger = Util.Chance(25);
+                var spawnCoordinate = Coordinate + Vector.Create(x: Util.Random(300, 600), y: Util.Random(300, 600));
 				glimmerSpawn = SpawnTimedAdd((isMessenger) ? 620 : 621+Util.Random(2),
-					(isMessenger) ? Util.Random(47, 53) : Util.Random(57, 63),
-					X + Util.Random(300, 600), Y + Util.Random(300, 600), 60, isMessenger);
+					(isMessenger) ? Util.Random(47, 53) : Util.Random(57, 63), spawnCoordinate, 60, isMessenger);
 
 				// We got a messenger, tell it who its master is and which exit
 				// to run to.
@@ -84,7 +84,7 @@ namespace DOL.GS
 		/// 3 = SE, 4 = NE).
 		/// </summary>
 		/// <returns>Coordinates.</returns>
-		private Point3D GetExitCoordinates(int exitNo)
+		private Coordinate GetExitCoordinates(int exitNo)
 		{
 			// Get target coordinates (hardcoded). Yeah I know, this is
 			// ugly, but to get this right NPC pathing is a must; as it
@@ -93,11 +93,11 @@ namespace DOL.GS
 
 			switch (exitNo)
 			{
-				case 1: return new Point3D(407292, 704008, 0);
-				case 2: return new Point3D(406158, 707745, 0);
-				case 3: return new Point3D(410302, 708563, 0);
-				case 4: return new Point3D(411117, 704696, 0);
-				default: return SpawnPoint;
+                case 1: return Coordinate.Create(x: 407292, y: 704008 );
+                case 2: return Coordinate.Create(x: 406158, y: 707745 );
+                case 3: return Coordinate.Create(x: 410302, y: 708563 );
+                case 4: return Coordinate.Create(x: 411117, y: 704696 );
+				default: return SpawnPosition.Coordinate;
 			}
 		}
 
@@ -113,7 +113,7 @@ namespace DOL.GS
 			// Spawn nasty adds.
 
 			if (m_messengerList.Contains(sender))
-				SpawnGlimmers(Util.Random(7, 10), sender.X, sender.Y);
+				SpawnGlimmers(Util.Random(7, 10), sender.Coordinate);
 		}
 
 		/// <summary>
@@ -121,15 +121,13 @@ namespace DOL.GS
 		/// retriever has reported back from, then make these spawns aggro the
 		/// raid inside the lair.
 		/// </summary>
-		/// <param name="numAdds"></param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		private void SpawnGlimmers(int numAdds, int x, int y)
+		private void SpawnGlimmers(int numAdds, Coordinate coordinate)
 		{
 			GameNPC glimmer;
 			for (int add = 0; add < numAdds; ++add)
 			{
-				glimmer = SpawnTimedAdd(624+Util.Random(2), Util.Random(62, 68), x + Util.Random(250), y + Util.Random(250), 120, false);
+                var randomSpawnCoordinate = coordinate + Vector.Create(x: Util.Random(250), y: Util.Random(250));
+				glimmer = SpawnTimedAdd(624+Util.Random(2), Util.Random(62, 68), randomSpawnCoordinate, 120, false);
 
 				if (glimmer != null && glimmer.Brain is StandardMobBrain && this.Brain is DragonBrain)
 				{

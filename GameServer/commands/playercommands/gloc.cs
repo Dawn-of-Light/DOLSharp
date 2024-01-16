@@ -33,7 +33,8 @@ namespace DOL.GS.Commands
 				return;
 
 			DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Gloc.At",
-				client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading, client.Player.CurrentRegionID,
+				client.Player.Position.X, client.Player.Position.Y, client.Player.Position.Z,
+                client.Player.Position.Orientation.InHeading, client.Player.Position.RegionID,
 				client.Player.CurrentRegion is BaseInstance ? string.Format("Skin:{0}", client.Player.CurrentRegion.Skin) : ""));
 		}
 	}

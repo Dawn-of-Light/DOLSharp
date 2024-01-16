@@ -22,6 +22,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.PacketHandler;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -182,18 +183,23 @@ namespace DOL.GS
 		/// <returns></returns>
 		public abstract bool IsIntersectingZone(Zone zone);
 
-		/// <summary>
-		/// Checks wether given spot is within areas boundaries or not
-		/// </summary>
-		/// <param name="spot"></param>
-		/// <returns></returns>
-		public abstract bool IsContaining(IPoint3D spot);
+        public abstract bool IsContaining(Coordinate spot, bool ignoreZ = false);
 
-		public abstract bool IsContaining(IPoint3D spot, bool checkZ);
+        [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
+		public virtual bool IsContaining(IPoint3D spot)
+            => IsContaining(spot.ToCoordinate(), ignoreZ: false);
 
-		public abstract bool IsContaining(int x, int y, int z);
+        [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
+		public virtual bool IsContaining(IPoint3D spot, bool checkZ)
+            => IsContaining(spot.ToCoordinate(), ignoreZ: !checkZ);
 
-		public abstract bool IsContaining(int x, int y, int z, bool checkZ);
+        [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
+		public virtual bool IsContaining(int x, int y, int z)
+            => IsContaining(Coordinate.Create(x, y, z), ignoreZ: false);
+
+        [Obsolete("Use .IsContaining(Coordinate[,bool]) instead!")]
+		public virtual bool IsContaining(int x, int y, int z, bool checkZ)
+            => IsContaining(Coordinate.Create(x, y, z), ignoreZ: !checkZ);
 
 		/// <summary>
 		/// Called whenever a player leaves the given area

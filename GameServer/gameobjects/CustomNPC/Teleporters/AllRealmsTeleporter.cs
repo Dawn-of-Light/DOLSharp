@@ -544,15 +544,15 @@ namespace DOL.GS
 				}
 				else
 				{
-					IGameLocation location = house.OutdoorJumpPoint;
+					var position = house.OutdoorJumpPosition;
 					Teleport teleport = new Teleport();
 					teleport.TeleportID = "personal";
 					teleport.Realm = (int)player.Realm;
-					teleport.RegionID = location.RegionID;
-					teleport.X = location.X;
-					teleport.Y = location.Y;
-					teleport.Z = location.Z;
-					teleport.Heading = location.Heading;
+					teleport.RegionID = position.RegionID;
+					teleport.X = position.X;
+					teleport.Y = position.Y;
+					teleport.Z = position.Z;
+					teleport.Heading = position.Orientation.InHeading;
 					return teleport;
 				}
 			}
@@ -562,16 +562,14 @@ namespace DOL.GS
 			if (text.ToLower() == "hearth")
 			{
 				// Check if player has set a house bind
-				if (!(player.BindHouseRegion > 0))
+				if (!(player.BindHousePosition.RegionID > 0))
 				{
 					SayTo(player, "Sorry, you haven't set any house bind point yet.");
 					return null;
 				}
 
 				// Check if the house at the player's house bind location still exists
-				ArrayList houses = (ArrayList)HouseMgr.GetHousesCloseToSpot((ushort)player.
-					BindHouseRegion, player.BindHouseXpos, player.
-					BindHouseYpos, 700);
+				ArrayList houses = (ArrayList)HouseMgr.GetHousesCloseToSpot(player.BindHousePosition, 700);
 				if (houses.Count == 0)
 				{
 					SayTo(player, "I'm afraid I can't teleport you to your hearth since the house at your " +
@@ -611,11 +609,11 @@ namespace DOL.GS
 				Teleport teleport = new Teleport();
 				teleport.TeleportID = "hearth";
 				teleport.Realm = (int)player.Realm;
-				teleport.RegionID = player.BindHouseRegion;
-				teleport.X = player.BindHouseXpos;
-				teleport.Y = player.BindHouseYpos;
-				teleport.Z = player.BindHouseZpos;
-				teleport.Heading = player.BindHouseHeading;
+				teleport.RegionID = player.BindHousePosition.RegionID;
+				teleport.X = player.BindHousePosition.X;
+				teleport.Y = player.BindHousePosition.Y;
+				teleport.Z = player.BindHousePosition.Z;
+				teleport.Heading = player.BindHousePosition.Orientation.InHeading;
 				return teleport;
 			}
 
@@ -629,15 +627,15 @@ namespace DOL.GS
 				}
 				else
 				{
-					IGameLocation location = house.OutdoorJumpPoint;
+					var position = house.OutdoorJumpPosition;
 					Teleport teleport = new Teleport();
 					teleport.TeleportID = "guild house";
 					teleport.Realm = (int)player.Realm;
-					teleport.RegionID = location.RegionID;
-					teleport.X = location.X;
-					teleport.Y = location.Y;
-					teleport.Z = location.Z;
-					teleport.Heading = location.Heading;
+					teleport.RegionID = position.RegionID;
+					teleport.X = position.X;
+					teleport.Y = position.Y;
+					teleport.Z = position.Z;
+					teleport.Heading = position.Orientation.InHeading;
 					return teleport;
 				}
 			}

@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Housing
@@ -255,11 +256,7 @@ namespace DOL.GS.Housing
 		{
 			var obj = new GameLotMarker
 			          	{
-			          		X = house.X,
-			          		Y = house.Y,
-			          		Z = house.Z,
-			          		CurrentRegionID = house.RegionID,
-			          		Heading = (ushort) house.Heading,
+                            Position = Position.Create(house.RegionID, house.X, house.Y, house.Z, (ushort)house.Heading),
 			          		Name = "Lot Marker",
 			          		Model = 1308,
 			          		DatabaseItem = house

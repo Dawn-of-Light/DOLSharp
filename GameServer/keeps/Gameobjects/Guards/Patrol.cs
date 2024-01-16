@@ -7,6 +7,7 @@ using DOL.GS;
 using DOL.GS.Movement;
 using DOL.Events;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Keeps
 {
@@ -175,38 +176,23 @@ namespace DOL.GS.Keeps
 				CreatePatrolGuard(PatrolGuards.Count);
 			}
 
-			int x = 0;
-			int y = 0;
-
-			List<GameKeepGuard> guardsToKeep = new List<GameKeepGuard>();
-
+            var position = Position.Zero;
+			var guardsToKeep = new List<GameKeepGuard>();
 			for (int i = 0; i < PatrolGuards.Count; i++)
 			{
-				GameKeepGuard guard = PatrolGuards[i] as GameKeepGuard;
-
-				// Console.WriteLine(PatrolID + " loading guard " + guard.Name);
+				var guard = PatrolGuards[i] as GameKeepGuard;
 
 				if (i < guardsToPatrol)
 				{
 					// we need to reposition the patrol at their spawn point plus variation
-					if (x == 0)
-					{
-						x = guard.SpawnPoint.X;
-						y = guard.SpawnPoint.Y;
-					}
-					else
-					{
-						x += Util.Random(250, 350);
-						y += Util.Random(250, 350);
-					}
+					if (position == Position.Zero) position = guard.SpawnPosition;
+					else position += Vector.Create(x: Util.Random(250, 350), y: Util.Random(250, 350));
 
 					if (guard.IsAlive)
 					{
+						if (guard.IsMovingOnPath) guard.StopMovingOnPath();
 
-						if (guard.IsMovingOnPath)
-							guard.StopMovingOnPath();
-
-						guard.MoveTo(guard.CurrentRegionID, x, y, guard.SpawnPoint.Z, guard.SpawnHeading);
+						guard.MoveTo(position);
 					}
 
 					guardsToKeep.Add(guard);

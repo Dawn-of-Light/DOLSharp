@@ -47,25 +47,11 @@ namespace DOL.GS
 		private List<GamePlayer> m_players_in;
 		
 		/// <summary>
-		/// Entrance location of Instance, needed to force exit players.
-		/// </summary>
-		protected GameLocation m_sourceentrance;
-		
-		/// <summary>
 		/// List Containing players in instance
 		/// </summary>
 		protected List<GamePlayer> PlayersInside
 		{
 			get { return m_players_in; }
-		}
-
-		/// <summary>
-		/// Entrance location of Instance, needed to force exit players.
-		/// </summary>
-		public GameLocation SourceEntrance
-		{
-			get { return m_sourceentrance; }
-			set { m_sourceentrance = value; }
 		}
 		
 		/// <summary>

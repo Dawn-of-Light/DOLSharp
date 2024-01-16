@@ -183,7 +183,7 @@ namespace DOL.GS.RealmAbilities
 			resurrectedPlayer.Health = (int)(resurrectedPlayer.MaxHealth * m_resurrectValue / 100);
 			resurrectedPlayer.Mana = (int)(resurrectedPlayer.MaxMana * m_resurrectValue / 100);
 			resurrectedPlayer.Endurance = (int)(resurrectedPlayer.MaxEndurance * m_resurrectValue / 100); //no endurance after any rez
-			resurrectedPlayer.MoveTo(rezzer.CurrentRegionID, rezzer.X, rezzer.Y, rezzer.Z, rezzer.Heading);
+			resurrectedPlayer.MoveTo(rezzer.Position);
 
             GameLiving living = resurrectedPlayer as GameLiving;
             GameTimer resurrectExpiredTimer = null;

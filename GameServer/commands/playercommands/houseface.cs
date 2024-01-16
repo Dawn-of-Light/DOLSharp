@@ -1,4 +1,5 @@
 using DOL.GS;
+using DOL.GS.Geometry;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 using DOL.Language;
@@ -36,8 +37,7 @@ namespace DOL.GS.Commands
 
 			House house = HouseMgr.GetHouse(housenumber);
 
-			ushort direction = client.Player.GetHeading(house);
-			client.Player.Heading = direction;
+            client.Player.TurnTo(house.Position.Coordinate);
 			client.Out.SendPlayerJump(true);
 			DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Houseface.Faced", housenumber));
 		}

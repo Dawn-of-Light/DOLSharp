@@ -38,6 +38,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -104,7 +105,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 749099 && npc.Y == 813104)
+					if (npc.CurrentRegionID == 100)
 					{
 						Masrim = npc;
 						break;
@@ -119,13 +120,9 @@ namespace DOL.GS.Quests.Midgard
 				Masrim.Name = "Masrim";
 				Masrim.GuildName = "";
 				Masrim.Realm = eRealm.Midgard;
-				Masrim.CurrentRegionID = 100;
 				Masrim.Size = 52;
 				Masrim.Level = 40;
-				Masrim.X = 749099;
-				Masrim.Y = 813104;
-				Masrim.Z = 4437;
-				Masrim.Heading = 2605;
+                Masrim.Position = Position.Create(regionID: 100, x: 749099, y: 813104, z: 4437, heading: 2605);
 				Masrim.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -138,7 +135,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 607233 && npc.Y == 786850)
+					if (npc.CurrentRegionID == 100)
 					{
 						Oona = npc;
 						break;
@@ -153,13 +150,9 @@ namespace DOL.GS.Quests.Midgard
 				Oona.Name = "Oona";
 				Oona.GuildName = "";
 				Oona.Realm = eRealm.None;
-				Oona.CurrentRegionID = 100;
 				Oona.Size = 50;
 				Oona.Level = 65;
-				Oona.X = 607233;
-				Oona.Y = 786850;
-				Oona.Z = 4384;
-				Oona.Heading = 3891;
+                Oona.Position = Position.Create(regionID: 100, x: 607233, y: 786850, z: 4384, heading: 3891);
 				Oona.Flags ^= GameNPC.eFlags.GHOST;
 				Oona.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -173,7 +166,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 101 && npc.X == 33400 && npc.Y == 33620)
+					if (npc.CurrentRegionID == 101)
 					{
 						MorlinCaan = npc;
 						break;
@@ -188,13 +181,9 @@ namespace DOL.GS.Quests.Midgard
 				MorlinCaan.Name = "Morlin Caan";
 				MorlinCaan.GuildName = "Smith";
 				MorlinCaan.Realm = eRealm.Midgard;
-				MorlinCaan.CurrentRegionID = 101;
 				MorlinCaan.Size = 50;
 				MorlinCaan.Level = 54;
-				MorlinCaan.X = 33400;
-				MorlinCaan.Y = 33620;
-				MorlinCaan.Z = 8023;
-				MorlinCaan.Heading = 523;
+                MorlinCaan.Position = Position.Create(regionID: 101, x: 33400, y: 33620, z: 8023, heading: 523);
 				MorlinCaan.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -1090,7 +1079,7 @@ namespace DOL.GS.Quests.Midgard
         *#26 seek out Loken in Raumarik Loc 47k, 25k, 4k, and kill him purp and 2 blue adds 
         *#27 return to Masrim 
         *#28 give her the ball of flame
-        *#29 talk with Masrim about Loken’s demise
+        *#29 talk with Masrim about Loken's demise
         *#30 go to MorlinCaan in Jordheim 
         *#31 give her the sealed pouch
         *#32 you get your epic armor as a reward

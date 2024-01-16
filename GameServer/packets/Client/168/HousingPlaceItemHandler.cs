@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.Housing;
 using DOL.GS.ServerProperties;
 using DOL.GS.Utils;
@@ -42,7 +43,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				int unknow1 = packet.ReadByte(); // 1=Money 0=Item (?)
 				int slot = packet.ReadByte(); // Item/money slot
-				ushort housenumber = packet.ReadShort(); // N° of house
+				ushort housenumber = packet.ReadShort();
 				int unknow2 = (byte)packet.ReadByte();
 				_position = (byte)packet.ReadByte();
 				int method = packet.ReadByte(); // 2=Wall 3=Floor
@@ -329,7 +330,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.GardenItemPlacedName", orgitem.Name);
 
 							// update all nearby players
-							foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(house.RegionID, house, WorldMgr.OBJ_UPDATE_DISTANCE))
+							foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(house.Position, WorldMgr.OBJ_UPDATE_DISTANCE))
 							{
 								player.Out.SendGarden(house);
 							}
@@ -393,7 +394,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 											};
 
 							// figure out proper rotation for item
-							int properRotation = client.Player.Heading / 10;
+							int properRotation = client.Player.Orientation.InHeading / 10;
 							properRotation = properRotation.Clamp(0, 360);
 
 							if (method == 2 && IsSuitableForWall(orgitem))
@@ -554,7 +555,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 
 							// if the hookpoint doesn't exist, prompt player to Log it in the database for us
-							if (house.GetHookpointLocation((uint)_position) == null)
+							if (house.GetHookPointCoordinate((uint)_position) == Coordinate.Nowhere)
 							{
 								client.Out.SendInventorySlotsUpdate(new[] { slot });
 
@@ -574,7 +575,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									}
 								}
 							}
-							else if (house.GetHookpointLocation((uint)_position) != null)
+							else if (house.GetHookPointCoordinate((uint)_position) != Coordinate.Nowhere)
 							{
 								var point = new DBHouseHookpointItem
 												{
@@ -597,7 +598,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (house.HousepointItems.ContainsKey(point.HookpointID) == false)
 								{
 									house.HousepointItems.Add(point.HookpointID, point);
-									house.FillHookpoint((uint)_position, orgitem.Id_nb, client.Player.Heading, 0);
+									house.FillHookpoint((uint)_position, orgitem.Id_nb, client.Player.Orientation.InHeading, 0);
 								}
 								else
 								{
@@ -697,7 +698,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 
 							// if hookpoint doesn't exist, prompt player to Log it in the database for us
-							if (house.GetHookpointLocation((uint)_position) == null)
+							if (house.GetHookPointCoordinate((uint)_position) == Coordinate.Nowhere)
 							{
 								client.Out.SendInventorySlotsUpdate(new[] { slot });
 
@@ -744,7 +745,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							// create the new vault and attach it to the house
 							var houseVault = new GameHouseVault(orgitem.Template, vaultIndex);
-							houseVault.Attach(house, (uint)_position, (ushort)((client.Player.Heading + 2048) % 4096));
+							houseVault.Attach(house, (uint)_position, (client.Player.Orientation + Angle.Degrees(180)).InHeading);
 
 							// remove the original item from the player's inventory
 							client.Player.Inventory.RemoveItem(orgitem);
@@ -883,14 +884,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (player.CurrentHouse == null)
 				return;
 
+            var offset = player.Coordinate - player.CurrentHouse.Position.Coordinate;
 			var a = new HouseHookpointOffset
 			{
 				HouseModel = player.CurrentHouse.Model,
 				HookpointID = _position,
-				X = player.X - player.CurrentHouse.X,
-				Y = player.Y - player.CurrentHouse.Y,
-				Z = player.Z - 25000,
-				Heading = player.Heading - player.CurrentHouse.Heading
+				X = offset.X,
+				Y = offset.Y,
+				Z = player.Position.Z - 25000,
+				Heading = player.Orientation.InHeading - player.CurrentHouse.Position.Orientation.InHeading
 			};
 
 			if (GameServer.Database.AddObject(a) && House.AddNewOffset(a))

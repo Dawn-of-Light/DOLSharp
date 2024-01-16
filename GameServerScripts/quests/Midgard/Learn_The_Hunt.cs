@@ -36,8 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
-	namespace DOL.GS.Quests.Midgard {
+namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -116,15 +117,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + Aegan.Name + ", creating ...");
 				Aegan.GuildName = "Part of " + questTitle + " Quest";
 				Aegan.Realm = eRealm.Midgard;
-				Aegan.CurrentRegionID = 100;
 				Aegan.Size = 51;
 				Aegan.Level = 41;
 				Aegan.MaxSpeedBase = 191;
 				Aegan.Faction = FactionMgr.GetFactionByID(0);
-				Aegan.X = 805398;
-				Aegan.Y = 725829;
-				Aegan.Z = 4700;
-				Aegan.Heading = 3595;
+                Aegan.Position = Position.Create(regionID: 100, x: 805398, y: 725829, z: 4700, heading: 3595);
 				Aegan.RespawnInterval = -1;
 				Aegan.BodyType = 0;
 				

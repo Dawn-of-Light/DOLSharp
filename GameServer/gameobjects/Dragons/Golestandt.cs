@@ -24,7 +24,7 @@ using DOL.Events;
 using log4net;
 using System.Reflection;
 using System.Collections;
-
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -50,7 +50,8 @@ namespace DOL.GS
 			int numAdds = Math.Max(1, PlayersInLair / 2);
 			for (int add = 1; add <= numAdds; ++add)
 			{
-				SpawnTimedAdd(600, Util.Random(57, 60),	X + Util.Random(300, 600), Y + Util.Random(300, 600), 30, false);	// granite giant pounder lvl 57-60
+                var spawnCoordinate = Coordinate + Vector.Create(x: Util.Random(300, 600), y: Util.Random(300, 600));
+				SpawnTimedAdd(600, Util.Random(57, 60),	spawnCoordinate, 30, false);	// granite giant pounder lvl 57-60
 			}
 			return true;
 		}

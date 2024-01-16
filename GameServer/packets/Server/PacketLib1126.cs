@@ -17,6 +17,7 @@
  *
  */
 using DOL.Database;
+using DOL.GS.Geometry;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -181,7 +182,7 @@ namespace DOL.GS.PacketHandler
 					string locationDescription = string.Empty;
 					Region region = WorldMgr.GetRegion((ushort)c.Region);
 					if (region != null)
-						locationDescription = m_gameClient.GetTranslatedSpotDescription(region, c.Xpos, c.Ypos, c.Zpos);
+						locationDescription = GamePlayerUtils.GetTranslatedSpotDescription(region, m_gameClient, c.GetPosition().Coordinate);
 					string classname = "";
 					if (c.Class != 0)
 						classname = ((eCharacterClass)c.Class).ToString();

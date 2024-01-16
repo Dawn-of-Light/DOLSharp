@@ -28,6 +28,7 @@ using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.Database;
 using DOL.GS.Styles;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Spells
 {
@@ -75,11 +76,8 @@ namespace DOL.GS.Spells
                 effect.Cancel(false);
         }
 
-        protected override void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
-        {
-            base.GetPetLocation(out x, out y, out z, out heading, out region);
-            heading = Caster.Heading;
-        }
+        protected override Position GetSummonPosition()
+            => Caster.Position + Vector.Create(Caster.Orientation, length: 64);
 
          public AstralPetSummon(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line) { }

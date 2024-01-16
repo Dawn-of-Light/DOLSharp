@@ -22,6 +22,7 @@ using System.Collections.Generic;
 
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.Profession;
@@ -750,7 +751,9 @@ namespace DOL.GS.PacketHandler
 		void SendConcentrationList();
 		void SendUpdateCraftingSkills();
 		void SendChangeTarget(GameObject newTarget);
+        [Obsolete("Use .SendChangeGroundTarget(Point3D) instead!")]
 		void SendChangeGroundTarget(Point3D newTarget);
+		void SendChangeGroundTarget(Coordinate groundTarget);
 		void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState);
 		void SendPlaySound(eSoundType soundType, ushort soundID);
 		void SendNPCsQuestEffect(GameNPC npc, eQuestIndicator indicator);
@@ -762,6 +765,8 @@ namespace DOL.GS.PacketHandler
 		void SendSiegeWeaponCloseInterface();
 		void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon, int time);
 		void SendLivingDataUpdate(GameLiving living, bool updateStrings);
+        void SendSoundEffect(ushort soundId, Position position, ushort radius);
+        [Obsolete("Use .SendSoundEffect(ushort,Position,ushort) instead!")]
 		void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius);
 		//keep
 		void SendKeepInfo(IGameKeep keep);
@@ -812,7 +817,9 @@ namespace DOL.GS.PacketHandler
 		void SendVampireEffect(GameLiving living, bool show);
 		void SendXFireInfo(byte flag);
 		void SendMinotaurRelicMapRemove(byte id);
+        [Obsolete("Use .SendMinotaurRelicMapUpdate(byte, Position) instead!")]
 		void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z);
+		void SendMinotaurRelicMapUpdate(byte id, Position position);
 		void SendMinotaurRelicWindow(GamePlayer player, int spell, bool flag);
 		void SendMinotaurRelicBarUpdate(GamePlayer player, int xp);
 

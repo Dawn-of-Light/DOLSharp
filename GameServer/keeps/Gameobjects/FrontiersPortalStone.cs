@@ -16,9 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections;
 
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Keeps
@@ -39,7 +41,7 @@ namespace DOL.GS.Keeps
 		}
 
 		private DBKeepPosition m_position;
-		public DBKeepPosition Position
+		public DBKeepPosition DbKeepPosition
 		{
 			get { return m_position; }
 			set { m_position = value; }
@@ -64,7 +66,7 @@ namespace DOL.GS.Keeps
 			{
 				if (m_component != null)
 					return m_component.Keep.Realm;
-				if (m_CurrentRegion.ID == 163)
+				if (CurrentRegion.ID == 163)
 					return CurrentZone.Realm;
 				return base.Realm;
 			}
@@ -125,16 +127,14 @@ namespace DOL.GS.Keeps
 			return true;
 		}
 
-		public void GetTeleportLocation(out int x, out int y)
-		{
-			ushort originalHeading = m_Heading;
-			m_Heading = (ushort)Util.Random((m_Heading - 500), (m_Heading + 500));
-			int distance = Util.Random(50, 150);
-            Point2D portloc = this.GetPointFromHeading( this.Heading, distance );
-            x = portloc.X;
-            y = portloc.Y;
-			m_Heading = originalHeading;
-		}
+        [Obsolete("This is going to be removed.")]
+        public void GetTeleportLocation(out int x, out int y)
+        {
+            var angle = Orientation + Angle.Heading(Util.Random(- 500, 500));
+            var portPosition = Position + Vector.Create(angle, length: Util.Random(50, 150));
+            x = portPosition.X;
+            y = portPosition.Y;
+        }
 
 		public class TeleporterEffect : GameNPC
 		{
@@ -157,11 +157,7 @@ namespace DOL.GS.Keeps
 		{
 			if (!base.AddToWorld()) return false;
 			TeleporterEffect mob = new TeleporterEffect();
-			mob.CurrentRegion = this.CurrentRegion;
-			mob.X = this.X;
-			mob.Y = this.Y;
-			mob.Z = this.Z;
-			mob.Heading = this.Heading;
+			mob.Position = Position;
 			mob.Health = mob.MaxHealth;
 			mob.MaxSpeedBase = 0;
 			if (mob.AddToWorld())

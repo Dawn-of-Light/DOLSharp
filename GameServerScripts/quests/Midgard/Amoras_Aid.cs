@@ -36,8 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
-	namespace DOL.GS.Quests.Midgard {
+namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -120,15 +121,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + Lycla.Name + ", creating ...");
 				Lycla.GuildName = "Part of " + questTitle + " Quest";
 				Lycla.Realm = eRealm.Midgard;
-				Lycla.CurrentRegionID = 100;
 				Lycla.Size = 48;
 				Lycla.Level = 50;
 				Lycla.MaxSpeedBase = 191;
 				Lycla.Faction = FactionMgr.GetFactionByID(0);
-				Lycla.X = 749032;
-				Lycla.Y = 814613;
-				Lycla.Z = 4408;
-				Lycla.Heading = 170;
+                Lycla.Position = Position.Create(regionID: 100, x: 749032, y: 814613, z: 4408, heading: 170);
 				Lycla.RespawnInterval = -1;
 				Lycla.BodyType = 0;
 				
@@ -162,15 +159,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + Amora.Name + ", creating ...");
 				Amora.GuildName = "Part of " + questTitle + " Quest";
 				Amora.Realm = eRealm.Midgard;
-				Amora.CurrentRegionID = 100;
 				Amora.Size = 49;
 				Amora.Level = 28;
 				Amora.MaxSpeedBase = 191;
 				Amora.Faction = FactionMgr.GetFactionByID(0);
-				Amora.X = 747714;
-				Amora.Y = 814910;
-				Amora.Z = 4636;
-				Amora.Heading = 3456;
+                Amora.Position = Position.Create(regionID: 100, x: 747714, y: 814910, z: 4636, heading: 3456);
 				Amora.RespawnInterval = -1;
 				Amora.BodyType = 0;
 				
@@ -204,15 +197,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + Kari.Name + ", creating ...");
 				Kari.GuildName = "Part of " + questTitle + " Quest";
 				Kari.Realm = eRealm.Midgard;
-				Kari.CurrentRegionID = 100;
 				Kari.Size = 51;
 				Kari.Level = 20;
 				Kari.MaxSpeedBase = 191;
 				Kari.Faction = FactionMgr.GetFactionByID(0);
-				Kari.X = 749114;
-				Kari.Y = 814019;
-				Kari.Z = 4408;
-				Kari.Heading = 3595;
+                Kari.Position = Position.Create(regionID: 100, x: 749114, y: 814019, z: 4408, heading: 3595);
 				Kari.RespawnInterval = -1;
 				Kari.BodyType = 0;
 				

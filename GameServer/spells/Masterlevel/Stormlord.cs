@@ -25,6 +25,7 @@ using DOL.Database;
 using DOL.Events;
 using System.Collections;
 using System.Collections.Generic;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Spells
 {
@@ -41,11 +42,7 @@ namespace DOL.GS.Spells
             //Construct a new storm.
             storm = new GameStorm();
             storm.Realm = caster.Realm;
-            storm.X = caster.X;
-            storm.Y = caster.Y;
-            storm.Z = caster.Z;
-            storm.CurrentRegionID = caster.CurrentRegionID;
-            storm.Heading = caster.Heading;
+            storm.Position = caster.Position;
             storm.Owner = (GamePlayer)caster;
             storm.Movable = true;
 
@@ -156,7 +153,8 @@ namespace DOL.GS.Spells
                     GameNPC targetNPC = targetStorm as GameNPC;
                     int range = Util.Random(0, 750);
                     double angle = Util.RandomDouble() * 2 * Math.PI;
-                    targetNPC.WalkTo(targetNPC.X + (int)(range * Math.Cos(angle)), targetNPC.Y + (int)(range * Math.Sin(angle)), targetNPC.Z, targetNPC.MaxSpeed);
+                    var offset = Vector.Create(x: (int)(range * Math.Cos(angle)), y: (int)(range * Math.Sin(angle)) );
+                    targetNPC.WalkTo(targetNPC.Coordinate + offset, targetNPC.MaxSpeed);
                 }
             }
         }
@@ -180,11 +178,7 @@ namespace DOL.GS.Spells
             //Construct a new storm.
             storm = new GameStorm();
             storm.Realm = caster.Realm;
-            storm.X = caster.X;
-            storm.Y = caster.Y;
-            storm.Z = caster.Z;
-            storm.CurrentRegionID = caster.CurrentRegionID;
-            storm.Heading = caster.Heading;
+            storm.Position = caster.Position;
             storm.Owner = (GamePlayer)caster;
             storm.Movable = true;
 
@@ -267,11 +261,7 @@ namespace DOL.GS.Spells
             //Construct a new storm.
             storm = new GameStorm();
             storm.Realm = caster.Realm;
-            storm.X = caster.X;
-            storm.Y = caster.Y;
-            storm.Z = caster.Z;
-            storm.CurrentRegionID = caster.CurrentRegionID;
-            storm.Heading = caster.Heading;
+            storm.Position = caster.Position;
             storm.Owner = (GamePlayer)caster;
             storm.Movable = true;
 
@@ -350,11 +340,7 @@ namespace DOL.GS.Spells
             //Construct a new storm.
             storm = new GameStorm();
             storm.Realm = caster.Realm;
-            storm.X = caster.X;
-            storm.Y = caster.Y;
-            storm.Z = caster.Z;
-            storm.CurrentRegionID = caster.CurrentRegionID;
-            storm.Heading = caster.Heading;
+            storm.Position = caster.Position;
             storm.Owner = (GamePlayer)caster;
             storm.Movable = true;
 
@@ -510,11 +496,7 @@ namespace DOL.GS.Spells
             //Construct a new storm.
             storm = new GameStorm();
             storm.Realm = caster.Realm;
-            storm.X = caster.X;
-            storm.Y = caster.Y;
-            storm.Z = caster.Z;
-            storm.CurrentRegionID = caster.CurrentRegionID;
-            storm.Heading = caster.Heading;
+            storm.Position = caster.Position;
             storm.Owner = (GamePlayer)caster;
             storm.Movable = true;
 
@@ -593,11 +575,7 @@ namespace DOL.GS.Spells
             //Construct a new storm.
             storm = new GameStorm();
             storm.Realm = caster.Realm;
-            storm.X = caster.X;
-            storm.Y = caster.Y;
-            storm.Z = caster.Z;
-            storm.CurrentRegionID = caster.CurrentRegionID;
-            storm.Heading = caster.Heading;
+            storm.Position = caster.Position;
             storm.Owner = (GamePlayer)caster;
             storm.Movable = true;
 
@@ -675,11 +653,7 @@ namespace DOL.GS.Spells
             //Construct a new storm.
             storm = new GameStorm();
             storm.Realm = caster.Realm;
-            storm.X = caster.X;
-            storm.Y = caster.Y;
-            storm.Z = caster.Z;
-            storm.CurrentRegionID = caster.CurrentRegionID;
-            storm.Heading = caster.Heading;
+            storm.Position = caster.Position;
             storm.Owner = (GamePlayer)caster;
             storm.Movable = true;
 

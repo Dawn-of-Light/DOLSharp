@@ -23,6 +23,7 @@ using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.ServerProperties;
 using DOL.Language;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -190,10 +191,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				door.MaxHealth = 2545;
 				door.Health = 2545;
 				door.Locked = 0;
-				door.X = player.X;
-				door.Y = player.Y;
-				door.Z = player.Z;
-				door.Heading = player.Heading;
+				door.X = player.Position.X;
+				door.Y = player.Position.Y;
+				door.Z = player.Position.Z;
+				door.Heading = player.Orientation.InHeading;
 				GameServer.Database.AddObject(door);
 
 				player.Out.SendMessage("Added door " + m_handlerDoorID + " to the database!", eChatType.CT_Important,
@@ -261,7 +262,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							if (player.IsWithinRadius(mydoor, m_radius))
+							if (player.Coordinate.DistanceTo(mydoor.Coordinate) < m_radius)
 							{
 								if (m_doorState == 0x01)
 									mydoor.Open(player);
@@ -297,11 +298,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					//else basic quick hack
 					var door = new GameDoor();
 					door.DoorID = m_doorId;
-					door.X = player.X;
-					door.Y = player.Y;
-					door.Z = player.Z;
+					door.Position = player.Position.With(door.Orientation);
 					door.Realm = eRealm.Door;
-					door.CurrentRegion = player.CurrentRegion;
 					door.Open(player);
 				}
 			}

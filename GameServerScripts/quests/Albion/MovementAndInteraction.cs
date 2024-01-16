@@ -33,6 +33,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Behaviour;
 using DOL.Language;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Quests.Albion {
 	public class MovementAndInteraction : BaseQuest
@@ -50,7 +51,7 @@ namespace DOL.GS.Quests.Albion {
 		private static GameNPC questGiver = null;
 		private static GameNPC questTarget = null;
 
-		private static GameLocation targetLocation = new GameLocation("Tutorial", 27, 94789, 101439, 5248);
+		private static Position targetPosition = Position.Create(regionID: 27, x: 94789, y: 101439, z: 5248);
 		private static IArea targetArea = null;
 
 		public MovementAndInteraction() : base()
@@ -114,7 +115,6 @@ namespace DOL.GS.Quests.Albion {
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + questGiver.Name + ", creating him ...");
 				questGiver.Realm = eRealm.Albion;
-				questGiver.CurrentRegionID = 27;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 691, 0);		//Slot 22
@@ -128,10 +128,7 @@ namespace DOL.GS.Quests.Albion {
 
 				questGiver.Size = 55;
 				questGiver.Level = 70;
-				questGiver.X = 95510;
-				questGiver.Y = 101313;
-				questGiver.Z = 5340;
-				questGiver.Heading = 3060;
+                questGiver.Position = Position.Create(regionID: 27, x: 95510, y: 101313, z: 5340, heading: 3060);
 
 				if (SAVE_INTO_DATABASE)
 					questGiver.SaveIntoDatabase();
@@ -151,7 +148,6 @@ namespace DOL.GS.Quests.Albion {
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + questTarget.Name + ", creating him ...");
 				questTarget.Realm = eRealm.Albion;
-				questTarget.CurrentRegionID = 27;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 665, 0);		//Slot 22
@@ -165,10 +161,7 @@ namespace DOL.GS.Quests.Albion {
 
 				questTarget.Size = 50;
 				questTarget.Level = 38;
-				questTarget.X = 94789;
-				questTarget.Y = 101439;
-				questTarget.Z = 5248;
-				questTarget.Heading = 2878;
+                questTarget.Position = Position.Create(regionID: 27, x: 94789, y: 101439, z: 5248, heading: 2878);
 
 				if (SAVE_INTO_DATABASE)
 					questTarget.SaveIntoDatabase();
@@ -180,7 +173,7 @@ namespace DOL.GS.Quests.Albion {
 			#endregion
 
 			#region defineAreas
-			targetArea = WorldMgr.GetRegion(targetLocation.RegionID).AddArea(new Area.Circle("", targetLocation.X, targetLocation.Y, targetLocation.Z, 200));
+			targetArea = WorldMgr.GetRegion(targetPosition.RegionID).AddArea(new Area.Circle("", targetPosition.Coordinate, 200));
 			#endregion
 
 			#region defineBehaviours

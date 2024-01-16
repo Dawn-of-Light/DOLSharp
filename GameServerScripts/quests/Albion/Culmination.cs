@@ -36,6 +36,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -161,14 +162,10 @@ namespace DOL.GS.Quests.Albion
 				queenTatiana = new GameNPC();
 
 				queenTatiana.Name = "Queen Tatiana";
-				queenTatiana.X = 558500;
-				queenTatiana.Y = 533042;
-				queenTatiana.Z = 2573;
-				queenTatiana.Heading = 174;
+                queenTatiana.Position = Position.Create(regionID: 1, x: 558500, y: 533042, z: 2573, heading: 174);
 				queenTatiana.Model = 603;
 				queenTatiana.GuildName = "Part of " + questTitle + " Quest";
 				queenTatiana.Realm = eRealm.None;
-				queenTatiana.CurrentRegionID = 1;
 				queenTatiana.Size = 49;
 				queenTatiana.Level = 5;
 
@@ -210,19 +207,14 @@ namespace DOL.GS.Quests.Albion
 					fairySorceress[i].Name = "ire fairy sorceress";
 					fairySorceress[i].GuildName = "Part of " + questTitle + " Quest";
 					fairySorceress[i].Realm = eRealm.None;
-					fairySorceress[i].CurrentRegionID = 1;
 					fairySorceress[i].Size = 35;
 					fairySorceress[i].Level = 5;
-					fairySorceress[i].X = queenTatiana.X + Util.Random(30, 150);
-					fairySorceress[i].Y = queenTatiana.Y + Util.Random(30, 150);
-					fairySorceress[i].Z = queenTatiana.Z;
+					fairySorceress[i].Position = queenTatiana.Position.With(heading: 93) + Vector.Create(x: Util.Random(30, 150), y: Util.Random(30, 150));
 
 					StandardMobBrain brain = new StandardMobBrain();
 					brain.AggroLevel = 30;
 					brain.AggroRange = 600;
 					fairySorceress[i].SetOwnBrain(brain);
-
-					fairySorceress[i].Heading = 93;
 					//fairySorceress[i].EquipmentTemplateID = 200276;                
 
 					//You don't have to store the created mob in the db if you don't want,
@@ -838,14 +830,10 @@ namespace DOL.GS.Quests.Albion
 				dunwynClone.Model = 9;
 				dunwynClone.GuildName = "Part of " + questTitle + " Quest";
 				dunwynClone.Realm = eRealm.Albion;
-				dunwynClone.CurrentRegionID = 1;
 				dunwynClone.Size = 50;
 				dunwynClone.Level = 14;
-
-				dunwynClone.X = GameLocation.ConvertLocalXToGlobalX(8602, 0) + Util.Random(-150, 150);
-				dunwynClone.Y = GameLocation.ConvertLocalYToGlobalY(47193, 0) + Util.Random(-150, 150);
-				dunwynClone.Z = 2409;
-				dunwynClone.Heading = 342;
+                dunwynClone.Position = Position.CreateInZone(zoneID: 0, x: 8602, y: 47193, z: 2409, heading: 342)
+                    + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 
 				template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 798);
@@ -868,7 +856,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			else
 			{
-				dunwynClone.MoveTo(1, 567604, 509619, 2813, 3292);
+				dunwynClone.MoveTo(Position.Create(regionID: 1, x: 567604, y: 509619, z: 2813, heading: 3292));
 			}
 
 
@@ -886,15 +874,11 @@ namespace DOL.GS.Quests.Albion
 
 				recruits[i].GuildName = "Part of " + questTitle + " Quest";
 				recruits[i].Realm = eRealm.Albion;
-				recruits[i].CurrentRegionID = 1;
 
 				recruits[i].Size = 50;
 				recruits[i].Level = 6;
-				recruits[i].X = GameLocation.ConvertLocalXToGlobalX(8602, 0) + Util.Random(-150, 150);
-				recruits[i].Y = GameLocation.ConvertLocalYToGlobalY(47193, 0) + Util.Random(-150, 150);
-
-				recruits[i].Z = 2409;
-				recruits[i].Heading = 187;
+				recruits[i].Position = Position.CreateInZone(zoneID: 0, x: 8602, y: 47193, z: 2409, heading: 187)
+                    + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;

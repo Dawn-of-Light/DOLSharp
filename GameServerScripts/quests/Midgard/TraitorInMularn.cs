@@ -35,6 +35,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -82,8 +83,8 @@ namespace DOL.GS.Quests.Midgard
 		private static ItemTemplate recruitsBoots = null;
 		private static ItemTemplate recruitsQuiltedBoots = null;
 
-		private static GameLocation hindaEnd = new GameLocation("Lady Hinda", 100, 100, 56484, 55671, 4682, 29);
-		private static GameLocation hindaStart = new GameLocation("Lady Hinda", 100, 811022, 727295, 4677, 908);
+        private static Position hindaStart = Position.Create(regionID: 100, x: 811022, y: 727295, z: 4677, heading: 908 );
+        private static Position hindaEnd = Position.Create(regionID: 100, x: 56484, y: 55671, z: 4682, heading: 29 );
 
 
 		/* We need to define the constructors from the base class here, else there might be problems
@@ -152,13 +153,9 @@ namespace DOL.GS.Quests.Midgard
 				ladyHinda.Name = "Lady Hinda";
 				ladyHinda.GuildName = "Part of " + questTitle + " Quest";
 				ladyHinda.Realm = eRealm.None;
-				ladyHinda.CurrentRegionID = hindaStart.RegionID;
 				ladyHinda.Size = 50;
 				ladyHinda.Level = 30;
-				ladyHinda.X = hindaStart.X;
-				ladyHinda.Y = hindaStart.Y;
-				ladyHinda.Z = hindaStart.Z;
-				ladyHinda.Heading = hindaStart.Heading;
+                ladyHinda.Position = hindaStart;
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -442,7 +439,7 @@ namespace DOL.GS.Quests.Midgard
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == necklaceOfDoppelganger.Id_nb)
 				{
-                    if ( player.IsWithinRadius( hindaEnd, 2500 ) )
+                    if (player.Coordinate.DistanceTo(hindaEnd) <= 2500)
 					{
 						foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
@@ -455,12 +452,9 @@ namespace DOL.GS.Quests.Midgard
 
 						if (!ladyHinda.IsAlive || ladyHinda.ObjectState != GameObject.eObjectState.Active)
 						{
-							ladyHinda.X = hindaStart.X;
-							ladyHinda.Y = hindaStart.Y;
-							ladyHinda.Z = hindaStart.Z;
-							ladyHinda.Heading = hindaStart.Heading;
+                            ladyHinda.Position = hindaStart;
 							ladyHinda.AddToWorld();
-							ladyHinda.WalkTo(hindaEnd.X, hindaEnd.Y, hindaEnd.Z, ladyHinda.MaxSpeed);
+							ladyHinda.WalkTo(hindaEnd.Coordinate, ladyHinda.MaxSpeed);
 						}
 						quest.Step = 3;
 					}
@@ -482,10 +476,7 @@ namespace DOL.GS.Quests.Midgard
 
 				if (quest.Step == 3 && (!ladyHinda.IsAlive || ladyHinda.ObjectState != GameObject.eObjectState.Active))
 				{
-					ladyHinda.X = hindaEnd.X;
-					ladyHinda.Y = hindaEnd.Y;
-					ladyHinda.Z = hindaEnd.Z;
-					ladyHinda.Heading = hindaEnd.Heading;
+					ladyHinda.Position = hindaEnd;
 					ladyHinda.AddToWorld();
 				}
 			}

@@ -37,6 +37,7 @@ using DOL.Events;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using DOL.Language;
@@ -77,7 +78,8 @@ namespace DOL.GS.Quests.Midgard
         private static ItemTemplate daringstuddedleggings = null;
         private static ItemTemplate daringstuddedsleeves = null;
         //private static AbstractArea Statua = null;
-        private static GameLocation Mid_Statue = new GameLocation("Childs Play (Mid)", 489, 27580, 40006, 14483);
+        private static ushort demonsBreachRegionId = 489;
+        private static Position Mid_Statue = Position.Create(demonsBreachRegionId, x: 27580, y: 40006, z: 14483);
 
         private static IArea Mid_Statue_Area = null;
 
@@ -122,15 +124,11 @@ namespace DOL.GS.Quests.Midgard
                     log.Warn("Could not find " + Charles.Name + ", creating ...");
                 //Charles.GuildName = "Part of " + questTitle + " Quest";
                 Charles.Realm = eRealm.Midgard;
-                Charles.CurrentRegionID = 100;
                 Charles.Size = 37;
                 Charles.Level = 1;
                 Charles.MaxSpeedBase = 191;
                 Charles.Faction = FactionMgr.GetFactionByID(0);
-                Charles.X = 803946;
-                Charles.Y = 727221;
-                Charles.Z = 4680;
-                Charles.Heading = 1592;
+                Charles.Position = Position.Create(regionID: 100, x: 803946, y: 727221, z: 4680, heading: 1592);
                 Charles.RespawnInterval = -1;
                 Charles.BodyType = 0;
 
@@ -1475,7 +1473,7 @@ namespace DOL.GS.Quests.Midgard
             #endregion
 
             #region defineAreas
-            Mid_Statue_Area = WorldMgr.GetRegion(Mid_Statue.RegionID).AddArea(new Area.Circle("", Mid_Statue.X, Mid_Statue.Y, Mid_Statue.Z, 500));
+            Mid_Statue_Area = WorldMgr.GetRegion(Mid_Statue.RegionID).AddArea(new Area.Circle("", Mid_Statue.Coordinate, 500));
             Mid_Statue_Area.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterStatueArea));
 
             #endregion

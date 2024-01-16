@@ -23,6 +23,7 @@ using System.Linq;
 
 using DOL.Language;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -31,36 +32,23 @@ namespace DOL.GS
 	/// </summary>
 	public static class GamePlayerUtils
 	{
-		#region Spot and Area Description / Translation
-		/// <summary>
-		/// Get Spot Description Checking Any Area with Description or Zone Description
-		/// </summary>
-		/// <param name="reg"></param>
-		/// <param name="spot"></param>
-		/// <returns></returns>
-		public static string GetSpotDescription(this Region reg, IPoint3D spot)
-		{
-			return reg.GetSpotDescription(spot.X, spot.Y, spot.Z);
-		}
-		
-		/// <summary>
-		/// Get Spot Description Checking Any Area with Description or Zone Description
-		/// </summary>
-		/// <param name="reg"></param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="z"></param>
-		/// <returns></returns>
+        #region Spot and Area Description / Translation
+        [Obsolete("This is going to be removed.")]
+        public static string GetSpotDescription(this Region reg, IPoint3D spot)
+            => reg.GetSpotDescription(spot.X, spot.Y, spot.Z);
+
+        [Obsolete("This is going to be removed.")]
 		public static string GetSpotDescription(this Region reg, int x, int y, int z)
 		{
+            var coordinate = Coordinate.Create(x,y,z);
 			if (reg != null)
 			{
-				var area = reg.GetAreasOfSpot(x, y, z).OfType<AbstractArea>().FirstOrDefault(a => a.DisplayMessage && !string.IsNullOrEmpty(a.Description));
+				var area = reg.GetAreasOfSpot(coordinate).OfType<AbstractArea>().FirstOrDefault(a => a.DisplayMessage && !string.IsNullOrEmpty(a.Description));
 				
 				if (area != null)
 					return area.Description;
 				
-				var zone = reg.GetZone(x, y);
+				var zone = reg.GetZone(coordinate);
 				
 				if (zone != null)
 					return zone.Description;
@@ -71,32 +59,19 @@ namespace DOL.GS
 			return string.Empty;
 		}
 
-		/// <summary>
-		/// Get Spot Description Checking Any Area with Description or Zone Description and Try Translating it
-		/// </summary>
-		/// <param name="reg"></param>
-		/// <param name="client"></param>
-		/// <param name="spot"></param>
-		/// <returns></returns>
-		public static string GetTranslatedSpotDescription(this Region reg, GameClient client, IPoint3D spot)
-		{
-			return reg.GetTranslatedSpotDescription(client, spot.X, spot.Y, spot.Z);
-		}
-		
-		/// <summary>
-		/// Get Spot Description Checking Any Area with Description or Zone Description and Try Translating it
-		/// </summary>
-		/// <param name="reg"></param>
-		/// <param name="client"></param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="z"></param>
-		/// <returns></returns>
-		public static string GetTranslatedSpotDescription(this Region reg, GameClient client, int x, int y, int z)
+        [Obsolete("This is going to be removed.")]
+        public static string GetTranslatedSpotDescription(this Region reg, GameClient client, IPoint3D spot)
+            => reg.GetTranslatedSpotDescription(client, spot.X, spot.Y, spot.Z);
+
+        [Obsolete("This is going to be removed.")]
+        public static string GetTranslatedSpotDescription(this Region reg, GameClient client, int x, int y, int z)
+            => GetTranslatedSpotDescription(reg, client, Coordinate.Create(x, y, z));
+
+		public static string GetTranslatedSpotDescription(this Region reg, GameClient client, Coordinate coordinate)
 		{
 			if (reg != null)
 			{
-				var area = reg.GetAreasOfSpot(x, y, z).OfType<AbstractArea>().FirstOrDefault(a => a.DisplayMessage);
+				var area = reg.GetAreasOfSpot(coordinate).OfType<AbstractArea>().FirstOrDefault(a => a.DisplayMessage);
 				
 				// Try Translate Area First
 				if (area != null)
@@ -109,7 +84,7 @@ namespace DOL.GS
 					return area.Description;
 				}
 				
-				var zone = reg.GetZone(x, y);
+				var zone = reg.GetZone(coordinate);
 				
 				// Try Translate Zone
 				if (zone != null)
@@ -126,64 +101,34 @@ namespace DOL.GS
 			
 			return string.Empty;			
 		}
-		
-		/// <summary>
-		/// Get Player Spot Description Checking Any Area with Description or Zone Description and Try Translating it
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
+
+		[Obsolete("This is going to be removed.")]
 		public static string GetTranslatedSpotDescription(this GamePlayer player)
 		{
 			return player.GetTranslatedSpotDescription(player.CurrentRegion, player.X, player.Y, player.Z);
 		}
-		
-		/// <summary>
-		/// Get Player Spot Description Checking Any Area with Description or Zone Description and Try Translating it
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="region"></param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="z"></param>
-		/// <returns></returns>
+
+		[Obsolete("This is going to be removed.")]
 		public static string GetTranslatedSpotDescription(this GamePlayer player, Region region, int x, int y, int z)
 		{
 			return player.Client.GetTranslatedSpotDescription(region, x, y, z);
 		}
-		
-		/// <summary>
-		/// Get Client Spot Description Checking Any Area with Description or Zone Description and Try Translating it
-		/// </summary>
-		/// <param name="client"></param>
-		/// <param name="region"></param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="z"></param>
-		/// <returns></returns>
+
+		[Obsolete("This is going to be removed.")]
 		public static string GetTranslatedSpotDescription(this GameClient client, Region region, int x, int y, int z)
 		{
 			return region.GetTranslatedSpotDescription(client, x, y, z);
 		}
-		
-		/// <summary>
-		/// Get Player Spot Description Checking Any Area with Description or Zone Description 
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
+
+		[Obsolete("This is going to be removed.")]
 		public static string GetSpotDescription(this GamePlayer player)
 		{
 			return player.GetTranslatedSpotDescription();
 		}
-		
-		/// <summary>
-		/// Get Player's Bind Spot Description Checking Any Area with Description or Zone Description 
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
-		public static string GetBindSpotDescription(this GamePlayer player)
-		{
-			return player.GetTranslatedSpotDescription(WorldMgr.GetRegion((ushort)player.BindRegion), player.BindXpos, player.BindYpos, player.BindZpos);
-		}
+
+        [Obsolete("This is going to be removed.")]
+        public static string GetBindSpotDescription(this GamePlayer player)
+            => WorldMgr.GetRegion((ushort)player.BindPosition.RegionID).GetTranslatedSpotDescription(player.Client,player.BindPosition.Coordinate);
 		#endregion
 		
 		#region player skills / bonuses

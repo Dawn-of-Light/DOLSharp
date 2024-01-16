@@ -35,6 +35,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -151,7 +152,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + ydeniaPhilpott.Name + ", creating him ...");
 				ydeniaPhilpott.GuildName = "Part of " + questTitle + " Quest";
 				ydeniaPhilpott.Realm = eRealm.Albion;
-				ydeniaPhilpott.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 227);
@@ -166,10 +166,7 @@ namespace DOL.GS.Quests.Albion
 
 				ydeniaPhilpott.Size = 51;
 				ydeniaPhilpott.Level = 40;
-				ydeniaPhilpott.X = 559315;
-				ydeniaPhilpott.Y = 510705;
-				ydeniaPhilpott.Z = 2488;
-				ydeniaPhilpott.Heading = 3993;
+                ydeniaPhilpott.Position = Position.Create(regionID: 1, x: 559315, y: 510705, z: 2488, heading: 3993);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -193,7 +190,6 @@ namespace DOL.GS.Quests.Albion
 				elvarTambor.Name = "Elvar Tambor";
 				elvarTambor.GuildName = "Part of " + questTitle + " Quest";
 				elvarTambor.Realm = eRealm.Albion;
-				elvarTambor.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 3);
@@ -207,10 +203,7 @@ namespace DOL.GS.Quests.Albion
 
 				elvarTambor.Size = 50;
 				elvarTambor.Level = 15;
-				elvarTambor.X = 574711;
-				elvarTambor.Y = 529887;
-				elvarTambor.Z = 2896;
-				elvarTambor.Heading = 2366;
+                elvarTambor.Position = Position.Create(regionID: 1, x: 574711, y: 529887, z: 2896, heading: 2366);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

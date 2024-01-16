@@ -36,6 +36,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -75,14 +76,19 @@ namespace DOL.GS.Quests.Albion
 		protected const string questTitle = "City of Camelot";
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 1;
-
-		protected static GameLocation armsManTrainer = new GameLocation("Armsman Trainer", 10, 30985, 31520, 8216, 0);
-		protected static GameLocation reaverTrainer = new GameLocation("Reaver Trainer", 10, 32545, 26900, 7830, 0);
-		protected static GameLocation paladinTrainer = new GameLocation("Paladin Trainer", 10, 38920, 27845, 8636, 0);
-		protected static GameLocation mercenaryTrainer = new GameLocation("Mercenary Trainer", 10, 32826, 26831, 7995, 0);
-
-		protected static GameLocation vaultKeeper = new GameLocation("Vault Keeper", 10, 35408, 23830, 8751, 0);
-		protected static GameLocation mainGates = new GameLocation("Main Gates", 10, 40069, 26463, 8255, 0);
+        
+        private static Position armsManTrainerPosition 
+            = Position.Create(regionID: 10, x: 30985, y: 31520, z: 8216, heading: 0);
+        private static Position reaverTrainerPosition
+            = Position.Create(regionID: 10, x: 32545, y: 26900, z: 7830, heading: 0);
+        private static Position paladinTrainerPosition
+            = Position.Create(regionID: 10, x: 38920, y: 27845, z: 8636, heading: 0);
+        private static Position mercenaryTrainerPosition
+            = Position.Create(regionID: 10, x: 32826, y: 26831, z: 7995, heading: 0);
+        private static Position vaultKeeperPosition
+            = Position.Create(regionID: 10, x: 35408, y: 23830, z: 8751, heading: 0);
+        private static Position mainGatesPosition
+            = Position.Create(regionID: 10, x: 40069, y: 26463, z: 8255, heading: 0);
 
 		private static GameNPC masterFrederick = null;
 		private static GameNPC lordUrqhart = null;
@@ -167,13 +173,9 @@ namespace DOL.GS.Quests.Albion
 				lordUrqhart.Name = "Lord Urqhart";
 				lordUrqhart.GuildName = "Vault Keeper";
 				lordUrqhart.Realm = eRealm.Albion;
-				lordUrqhart.CurrentRegionID = 10;
 				lordUrqhart.Size = 49;
 				lordUrqhart.Level = 50;
-				lordUrqhart.X = 35500;
-				lordUrqhart.Y = 23857;
-				lordUrqhart.Z = 8751;
-				lordUrqhart.Heading = 603;
+                lordUrqhart.Position = Position.Create(regionID: 10, x: 35500, y: 23857, z: 8751, heading: 603);
 				lordUrqhart.EquipmentTemplateID = "1707104";
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -196,13 +198,9 @@ namespace DOL.GS.Quests.Albion
 				bombard.Name = "Bombard";
 				bombard.GuildName = "Stable Master";
 				bombard.Realm = eRealm.Albion;
-				bombard.CurrentRegionID = 1;
 				bombard.Size = 49;
 				bombard.Level = 4;
-				bombard.X = 515718;
-				bombard.Y = 496739;
-				bombard.Z = 3352;
-				bombard.Heading = 2500;
+                bombard.Position = Position.Create(regionID: 1, x: 515718, y: 496739, z: 3352, heading: 2500);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -735,26 +733,26 @@ namespace DOL.GS.Quests.Albion
 							break;
 
 						case "paladin":
-							quest.TeleportTo(paladinTrainer);
+							quest.TeleportWithAssistantTo(paladinTrainerPosition, "Paladin Trainer");
 							break;
 						case "armsman":
-							quest.TeleportTo(armsManTrainer);
+							quest.TeleportWithAssistantTo(armsManTrainerPosition, "Armsman Trainer");
 							break;
 						case "reaver":
-							quest.TeleportTo(reaverTrainer);
+							quest.TeleportWithAssistantTo(reaverTrainerPosition, "Reaver Trainer");
 							break;
 						case "mercenary":
-							quest.TeleportTo(mercenaryTrainer);
+							quest.TeleportWithAssistantTo(mercenaryTrainerPosition, "Mercenary Trainer");
 							break;
 						case "main gates":
-							quest.TeleportTo(mainGates);
+							quest.TeleportWithAssistantTo(mainGatesPosition, "Main Gates");
 							break;
 						case "vault keeper":
 							if (quest.Step == 3)
 							{
 								quest.Step = 4;
 							}
-							quest.TeleportTo(vaultKeeper);
+							quest.TeleportWithAssistantTo(vaultKeeperPosition, "Vault Keeper");
 							break;
 
 						case "go away":
@@ -766,15 +764,12 @@ namespace DOL.GS.Quests.Albion
 			}
 		}
 
-		/**
-         * Convinient Method for teleporintg with assistant 
-         */
 
-		protected void TeleportTo(GameLocation target)
-		{
-			TeleportTo(m_questPlayer, assistant, target, 5);
-			TeleportTo(assistant, assistant, target, 25, 50);
-		}
+        private void TeleportWithAssistantTo(Position destination, string destinationName)
+        {
+            TeleportTo(m_questPlayer, assistant, destination, destinationName, 5, 0);
+            TeleportTo(assistant, assistant, destination, destinationName, 25, 50);
+        }
 
 
 		protected static void PlayerEnterWorld(DOLEvent e, object sender, EventArgs args)
@@ -859,7 +854,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			if (assistant != null && assistant.ObjectState == GameObject.eObjectState.Active)
 			{
-				assistant.MoveTo(m_questPlayer.CurrentRegionID, m_questPlayer.X + 50, m_questPlayer.Y + 30, m_questPlayer.Z, m_questPlayer.Heading);
+				assistant.MoveTo(m_questPlayer.Position + Vector.Create(x: 50, y: 30));
 			}
 			else
 			{
@@ -868,13 +863,9 @@ namespace DOL.GS.Quests.Albion
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";
 				assistant.Realm = m_questPlayer.Realm;
-				assistant.CurrentRegionID = m_questPlayer.CurrentRegionID;
 				assistant.Size = 25;
 				assistant.Level = 5;
-				assistant.X = m_questPlayer.X + 50;
-				assistant.Y = m_questPlayer.Y + 50;
-				assistant.Z = m_questPlayer.Z;
-				assistant.Heading = m_questPlayer.Heading;
+				assistant.Position = m_questPlayer.Position + Vector.Create(x: 50, y: 50);
 
 				assistant.AddToWorld();
 

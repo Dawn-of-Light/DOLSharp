@@ -18,6 +18,7 @@
  */
 using System;
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.Keeps;
 using DOL.Language;
 
@@ -92,7 +93,7 @@ namespace DOL.GS.Commands
 			}
 
 			AbstractGameKeep myKeep = (AbstractGameKeep)client.Player.TempProperties.getProperty<object>(TEMP_KEEP_LAST, null);
-			if (myKeep == null) myKeep = GameServer.KeepManager.GetKeepCloseToSpot(client.Player.CurrentRegionID, client.Player, 10000);
+			if (myKeep == null) myKeep = GameServer.KeepManager.GetKeepCloseToSpot(client.Player.Position, 10000);
 			
 			switch (args[1])
 			{
@@ -144,11 +145,7 @@ namespace DOL.GS.Commands
 						keep.Level = (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL;
 						keep.BaseLevel = 50;
 						keep.Realm = client.Player.Realm;
-						keep.Region = client.Player.CurrentRegionID;
-						keep.X = client.Player.X;
-						keep.Y = client.Player.Y;
-						keep.Z = client.Player.Z;
-						keep.Heading = client.Player.Heading;
+						keep.Position = client.Player.Position;
 
 						if ((int)keepType < 8)
 						{
@@ -2037,11 +2034,7 @@ namespace DOL.GS.Commands
 						keep.Name = keepName;
 						keep.KeepID = keepid;
 						keep.Level = 0;
-						keep.Region = client.Player.CurrentRegionID;
-						keep.X = client.Player.X;
-						keep.Y = client.Player.Y;
-						keep.Z = client.Player.Z;
-						keep.Heading = client.Player.Heading;
+                        keep.SetPosition(client.Player.Position);
 						keep.BaseLevel = baseLevel;
 						GameServer.Database.AddObject(keep);
 
@@ -2132,11 +2125,7 @@ namespace DOL.GS.Commands
 						keep.Name = keepName;
 						keep.KeepID = keepid;
 						keep.Level = 0;
-						keep.Region = client.Player.CurrentRegionID;
-						keep.X = client.Player.X;
-						keep.Y = client.Player.Y;
-						keep.Z = client.Player.Z;
-						keep.Heading = client.Player.Heading;
+                        keep.SetPosition(client.Player.Position);
 						keep.BaseLevel = baselevel;
 						GameServer.Database.AddObject(keep);
 
@@ -2150,12 +2139,8 @@ namespace DOL.GS.Commands
 						{
 							(door as GameObject).RemoveFromWorld();
 							GameKeepDoor d = new GameKeepDoor();
-							d.CurrentRegionID = (ushort)keep.Region;
 							d.Name = door.Name;
-							d.Heading = (ushort)door.Heading;
-							d.X = door.X;
-							d.Y = door.Y;
-							d.Z = door.Z;
+							d.Position = Position.Create(keep.Region, door.Coordinate, door.Orientation);
 							d.Level = 0;
 							d.Model = 0xFFFF;
 							d.DoorID = door.DoorID;
@@ -2425,11 +2410,7 @@ namespace DOL.GS.Commands
 						else
 						{
 							FrontiersPortalStone stone = new FrontiersPortalStone();
-							stone.CurrentRegion = client.Player.CurrentRegion;
-							stone.X = client.Player.X;
-							stone.Y = client.Player.Y;
-							stone.Z = client.Player.Z;
-							stone.Heading = client.Player.Heading;
+							stone.Position = client.Player.Position;
 							stone.SaveIntoDatabase();
 							stone.AddToWorld();
 						}
@@ -2464,11 +2445,7 @@ namespace DOL.GS.Commands
 						{
 							GameKeepBanner banner = new GameKeepBanner();
 							banner.BannerType = bannerType;
-							banner.CurrentRegion = client.Player.CurrentRegion;
-							banner.X = client.Player.X;
-							banner.Y = client.Player.Y;
-							banner.Z = client.Player.Z;
-							banner.Heading = client.Player.Heading;
+							banner.Position = client.Player.Position;
 							banner.SaveIntoDatabase();
 
 							foreach (AbstractArea area in banner.CurrentAreas)
@@ -2507,10 +2484,7 @@ namespace DOL.GS.Commands
 						if (args.Length < 3)
 						{
 							// simple move to player location
-							myKeep.X = client.Player.X;
-							myKeep.Y = client.Player.Y;
-							myKeep.Z = client.Player.Z;
-							myKeep.Heading = client.Player.Heading;
+							myKeep.Position = client.Player.Position;
 						}
 						else if (args.Length < 4)
 						{
@@ -2537,22 +2511,7 @@ namespace DOL.GS.Commands
 									break;
 
 								case "h":
-
-									if (amount < 0 && myKeep.Heading - Math.Abs(amount) < 0)
-									{
-										int diff = myKeep.Heading - Math.Abs(amount);
-										myKeep.Heading = (ushort)(4095 + diff);
-									}
-									else
-									{
-										myKeep.Heading += (ushort)amount;
-									}
-
-									if (myKeep.Heading > 4095)
-									{
-										myKeep.Heading = (ushort)(myKeep.Heading - 4095);
-									}
-
+                                    myKeep.Orientation += Angle.Heading((ushort)amount);
 									break;
 
 								default:

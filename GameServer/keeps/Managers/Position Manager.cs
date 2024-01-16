@@ -26,6 +26,7 @@ using DOL.GS;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using System.Collections.Generic;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Keeps
 {
@@ -82,134 +83,24 @@ namespace DOL.GS.Keeps
 		{
 			LoadKeepItemPosition(pos, guard);
 
-            guard.SpawnPoint.X = guard.X;
-            guard.SpawnPoint.Y = guard.Y;
-            guard.SpawnPoint.Z = guard.Z;
-			guard.SpawnHeading = guard.Heading;
+            guard.SpawnPosition = guard.Position;
 		}
 
-		public static void LoadKeepItemPosition(DBKeepPosition pos, IKeepItem item)
-		{
-			item.CurrentRegionID = item.Component.CurrentRegionID;
-			int x, y;
-			LoadXY(item.Component, pos.XOff, pos.YOff, out x, out y);
-			item.X = x;
-			item.Y = y;
+        public static void LoadKeepItemPosition(DBKeepPosition pos, IKeepItem item)
+        {
+            var keepPositionOffset = Vector.Create(pos.XOff, -pos.YOff, pos.ZOff).RotatedClockwise(item.Component.Orientation);
+            var orientation = item.Component.Orientation + Angle.Heading(pos.HOff);
+            item.Position = (item.Component.Position + keepPositionOffset).With(orientation);
+            item.DbKeepPosition = pos;
+        }
 
-			item.Z = item.Component.Keep.Z + pos.ZOff;
+        public static Vector SaveXY(GameKeepComponent component, Coordinate keepPointCoordinate)
+        {
+            var angle = component.Keep.Orientation + component.RelativeOrientationToKeep;
+            var vector = keepPointCoordinate - component.Coordinate;
+            return vector.RotatedClockwise(angle - Angle.Degrees(90));
+        }
 
-			item.Heading = (ushort)(item.Component.Heading + pos.HOff);
-
-			item.Position = pos;
-		}
-
-		/// <summary>
-		/// Calculates X and Y based on component rotation and offset
-		/// </summary>
-		/// <param name="component">The assigned component object</param>
-		/// <param name="inX">The argument X</param>
-		/// <param name="inY">The argument Y</param>
-		/// <param name="outX">The result X</param>
-		/// <param name="outY">The result Y</param>
-		public static void LoadXY(GameKeepComponent component, int inX, int inY, out int outX, out int outY)
-		{
-			double angle = component.Keep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-			double C = Math.Cos(angle);
-			double S = Math.Sin(angle);
-			switch (component.ComponentHeading)
-			{
-				case 0:
-					{
-						outX = (int)(component.X + C * inX + S * inY);
-						outY = (int)(component.Y - C * inY + S * inX);
-						break;
-					}
-				case 1:
-					{
-						outX = (int)(component.X + C * inY - S * inX);
-						outY = (int)(component.Y + C * inX + S * inY);
-						break;
-					}
-				case 2:
-					{
-						outX = (int)(component.X - C * inX - S * inY);
-						outY = (int)(component.Y + C * inY - S * inX);
-						break;
-					}
-				case 3:
-					{
-						outX = (int)(component.X - C * inY + S * inX);
-						outY = (int)(component.Y - C * inX - S * inY);
-						break;
-					}
-				default:
-					{
-						outX = 0;
-						outY = 0;
-						break;
-					}
-			}
-		}
-
-		/// <summary>
-		/// Saves X and Y offsets
-		/// </summary>
-		/// <param name="component">The assigned component object</param>
-		/// <param name="inX">The argument X</param>
-		/// <param name="inY">The argument Y</param>
-		/// <param name="outX">The result X</param>
-		/// <param name="outY">The result Y</param>
-		public static void SaveXY(GameKeepComponent component, int inX, int inY, out int outX, out int outY)
-		{
-			double angle = component.Keep.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-			int gx = inX - component.X;
-			int gy = inY - component.Y;
-			double C = Math.Cos(angle);
-			double S = Math.Sin(angle);
-			switch (component.ComponentHeading)
-			{
-				case 0:
-					{
-						outX = (int)(gx * C + gy * S);
-						outY = (int)(gx * S - gy * C);
-						break;
-					}
-				case 1:
-					{
-						outX = (int)(gy * C - gx * S);
-						outY = (int)(gx * C + gy * S);
-						break;
-					}
-				case 2:
-					{
-						outX = (int)((gx * C + gy * S) / (-C * C - S * S));
-						outY = (int)(gy * C - gx * S);
-						break;
-					}
-				case 3:
-					{
-						outX = (int)(gx * S - gy * C);
-						outY = (int)((gx * C + gy * S) / (-C * C - S * S));
-						break;
-					}
-				default:
-					{
-						outX = 0;
-						outY = 0;
-						break;
-					}
-			}
-		}
-
-		/// <summary>
-        /// Creates a position
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="height"></param>
-		/// <param name="player"></param>
-		/// <param name="guardID"></param>
-		/// <param name="component"></param>
-		/// <returns></returns>
 		public static DBKeepPosition CreatePosition(Type type, int height, GamePlayer player, string guardID, GameKeepComponent component)
 		{
 			DBKeepPosition pos = CreatePosition(guardID, component, player);
@@ -249,15 +140,13 @@ namespace DOL.GS.Keeps
 			pos.ComponentSkin = component.Skin;
 			pos.ComponentRotation = component.ComponentHeading;
 			pos.TemplateID = templateID;
-			int x, y;
 
-			SaveXY(component, player.X, player.Y, out x, out y);
-			pos.XOff = x;
-			pos.YOff = y;
+			var keepPositionOffset = SaveXY(component, player.Coordinate);
+			pos.XOff = keepPositionOffset.X;
+			pos.YOff = keepPositionOffset.Y;
+			pos.ZOff = keepPositionOffset.Z;
 
-			pos.ZOff = player.Z - component.Z;
-
-			pos.HOff = player.Heading - component.Heading;
+			pos.HOff = (player.Orientation - component.Orientation).InHeading;
 			return pos;
 		}
 
@@ -343,27 +232,22 @@ namespace DOL.GS.Keeps
 			PathPoint first = null;
 			for (int i = 0; i < sorted.Count; i++)
 			{
-				DBPathPoint pp = (DBPathPoint)sorted.GetByIndex(i);
-				PathPoint p = new PathPoint(pp.X, pp.Y, pp.Z, pp.MaxSpeed, pathType);
-
-				int x, y;
-				LoadXY(component, pp.X, pp.Y, out x, out y);
-				p.X = x;
-				p.Y = y;
-				p.Z = component.Keep.Z + p.Z;
-
-				p.WaitTime = pp.WaitTime;
+				var dbPathPoint = (DBPathPoint)sorted.GetByIndex(i);
+				var pathPoint = new PathPoint(dbPathPoint, pathType);
+                var relativeOffset = Vector.Create(pathPoint.Coordinate.X, -pathPoint.Coordinate.Y, pathPoint.Coordinate.Z)
+                    .RotatedClockwise(component.Orientation);
+                pathPoint.Coordinate = component.Coordinate + relativeOffset;
 
 				if (first == null)
 				{
-					first = p;
+					first = pathPoint;
 				}
-				p.Prev = prev;
+				pathPoint.Prev = prev;
 				if (prev != null)
 				{
-					prev.Next = p;
+					prev.Next = pathPoint;
 				}
-				prev = p;
+				prev = pathPoint;
 			}
 			return first;
 		}
@@ -391,17 +275,15 @@ namespace DOL.GS.Keeps
 			int i = 1;
 			do
 			{
-				DBPathPoint dbpp = new DBPathPoint(path.X, path.Y, path.Z, path.MaxSpeed);
-				int x, y;
-				SaveXY(component, dbpp.X, dbpp.Y, out x, out y);
-				dbpp.X = x;
-				dbpp.Y = y;
-				dbpp.Z = dbpp.Z - component.Z;
+                var dbPathPoint = path.GenerateDbEntry();
+                var offset = SaveXY(component, Coordinate.Create(dbPathPoint.X, dbPathPoint.Y));
+                dbPathPoint.X = offset.X;
+                dbPathPoint.Y = offset.Y;
+                dbPathPoint.Z = offset.Z;
+                dbPathPoint.Step = i++;
+                dbPathPoint.PathID = pathID;
 
-				dbpp.Step = i++;
-				dbpp.PathID = pathID;
-				dbpp.WaitTime = path.WaitTime;
-				GameServer.Database.AddObject(dbpp);
+				GameServer.Database.AddObject(dbPathPoint);
 				path = path.Next;
 			} while (path != null && path != root);
 		}
@@ -440,15 +322,13 @@ namespace DOL.GS.Keeps
 			pos.ComponentSkin = component.Skin;
 			pos.ComponentRotation = component.ComponentHeading;
 			pos.TemplateID = Guid.NewGuid().ToString();
-			int x, y;
 
-			SaveXY(component, player.X, player.Y, out x, out y);
-			pos.XOff = x;
-			pos.YOff = y;
+			var keepPositionOffset = SaveXY(component, player.Coordinate);
+			pos.XOff = keepPositionOffset.X;
+			pos.YOff = keepPositionOffset.Y;
+			pos.ZOff = keepPositionOffset.Z;
 
-			pos.ZOff = player.Z - component.Z;
-
-			pos.HOff = player.Heading - component.Heading;
+			pos.HOff = (player.Orientation - component.Orientation).InHeading;
 
 			GameServer.Database.AddObject(pos);
 

@@ -822,11 +822,11 @@ namespace DOL.GS
 				if((isObjectFromPlayer(target) || isObjectFromPlayer(source))  && isObjectFromPlayer(contamined))
 				{
 					// Update using PvP cache Timeout
-					if(LOSMGR_PET_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PET_CONTAMINATION_RADIUS) 
+					if(LOSMGR_PET_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PET_CONTAMINATION_RADIUS) 
 					{
 						// FIXME debug
 						if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-							log.Warn("LOSMGR_D : Contamination Los Check (Pet PvP) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+							log.Warn("LOSMGR_D : Contamination Los Check (Pet PvP) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR));
 
 						UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_PLAYER_CACHE_TIMEOUT, time);
 					}
@@ -838,11 +838,11 @@ namespace DOL.GS
 				if(contamined is GameKeepGuard)
 				{
 					// Update using PvE cache Timeout
-					if(LOSMGR_GUARD_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_GUARD_CONTAMINATION_RADIUS)
+					if(LOSMGR_GUARD_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_GUARD_CONTAMINATION_RADIUS)
 					{
 						// FIXME debug
 						if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-							log.Warn("LOSMGR_D : Contamination Los Check (Grd PvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+							log.Warn("LOSMGR_D : Contamination Los Check (Grd PvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR));
 
 						UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_ENVIRONMENT_CACHE_TIMEOUT, time);
 					}
@@ -854,11 +854,11 @@ namespace DOL.GS
 				if((isObjectFromPlayer(target) || isObjectFromPlayer(source)) || isObjectFromPlayer(contamined))
 				{
 					// Update using PvE cache Timeout
-					if(LOSMGR_NPC_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_NPC_CONTAMINATION_RADIUS)
+					if(LOSMGR_NPC_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_NPC_CONTAMINATION_RADIUS)
 					{
 						// FIXME debug
 						if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-							log.Warn("LOSMGR_D : Contamination Los Check (Mob PvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+							log.Warn("LOSMGR_D : Contamination Los Check (Mob PvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR));
 
 						UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_ENVIRONMENT_CACHE_TIMEOUT, time);
 					}
@@ -868,11 +868,11 @@ namespace DOL.GS
 				
 
 				// else it's EvE radius
-				if(source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_MAX_CONTAMINATION_RADIUS)
+				if(source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_MAX_CONTAMINATION_RADIUS)
 				{
 					// FIXME debug
 					if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-						log.Warn("LOSMGR_D : Contamination Los Check (Mob EvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+						log.Warn("LOSMGR_D : Contamination Los Check (Mob EvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR));
 					
 					UpdateLosCacheItem(source, target, losOK, LOSMGR_ENVIRONMENT_VS_ENVIRONMENT_CACHE_TIMEOUT, time);
 				}
@@ -887,11 +887,11 @@ namespace DOL.GS
 				// P v P
 				if(target is GamePlayer || source is GamePlayer)
 				{
-					if(LOSMGR_PLAYER_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PLAYER_CONTAMINATION_RADIUS)
+					if(LOSMGR_PLAYER_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PLAYER_CONTAMINATION_RADIUS)
 					{
 						// FIXME debug
 						if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-							log.Warn("LOSMGR_D : Contamination Los Check (Pl PvP) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+							log.Warn("LOSMGR_D : Contamination Los Check (Pl PvP) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR));
 
 						UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_PLAYER_CACHE_TIMEOUT, time);
 					}
@@ -902,11 +902,11 @@ namespace DOL.GS
 				// Player to Pet
 				if(isObjectFromPlayer(target) || isObjectFromPlayer(source)) 
 				{
-					if(LOSMGR_PET_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PET_CONTAMINATION_RADIUS)
+					if(LOSMGR_PET_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PET_CONTAMINATION_RADIUS)
 					{
 						// FIXME debug
 						if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-							log.Warn("LOSMGR_D : Contamination Los Check (Pl PvPets) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+							log.Warn("LOSMGR_D : Contamination Los Check (Pl PvPets) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR));
 
 						UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_PLAYER_CACHE_TIMEOUT, time);
 					}
@@ -914,11 +914,11 @@ namespace DOL.GS
 					continue;
 				}
 				
-				if(source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_NPC_CONTAMINATION_RADIUS)
+				if(source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_NPC_CONTAMINATION_RADIUS)
 				{
 					// FIXME debug
 					if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-						log.Warn("LOSMGR_D : Contamination Los Check (Pl PvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+						log.Warn("LOSMGR_D : Contamination Los Check (Pl PvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined.Position, LOSMGR_CONTAMINATION_ZFACTOR));
 	
 					// else we're in PvE, a player can't be in EvE
 					UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_ENVIRONMENT_CACHE_TIMEOUT, time);

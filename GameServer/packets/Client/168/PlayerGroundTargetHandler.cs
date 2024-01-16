@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using DOL.GS.Geometry;
+
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerGroundTarget, "Handles Player Ground Target Settings", eClientStatus.PlayerInGame)]
@@ -77,7 +79,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				var player = (GamePlayer) m_actionSource;
 				player.GroundTargetInView = ((m_flag & 0x100) != 0);
-				player.SetGroundTarget(m_x, m_y, (ushort) m_z);
+				player.GroundTargetPosition = Position.Create(player.Position.RegionID, m_x, m_y, (ushort) m_z);
 
 				if (!player.GroundTargetInView)
 					player.Out.SendMessage("Your ground target is not visible!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -96,7 +98,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (player.Steed.OwnerID == player.InternalID)
 						{
 							player.Out.SendMessage("You usher your boat forward.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							player.Steed.WalkTo(player.GroundTarget, player.Steed.MaxSpeed);
+							player.Steed.WalkTo(player.GroundTargetPosition.Coordinate, player.Steed.MaxSpeed);
 							return;
 						}
 					}
@@ -107,7 +109,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					player.Steed.WalkTo(player.GroundTarget, player.Steed.MaxSpeed);
+					player.Steed.WalkTo(player.GroundTargetPosition.Coordinate, player.Steed.MaxSpeed);
 					return;
 				}
 			}

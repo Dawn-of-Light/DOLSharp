@@ -6,6 +6,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -28,7 +29,7 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-            if ( caster.GroundTarget == null || !caster.IsWithinRadius( caster.GroundTarget, 1500 ) )
+            if ( caster.GroundTargetPosition == Position.Nowhere || caster.Coordinate.DistanceTo(caster.GroundTargetPosition) > 1500)
             {
 				caster.Out.SendMessage("You groundtarget is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -104,7 +105,7 @@ namespace DOL.GS.RealmAbilities
             if (!castWasSuccess)
                 return 0;
 			Statics.NegativeMaelstromBase nm = new Statics.NegativeMaelstromBase(dmgValue);
-			nm.CreateStatic(player, player.GroundTarget, duration, 5, 350);
+			nm.CreateStatic(player, player.GroundTargetPosition.Coordinate, duration, 5, 350);
             DisableSkill(player); 
 			timer.Stop();
 			timer = null;

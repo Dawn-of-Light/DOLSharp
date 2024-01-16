@@ -35,6 +35,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -154,13 +155,9 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + dunan.Name + ", creating ...");
 				dunan.GuildName = "Part of " + questTitle + " Quest";
 				dunan.Realm = eRealm.Albion;
-				dunan.CurrentRegionID = 1;
 				dunan.Size = 49;
 				dunan.Level = 21;
-				dunan.X = 531663;
-				dunan.Y = 479785;
-				dunan.Z = 2200;
-				dunan.Heading = 1579;
+                dunan.Position = Position.Create(regionID: 1, x: 531663, y: 479785, z: 2200, heading: 1579);
 				dunan.EquipmentTemplateID = "1707754";
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -182,13 +179,9 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + bombard.Name + ", creating ...");
 				bombard.GuildName = "Stable Master";
 				bombard.Realm = eRealm.Albion;
-				bombard.CurrentRegionID = 1;
 				bombard.Size = 49;
 				bombard.Level = 4;
-				bombard.X = 515718;
-				bombard.Y = 496739;
-				bombard.Z = 3352;
-				bombard.Heading = 2500;
+                bombard.Position = Position.Create(regionID: 1, x: 515718, y: 496739, z: 3352, heading: 2500);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -210,13 +203,9 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + vuloch.Name + ", creating ...");
 				vuloch.GuildName = "Stable Master";
 				vuloch.Realm = eRealm.Albion;
-				vuloch.CurrentRegionID = 1;
 				vuloch.Size = 50;
 				vuloch.Level = 4;
-				vuloch.X = 553089;
-				vuloch.Y = 513380;
-				vuloch.Z = 2896;
-				vuloch.Heading = 2139;
+                vuloch.Position = Position.Create(regionID: 1, x: 553089, y: 513380, z: 2896, heading: 2139);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -239,13 +228,9 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + yaren.Name + ", creating ...");
 				yaren.GuildName = "Stable Master";
 				yaren.Realm = eRealm.Albion;
-				yaren.CurrentRegionID = 1;
 				yaren.Size = 48;
 				yaren.Level = 4;
-				yaren.X = 529638;
-				yaren.Y = 478091;
-				yaren.Z = 2200;
-				yaren.Heading = 3160;
+                yaren.Position = Position.Create(regionID: 1, x: 529638, y: 478091, z: 2200, heading: 3160);
 				yaren.EquipmentTemplateID = "11701347";
 
 				//You don't have to store the created mob in the db if you don't want,

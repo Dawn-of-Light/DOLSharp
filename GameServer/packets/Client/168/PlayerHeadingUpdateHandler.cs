@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Reflection;
 using DOL.GS;
+using DOL.GS.Geometry;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -55,7 +56,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			var steedSlot = (byte) packet.ReadByte();
 			var ridingFlag = (byte)packet.ReadByte();
 
-			client.Player.Heading = (ushort)(head & 0xFFF);
+			client.Player.Orientation = Angle.Heading(head);
 			// client.Player.PetInView = ((flags & 0x04) != 0); // TODO
 			client.Player.GroundTargetInView = ((flags & 0x08) != 0);
 			client.Player.TargetInView = ((flags & 0x10) != 0);
@@ -65,7 +66,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				state = 5; // set dead state
 			else if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
 			{
-				client.Player.Heading = client.Player.Steed.Heading;
+				client.Player.Orientation = client.Player.Steed.Orientation;
 				state = 6; // Set ride state
 				steedSlot = (byte)client.Player.Steed.RiderSlot(client.Player); // there rider slot this player
 				head = (ushort)client.Player.Steed.ObjectID; // heading = steed ID

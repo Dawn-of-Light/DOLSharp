@@ -27,6 +27,7 @@ using DOL.GS.Styles;
 using log4net;
 using DOL.GS.Spells;
 using DOL.GS.Delve;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.PacketHandler
 {
@@ -163,21 +164,10 @@ namespace DOL.GS.PacketHandler
             using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
             {
                 pak.WriteInt((uint)siegeWeapon.ObjectID);
-                pak.WriteInt(
-                    (uint)
-                    (siegeWeapon.TargetObject == null
-                     ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.X)
-                     : siegeWeapon.TargetObject.X));
-                pak.WriteInt(
-                    (uint)
-                    (siegeWeapon.TargetObject == null
-                     ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.Y)
-                     : siegeWeapon.TargetObject.Y));
-                pak.WriteInt(
-                    (uint)
-                    (siegeWeapon.TargetObject == null
-                     ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.Z)
-                     : siegeWeapon.TargetObject.Z));
+                var aimCoordinate = siegeWeapon.AimCoordinate;
+                pak.WriteInt((uint)aimCoordinate.X);
+                pak.WriteInt((uint)aimCoordinate.Y);
+                pak.WriteInt((uint)aimCoordinate.Z);
                 pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
                 pak.WriteShort(siegeWeapon.Effect);
                 pak.WriteShort((ushort)(siegeWeapon.SiegeWeaponTimer.TimeUntilElapsed)); // timer is no longer ( value / 100 )
@@ -198,10 +188,12 @@ namespace DOL.GS.PacketHandler
 				return;
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
 			{
+                var targetPosition = siegeWeapon.TargetObject.Position;
+                if(targetPosition == Position.Nowhere) targetPosition = siegeWeapon.GroundTargetPosition;
 				pak.WriteInt((uint) siegeWeapon.ObjectID);
-				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? siegeWeapon.GroundTarget.X : siegeWeapon.TargetObject.X));
-				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? siegeWeapon.GroundTarget.Y : siegeWeapon.TargetObject.Y));
-				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? siegeWeapon.GroundTarget.Z + 50 : siegeWeapon.TargetObject.Z + 50));
+				pak.WriteInt((uint) (targetPosition.X));
+				pak.WriteInt((uint) (targetPosition.Y));
+				pak.WriteInt((uint) (targetPosition.Z + 50));
 				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
 				pak.WriteShort(siegeWeapon.Effect);
 				pak.WriteShort((ushort) (timer)); // timer is no longer ( value / 100 )

@@ -34,6 +34,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -77,7 +78,7 @@ namespace DOL.GS.Quests.Albion
 
 		protected GameNPC ireFairy = null;
 
-		private static GameLocation fairyLocation = new GameLocation("Ire Fairy", 1, 561200, 505951, 2405);
+		private static Position fairyPosition = Position.Create(regionID: 1, x: 561200, y: 505951, z: 2405);
 
 		private static IArea fairyArea = null;
 
@@ -291,7 +292,7 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 
-			fairyArea = WorldMgr.GetRegion(fairyLocation.RegionID).AddArea(new Area.Circle("Fairy contamined Area", fairyLocation.X, fairyLocation.Y, 0, 1500));
+			fairyArea = WorldMgr.GetRegion(fairyPosition.RegionID).AddArea(new Area.Circle("Fairy contamined Area", fairyPosition.Coordinate, 1500));
 			fairyArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterFairyArea));
 
 			/* Now we add some hooks to the npc we found.
@@ -342,7 +343,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
 			fairyArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterFairyArea));
-			WorldMgr.GetRegion(fairyLocation.RegionID).RemoveArea(fairyArea);
+			WorldMgr.GetRegion(fairyPosition.RegionID).RemoveArea(fairyArea);
 
 			GameEventMgr.RemoveHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnterWorld));
 
@@ -380,13 +381,11 @@ namespace DOL.GS.Quests.Albion
 			ireFairy.Name = "Ire Fairy";
 			ireFairy.GuildName = "Part of " + questTitle + " Quest";
 			ireFairy.Realm = eRealm.None;
-			ireFairy.CurrentRegionID = 1;
 			ireFairy.Size = 50;
 			ireFairy.Level = 4;
-			ireFairy.X = GameLocation.ConvertLocalXToGlobalX(12336, 0) + Util.Random(-150, 150);
-			ireFairy.Y = GameLocation.ConvertLocalYToGlobalY(22623, 0) + Util.Random(-150, 150);
-			ireFairy.Z = 2405;
-			ireFairy.Heading = 226;
+            var camelotHills = WorldMgr.GetZone(0);
+            ireFairy.Position = Position.CreateInZone(zoneID: 0, x: 12336, y: 22623, z: 2405, heading: 226)
+                + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 
 			StandardMobBrain brain = new StandardMobBrain();
 			brain.AggroLevel = 20;

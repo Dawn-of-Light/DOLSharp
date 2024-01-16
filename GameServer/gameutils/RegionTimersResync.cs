@@ -204,14 +204,16 @@ namespace DOL.GS.GameEvents
 										}
 										catch(Exception e)
 										{
-											log.Error("Can't restart Brain in RegionTimerResynch, NPC Name = "+npc.Name+" X="+npc.X+"/Y="+npc.Y+"/Z="+npc.Z+"/R="+npc.CurrentRegion.ID+" "+e);
+											log.Error("Can't restart Brain in RegionTimerResynch, NPC Name = "+npc.Name
+                                                +" X="+npc.Position.X+"/Y="+npc.Position.Y+"/Z="+npc.Position.Z+"/R="+npc.Position.RegionID+" "+e);
 											try
 											{
 												npc.Die(null);
 											}
 											catch(Exception ee)
 											{
-												log.Error("Can't restart Brain and Kill NPC in RegionTimerResynch, NPC Name = "+npc.Name+" X="+npc.X+"/Y="+npc.Y+"/Z="+npc.Z+"/R="+npc.CurrentRegion.ID+" "+ee);
+												log.Error("Can't restart Brain and Kill NPC in RegionTimerResynch, NPC Name = "+npc.Name
+                                                    +" X="+npc.Position.X+"/Y="+npc.Position.Y+"/Z="+npc.Position.Z+"/R="+npc.Position.RegionID+" "+ee);
 											}
 										}
 									}

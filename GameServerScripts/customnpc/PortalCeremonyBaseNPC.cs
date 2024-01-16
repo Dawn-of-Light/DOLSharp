@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
-
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Scripts
 {
@@ -29,6 +29,7 @@ namespace DOL.GS.Scripts
 	/// </summary>
 	public class PortalCeremonyBaseNPC : GameNPC
 	{
+        private readonly Position destinationDummy = Position.Create(regionID: 0, x: 0, y: 0, z: 0, heading: 0);
 		/// <summary>
 		/// Portal Pad Model id to override
 		/// </summary>
@@ -82,35 +83,14 @@ namespace DOL.GS.Scripts
 		{
 			get {return 0;}
 		}
-		
-		/// <summary>
-		/// Portal destination X
-		/// </summary>
-		protected virtual int PortalDestinationX
-		{
-			get {return 0;}
-		}
-		/// <summary>
-		/// Portal destination Y
-		/// </summary>
-		protected virtual int PortalDestinationY
-		{
-			get {return 0;}
-		}
-		/// <summary>
-		/// Portal destination Z
-		/// </summary>
-		protected virtual int PortalDestinationZ
-		{
-			get {return 0;}
-		}
-		/// <summary>
-		/// Portal destination Region
-		/// </summary>
-		protected virtual int PortalDestinationRegion
-		{
-			get {return 0;}
-		}
+
+        protected virtual Position PortalDestination
+            => destinationDummy;
+
+		protected virtual int PortalDestinationX => PortalDestination.X;
+		protected virtual int PortalDestinationY => PortalDestination.Y;
+		protected virtual int PortalDestinationZ => PortalDestination.Z;
+		protected virtual int PortalDestinationRegion => PortalDestination.RegionID;
 
 		/// <summary>
 		/// Interval between teleport in milliseconds
@@ -157,10 +137,7 @@ namespace DOL.GS.Scripts
 				return false;
 			
 			// Add the Item Pad
-			m_worldObject.X = X;
-			m_worldObject.Y = Y;
-			m_worldObject.Z = Z;
-			m_worldObject.Heading = Heading;
+            m_worldObject.Position = Position;
 			m_worldObject.Model = PortalWorldObjectModel;
 			m_worldObject.AddToWorld();
 			
@@ -170,12 +147,10 @@ namespace DOL.GS.Scripts
 			for (int cnt = 0 ; cnt < PortalTeleporterCount ; cnt++)
 			{
 				GameNPC teleporter = new GameNPC(teleporters);
-				Point2D tgt = GetPointFromHeading((ushort)((Heading+(cnt*divisor))%4096), PortalCeremonyRange);
-				teleporter.X = tgt.X;
-				teleporter.Y = tgt.Y;
-				teleporter.Z = Z;
+                var assistantOrientation = Orientation + Angle.Heading(cnt * divisor + 2048);
+                var assistantLocation = Position + Vector.Create(assistantOrientation, length: PortalCeremonyRange);
+                teleporter.Position = assistantLocation.With(orientation: assistantOrientation);
 				teleporter.CurrentRegion = CurrentRegion;
-				teleporter.Heading = (ushort)((Heading+(cnt*divisor)+2048)%4096);
 				m_teleporters.Add(teleporter);
 				teleporter.AddToWorld();
 			}
@@ -220,7 +195,7 @@ namespace DOL.GS.Scripts
 				{
 					GamePlayer ply = player;
 					if (ply != null)
-						ply.MoveTo((ushort)PortalDestinationRegion, PortalDestinationX, PortalDestinationY, PortalDestinationZ, player.Heading);
+						ply.MoveTo(PortalDestination.With(player.Orientation));
 				}
 				
 			}

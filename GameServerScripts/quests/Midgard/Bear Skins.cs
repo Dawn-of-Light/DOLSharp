@@ -36,8 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
-	namespace DOL.GS.Quests.Midgard {
+namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -116,15 +117,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + Helen.Name + ", creating ...");
 				Helen.GuildName = "Part of " + questTitle + " Quest";
 				Helen.Realm = eRealm.Midgard;
-				Helen.CurrentRegionID = 100;
 				Helen.Size = 49;
 				Helen.Level = 41;
 				Helen.MaxSpeedBase = 191;
 				Helen.Faction = FactionMgr.GetFactionByID(0);
-				Helen.X = 805693;
-				Helen.Y = 701160;
-				Helen.Z = 4960;
-				Helen.Heading = 3470;
+                Helen.Position = Position.Create(regionID: 100, x: 805693, y: 701160, z: 4960, heading: 3470);
 				Helen.RespawnInterval = -1;
 				Helen.BodyType = 0;
 				

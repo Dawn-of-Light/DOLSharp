@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.Housing;
 
 namespace DOL.GS
@@ -112,17 +113,12 @@ namespace DOL.GS
 
 			_hookedItem = hookedItem;
 
-			IPoint3D position = house.GetHookpointLocation(hookedItem.HookpointID);
-			if (position == null)
-				return false;
+			var coordinate = house.GetHookPointCoordinate(hookedItem.HookpointID);
+			if (coordinate == Coordinate.Nowhere) return false;
 
 			CurrentHouse = house;
-			CurrentRegionID = house.RegionID;
 			InHouse = true;
-			X = position.X;
-			Y = position.Y;
-			Z = position.Z;
-			Heading = (ushort) (hookedItem.Heading%4096);
+			Position = Position.Create(house.RegionID, coordinate, hookedItem.Heading);
 			AddToWorld();
 
 			return true;

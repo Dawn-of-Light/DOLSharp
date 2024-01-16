@@ -19,6 +19,7 @@
 using System;
 using log4net;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.DatabaseConverters
 {
@@ -63,7 +64,7 @@ namespace DOL.GS.DatabaseConverters
 				Region region = WorldMgr.GetRegion(mob.Region);
 				if (region != null)
 				{
-					Zone zone = region.GetZone(mob.X, mob.Y);
+					Zone zone = region.GetZone(mob.GetPosition().Coordinate);
 					if (zone != null)
 					{
 						mob.Realm = (byte)zone.Realm;

@@ -18,22 +18,19 @@
  */
 using System;
 using System.Collections;
-using System.Reflection;
 
 using DOL.Database;
-using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
-
-using log4net;
 
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// keep door in world
-	/// </summary>
-	public class GameKeepDoor : GameLiving, IDoor, IKeepItem
+    /// <summary>
+    /// keep door in world
+    /// </summary>
+    public class GameKeepDoor : GameLiving, IDoor, IKeepItem
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -272,7 +269,7 @@ namespace DOL.GS.Keeps
 		}
 
 		protected DBKeepPosition m_position;
-		public DBKeepPosition Position
+		public DBKeepPosition DbKeepPosition
 		{
 			get { return m_position; }
 			set { m_position = value; }
@@ -405,7 +402,7 @@ namespace DOL.GS.Keeps
 
 			if (!GameServer.KeepManager.IsEnemy(this, player) || player.Client.Account.PrivLevel != 1)
 			{
-				int keepz = Z, distance = 0;
+				int keepz = Position.Z, distance = 0;
 
 				//calculate distance
 				//normal door 
@@ -427,7 +424,7 @@ namespace DOL.GS.Keeps
 					{
 						if (DoorID == 1)
 						{
-							keepz = Z + 83;
+							keepz = Position.Z + 83;
 						}
 						else
 						{
@@ -459,19 +456,17 @@ namespace DOL.GS.Keeps
 								break;
 						}
 						if (DoorIndex == 1 && keepdistance < gatedistance)
-							keepz = Z + 92;//checked in game with lvl 1 keep
+							keepz = Position.Z + 92;//checked in game with lvl 1 keep
 					}
 				}
 
-                Point2D keepPoint;
+                Position keepPoint;
 				//calculate x y
-				if (IsObjectInFront(player, 180, false))
-					keepPoint = GetPointFromHeading( this.Heading, -distance );
-				else
-					keepPoint = GetPointFromHeading( this.Heading, distance );
+				if (IsObjectInFront(player, 180, false)) keepPoint = Position + Vector.Create(Orientation, -distance);
+				else keepPoint = Position + Vector.Create(Orientation, distance);
 
 				//move player
-				player.MoveTo(CurrentRegionID, keepPoint.X, keepPoint.Y, keepz, player.Heading);
+				player.MoveTo(keepPoint.With(z: keepz).With(player.Orientation));
 			}
 			return base.Interact(player);
 		}
@@ -576,7 +571,7 @@ namespace DOL.GS.Keeps
 			}
 
 			Component = null;
-			Position = null;
+			DbKeepPosition = null;
 			base.Delete();
 			CurrentRegion = null;
 		}
@@ -617,10 +612,7 @@ namespace DOL.GS.Keeps
 			if (curZone == null) return;
 			this.CurrentRegion = curZone.ZoneRegion;
 			m_name = door.Name;
-			m_Heading = (ushort)door.Heading;
-			m_x = door.X;
-			m_y = door.Y;
-			m_z = door.Z;
+            Position = Position.Create(regionID:CurrentRegion.ID, x: door.X, y: door.Y, z: door.Z, heading: (ushort)door.Heading );
 			m_level = 0;
 			m_model = 0xFFFF;
 			m_doorID = door.InternalID;
@@ -707,7 +699,7 @@ namespace DOL.GS.Keeps
 			int componentID = m_component.ID;
 
 			//index not sure yet
-			int doorIndex = this.Position.TemplateType;
+			int doorIndex = this.DbKeepPosition.TemplateType;
 			int id = 0;
 			//add door type
 			id += doortype * 100000000;

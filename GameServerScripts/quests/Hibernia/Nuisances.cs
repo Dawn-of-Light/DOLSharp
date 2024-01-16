@@ -34,6 +34,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -76,7 +77,13 @@ namespace DOL.GS.Quests.Hibernia
 		private static GameNPC addrir = null;
 		private GameNPC sluagh = null;
 
-		private static GameLocation sluaghLocation = new GameLocation("sluagh Location", 200, 200, 27416, 4129, 5221, 310);
+        protected static Zone loughDerg = WorldMgr.GetZone(200);
+        private static Position sluaghPosition = Position.Create(
+                regionID: loughDerg.ZoneRegion.ID,
+                x: 27416 + loughDerg.Offset.X,
+                y: 4129 + loughDerg.Offset.Y,
+                z: 5221,
+                heading: 310);
 		private static IArea sluaghArea = null;
 
 		private static ItemTemplate emptyMagicBox = null;
@@ -292,7 +299,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#endregion
 
-			sluaghArea = WorldMgr.GetRegion(sluaghLocation.RegionID).AddArea(new Area.Circle("Sluagh contamined Area", sluaghLocation.X, sluaghLocation.Y, 0, 1500));
+			sluaghArea = WorldMgr.GetRegion(sluaghPosition.RegionID).AddArea(new Area.Circle("Sluagh contamined Area", sluaghPosition.Coordinate, 1500));
 			sluaghArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterSluaghArea));
 
 			/* Now we add some hooks to the npc we found.
@@ -336,7 +343,7 @@ namespace DOL.GS.Quests.Hibernia
 				return;
 
 			sluaghArea.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterSluaghArea));
-			WorldMgr.GetRegion(sluaghLocation.RegionID).RemoveArea(sluaghArea);
+			WorldMgr.GetRegion(sluaghPosition.RegionID).RemoveArea(sluaghArea);
 
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
@@ -379,13 +386,9 @@ namespace DOL.GS.Quests.Hibernia
 			sluagh.Name = "Sluagh Footsoldier";
 			sluagh.GuildName = "Part of " + questTitle + " Quest";
 			sluagh.Realm = eRealm.None;
-			sluagh.CurrentRegionID = 200;
 			sluagh.Size = 50;
 			sluagh.Level = 4;
-			sluagh.X = sluaghLocation.X + Util.Random(-150, 150);
-			sluagh.Y = sluaghLocation.Y + Util.Random(-150, 150);
-			sluagh.Z = sluaghLocation.Z;
-			sluagh.Heading = sluaghLocation.Heading;
+			sluagh.Position = sluaghPosition + Vector.Create(x: Util.Random(-150, 150), y: Util.Random(-150, 150));
 
 			StandardMobBrain brain = new StandardMobBrain();
 			brain.AggroLevel = 20;

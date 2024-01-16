@@ -26,6 +26,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Albion
@@ -105,7 +106,6 @@ namespace DOL.GS.Quests.Albion
 				//k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
 				//sirDorian.GuildName = "Part of " + questTitle + " Quest";
 				sirDorian.Realm = eRealm.Albion;
-				sirDorian.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 49);
@@ -118,10 +118,7 @@ namespace DOL.GS.Quests.Albion
 
 				sirDorian.Size = 52;
 				sirDorian.Level = 40;
-				sirDorian.X = 560869;
-				sirDorian.Y = 511737;
-				sirDorian.Z = 2344;
-				sirDorian.Heading = 2930;
+                sirDorian.Position = Position.Create(regionID: 1, x: 560869, y: 511737, z: 2344, heading: 2930);
 
 				if (SAVE_INTO_DATABASE)
 					sirDorian.SaveIntoDatabase();

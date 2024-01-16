@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Commands
 {
@@ -58,8 +59,8 @@ namespace DOL.GS.Commands
 					info.Add(" Zone ID: " + client.Player.CurrentZone.ID);
 					info.Add(" Zone IsDungeon: " + client.Player.CurrentZone.IsDungeon);
 					info.Add(" Zone SkinID: " + client.Player.CurrentZone.ZoneSkinID);
-					info.Add(" Zone X: " + client.Player.CurrentZone.XOffset);
-					info.Add(" Zone Y: " + client.Player.CurrentZone.YOffset);
+					info.Add(" Zone X: " + client.Player.CurrentZone.Offset.X);
+					info.Add(" Zone Y: " + client.Player.CurrentZone.Offset.Y);
 					info.Add(" Zone Width: " + client.Player.CurrentZone.Width);
 					info.Add(" Zone Height: " + client.Player.CurrentZone.Height);
 					info.Add(" Zone DivingEnabled: " + client.Player.CurrentZone.IsDivingEnabled);
@@ -130,7 +131,7 @@ namespace DOL.GS.Commands
 					// Update water level and diving flag for the new zone
 					client.Out.SendPlayerPositionAndObjectID();
 
-					client.Player.MoveTo(client.Player.CurrentRegionID, client.Player.X, client.Player.Y, client.Player.Z + 1, client.Player.Heading);
+					client.Player.MoveTo(client.Player.Position + Vector.Create(z: 1));
 
 					DisplayMessage(client, string.Format("Waterlevel for {0}:{1} changed to {2}.", zone.ID, zone.Description, waterlevel));
 					return;

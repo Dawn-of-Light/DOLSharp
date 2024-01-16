@@ -18,6 +18,7 @@
  */
 using DOL.AI;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -141,18 +142,10 @@ namespace DOL.GS
                 m_pet = new GameNPC(PetTemplate);
                 if (m_pet != null)
                 {
-                    m_pet.CurrentRegion = CurrentRegion;
-
                     // Summon pet to the left or right of the summoner
-                    ushort sideHeading = (ushort)(Heading + 900);
-                    if (Util.Random(1) < 1)
-                        sideHeading += 1800;
-                    Point2D point = GetPointFromHeading(sideHeading, PetSummonDistance);
-                    m_pet.X = point.X;
-                    m_pet.Y = point.Y;
-                    m_pet.Z = Z;
+                    var petOrientationOffset = Util.Random(1) < 1 ? Angle.Heading(1800) : Angle.Heading(900);
+                    m_pet.Position = Position + Vector.Create(Orientation + petOrientationOffset, PetSummonDistance);
 
-                    m_pet.Heading = Heading;
                     m_pet.Realm = eRealm.None;
                     m_pet.LoadedFromScript = true;
                     m_pet.MaxDistance = PetMaxDistance;

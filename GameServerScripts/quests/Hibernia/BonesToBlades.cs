@@ -35,6 +35,7 @@ using DOL.GS.Behaviour.Actions;
 using DOL.Language;
 using log4net;
 using DOL.GS.Behaviour.Requirements;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Quests.Hibernia
 {
@@ -125,7 +126,6 @@ namespace DOL.GS.Quests.Hibernia
 				questGiver = new GameNPC();
 				questGiver.Name = questGiverName;
 				questGiver.Realm = eRealm.Hibernia;
-				questGiver.CurrentRegionID = 200;
 
 				// select * from NPCEquipment where TemplateID in (select EquipmentTemplateID from Mob where name = ?)
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -140,11 +140,7 @@ namespace DOL.GS.Quests.Hibernia
 				questGiver.Model = 388;
 				questGiver.Size = 51;
 				questGiver.Level = 35;
-				questGiver.X = 346768;
-				questGiver.Y = 489521;
-				questGiver.Z = 5200;
-				questGiver.Heading = 2594;
-
+                questGiver.Position = Position.Create(regionID: 200, x: 346768, y: 489521, z: 5200, heading: 2594);
 				if (SAVE_INTO_DATABASE)
 					questGiver.SaveIntoDatabase();
 
@@ -162,7 +158,6 @@ namespace DOL.GS.Quests.Hibernia
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + questTarget.Name + ", creating him ...");
 				questTarget.Realm = eRealm.Hibernia;
-				questTarget.CurrentRegionID = 200;
 
 				// select * from NPCEquipment where TemplateID in (select EquipmentTemplateID from Mob where name = ?)
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -178,11 +173,7 @@ namespace DOL.GS.Quests.Hibernia
 				questTarget.Model = 381;
 				questTarget.Size = 50;
 				questTarget.Level = 12;
-				questTarget.X = 347327;
-				questTarget.Y = 492700;
-				questTarget.Z = 5199;
-				questTarget.Heading = 2468;
-
+                questTarget.Position = Position.Create(regionID: 200, x: 347327, y: 492700, z: 5199, heading: 2468);
 				if (SAVE_INTO_DATABASE)
 					questTarget.SaveIntoDatabase();
 

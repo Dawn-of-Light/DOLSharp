@@ -22,6 +22,7 @@ using System.Reflection;
 using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -52,40 +53,16 @@ namespace DOL.GS
 			if (player.InCombat == false && GameRelic.IsPlayerCarryingRelic(player) == false)
 			{
 				player.LeaveHouse();
-				GameLocation currentLocation = new GameLocation("TeleportStart", player.CurrentRegionID, player.X, player.Y, player.Z);
-				player.MoveTo((ushort)destination.RegionID, destination.X, destination.Y, destination.Z, (ushort)destination.Heading);
-				GameServer.ServerRules.OnPlayerTeleport(player, currentLocation, destination);
+				player.MoveTo(destination.GetPosition());
+				GameServer.ServerRules.OnPlayerTeleport(player, destination);
 			}
 		}
 		
 	}
 
-	/// <summary>
-	/// Description of TeleportArea.
-	/// Used to teleport players when someone enters, Withtout Z-checks
-	/// </summary>	
-	public class TeleportPillarArea : TeleportArea
-	{
-		
-		public override bool IsContaining(int x, int y, int z)
-		{
-			return base.IsContaining(x, y, z, false);
-		}
-		
-		public override bool IsContaining(IPoint3D spot)
-		{
-			return base.IsContaining(spot, false);
-		}
-		
-		public override bool IsContaining(int x, int y, int z, bool checkZ)
-		{
-			return base.IsContaining(x, y, z, false);
-		}
-		
-		public override bool IsContaining(IPoint3D p, bool checkZ)
-		{
-			return base.IsContaining(p, false);
-		}
-		
-	}
+    public class TeleportPillarArea : TeleportArea
+    {
+        public override bool IsContaining(Coordinate spot, bool ignoreZ)
+            => base.IsContaining(spot, ignoreZ: true);
+    }
 }

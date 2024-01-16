@@ -16,15 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
-using System.Reflection;
 
 using DOL.Database;
-using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
-
-using log4net;
 
 
 namespace DOL.GS.Keeps
@@ -153,15 +149,13 @@ namespace DOL.GS.Keeps
 
 			if (GameServer.ServerRules.IsSameRealm(player, this, true) || player.Client.Account.PrivLevel != 1)
 			{
-                Point2D point;
+                Position position;
 				//calculate x y
-                if ( IsObjectInFront( player, 180, false ) )
-                    point = this.GetPointFromHeading( this.Heading, -500 );
-                else
-                    point = this.GetPointFromHeading( this.Heading, 500 );
+                if ( IsObjectInFront( player, 180, false ) ) position = Position + Vector.Create(Position.Orientation, length: -500);
+                else position = Position + Vector.Create(Position.Orientation, length: 500);
 
 				//move player
-				player.MoveTo(CurrentRegionID, point.X, point.Y, player.Z, player.Heading);
+				player.MoveTo(position);
 			}
 			return base.Interact(player);
 		}
@@ -244,10 +238,7 @@ namespace DOL.GS.Keeps
 			if (curZone == null) return;
 			this.CurrentRegion = curZone.ZoneRegion;
 			m_name = door.Name;
-			m_Heading = (ushort)door.Heading;
-			m_x = door.X;
-			m_y = door.Y;
-			m_z = door.Z;
+            Position = Position.Create(regionID: CurrentRegion.ID, x: door.X, y: door.Y, z: door.Z, heading: (ushort)door.Heading );
 			m_level = 0;
 			m_model = 0xFFFF;
 			m_doorID = door.InternalID;

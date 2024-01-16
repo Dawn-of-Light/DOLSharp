@@ -6,6 +6,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -30,12 +31,12 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-			if (caster.GroundTarget == null )
+			if (caster.GroundTargetPosition == Position.Nowhere )
             {
                 caster.Out.SendMessage( "You must set a ground target to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
                 return;
             }
-            else if(!caster.IsWithinRadius( caster.GroundTarget, 1500 ))
+            else if(caster.Coordinate.DistanceTo(caster.GroundTargetPosition) > 1500)
 			{
 				caster.Out.SendMessage("Your ground target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -102,7 +103,7 @@ namespace DOL.GS.RealmAbilities
 			if (m_player.IsMezzed || m_player.IsStunned || m_player.IsSitting)
 				return 0;
 			Statics.ThornweedFieldBase twf = new Statics.ThornweedFieldBase(m_dmgValue);
-			twf.CreateStatic(m_player, m_player.GroundTarget, m_duration, 3, 500);
+			twf.CreateStatic(m_player, m_player.GroundTargetPosition.Coordinate, m_duration, 3, 500);
 			DisableSkill(m_player);
 			timer.Stop();
 			timer = null;

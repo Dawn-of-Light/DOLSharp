@@ -39,6 +39,7 @@ using System;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -75,7 +76,9 @@ namespace DOL.GS.Quests.Midgard
 		 * 
 		 */
 
-		protected static GameLocation locationDalikor = new GameLocation("Dalikor", 100, 100, 41211, 50221, 5018, 242);
+        protected static Zone valeOfMularn = WorldMgr.GetZone(100);
+        protected static Position locationDalikor 
+            = Position.Create(valeOfMularn.ZoneRegion.ID, 41211, 50221, 5018, 242) + valeOfMularn.Offset;
 
 		/* We need to define the constructors from the base class here, else there might be problems
 		 * when loading this quest...
@@ -166,7 +169,6 @@ namespace DOL.GS.Quests.Midgard
 					log.Warn("Could not find " + dalikor.Name + ", creating him ...");
 				dalikor.GuildName = "Part of Dalikor Quests";
 				dalikor.Realm = eRealm.Midgard;
-				dalikor.CurrentRegionID = locationDalikor.RegionID;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 348);
@@ -187,10 +189,7 @@ namespace DOL.GS.Quests.Midgard
 
 				dalikor.Size = 50;
 				dalikor.Level = 50;
-				dalikor.X = locationDalikor.X;
-				dalikor.Y = locationDalikor.Y;
-				dalikor.Z = locationDalikor.Z;
-				dalikor.Heading = locationDalikor.Heading;
+				dalikor.Position = locationDalikor;
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;

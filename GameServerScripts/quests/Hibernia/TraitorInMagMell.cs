@@ -35,6 +35,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -82,9 +83,8 @@ namespace DOL.GS.Quests.Hibernia
 		private static ItemTemplate recruitsBoots = null;
 		private static ItemTemplate recruitsQuiltedBoots = null;
 
-		private static GameLocation legadaEnd = new GameLocation("Lady Legada", 200, 200, 12235, 8713, 5304, 218);
-		private static GameLocation legadaStart = new GameLocation("Lady Legada", 200, 330877, 492742, 5439, 2657);
-
+        private static Position legadaStart = Position.Create(regionID: 200, x: 330877, y: 492742, z: 5439, heading: 2657 );
+        private static Position legadaEnd = Position.Create(regionID: 200, x: 12235, y: 8713, z: 5304, heading: 218 );
 
 		/* We need to define the constructors from the base class here, else there might be problems
 		 * when loading this quest...
@@ -151,13 +151,9 @@ namespace DOL.GS.Quests.Hibernia
 				ladyLegada.Name = "Lady Legada";
 				ladyLegada.GuildName = "Part of " + questTitle + " Quest";
 				ladyLegada.Realm = eRealm.None;
-				ladyLegada.CurrentRegionID = legadaStart.RegionID;
 				ladyLegada.Size = 50;
 				ladyLegada.Level = 30;
-				ladyLegada.X = legadaStart.X;
-				ladyLegada.Y = legadaStart.Y;
-				ladyLegada.Z = legadaStart.Z;
-				ladyLegada.Heading = legadaStart.Heading;
+                ladyLegada.Position = legadaStart;
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
@@ -439,7 +435,7 @@ namespace DOL.GS.Quests.Hibernia
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)uArgs.Slot);
 				if (item != null && item.Id_nb == necklaceOfDoppelganger.Id_nb)
 				{
-					if (player.IsWithinRadius( legadaEnd, 2500 ))
+					if (player.Coordinate.DistanceTo(legadaEnd) <= 2500)
 					{
 						foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
@@ -452,12 +448,9 @@ namespace DOL.GS.Quests.Hibernia
 
 						if (!ladyLegada.IsAlive || ladyLegada.ObjectState != GameObject.eObjectState.Active)
 						{
-							ladyLegada.X = legadaStart.X;
-							ladyLegada.Y = legadaStart.Y;
-							ladyLegada.Z = legadaStart.Z;
-							ladyLegada.Heading = legadaStart.Heading;
+                            ladyLegada.Position = legadaStart;
 							ladyLegada.AddToWorld();
-							ladyLegada.WalkTo(legadaEnd.X, legadaEnd.Y, legadaEnd.Z, ladyLegada.MaxSpeed);
+							ladyLegada.WalkTo(legadaEnd.Coordinate, ladyLegada.MaxSpeed);
 						}
 						quest.Step = 3;
 					}
@@ -479,10 +472,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				if (quest.Step == 3 && (!ladyLegada.IsAlive || ladyLegada.ObjectState != GameObject.eObjectState.Active))
 				{
-					ladyLegada.X = legadaEnd.X;
-					ladyLegada.Y = legadaEnd.Y;
-					ladyLegada.Z = legadaEnd.Z;
-					ladyLegada.Heading = legadaEnd.Heading;
+					ladyLegada.Position = legadaEnd;
 					ladyLegada.AddToWorld();
 				}
 			}

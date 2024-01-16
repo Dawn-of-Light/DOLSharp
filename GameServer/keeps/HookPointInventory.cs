@@ -270,15 +270,11 @@ namespace DOL.GS.Keeps
 			if (hookPointObj == null) return;
 			//use default value so no need to load
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
-			hookPointObj.CurrentRegion = player.CurrentRegion;
 			hookPointObj.Realm = hookpoint.Component.Keep.Realm;
 
 			if (hookPointObj is GameSiegeWeapon)
 				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
-			hookPointObj.X = hookpoint.X;
-			hookPointObj.Y = hookpoint.Y;
-			hookPointObj.Z = hookpoint.Z;
-			hookPointObj.Heading = hookpoint.Heading;
+			hookPointObj.Position = hookpoint.Position;
 
 			if (hookPointObj is GameSiegeWeapon)
 				(hookPointObj as GameSiegeWeapon).HookPoint = hookpoint;
@@ -318,16 +314,12 @@ namespace DOL.GS.Keeps
 
 			//use default value so no need to load
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
-			hookPointObj.CurrentRegion = hookpoint.Component.CurrentRegion;
 			hookPointObj.Realm = hookpoint.Component.Keep.Realm;
 
 			if (hookPointObj is GameSiegeWeapon)
 				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
 
-			hookPointObj.X = hookpoint.X;
-			hookPointObj.Y = hookpoint.Y;
-			hookPointObj.Z = hookpoint.Z;
-			hookPointObj.Heading = hookpoint.Heading;
+			hookPointObj.Position = hookpoint.Position;
 
 			if (hookPointObj is GameSiegeWeapon)
 				(hookPointObj as GameSiegeWeapon).HookPoint = hookpoint;

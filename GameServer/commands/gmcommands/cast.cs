@@ -23,6 +23,7 @@ using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.Effects;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Commands
 {
@@ -150,7 +151,7 @@ namespace DOL.GS.Commands
 				case "sound":
 					DisplayMessage(client,
 					               LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Cast.SoundPlayed", id.ToString()));
-					client.Player.Out.SendSoundEffect((ushort)id, 0, 0, 0, 0, 0);
+					client.Player.Out.SendSoundEffect((ushort)id, Position.Zero, 0);
 					break;
 					#endregion
 					#region Default

@@ -34,6 +34,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -164,7 +165,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + madissair.Name + ", creating him ...");
 				madissair.GuildName = "Part of " + questTitle + " Quest";
 				madissair.Realm = eRealm.Albion;
-				madissair.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon,8);
@@ -178,10 +178,7 @@ namespace DOL.GS.Quests.Albion
 
 				madissair.Size = 50;
 				madissair.Level = 30;
-				madissair.X = 561064;
-				madissair.Y = 512291;
-				madissair.Z = 2407;
-				madissair.Heading = 721;
+                madissair.Position = Position.Create(regionID: 1, x: 561064, y: 512291, z: 2407, heading: 721);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -205,7 +202,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + eileenMorton.Name + ", creating him ...");
 				eileenMorton.GuildName = "Part of " + questTitle + " Quest";
 				eileenMorton.Realm = eRealm.Albion;
-				eileenMorton.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 227);
@@ -218,10 +214,7 @@ namespace DOL.GS.Quests.Albion
 
 				eileenMorton.Size = 52;
 				eileenMorton.Level = 21;
-				eileenMorton.X = 559495;
-				eileenMorton.Y = 510743;
-				eileenMorton.Z = 2496;
-				eileenMorton.Heading = 716;
+                eileenMorton.Position = Position.Create(regionID: 1, x: 559495, y: 510743, z: 2496, heading: 716);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -245,7 +238,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + scribeVeral.Name + ", creating him ...");
 				scribeVeral.GuildName = "Part of " + questTitle + " Quest";
 				scribeVeral.Realm = eRealm.Albion;
-				scribeVeral.CurrentRegionID = 10;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 142, 43);
@@ -256,10 +248,7 @@ namespace DOL.GS.Quests.Albion
 
 				scribeVeral.Size = 50;
 				scribeVeral.Level = 8;
-				scribeVeral.X = 35308;
-				scribeVeral.Y = 21876;
-				scribeVeral.Z = 8447;
-				scribeVeral.Heading = 284;
+                scribeVeral.Position = Position.Create(regionID: 10, x: 35308, y: 21876, z: 8447, heading: 284);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -283,7 +272,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + serawen.Name + ", creating him ...");
 				serawen.GuildName = "Part of " + questTitle + " Quest";
 				serawen.Realm = eRealm.Albion;
-				serawen.CurrentRegionID = 10;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 2160);
@@ -292,10 +280,7 @@ namespace DOL.GS.Quests.Albion
 
 				serawen.Size = 51;
 				serawen.Level = 30;
-				serawen.X = 35863;
-				serawen.Y = 27167;
-				serawen.Z = 8449;
-				serawen.Heading = 3298;
+                serawen.Position = Position.Create(regionID: 10, x: 35863, y: 27167, z: 8449, heading: 3298);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

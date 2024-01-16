@@ -18,7 +18,7 @@
  */
 using System;
 using System.Collections;
-
+using DOL.GS.Geometry;
 using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -128,54 +128,43 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 						}
 
-						int x = 0;
-						int y = 0;
-						int z = 0;
-						ushort heading = 0;
+                        var portPosition = Position.Zero;
 						switch (keepId)
 						{
-							//sauvage
-							case 1:
-							//snowdonia
-							case 2:
-							//svas
-							case 3:
-							//vind
-							case 4:
-							//ligen
-							case 5:
-							//cain
-							case 6:
+							
+							case 1: //sauvage
+							case 2: //snowdonia
+							case 3: //svas
+							case 4: //vind
+							case 5: //ligen
+							case 6: //cain
 								{
-									GameServer.KeepManager.GetBorderKeepLocation(keepId, out x, out y, out z, out heading);
+									portPosition = GameServer.KeepManager.GetBorderKeepPosition(keepId);
 									break;
 								}
 							default:
 								{
 									if (keep != null && keep is GameKeep)
 									{
-										FrontiersPortalStone stone = keep.TeleportStone;
+										var stone = keep.TeleportStone;
 										if (stone != null) 
 										{
-											heading = stone.Heading;
-											z = stone.Z;
-											stone.GetTeleportLocation(out x, out y);
+                                            var distance = Util.Random(50, 150);
+                                            var direction = stone.Orientation + Angle.Heading(Util.Random(- 500, 500));
+                                            portPosition = stone.Position + Vector.Create(direction, distance);
 										}
 										else
 										{
-											x = keep.X;
-											y = keep.Y;
-											z = keep.Z+150;
-											heading = keep.Heading;
+											portPosition = Position.Create(regionID: 163, keep.X, keep.Y, keep.Z+150, keep.Orientation);
 										}
 									}
 									break;
 								}
 						}
 
-						if (x != 0)
+						if (portPosition != Position.Zero)
 						{
-							client.Player.MoveTo(163, x, y, z, heading);
+							client.Player.MoveTo(portPosition);
 						}
 
 						break;

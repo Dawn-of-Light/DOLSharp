@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using DOL.GS.Geometry;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -42,11 +43,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int spellLineIndex;
 			if (client.Version >= GameClient.eClientVersion.Version1124)
 			{
-				client.Player.X = (int)packet.ReadFloatLowEndian();
-				client.Player.Y = (int)packet.ReadFloatLowEndian();
-				client.Player.Z = (int)packet.ReadFloatLowEndian();
-				client.Player.CurrentSpeed = (short)packet.ReadFloatLowEndian();
-				client.Player.Heading = packet.ReadShort();
+                var x = (int)packet.ReadFloatLowEndian();
+                var y = (int)packet.ReadFloatLowEndian();
+                var z = (int)packet.ReadFloatLowEndian();
+                var speed = (short)packet.ReadFloatLowEndian();
+                var heading = packet.ReadShort();
+                client.Player.Position = Position.Create(client.Player.CurrentRegionID, x, y, z, heading);
+				client.Player.CurrentSpeed = speed;
 				flagSpeedData = packet.ReadShort(); // target visible ? 0xA000 : 0x0000
 				spellLevel = packet.ReadByte();
 				spellLineIndex = packet.ReadByte();
@@ -71,17 +74,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					else
 					{
-						client.Player.X = newZone.XOffset + xOffsetInZone;
-						client.Player.Y = newZone.YOffset + yOffsetInZone;
-						client.Player.Z = realZ;
-						client.Player.MovementStartTick = Environment.TickCount;
+                        client.Player.Position = Position.Create(
+                            client.Player.CurrentRegionID,
+                            newZone.Offset.X + xOffsetInZone,
+                            newZone.Offset.Y + yOffsetInZone,
+                            realZ,
+                            client.Player.Orientation
+                        );
 					}
 				}
 
 				spellLevel = packet.ReadByte();
 				spellLineIndex = packet.ReadByte();
 
-				client.Player.Heading = (ushort)(heading & 0xfff);
+				client.Player.Orientation = Angle.Heading(heading);
 			}
 
 			new UseSpellAction(client.Player, flagSpeedData, spellLevel, spellLineIndex).Start(1);

@@ -115,11 +115,11 @@ namespace DOL.GS.Commands
             Teleport teleport = new Teleport();
             teleport.TeleportID = teleportID;
             teleport.Realm = (int)realm;
-            teleport.RegionID = player.CurrentRegion.ID;
-            teleport.X = player.X;
-            teleport.Y = player.Y;
-            teleport.Z = player.Z;
-            teleport.Heading = player.Heading;
+            teleport.RegionID = player.Position.RegionID;
+            teleport.X = player.Position.X;
+            teleport.Y = player.Position.Y;
+            teleport.Z = player.Position.Z;
+            teleport.Heading = player.Position.Orientation.InHeading;
             teleport.Type = type;
 
             if (!WorldMgr.AddTeleportLocation(teleport))

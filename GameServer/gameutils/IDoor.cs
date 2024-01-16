@@ -18,24 +18,22 @@
  */
 
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The state a door can take
-	/// </summary>
 	public enum eDoorState
 	{
 		Open,
 		Closed
 	}
-	/// <summary>
-	/// IDoor is interface for door and keepdoor
-	/// </summary>
-	public interface IDoor : IPoint3D
+
+	public interface IDoor
 	{
 		string Name	{get;}
 		uint Flag {get;}
+        Coordinate Coordinate { get; }
+        Angle Orientation { get; }
 		ushort Heading	{get;}
 		ushort ZoneID { get; }
 		eRealm Realm {get;}

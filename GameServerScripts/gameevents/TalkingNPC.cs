@@ -28,6 +28,7 @@
 using System;
 using System.Reflection;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -52,17 +53,13 @@ namespace DOL.GS.GameEvents
 				//npc in the constructor. You can set
 				//the npc position, model etc. in the
 				//StartEvent() method too if you want.
-				X = 505499;
-				Y = 437679;
-				Z = 0;
-				Heading = 0x0;
+				Position = Position.Create(regionID: 1, x: 505499, y: 437679, z: 0, heading: 0);
 				Name = "The talking NPC";
 				GuildName = "Rightclick me";
 				Model = 5;
 				Size = 50;
 				Level = 10;
 				Realm = eRealm.Albion;
-				CurrentRegionID = 1;
 			}
 
 			//This function is the callback function that is called when
@@ -74,7 +71,7 @@ namespace DOL.GS.GameEvents
 
 				//Now we turn the npc into the direction of the person it is
 				//speaking to.
-				TurnTo(player.X, player.Y);
+				TurnTo(player.Coordinate);
 
 				//We send a message to player and make it appear in a popup
 				//window. Text inside the [brackets] is clickable in popup
@@ -101,7 +98,7 @@ namespace DOL.GS.GameEvents
 
 				//Now we turn the npc into the direction of the person it is
 				//speaking to.
-				TurnTo(t.X, t.Y);
+				TurnTo(t.Coordinate);
 
 				//We test what the player whispered to the npc and
 				//send a reply. The Method SendReply used here is

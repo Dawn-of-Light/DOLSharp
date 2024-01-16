@@ -21,7 +21,9 @@ using System.Collections;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Quests
 {
@@ -249,10 +251,7 @@ namespace DOL.GS.Quests
 							}
 							droppeditem.Name = itemdrop.Name;
 							droppeditem.Level = 1;
-							droppeditem.X = target.X;
-							droppeditem.Y = target.Y;
-							droppeditem.Z = target.Z;
-							droppeditem.CurrentRegion = target.CurrentRegion;
+							droppeditem.Position = target.Position;
 							droppeditem.AddToWorld();
 							if (dropMessages.Count > 0)
 							{
@@ -327,32 +326,10 @@ namespace DOL.GS.Quests
 				((KillTask)player.Task).ItemIndex = Util.Random(0, TaskObjects.Length - 1);
 				((KillTask)player.Task).MobName = Mob.Name;
 				player.Task.RecieverName = source.Name;
-				player.Out.SendMessage(source.Name + " says, *Very well " + player.Name + ", it's good to see adventurers willing to help out the realm in such times. Search to the " + GetDirectionFromHeading(Mob.Heading) + " and kill a " + Mob.Name + " and return to me for your reward. Good luck!*", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(source.Name + " says, *Very well " + player.Name + ", it's good to see adventurers willing to help out the realm in such times. Search to the " + LanguageMgr.GetCardinalDirection(player.Client.Account.Language, Mob.Orientation) + " and kill a " + Mob.Name + " and return to me for your reward. Good luck!*", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Out.SendDialogBox(eDialogCode.SimpleWarning, 1, 1, 1, 1, eDialogType.Ok, false, "You have been given a task!");
 				return true;
 			}
-		}
-		public static string GetDirectionFromHeading(ushort heading)
-		{
-			if (heading < 0)
-				heading += 4096;
-			if (heading >= 3840 || heading <= 256)
-				return "South";
-			else if (heading > 256 && heading < 768)
-				return "South West";
-			else if (heading >= 768 && heading <= 1280)
-				return "West";
-			else if (heading > 1280 && heading < 1792)
-				return "North West";
-			else if (heading >= 1792 && heading <= 2304)
-				return "North";
-			else if (heading > 2304 && heading < 2816)
-				return "North East";
-			else if (heading >= 2816 && heading <= 3328)
-				return "East";
-			else if (heading > 3328 && heading < 3840)
-				return "South East";
-			return "";
 		}
 
 		/// <summary>

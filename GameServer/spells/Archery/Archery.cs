@@ -22,6 +22,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Spells
 {
@@ -107,7 +108,7 @@ namespace DOL.GS.Spells
 			String targetType = m_spell.Target.ToLower();
 			if (targetType == "area")
 			{
-				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
+				if (m_caster.Coordinate.DistanceTo(m_caster.GroundTargetPosition) > CalculateSpellRange())
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -308,7 +309,7 @@ namespace DOL.GS.Spells
 				Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
 				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 
-				foreach (GameLiving npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
+				foreach (GameLiving npc in WorldMgr.GetNPCsCloseToSpot(Caster.GroundTargetPosition, (ushort)Spell.Radius))
 				{
 					if (npc.Realm == 0 || Caster.Realm == 0)
 					{

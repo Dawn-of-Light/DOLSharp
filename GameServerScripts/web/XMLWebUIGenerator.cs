@@ -304,8 +304,8 @@ namespace DOL.GS.Scripts
 					pi.Alive = plr.IsAlive ? "yes" : "no";
 					pi.Realm = ((eRealm) plr.Realm).ToString();
 					pi.Region = plr.CurrentRegion.Name;
-					pi.X = plr.X;
-					pi.Y = plr.Y;
+					pi.X = plr.Position.X;
+					pi.Y = plr.Position.Y;
 				}
 
 				// 2008-01-29 Kakuri - Obsolete

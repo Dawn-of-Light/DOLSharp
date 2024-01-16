@@ -59,6 +59,7 @@ using DOL.Events;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Quests.Hibernia
 {
@@ -310,14 +311,10 @@ namespace DOL.GS.Quests.Hibernia
 				}
 				npcBaeth.GuildName = "Part of " + questTitle + " Quest";
 				npcBaeth.Realm = eRealm.Hibernia;
-				npcBaeth.CurrentRegionID = 27;
 
 				npcBaeth.Size = 52;
 				npcBaeth.Level = 30;
-				npcBaeth.X = 356650;
-				npcBaeth.Y = 355078;
-				npcBaeth.Z = 5015;
-				npcBaeth.Heading = 2959;
+                npcBaeth.Position = Position.Create(regionID: 27, x: 356650, y: 355078, z: 5015, heading: 2959);
 
 				if (SAVE_INTO_DATABASE)
 				{
@@ -344,15 +341,10 @@ namespace DOL.GS.Quests.Hibernia
 				}
 				npcJessica.GuildName = "Part of " + questTitle + " Quest";
 				npcJessica.Realm = eRealm.Hibernia;
-				npcJessica.CurrentRegionID = 27;
 
 				npcJessica.Size = 38;
 				npcJessica.Level = 1;
-				npcJessica.X = 358068;
-				npcJessica.Y = 347553;
-				npcJessica.Z = 5491;
-				npcJessica.Heading = 49;
-
+                npcJessica.Position = Position.Create(regionID: 27, x: 358068, y: 347553, z: 5491, heading: 49);
 				if (SAVE_INTO_DATABASE)
 				{
 					npcJessica.SaveIntoDatabase();

@@ -7,6 +7,7 @@ using DOL.GS.PacketHandler;
 using DOL.Database;
 using log4net;
 using DOL.GS.Effects;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -190,12 +191,8 @@ namespace DOL.GS
 			m_player.Guild.SendMessageToGuildMembers(m_player.Name + " has dropped the guild banner!", eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 
 			gameItem = new WorldInventoryItem(m_item);
-			Point2D point = m_player.GetPointFromHeading(m_player.Heading, 30);
-            gameItem.X = point.X;
-            gameItem.Y = point.Y;
-            gameItem.Z = m_player.Z;
-            gameItem.Heading = m_player.Heading;
-            gameItem.CurrentRegionID = m_player.CurrentRegionID;
+			var point = m_player.Position + Vector.Create(m_player.Orientation, length: 30);
+            gameItem.Position = point;
 			gameItem.AddOwner(m_player);
 
 			if (playerKiller != null)

@@ -77,9 +77,9 @@ namespace DOL.GS.Commands
 						}
 						area.Sound = byte.Parse(args[6]);
 						area.Region = client.Player.CurrentRegionID;
-						area.X = client.Player.X;
-						area.Y = client.Player.Y;
-						area.Z = client.Player.Z;
+						area.X = client.Player.Position.X;
+						area.Y = client.Player.Position.Y;
+						area.Z = client.Player.Position.Z;
 
 						Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 						AbstractArea newArea = (AbstractArea)gasm.CreateInstance(area.ClassType, false);

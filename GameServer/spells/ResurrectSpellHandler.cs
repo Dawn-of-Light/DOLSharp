@@ -170,7 +170,7 @@ namespace DOL.GS.Spells
 			else
 				living.Endurance = 0;
 
-			living.MoveTo(m_caster.CurrentRegionID, m_caster.X, m_caster.Y, m_caster.Z, m_caster.Heading);
+			living.MoveTo(m_caster.Position);
 
 			GameTimer resurrectExpiredTimer = null;
 			lock (m_resTimersByLiving.SyncRoot)

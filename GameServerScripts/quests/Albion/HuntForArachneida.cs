@@ -37,6 +37,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -165,13 +166,9 @@ namespace DOL.GS.Quests.Albion
 
 				kealan.GuildName = "Part of " + questTitle + " Quest";
 				kealan.Realm = eRealm.Albion;
-				kealan.CurrentRegionID = 1;
 				kealan.Size = 48;
 				kealan.Level = 32;
-				kealan.X = 493414;
-				kealan.Y = 593089;
-				kealan.Z = 1797;
-				kealan.Heading = 830;
+                kealan.Position = Position.Create(regionID: 1, x: 493414, y: 593089, z: 1797, heading: 830);
 
 				kealan.EquipmentTemplateID = "11704675";
 
@@ -198,13 +195,9 @@ namespace DOL.GS.Quests.Albion
 
 				arachneida.GuildName = "Part of " + questTitle + " Quest";
 				arachneida.Realm = eRealm.None;
-				arachneida.CurrentRegionID = 1;
 				arachneida.Size = 90;
 				arachneida.Level = 12;
-				arachneida.X = 534851;
-				arachneida.Y = 609656;
-				arachneida.Z = 2456;
-				arachneida.Heading = 2080;
+                arachneida.Position = Position.Create(regionID: 1, x: 534851, y: 609656, z: 2456, heading: 2080);
 
 				arachneida.EquipmentTemplateID = "2";
 

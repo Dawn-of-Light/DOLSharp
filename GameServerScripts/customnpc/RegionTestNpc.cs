@@ -1,4 +1,5 @@
 using System;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -46,30 +47,24 @@ namespace DOL.GS
 						Say("Instance is currently null.");
 					else
 					{
-						int x = 32361;
-						int y = 31744;
-						int z = 16003;
-						ushort heading = 1075;
+                        var entrancePosition = Position.Create(regionID: m_instance.ID, x: 32361, y: 31744, z: 16003, heading: 1075);
 
-						if (m_instance.InstanceEntranceLocation != null)
+						if (m_instance.EntrancePosition != Position.Nowhere)
 						{
-							x = m_instance.InstanceEntranceLocation.X;
-							y = m_instance.InstanceEntranceLocation.Y;
-							z = m_instance.InstanceEntranceLocation.Z;
-							heading = m_instance.InstanceEntranceLocation.Heading;
+                            entrancePosition = m_instance.EntrancePosition;
 						}
 
 						// save current position so player can use /instance exit
-						GameLocation saveLocation = new GameLocation(source.Name + "_exit", source.CurrentRegionID, source.X, source.Y, source.Z);
-						source.TempProperties.setProperty(saveLocation.Name, saveLocation);
+						var savePosition = source.Position.With(Angle.Zero);
+						source.TempProperties.setProperty(source.Name + "_exit", savePosition);
 
 						Say("Instance ID " + m_instance.ID + ", Skin: " + m_instance.Skin + ", with " + m_instance.Zones.Count + " zones inside the region.");
 
-						if (!source.MoveTo(m_instance.ID, x, y, z, heading))
+						if (!source.MoveTo(entrancePosition))
 						{
 							Say("Source could not be moved to instance entrance; MoveTo returned false.  Now trying to move to current location inside the instance.");
 
-							if (!source.MoveTo(m_instance.ID, source.X, source.Y, source.Z, source.Heading))
+							if (!source.MoveTo(source.Position))
 							{
 								Say("Sorry, that failed as well.");
 							}
@@ -102,7 +97,7 @@ namespace DOL.GS.Commands
 				if (npc == null)
 					continue;
 
-				log.Warn(index + ": Object name=" + npc.Name + ", {X/Y/Z} H =  { " + npc.X + " / " + npc.Y + " / " + npc.Z + " }  " + npc.Heading + ".");
+				log.Warn(index + ": Object name=" + npc.Name + ", {X/Y/Z} H =  { " + npc.Position.X + " / " + npc.Position.Y + " / " + npc.Position.Z + " }  " + npc.Orientation.InHeading + ".");
 				log.Warn("Zone, zoneID " + npc.CurrentZone.ID + " (" + npc.CurrentZone.Description + "), zoneSkinID = " + npc.CurrentZone.ZoneSkinID + ".");
 			}
 		}

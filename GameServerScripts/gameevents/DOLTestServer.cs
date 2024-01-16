@@ -28,6 +28,7 @@
 using System;
 using System.Reflection;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -95,7 +96,8 @@ namespace DOL.GS.GameEvents
 			//DOLTopia (our selfproclaimed town to show off)
 			//If the player is > 10.000 coordinates away or in another region
 			//we send a dialog to the player and register a dialog-callback
-			if (player.CurrentRegionID != 1 || !player.IsWithinRadius( new Point2D( 531405, 479515 ), 10000 ))
+            var doltopiaLocation = Coordinate.Create(x: 531405, y: 479515);
+			if (player.CurrentRegionID != 1 || player.Coordinate.DistanceTo(doltopiaLocation, ignoreZ: true) > 10000)
 				player.Out.SendCustomDialog("Do you want to be teleported to DOLTopia?", new CustomDialogResponse(TeleportToDOLTopia));
 		}
 
@@ -121,7 +123,7 @@ namespace DOL.GS.GameEvents
 			if (response != 0x01)
 				return;
 			//The player clicked on "OK" so we teleport him!
-			player.MoveTo(1, 531405, 479515, 0, 2790);
+			player.MoveTo(Position.Create(regionID: 1, x: 531405, y: 479515, z: 0, heading: 2790));
 		}
 	}
 }

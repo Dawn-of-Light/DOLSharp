@@ -36,6 +36,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -76,13 +77,16 @@ namespace DOL.GS.Quests.Hibernia
 		protected const int minimumLevel = 1;
 		protected const int maximumLevel = 1;
 
-		protected static GameLocation heroTrainer = new GameLocation("Hero Trainer", 201, 31555, 26198, 7767, 2462);
-		protected static GameLocation bladeMasterTrainer = new GameLocation("Blademaster Trainer", 201, 29819, 26485, 7767, 1403);
-		protected static GameLocation championTrainer = new GameLocation("Champion Trainer", 201, 31783, 27885, 7767, 3377);
-		//protected static GameLocation mercenaryTrainer = new GameLocation("Mercenary Trainer", 10, 32826, 26831, 7995, 0);
-
-		protected static GameLocation vaultKeeper = new GameLocation("Vault Keeper", 201, 33175, 31237, 8000, 1970);
-		protected static GameLocation eastGates = new GameLocation("East Gates", 201, 22648, 34592, 6250, 995);
+        protected static Position heroTrainer
+            = Position.Create(regionID: 201, x: 31555, y: 26198, z: 7767, heading: 2462);
+        protected static Position bladeMasterTrainer
+            = Position.Create(regionID: 201, x: 29819, y: 26485, z: 7767, heading: 1403);
+        protected static Position championTrainer
+            = Position.Create(regionID: 201, x: 31783, y: 27885, z: 7767, heading: 3377);
+        protected static Position vaultKeeper
+            = Position.Create(regionID: 201, x: 33175, y: 31237, z: 8000, heading: 1970);
+        protected static Position eastGates
+            = Position.Create(regionID: 201, x: 22648, y: 34592, z: 6250, heading: 995);
 
 		private static GameNPC addrir = null;
 		private static GameNPC hylvian = null;
@@ -172,13 +176,9 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + hylvian.Name + ", creating ...");
 				hylvian.GuildName = "Part of " + questTitle + " Quest";
 				hylvian.Realm = eRealm.Hibernia;
-				hylvian.CurrentRegionID = 201;
 				hylvian.Size = 51;
 				hylvian.Level = 44;
-				hylvian.X = 33163;
-				hylvian.Y = 31142;
-				hylvian.Z = 8000;
-				hylvian.Heading = 11;
+                hylvian.Position = Position.Create(regionID: 201, x: 33163, y: 31142, z: 8000, heading: 11);
 				hylvian.EquipmentTemplateID = "7400147";
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -201,13 +201,9 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + freagus.Name + ", creating ...");
 				freagus.GuildName = "Stable Master";
 				freagus.Realm = eRealm.Hibernia;
-				freagus.CurrentRegionID = 200;
 				freagus.Size = 48;
 				freagus.Level = 30;
-				freagus.X = 341008;
-				freagus.Y = 469180;
-				freagus.Z = 5200;
-				freagus.Heading = 1934;
+                freagus.Position = Position.Create(regionID: 200, x: 341008, y: 469180, z: 5200, heading: 1934);
 				freagus.EquipmentTemplateID = "3800664";
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -230,13 +226,10 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + gweonry.Name + ", creating ...");
 				gweonry.GuildName = "Stable Master";
 				gweonry.Realm = eRealm.Hibernia;
-				gweonry.CurrentRegionID = 200;
 				gweonry.Size = 48;
 				gweonry.Level = 30;
-				gweonry.X = GameLocation.ConvertLocalXToGlobalX(16334, 200);
-				gweonry.Y = GameLocation.ConvertLocalYToGlobalY(3384, 200);
-				gweonry.Z = 5200;
-				gweonry.Heading = 245;
+                var loughDerg = WorldMgr.GetZone(200);
+                gweonry.Position = Position.Create(regionID: 200, x: 16334, y: 3384, z: 5200, heading: 245) + loughDerg.Offset;
 				//gweonry.EquipmentTemplateID="3800664";
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -813,17 +806,16 @@ namespace DOL.GS.Quests.Hibernia
 							break;
 
 						case "champion":
-							quest.TeleportTo(championTrainer);
+							quest.TeleportTo(championTrainer, "Champion Trainer");
 							break;
 						case "hero":
-							quest.TeleportTo(heroTrainer);
+							quest.TeleportTo(heroTrainer, "Hero Trainer");
 							break;
 						case "blademaster":
-							quest.TeleportTo(bladeMasterTrainer);
+							quest.TeleportTo(bladeMasterTrainer, "Blademaster Trainer");
 							break;
-							//case "mercenary": quest.TeleportTo(mercenaryTrainer); break;
 						case "east gates":
-							quest.TeleportTo(eastGates);
+							quest.TeleportTo(eastGates, "East Gates");
 							if (quest.Step == 7)
 							{
 								quest.Step = 8;
@@ -834,7 +826,7 @@ namespace DOL.GS.Quests.Hibernia
 							{
 								quest.Step = 4;
 							}
-							quest.TeleportTo(vaultKeeper);
+							quest.TeleportTo(vaultKeeper, "Vault Keeper");
 							break;
 
 						case "go away":
@@ -850,10 +842,10 @@ namespace DOL.GS.Quests.Hibernia
          * Convinient Method for teleporintg with assistant 
          */
 
-		protected void TeleportTo(GameLocation target)
+		protected void TeleportTo(Position destination, string destinationName)
 		{
-			TeleportTo(m_questPlayer, assistant, target, 5);
-			TeleportTo(assistant, assistant, target, 25, 50);
+			TeleportTo(m_questPlayer, assistant, destination, destinationName, 5, 0);
+			TeleportTo(assistant, assistant, destination, 25, 50);
 		}
 
 
@@ -939,7 +931,7 @@ namespace DOL.GS.Quests.Hibernia
 		{
 			if (assistant != null && assistant.ObjectState == GameObject.eObjectState.Active)
 			{
-				assistant.MoveTo(m_questPlayer.CurrentRegionID, m_questPlayer.X + 50, m_questPlayer.Y + 30, m_questPlayer.Z, m_questPlayer.Heading);
+				assistant.MoveTo(m_questPlayer.Position + Vector.Create(x: 50, y: 30));
 			}
 			else
 			{
@@ -948,13 +940,9 @@ namespace DOL.GS.Quests.Hibernia
 				assistant.Name = m_questPlayer.Name + "'s Assistant";
 				assistant.GuildName = "Part of " + questTitle + " Quest";
 				assistant.Realm = m_questPlayer.Realm;
-				assistant.CurrentRegionID = m_questPlayer.CurrentRegionID;
 				assistant.Size = 25;
 				assistant.Level = 5;
-				assistant.X = m_questPlayer.X + 50;
-				assistant.Y = m_questPlayer.Y + 50;
-				assistant.Z = m_questPlayer.Z;
-				assistant.Heading = m_questPlayer.Heading;
+                assistant.Position = m_questPlayer.Position + Vector.Create(x: 50,y: 50);
 
 				assistant.AddToWorld();
 

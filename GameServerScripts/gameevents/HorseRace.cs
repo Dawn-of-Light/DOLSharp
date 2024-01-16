@@ -36,6 +36,7 @@ using System;
 using System.Reflection;
 using System.Timers;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -95,13 +96,9 @@ namespace DOL.GS.GameEvents
 				m_originalY = origY;
 				m_originalHeading = origHeading;
 
-				CurrentRegionID = 1;
+                Position = Position.Create(regionID: 1, x: m_originalX, y: m_originalY, z: 0, heading: m_originalHeading);
 				Level = 10;
 				Realm = 0;
-				X = m_originalX;
-				Y = m_originalY;
-				Z = 0;
-				Heading = m_originalHeading;
 				GuildName = "Race Horse";
 			}
 
@@ -187,7 +184,8 @@ namespace DOL.GS.GameEvents
 				GetStartPoint(out startX, out startY);
 
 				//Make the mob and it's rider walk to our startposition!
-				WalkTo(startX, startY, 0, 250);
+                var destination = Coordinate.Create(x: startX, y: startY, z: 0 );
+				WalkTo(destination, 250);
 				//Set the horse state correctly
 				HorseState = RaceHorseState.WalkingToStart;
 				//Return true -> allow the mounting
@@ -215,7 +213,8 @@ namespace DOL.GS.GameEvents
 				UnregisterRacingHorse(this);
 
 				//Walk back to our grazing spot if the rider dismounts
-				WalkTo(m_originalX, m_originalY, 0, 75);
+                var destination = Coordinate.Create(x: m_originalX, y: m_originalY, z: 0 );
+				WalkTo(destination, 75);
 				//Set our horsestate correctly
 				m_horseState = RaceHorseState.WalkingToGrazing;
 				//Return true -> allow the dismounting
@@ -234,11 +233,10 @@ namespace DOL.GS.GameEvents
 						m_currentPathPoint = 0;
 
 						//Get the next point we will be racing to
-						int x, y;
-						GetNextPoint(m_currentPathPoint, out x, out y);
+						var destination = GetNextWalkTarget(m_currentPathPoint);
 
 						//Turn the horse towards the next point on the path
-						TurnTo(x, y);
+						TurnTo(destination);
 
 						//We are waiting for the race to start now!
 						m_horseState = RaceHorseState.WaitingForRaceStart;
@@ -246,7 +244,7 @@ namespace DOL.GS.GameEvents
 					else if (HorseState == RaceHorseState.WalkingToGrazing)
 					{
 						//We set our heading to our original heading
-						Heading = m_originalHeading;
+						Orientation = Angle.Heading(m_originalHeading);
 						//We broadcast the update to the players around us
 						BroadcastUpdate();
 						//Set the horse state back to grazing
@@ -281,11 +279,9 @@ namespace DOL.GS.GameEvents
 								CurrentSpeed = 550;
 
 							//We get our next pathpoint and
-							int nextX, nextY;
-							GetNextPoint(m_currentPathPoint, out nextX, out nextY);
+							var destination = GetNextWalkTarget(m_currentPathPoint);
 							m_currentPathPoint++;
-
-							WalkTo(nextX, nextY, 0, CurrentSpeed);
+							WalkTo(destination, CurrentSpeed);
 						}
 					}
 				}
@@ -302,25 +298,24 @@ namespace DOL.GS.GameEvents
 				m_currentPathPoint = 0;
 
 				//We fetch the next pathpoint
-				int x, y;
-				GetNextPoint(m_currentPathPoint, out x, out y);
+				var destination = GetNextWalkTarget(m_currentPathPoint);
 
 				//Now our current point is 1
 				m_currentPathPoint++;
 				//Walk to the target spot ... our speed is 500+random 20
 				Random rnd = new Random();
-				WalkTo(x, y, 0, (short)(500 + rnd.Next(20)));
+				WalkTo(destination, (short)(500 + rnd.Next(20)));
 			}
 
 			//This function is used to return the next pathpoint for a horse
 			//given the current pathpoint. The horses will race parallel to each
 			//other, depending on their startnumber
-			protected void GetNextPoint(int curPoint, out int x, out int y)
+			protected Coordinate GetNextWalkTarget(int curPointIndex)
 			{
 				//We get the vector from our current point to the next point and turn
 				//it by 90 degrees so it is normal to our vector to the next point
-				float normvx = racePoints[curPoint + 1, 1] - racePoints[curPoint, 1]; //DIFFY
-				float normvy = -(racePoints[curPoint + 1, 0] - racePoints[curPoint, 0]); //-DIFFX
+				float normvx = racePoints[curPointIndex + 1, 1] - racePoints[curPointIndex, 1]; //DIFFY
+				float normvy = -(racePoints[curPointIndex + 1, 0] - racePoints[curPointIndex, 0]); //-DIFFX
 
 				//We now get the unit vector of our normal vector
 				float len = (float) Math.Sqrt(normvx*normvx + normvy*normvy);
@@ -353,9 +348,11 @@ namespace DOL.GS.GameEvents
 						break;
 				}
 
-				//return the next point with the correct offset
-				x = (int) (racePoints[curPoint + 1, 0] + offx);
-				y = (int) (racePoints[curPoint + 1, 1] + offy);
+                //return the next point with the correct offset
+                return Coordinate.Create(
+                    x: (int)(racePoints[curPointIndex + 1, 0] + offx),
+                    y: (int)(racePoints[curPointIndex + 1, 1] + offy)
+                );
 			}
 
 			//Get the startpoint of our horse based on the startnumber

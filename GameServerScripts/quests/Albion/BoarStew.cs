@@ -29,6 +29,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -152,13 +153,9 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + masterGerol.Name + ", creating him ...");
                 masterGerol.GuildName = "Healer";
                 masterGerol.Realm = eRealm.Albion;
-                masterGerol.CurrentRegionID = 1;
                 masterGerol.Size = 45;
                 masterGerol.Level = 20;
-                masterGerol.X = 578668;
-                masterGerol.Y = 556823;
-                masterGerol.Z = 2184;
-                masterGerol.Heading = 79;
+                masterGerol.Position = Position.Create(regionID: 1, x: 578668, y: 556823, z: 2184, heading: 79);
                 masterGerol.MaxSpeedBase = 200;
 
                 //You don't have to store the created mob in the db if you don't want,

@@ -44,6 +44,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -121,7 +122,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 802818 && npc.Y == 727413)
+					if (npc.CurrentRegionID == 100)
 					{
 						Danica = npc;
 						break;
@@ -136,13 +137,9 @@ namespace DOL.GS.Quests.Midgard
 				Danica.Name = "Danica";
 				Danica.GuildName = "";
 				Danica.Realm = eRealm.Midgard;
-				Danica.CurrentRegionID = 100;
 				Danica.Size = 51;
 				Danica.Level = 50;
-				Danica.X = 802818;
-				Danica.Y = 727413;
-				Danica.Z = 4760;
-				Danica.Heading = 2116;
+                Danica.Position = Position.Create(regionID: 100, x: 802818, y: 727413, z: 4760, heading: 2116);
 				Danica.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -155,7 +152,7 @@ namespace DOL.GS.Quests.Midgard
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 100 && npc.X == 621577 && npc.Y == 745848)
+					if (npc.CurrentRegionID == 100)
 					{
 						Kelic = npc;
 						break;
@@ -170,13 +167,9 @@ namespace DOL.GS.Quests.Midgard
 				Kelic.Name = "Kelic";
 				Kelic.GuildName = "";
 				Kelic.Realm = eRealm.None;
-				Kelic.CurrentRegionID = 100;
 				Kelic.Size = 100;
 				Kelic.Level = 65;
-				Kelic.X = 621577;
-				Kelic.Y = 745848;
-				Kelic.Z = 4593;
-				Kelic.Heading = 3538;
+                Kelic.Position = Position.Create(regionID: 100, x: 621577, y: 745848, z: 4593, heading: 3538);
 				Kelic.Flags ^= GameNPC.eFlags.GHOST;
 				Kelic.MaxSpeedBase = 200;
 				Kelic.AddToWorld();
@@ -1612,7 +1605,7 @@ namespace DOL.GS.Quests.Midgard
         *#26 seek out Loken in Raumarik Loc 47k, 25k, 4k, and kill him purp and 2 blue adds 
         *#27 return to Inaksha 
         *#28 give her the ball of flame
-        *#29 talk with Inaksha about Loken’s demise
+        *#29 talk with Inaksha about Loken's demise
         *#30 go to Miri in Jordheim 
         *#31 give her the sealed pouch
         *#32 you get your epic armor as a reward

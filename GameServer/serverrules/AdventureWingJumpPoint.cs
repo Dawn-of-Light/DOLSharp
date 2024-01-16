@@ -18,6 +18,7 @@
  */
 
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using System.Collections;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace DOL.GS.ServerRules
         {            
             
             //Handles zoning INTO an instance.
-            GameLocation loc = null;
+            Position position = Position.Nowhere;
             AdventureWingInstance previousInstance = null;
                       
             // Do we have a group ?
@@ -113,26 +114,22 @@ namespace DOL.GS.ServerRules
             
            if(previousInstance == null) 
            {
-            	// I have no instance to go to, create one !
-            	previousInstance = (AdventureWingInstance)WorldMgr.CreateInstance(targetPoint.TargetRegion, typeof(AdventureWingInstance));
-            	if(targetPoint.SourceRegion != 0 && targetPoint.SourceRegion == player.CurrentRegionID) {
-            		//source loc seems legit...
-            		previousInstance.SourceEntrance = new GameLocation("source", targetPoint.SourceRegion, targetPoint.SourceX, targetPoint.SourceY, targetPoint.SourceZ);
-            	}
-            	
-        		if(player.Group != null) 
-        		{
-	        		previousInstance.Group = player.Group;
-	        		previousInstance.Player = player.Group.Leader;
-        		}
-        		else 
-        		{
-	       			previousInstance.Group = null;
-	        		previousInstance.Player = player;
-        		}
-        		
-        		//get region data
-				long mobs = 0;
+                // I have no instance to go to, create one !
+                previousInstance = (AdventureWingInstance)WorldMgr.CreateInstance(targetPoint.TargetRegion, typeof(AdventureWingInstance));
+
+                if (player.Group != null)
+                {
+                    previousInstance.Group = player.Group;
+                    previousInstance.Player = player.Group.Leader;
+                }
+                else
+                {
+                    previousInstance.Group = null;
+                    previousInstance.Player = player;
+                }
+
+                //get region data
+                long mobs = 0;
 				long merchants = 0;
 				long items = 0;
 				long bindpoints = 0;
@@ -193,15 +190,15 @@ namespace DOL.GS.ServerRules
         	//get loc of instance
         	if(previousInstance != null) 
         	{
-        		loc = new GameLocation(previousInstance.Description + " (instance)", previousInstance.ID, targetPoint.TargetX,  targetPoint.TargetY,  targetPoint.TargetZ,  targetPoint.TargetHeading);
+        		position = targetPoint.GetTargetPosition().With(regionID: previousInstance.ID);
         	}
 
 
-            if (loc != null)
+            if (position != Position.Nowhere)
             {
             	
             	// Move Player, changing target destination is failing !!
-            	player.MoveTo(loc);
+            	player.MoveTo(position);
                 return false;
             }
 

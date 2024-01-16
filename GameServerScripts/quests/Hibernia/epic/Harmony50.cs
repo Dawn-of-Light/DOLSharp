@@ -17,6 +17,7 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -116,7 +117,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 343442 && npc.Y == 706235)
+					if (npc.CurrentRegionID == 200)
 					{
 						Revelin = npc;
 						break;
@@ -131,13 +132,9 @@ namespace DOL.GS.Quests.Hibernia
 				Revelin.Name = "Revelin";
 				Revelin.GuildName = "";
 				Revelin.Realm = eRealm.Hibernia;
-				Revelin.CurrentRegionID = 200;
 				Revelin.Size = 42;
 				Revelin.Level = 20;
-				Revelin.X = 343442;
-				Revelin.Y = 706235;
-				Revelin.Z = 6336;
-				Revelin.Heading = 2127;
+                Revelin.Position = Position.Create(regionID: 200, x: 343442, y: 706235, z: 6336, heading: 2127);
 				Revelin.Flags ^= GameNPC.eFlags.PEACE;
 				Revelin.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -151,7 +148,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			if (npcs.Length > 0)
 				foreach (GameNPC npc in npcs)
-					if (npc.CurrentRegionID == 200 && npc.X == 479042 && npc.Y == 508134)
+					if (npc.CurrentRegionID == 200)
 					{
 						Cailean = npc;
 						break;
@@ -166,13 +163,9 @@ namespace DOL.GS.Quests.Hibernia
 				Cailean.Name = "Cailean";
 				Cailean.GuildName = "";
 				Cailean.Realm = eRealm.None;
-				Cailean.CurrentRegionID = 200;
 				Cailean.Size = 60;
 				Cailean.Level = 65;
-				Cailean.X = 479042;
-				Cailean.Y = 508134;
-				Cailean.Z = 4569;
-				Cailean.Heading = 3319;
+                Cailean.Position = Position.Create(regionID: 200, x: 479042, y: 508134, z: 4569, heading: 3319);
 				Cailean.AddToWorld();
 				if (SAVE_INTO_DATABASE)
 				{
@@ -2383,7 +2376,7 @@ namespace DOL.GS.Quests.Hibernia
         *#26 seek out Loken in Raumarik Loc 47k, 25k, 4k, and kill him purp and 2 blue adds 
         *#27 return to Revelin 
         *#28 give her the ball of flame
-        *#29 talk with Revelin about Loken’s demise
+        *#29 talk with Revelin about Loken's demise
         *#30 go to MorlinCaan in Jordheim 
         *#31 give her the sealed pouch
         *#32 you get your epic armor as a reward

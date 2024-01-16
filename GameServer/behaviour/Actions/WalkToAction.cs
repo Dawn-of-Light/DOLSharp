@@ -17,14 +17,13 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Behaviour.Actions
 {
+    [Obsolete("This is going to be removed.")]
     [ActionAttribute(ActionType = eActionType.WalkTo,DefaultValueQ=eDefaultValueConstants.NPC)]
     public class WalkToAction : AbstractAction<IPoint3D,GameNPC>
     {
@@ -37,15 +36,13 @@ namespace DOL.GS.Behaviour.Actions
 
         public WalkToAction(GameNPC defaultNPC,  IPoint3D destination, GameNPC npc)
             : this(defaultNPC, (object) destination,(object) npc) { }
-        
-
 
         public override void Perform(DOLEvent e, object sender, EventArgs args)
         {
             GamePlayer player = BehaviourUtils.GuessGamePlayerFromNotify(e, sender, args);
-            IPoint3D location = (P is IPoint3D) ? (IPoint3D)P : player;            
+            var destination = (P is IPoint3D) ? P.ToCoordinate() : player.Coordinate;
 
-            Q.WalkTo(location, Q.CurrentSpeed);
+            Q.WalkTo(destination, Q.CurrentSpeed);
             
         }
     }

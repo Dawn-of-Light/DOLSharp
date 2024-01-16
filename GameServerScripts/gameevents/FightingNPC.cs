@@ -17,7 +17,7 @@
  *
  */
 /*
- * Author:	SmallHorse & Crystalö
+ * Author:	SmallHorse & Crystal
  * Date:	20.11.2003
  * This script should be put in /scripts/gameevents directory.
  * This event simulates a guard-trainer and some of his trainees.
@@ -29,6 +29,7 @@ using System;
 using System.Reflection;
 using System.Timers;
 using DOL.Events;
+using DOL.GS.Geometry;
 using log4net;
 
 namespace DOL.GS.GameEvents
@@ -47,8 +48,8 @@ namespace DOL.GS.GameEvents
 			//Empty constructor, sets the default parameters for this NPC
 			public FightingNPC() : base()
 			{
-				Z = 0;
-				Heading = 0x0;
+				Position = Position.With(z: 0);
+				Orientation = Angle.Degrees(0);
 				Model = 40;
 				Size = 50;
 				Level = 10;
@@ -93,9 +94,7 @@ namespace DOL.GS.GameEvents
 
 			//We create our guardmaster-trainer
 			m_guardMaster = new FightingNPC();
-			m_guardMaster.X = 531771;
-			m_guardMaster.Y = 478755;
-			m_guardMaster.Heading = 3570;
+            m_guardMaster.Position = m_guardMaster.Position.With(x: 531771, y: 478755, heading: 3570);
 			m_guardMaster.Name = "Master Guard Trainer";
 			//Now we add some nice equipment to the guard-trainer
 			GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
@@ -156,37 +155,32 @@ namespace DOL.GS.GameEvents
 			}
 
 			//We set the position, model and size of our trainees
-			m_guardTrainee[0].X = m_guardMaster.X - 70;
-			m_guardTrainee[0].Y = m_guardMaster.Y - 66;
-			m_guardTrainee[0].Heading = m_guardTrainee[0].GetHeading( m_guardMaster );
+			m_guardTrainee[0].Position = m_guardMaster.Position + Vector.Create(-70, -66);
+			m_guardTrainee[0].TurnTo(m_guardMaster.Coordinate);
 			m_guardTrainee[0].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[0].Size = (byte) (45 + m_rnd.Next(10));
 
-			m_guardTrainee[1].X = m_guardMaster.X + 76;
-			m_guardTrainee[1].Y = m_guardMaster.Y - 29;
-			m_guardTrainee[1].Heading = m_guardTrainee[1].GetHeading( m_guardMaster );
-			;
+			m_guardTrainee[1].Position = m_guardMaster.Position + Vector.Create(76, -29);
+			m_guardTrainee[1].TurnTo(m_guardMaster.Coordinate);
+
 			m_guardTrainee[1].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[1].Size = (byte) (45 + m_rnd.Next(10));
 
-			m_guardTrainee[2].X = m_guardMaster.X - 110;
-			m_guardTrainee[2].Y = m_guardMaster.Y + 22;
-			m_guardTrainee[2].Heading = m_guardTrainee[2].GetHeading( m_guardMaster );
-			;
+			m_guardTrainee[2].Position = m_guardMaster.Position + Vector.Create(-110, 22);
+			m_guardTrainee[2].TurnTo(m_guardMaster.Coordinate);
+
 			m_guardTrainee[2].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[2].Size = (byte) (45 + m_rnd.Next(10));
 
-			m_guardTrainee[3].X = m_guardMaster.X - 34;
-			m_guardTrainee[3].Y = m_guardMaster.Y + 88;
-			m_guardTrainee[3].Heading = m_guardTrainee[3].GetHeading( m_guardMaster );
-			;
+			m_guardTrainee[3].Position = m_guardMaster.Position + Vector.Create(-34, 88);
+			m_guardTrainee[3].TurnTo(m_guardMaster.Coordinate);
+
 			m_guardTrainee[3].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[3].Size = (byte) (45 + m_rnd.Next(10));
 
-			m_guardTrainee[4].X = m_guardMaster.X + 52;
-			m_guardTrainee[4].Y = m_guardMaster.Y + 64;
-			m_guardTrainee[4].Heading = m_guardTrainee[4].GetHeading( m_guardMaster );
-			;
+			m_guardTrainee[4].Position = m_guardMaster.Position + Vector.Create(52, 64);
+			m_guardTrainee[4].TurnTo(m_guardMaster.Coordinate);
+
 			m_guardTrainee[4].Model = (ushort) m_rnd.Next(32, 55);
 			m_guardTrainee[4].Size = (byte) (45 + m_rnd.Next(10));
 

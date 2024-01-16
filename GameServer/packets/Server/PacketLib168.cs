@@ -41,6 +41,7 @@ using DOL.GS.ServerProperties;
 using DOL.GS.Finance;
 using DOL.GS.Profession;
 using DOL.GS.Behaviour;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.PacketHandler
 {
@@ -237,7 +238,8 @@ namespace DOL.GS.PacketHandler
 							Region reg = WorldMgr.GetRegion((ushort) characters[j].Region);
 							if (reg != null)
 							{
-								var description = m_gameClient.GetTranslatedSpotDescription(reg, characters[j].Xpos, characters[j].Ypos, characters[j].Zpos);
+                                var coordinate = characters[j].GetPosition().Coordinate;
+								var description = GamePlayerUtils.GetTranslatedSpotDescription(reg, m_gameClient, coordinate);
 								pak.FillString(description, 24);
 							}
 							else
@@ -538,10 +540,10 @@ namespace DOL.GS.PacketHandler
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PositionAndObjectID)))
 			{
 				pak.WriteShort((ushort) m_gameClient.Player.ObjectID); //This is the player's objectid not Sessionid!!!
-				pak.WriteShort((ushort) m_gameClient.Player.Z);
-				pak.WriteInt((uint) m_gameClient.Player.X);
-				pak.WriteInt((uint) m_gameClient.Player.Y);
-				pak.WriteShort(m_gameClient.Player.Heading);
+				pak.WriteShort((ushort) m_gameClient.Player.Position.Z);
+				pak.WriteInt((uint) m_gameClient.Player.Position.X);
+				pak.WriteInt((uint) m_gameClient.Player.Position.Y);
+				pak.WriteShort(m_gameClient.Player.Orientation.InHeading);
 
 				int flags = 0;
 				if (m_gameClient.Player.CurrentZone.IsDivingEnabled)
@@ -560,11 +562,11 @@ namespace DOL.GS.PacketHandler
 
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterJump)))
 			{
-				pak.WriteInt((uint) (headingOnly ? 0 : m_gameClient.Player.X));
-				pak.WriteInt((uint) (headingOnly ? 0 : m_gameClient.Player.Y));
+				pak.WriteInt((uint) (headingOnly ? 0 : m_gameClient.Player.Position.X));
+				pak.WriteInt((uint) (headingOnly ? 0 : m_gameClient.Player.Position.Y));
 				pak.WriteShort((ushort) m_gameClient.Player.ObjectID);
-				pak.WriteShort((ushort) (headingOnly ? 0 : m_gameClient.Player.Z));
-				pak.WriteShort(m_gameClient.Player.Heading);
+				pak.WriteShort((ushort) (headingOnly ? 0 : m_gameClient.Player.Position.Z));
+				pak.WriteShort(m_gameClient.Player.Orientation.InHeading);
 				if (m_gameClient.Player.InHouse == false || m_gameClient.Player.CurrentHouse == null)
 				{
 					pak.WriteShort(0);
@@ -662,6 +664,12 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
+        protected ushort GetXOffsetInZone(GamePlayer player)
+            => (ushort)(player.Coordinate.X - player.CurrentZone.Offset.X);
+
+        protected ushort GetYOffsetInZone(GamePlayer player)
+            => (ushort)(player.Coordinate.Y - player.CurrentZone.Offset.Y);
+
 		public virtual void SendPlayerCreate(GamePlayer playerToCreate)
 		{
 			if (playerToCreate == null)
@@ -693,14 +701,14 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort) playerToCreate.ObjectID);
 				//pak.WriteInt(playerToCreate.X);
 				//pak.WriteInt(playerToCreate.Y);
-				pak.WriteShort((ushort) playerRegion.GetXOffInZone(playerToCreate.X, playerToCreate.Y));
-				pak.WriteShort((ushort) playerRegion.GetYOffInZone(playerToCreate.X, playerToCreate.Y));
+				pak.WriteShort(GetXOffsetInZone(playerToCreate));
+				pak.WriteShort(GetYOffsetInZone(playerToCreate));
 
 				//Dinberg:Instances - changing to ZoneSkinID for instance zones.
 				pak.WriteByte((byte) playerZone.ZoneSkinID);
 				pak.WriteByte(0);
-				pak.WriteShort((ushort) playerToCreate.Z);
-				pak.WriteShort(playerToCreate.Heading);
+				pak.WriteShort((ushort) playerToCreate.Position.Z);
+				pak.WriteShort(playerToCreate.Orientation.InHeading);
 				pak.WriteShort(playerToCreate.Model);
 				//DOLConsole.WriteLine("send created player "+target.Player.Name+" to "+client.Player.Name+" alive="+target.Player.Alive);
 				pak.WriteByte((byte) (playerToCreate.IsAlive ? 0x1 : 0x0));
@@ -763,11 +771,8 @@ namespace DOL.GS.PacketHandler
 				return;
 			}
 
-			var xOffsetInZone = (ushort) (obj.X - z.XOffset);
-			var yOffsetInZone = (ushort) (obj.Y - z.YOffset);
-			ushort xOffsetInTargetZone = 0;
-			ushort yOffsetInTargetZone = 0;
-			ushort zOffsetInTargetZone = 0;
+            var currentZoneCoord = obj.Coordinate - z.Offset;
+            var targetZoneCoord = Coordinate.Zero;
 
 			int speed = 0;
 			ushort targetZone = 0;
@@ -799,17 +804,19 @@ namespace DOL.GS.PacketHandler
 					flags |= 0x20;
 				}
 
-				if (npc.IsMoving && !npc.IsAtTargetPosition)
+				if (npc.IsMoving && !npc.IsAtTargetLocation)
 				{
 					speed = npc.CurrentSpeed;
-					if (npc.TargetPosition.X != 0 || npc.TargetPosition.Y != 0 || npc.TargetPosition.Z != 0)
+					if (npc.Destination != Coordinate.Nowhere && npc.Destination != npc.Coordinate)
 					{
-						Zone tz = npc.CurrentRegion.GetZone(npc.TargetPosition.X, npc.TargetPosition.Y);
+						Zone tz = npc.CurrentRegion.GetZone(npc.Destination);
 						if (tz != null)
 						{
-							xOffsetInTargetZone = (ushort) (npc.TargetPosition.X - tz.XOffset);
-							yOffsetInTargetZone = (ushort) (npc.TargetPosition.Y - tz.YOffset);
-							zOffsetInTargetZone = (ushort) (npc.TargetPosition.Z);
+                            targetZoneCoord = npc.Destination - tz.Offset;
+
+                            var overshootVector = targetZoneCoord - currentZoneCoord;
+                            overshootVector = overshootVector * (100/overshootVector.Length);
+                            targetZoneCoord += overshootVector;
 							//Dinberg:Instances - zoneSkinID for object positioning clientside.
 							targetZone = tz.ZoneSkinID;
 						}
@@ -834,20 +841,13 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.WriteShort((ushort) speed);
 				
-				if (obj is GameNPC)
-				{
-					pak.WriteShort((ushort)(obj.Heading & 0xFFF));
-				}
-				else
-				{
-					pak.WriteShort(obj.Heading);
-				}
-				pak.WriteShort(xOffsetInZone);
-				pak.WriteShort(xOffsetInTargetZone);
-				pak.WriteShort(yOffsetInZone);
-				pak.WriteShort(yOffsetInTargetZone);
-				pak.WriteShort((ushort) obj.Z);
-				pak.WriteShort(zOffsetInTargetZone);
+				pak.WriteShort(obj.Orientation.InHeading);
+				pak.WriteShort((ushort)currentZoneCoord.X);
+				pak.WriteShort((ushort)targetZoneCoord.X);
+				pak.WriteShort((ushort)currentZoneCoord.Y);
+				pak.WriteShort((ushort)targetZoneCoord.Y);
+				pak.WriteShort((ushort)currentZoneCoord.Z);
+				pak.WriteShort((ushort)targetZoneCoord.Z);
 				pak.WriteShort((ushort) obj.ObjectID);
 				pak.WriteShort((ushort) targetOID);
 				//health
@@ -928,10 +928,10 @@ namespace DOL.GS.PacketHandler
 				if (obj is GameStaticItem)
 					pak.WriteShort((ushort) (obj as GameStaticItem).Emblem);
 				else pak.WriteShort(0);
-				pak.WriteShort(obj.Heading);
-				pak.WriteShort((ushort) obj.Z);
-				pak.WriteInt((uint) obj.X);
-				pak.WriteInt((uint) obj.Y);
+				pak.WriteShort(obj.Orientation.InHeading);
+				pak.WriteShort((ushort) obj.Position.Z);
+				pak.WriteInt((uint) obj.Position.X);
+				pak.WriteInt((uint) obj.Position.Y);
 				int flag = ((byte) obj.Realm & 3) << 4;
 				ushort model = obj.Model;
 				if (obj.IsUnderwater)
@@ -1050,17 +1050,17 @@ namespace DOL.GS.PacketHandler
 			{
 				int speed = 0;
 				ushort speedZ = 0;
-				if (npc.IsMoving && !npc.IsAtTargetPosition)
+				if (npc.IsMoving && !npc.IsAtTargetLocation)
 				{
 					speed = npc.CurrentSpeed;
-					speedZ = (ushort) npc.TickSpeedZ;
+					speedZ = (ushort)npc.ZSpeedFactor;
 				}
 				pak.WriteShort((ushort) npc.ObjectID);
 				pak.WriteShort((ushort) speed);
-				pak.WriteShort(npc.Heading);
-				pak.WriteShort((ushort) npc.Z);
-				pak.WriteInt((uint) npc.X);
-				pak.WriteInt((uint) npc.Y);
+				pak.WriteShort(npc.Orientation.InHeading);
+				pak.WriteShort((ushort) npc.Position.Z);
+				pak.WriteInt((uint) npc.Position.X);
+				pak.WriteInt((uint) npc.Position.Y);
 				pak.WriteShort(speedZ);
 				pak.WriteShort(npc.Model);
 				pak.WriteByte(npc.Size);
@@ -2537,7 +2537,7 @@ namespace DOL.GS.PacketHandler
 				// Write Speed
 				if (player.Steed != null && player.Steed.ObjectState == GameObject.eObjectState.Active)
 				{
-					player.Heading = player.Steed.Heading;
+					player.Orientation = player.Steed.Orientation;
 					pak.WriteShort(0x1800);
 				}
 				else
@@ -2582,12 +2582,11 @@ namespace DOL.GS.PacketHandler
 				}
 
 				// Get Off Corrd
-				int offX = player.X - player.CurrentZone.XOffset;
-				int offY = player.Y - player.CurrentZone.YOffset;
+                var zoneCoord = player.Coordinate - player.CurrentZone.Offset;
 
-				pak.WriteShort((ushort)player.Z);
-				pak.WriteShort((ushort)offX);
-				pak.WriteShort((ushort)offY);
+				pak.WriteShort((ushort)zoneCoord.Z);
+				pak.WriteShort((ushort)zoneCoord.X);
+				pak.WriteShort((ushort)zoneCoord.Y);
 				
 				// Write Zone
 				pak.WriteByte((byte)player.CurrentZone.ZoneSkinID);
@@ -2602,7 +2601,7 @@ namespace DOL.GS.PacketHandler
 				else
 				{
 					// Set Player always on ground, this is an "anti lag" packet
-					ushort contenthead = (ushort)(player.Heading + (true ? 0x1000 : 0));
+					ushort contenthead = (ushort)(player.Orientation.InHeading + (true ? 0x1000 : 0));
 					pak.WriteShort(contenthead);
 					// No Fall Speed.
 					pak.WriteShort(0);
@@ -3561,16 +3560,21 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public void SendChangeGroundTarget(Point3D newTarget)
-		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ChangeGroundTarget)))
-			{
-				pak.WriteInt((uint) (newTarget == null ? 0 : newTarget.X));
-				pak.WriteInt((uint) (newTarget == null ? 0 : newTarget.Y));
-				pak.WriteInt((uint) (newTarget == null ? 0 : newTarget.Z));
-				SendTCP(pak);
-			}
-		}
+        [Obsolete("Use .SendChangeGroundTarget(Coordinate) instead!")]
+        public void SendChangeGroundTarget(Point3D newTarget)
+            => SendChangeGroundTarget(newTarget.ToCoordinate());
+
+        public void SendChangeGroundTarget(Coordinate newTarget)
+        {
+            using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ChangeGroundTarget)))
+            {
+                var gtLoc = newTarget == Coordinate.Nowhere ? Coordinate.Zero : newTarget;
+                pak.WriteInt((uint)(gtLoc.X));
+                pak.WriteInt((uint)(gtLoc.Y));
+                pak.WriteInt((uint)(gtLoc.Z));
+                SendTCP(pak);
+            }
+        }
 
 		public virtual void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState,
 		                                  eWalkState walkState)
@@ -3689,10 +3693,10 @@ namespace DOL.GS.PacketHandler
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
-				pak.WriteShort((ushort) house.Z);
-				pak.WriteInt((uint) house.X);
-				pak.WriteInt((uint) house.Y);
-				pak.WriteShort((ushort) house.Heading);
+				pak.WriteShort((ushort) house.Position.Z);
+				pak.WriteInt((uint) house.Position.X);
+				pak.WriteInt((uint) house.Position.Y);
+				pak.WriteShort((ushort) house.Orientation);
 				pak.WriteShort((ushort) house.PorchRoofColor);
 				pak.WriteShort((ushort) house.GetPorchAndGuildEmblemFlags());
 				pak.WriteShort((ushort) house.Emblem);
@@ -3725,9 +3729,9 @@ namespace DOL.GS.PacketHandler
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
-				pak.WriteShort((ushort) house.Z);
-				pak.WriteInt((uint) house.X);
-				pak.WriteInt((uint) house.Y);
+				pak.WriteShort((ushort) house.Position.Z);
+				pak.WriteInt((uint) house.Position.X);
+				pak.WriteInt((uint) house.Position.Y);
 				pak.Fill(0x00, 15);
 				pak.WriteByte(0x03);
 				pak.WritePascalString("");
@@ -3816,9 +3820,9 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteShort(25000); //constant!
-				pak.WriteInt((uint) house.X);
-				pak.WriteInt((uint) house.Y);
-				pak.WriteShort((ushort) house.Heading); //useless/ignored by client.
+				pak.WriteInt((uint) house.Position.X);
+				pak.WriteInt((uint) house.Position.Y);
+				pak.WriteShort((ushort) house.Orientation); //useless/ignored by client.
 				pak.WriteByte(0x00);
 				pak.WriteByte((byte) house.GetGuildEmblemFlags()); //emblem style
 				pak.WriteShort((ushort) house.Emblem); //emblem
@@ -3986,10 +3990,10 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
 				pak.WriteShort(0);
-				pak.WriteShort(obj.Heading);
-				pak.WriteShort((ushort) obj.Z);
-				pak.WriteInt((uint) obj.X);
-				pak.WriteInt((uint) obj.Y);
+				pak.WriteShort(obj.Orientation.InHeading);
+				pak.WriteShort((ushort) obj.Position.Z);
+				pak.WriteInt((uint) obj.Position.X);
+				pak.WriteInt((uint) obj.Position.Y);
 				pak.WriteShort(obj.Model);
 				int flag = (obj.Type() | ((byte)obj.Realm == 3 ? 0x40 : (byte)obj.Realm << 4) | obj.GetDisplayLevel(m_gameClient.Player) << 9);
 				pak.WriteShort((ushort) flag); //(0x0002-for Ship,0x7D42-for catapult,0x9602,0x9612,0x9622-for ballista)
@@ -4088,21 +4092,10 @@ namespace DOL.GS.PacketHandler
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
 			{
 				pak.WriteInt((uint) siegeWeapon.ObjectID);
-				pak.WriteInt(
-					(uint)
-					(siegeWeapon.TargetObject == null
-					 ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.X)
-					 : siegeWeapon.TargetObject.X));
-				pak.WriteInt(
-					(uint)
-					(siegeWeapon.TargetObject == null
-					 ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.Y)
-					 : siegeWeapon.TargetObject.Y));
-				pak.WriteInt(
-					(uint)
-					(siegeWeapon.TargetObject == null
-					 ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.Z)
-					 : siegeWeapon.TargetObject.Z));
+                var aimCoordinate = siegeWeapon.AimCoordinate;
+                pak.WriteInt((uint)aimCoordinate.X);
+                pak.WriteInt((uint)aimCoordinate.Y);
+                pak.WriteInt((uint)aimCoordinate.Z);
 				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
 				pak.WriteShort(siegeWeapon.Effect);
 				pak.WriteShort((ushort) (siegeWeapon.SiegeWeaponTimer.TimeUntilElapsed/100));
@@ -4119,9 +4112,9 @@ namespace DOL.GS.PacketHandler
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
 			{
 				pak.WriteInt((uint) siegeWeapon.ObjectID);
-				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.X));
-				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.Y));
-				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.Z + 50));
+				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.Position.X));
+				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.Position.Y));
+				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.Position.Z + 50));
 				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
 				pak.WriteShort(siegeWeapon.Effect);
 				pak.WriteShort((ushort) (timer/100));
@@ -4159,6 +4152,18 @@ namespace DOL.GS.PacketHandler
 					SendLivingEquipmentUpdate(living as GameNPC);
 			}
 		}
+
+        public virtual void SendSoundEffect(ushort soundId, Position pos, ushort radius)
+        {
+            var region = WorldMgr.GetRegion(pos.RegionID);
+            if(region == null) return;
+
+            var zone = region.GetZone(pos.Coordinate);
+            if(zone == null) return;
+
+            var zoneCoord = pos - zone.Offset;
+            SendSoundEffect(soundId, zone.ID, (ushort)zoneCoord.X, (ushort)zoneCoord.Y, (ushort)zoneCoord.Z, radius);
+        }
 
 		public virtual void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius)
 		{
@@ -4387,7 +4392,10 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-		public virtual void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z)
+		public void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z)
+            => SendMinotaurRelicMapUpdate(id, Position.Create(region, x, y, z));
+
+        public virtual void SendMinotaurRelicMapUpdate(byte id, Position position)
 		{
 		}
 

@@ -36,6 +36,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -79,9 +80,9 @@ namespace DOL.GS.Quests.Albion
 
 		private static ItemTemplate farmerAsmasMap = null;
 
-		private static GameLocation firstField = new GameLocation("First Field", 1, 568278, 504052, 2168);
-		private static GameLocation secondField = new GameLocation("Second Field", 1, 573718, 509044, 2192);
-		private static GameLocation thirdField = new GameLocation("Third Field", 1, 577336, 513324, 2169);
+		private static Position firstField = Position.Create(regionID: 1, x: 568278, y: 504052, z: 2168);
+		private static Position secondField = Position.Create(regionID: 1, x: 573718, y: 509044, z: 2192);
+		private static Position thirdField = Position.Create(regionID: 1, x: 577336, y: 513324, z: 2169);
 
 		private static IArea firstFieldArea = null;
 		private static IArea secondFieldArea = null;
@@ -150,7 +151,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + farmerAsma.Name + ", creating him ...");
 				farmerAsma.GuildName = "Part of " + questTitle + " Quest";
 				farmerAsma.Realm = eRealm.Albion;
-				farmerAsma.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 31);
@@ -162,10 +162,7 @@ namespace DOL.GS.Quests.Albion
 
 				farmerAsma.Size = 50;
 				farmerAsma.Level = 35;
-				farmerAsma.X = 563939;
-				farmerAsma.Y = 509234;
-				farmerAsma.Z = 2744 ;
-				farmerAsma.Heading = 21;
+                farmerAsma.Position = Position.Create(regionID: 1, x: 563939, y: 509234, z: 2744 , heading: 21);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -217,13 +214,13 @@ namespace DOL.GS.Quests.Albion
 			#endregion
 
 
-			firstFieldArea = WorldMgr.GetRegion(firstField.RegionID).AddArea(new Area.Circle("First Vacant Field", firstField.X, firstField.Y, 0, 1450));
+			firstFieldArea = WorldMgr.GetRegion(firstField.RegionID).AddArea(new Area.Circle("First Vacant Field", firstField.Coordinate, 1450));
 			firstFieldArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterFirstFieldArea));
 
-			secondFieldArea = WorldMgr.GetRegion(secondField.RegionID).AddArea(new Area.Circle("Second Vacant Field", secondField.X, secondField.Y, 0, 1100));
+			secondFieldArea = WorldMgr.GetRegion(secondField.RegionID).AddArea(new Area.Circle("Second Vacant Field", secondField.Coordinate, 1100));
 			secondFieldArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterSecondFieldArea));
 
-			thirdFieldArea = WorldMgr.GetRegion(thirdField.RegionID).AddArea(new Area.Circle("Third Vacant Field", thirdField.X, thirdField.Y, 0, 1100));
+			thirdFieldArea = WorldMgr.GetRegion(thirdField.RegionID).AddArea(new Area.Circle("Third Vacant Field", thirdField.Coordinate, 1100));
 			thirdFieldArea.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterThirdFieldArea));
 			
 			/* Now we add some hooks to the npc we found.

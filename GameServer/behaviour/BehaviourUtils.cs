@@ -111,14 +111,6 @@ namespace DOL.GS.Behaviour
             {
                 result = (CustomDialogResponse)obj;
             }
-            else if (destinationType == typeof(GameLocation))
-            {
-                result = (GameLocation)obj;
-            }
-            else if (destinationType == typeof(IPoint3D))
-            {
-                result = (IPoint3D)obj;
-            }
             else if (destinationType == typeof(PathPoint))
             {
                 result = (PathPoint)obj;

@@ -34,6 +34,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -148,7 +149,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + sirJerem.Name + ", creating him ...");
 				sirJerem.GuildName = "Part of " + questTitle + " Quest";
 				sirJerem.Realm = eRealm.Albion;
-				sirJerem.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TwoHandWeapon, 68, 21);
@@ -164,10 +164,7 @@ namespace DOL.GS.Quests.Albion
 
 				sirJerem.Size = 51;
 				sirJerem.Level = 38;
-				sirJerem.X = 573815;
-				sirJerem.Y = 530850;
-				sirJerem.Z = 2933;
-				sirJerem.Heading = 2685;
+                sirJerem.Position = Position.Create(regionID: 1, x: 573815, y: 530850, z: 2933, heading: 2685);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -191,7 +188,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + squireGalune.Name + ", creating him ...");
 				squireGalune.GuildName = "Part of " + questTitle + " Quest";
 				squireGalune.Realm = eRealm.Albion;
-				squireGalune.CurrentRegionID = 21;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.RightHandWeapon, 320);
@@ -204,10 +200,7 @@ namespace DOL.GS.Quests.Albion
 
 				squireGalune.Size = 45;
 				squireGalune.Level = 8;
-				squireGalune.X = 33219;
-				squireGalune.Y = 31931;
-				squireGalune.Z = 16240;
-				squireGalune.Heading = 477;
+                squireGalune.Position = Position.Create(regionID: 21, x: 33219, y: 31931, z: 16240, heading: 477);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -239,19 +232,15 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + smallSpider.Name + ", creating him ...");
 				smallSpider.GuildName = "Part of " + questTitle + " Quest";
 				smallSpider.Realm = eRealm.None;
-				smallSpider.CurrentRegionID = 21;
 				smallSpider.Size = 17;
 				smallSpider.Level = 5;
-				smallSpider.X = 33158;
-				smallSpider.Y = 31973;
-				smallSpider.Z = 16240;
+                smallSpider.Position = Position.Create(regionID: 21, x: 33158, y: 31973, z: 16240, heading: 2605);
 
 				StandardMobBrain brain = new StandardMobBrain();
 				brain.AggroLevel = 0;
 				brain.AggroRange = 0;
 				smallSpider.SetOwnBrain(brain);
 
-				smallSpider.Heading = 2605;
 				smallSpider.MaxSpeedBase = 0;
 				
 				//You don't have to store the created mob in the db if you don't want,
@@ -620,7 +609,10 @@ namespace DOL.GS.Quests.Albion
 				if(Step == 2)
 				{
 					EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs) args;
-					if (gArgs.Target.Name == "small spider" && gArgs.Target.CurrentRegionID == smallSpider.CurrentRegionID && gArgs.Target.X == smallSpider.X && gArgs.Target.Y == smallSpider.Y)
+					if (gArgs.Target.Name == "small spider"
+                        && gArgs.Target.CurrentRegionID == smallSpider.CurrentRegionID
+                        && gArgs.Target.Position.X == smallSpider.Position.X
+                        && gArgs.Target.Position.Y == smallSpider.Position.Y)
 					{
 						Step = 3;
 						return;

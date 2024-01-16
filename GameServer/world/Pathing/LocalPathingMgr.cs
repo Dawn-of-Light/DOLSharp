@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using DOL.GS.Geometry;
 using log4net;
 
 namespace DOL.GS
@@ -193,74 +195,46 @@ namespace DOL.GS
             return new[] { value.X * LocalPathingMgr.CONVERSION_FACTOR, value.Z * LocalPathingMgr.CONVERSION_FACTOR, value.Y * LocalPathingMgr.CONVERSION_FACTOR };
         }
 
-        /// <summary>
-        /// Returns a path that prevents collisions with the navmesh, but floats freely otherwise
-        /// </summary>
-        /// <param name="zone"></param>
-        /// <param name="start">Start in GlobalXYZ</param>
-        /// <param name="end">End in GlobalXYZ</param>
-        /// <returns></returns>
-        public WrappedPathingResult GetPathStraightAsync(Zone zone, Vector3 start, Vector3 end)
-        {
-            if (!_navmeshPtrs.ContainsKey(zone.ID))
-                return new WrappedPathingResult
-                {
-                    Error = PathingError.NoPathFound,
-                    Points = null,
-                };
+        private static float[] CoordinateToRecastFloatArray(Coordinate loc)
+            => new[] {
+                loc.X * LocalPathingMgr.CONVERSION_FACTOR,
+                (loc.Z + 8) * LocalPathingMgr.CONVERSION_FACTOR,
+                loc.Y * LocalPathingMgr.CONVERSION_FACTOR
+            };
 
-            var result = new WrappedPathingResult();
+        public (LinePath,PathingError) GetPathStraightAsync(Zone zone, Coordinate start, Coordinate destination)
+        {
+            var linePath = new LinePath();
+            if (!_navmeshPtrs.ContainsKey(zone.ID)) return (linePath,PathingError.NoPathFound);
+
             NavMeshQuery query;
             if (!_navmeshQueries.Value.TryGetValue(zone.ID, out query))
             {
                 query = new NavMeshQuery(_navmeshPtrs[zone.ID]);
                 _navmeshQueries.Value.Add(zone.ID, query);
             }
-            var startFloats = ToRecastFloats(start + Vector3.UnitZ * 8);
-            var endFloats = ToRecastFloats(end + Vector3.UnitZ * 8);
+            var startFloats = CoordinateToRecastFloatArray(start);
+            var endFloats = CoordinateToRecastFloatArray(destination);
 
             var numNodes = 0;
             var buffer = new float[MAX_POLY * 3];
             var flags = new dtPolyFlags[MAX_POLY];
             dtPolyFlags includeFilter = dtPolyFlags.ALL ^ dtPolyFlags.DISABLED;
             dtPolyFlags excludeFilter = 0;
-            var polyExt = ToRecastFloats(new Vector3(64, 64, 256));
+            var polyExt = new[] { 2f, 2f, 8f }; //RecastFloatArray
             dtStraightPathOptions options = dtStraightPathOptions.DT_STRAIGHTPATH_ALL_CROSSINGS;
             var filter = new[] { includeFilter, excludeFilter };
             var status = PathStraight(query, startFloats, endFloats, polyExt, filter, options, ref numNodes, buffer, flags);
-            if ((status & dtStatus.DT_SUCCESS) == 0)
-            {
-                result.Error = PathingError.NoPathFound;
-                result.Points = null;
-                return result;
-            }
 
-            var points = new WrappedPathPoint[numNodes];
-            var positions = Vector3ArrayFromRecastFloats(buffer, numNodes);
+            if ((status & dtStatus.DT_SUCCESS) == 0) return (linePath, PathingError.NoPathFound);
 
-            for (var i = 0; i < numNodes; i++)
-            {
-                points[i].Position = positions[i];
-                points[i].Flags = flags[i];
-            }
+            linePath = LinePathFromRecastFloats(buffer, numNodes);
 
-            if ((status & dtStatus.DT_PARTIAL_RESULT) == 0)
-                result.Error = PathingError.PathFound;
-            else
-                result.Error = PathingError.PathFound;
-            result.Points = points;
-
-            return result;
+            return (linePath,PathingError.PathFound);
         }
 
-        /// <summary>
-        /// Returns a random point on the navmesh around the given position
-        /// </summary>
-        /// <param name="zone">Zone</param>
-        /// <param name="position">Start in GlobalXYZ</param>
-        /// <param name="radius">End in GlobalXYZ</param>
-        /// <returns>null if no point found, Vector3 with point otherwise</returns>
-        public Vector3? GetRandomPointAsync(Zone zone, Vector3 position, float radius)
+
+        public Vector3? GetRandomPointAsync(Zone zone, Coordinate center, float radius)
         {
             if (!_navmeshPtrs.ContainsKey(zone.ID))
                 return null;
@@ -275,7 +249,7 @@ namespace DOL.GS
                 _navmeshQueries.Value.Add(zone.ID, query);
             }
             var ptrs = _navmeshPtrs[zone.ID];
-            var center = ToRecastFloats(position + Vector3.UnitZ * 8);
+            var centerAsFloatArray = CoordinateToRecastFloatArray(center);
             var cradius = (radius * CONVERSION_FACTOR);
             var outVec = new float[3];
 
@@ -285,7 +259,7 @@ namespace DOL.GS
 
             var polyPickEx = new float[3] { 2.0f, 4.0f, 2.0f };
 
-            var status = FindRandomPointAroundCircle(query, center, cradius, polyPickEx, filter, outVec);
+            var status = FindRandomPointAroundCircle(query, centerAsFloatArray, cradius, polyPickEx, filter, outVec);
 
             if ((status & dtStatus.DT_SUCCESS) != 0)
                 result = new Vector3(outVec[0] * INV_FACTOR, outVec[2] * INV_FACTOR, outVec[1] * INV_FACTOR);
@@ -333,6 +307,20 @@ namespace DOL.GS
             for (var i = 0; i < numNodes; i++)
                 result[i] = new Vector3(buffer[i * 3 + 0] * INV_FACTOR, buffer[i * 3 + 2] * INV_FACTOR, buffer[i * 3 + 1] * INV_FACTOR);
             return result;
+        }
+
+        private LinePath LinePathFromRecastFloats(float[] buffer, int numNodes)
+        {
+            var wayPoints = new Coordinate[numNodes];
+            var conversionFactor = 32f;
+            for (var i = 0; i < numNodes; i++)
+            {
+                wayPoints[i] = Coordinate.Create(
+                    x: (int)(buffer[i * 3 + 0] * conversionFactor),
+                    y: (int)(buffer[i * 3 + 2] * conversionFactor),
+                    z: (int)(buffer[i * 3 + 1] * conversionFactor));
+            }
+            return LinePath.Create(wayPoints);
         }
 
         /// <summary>

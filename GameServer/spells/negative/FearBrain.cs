@@ -19,6 +19,7 @@
 using System;
 
 using DOL.GS;
+using DOL.GS.Geometry;
 
 namespace DOL.AI.Brain
 {
@@ -45,18 +46,14 @@ namespace DOL.AI.Brain
 			}
 		}
 
-		///<summary>
-		/// Calculate flee target.
-		/// </summary>
-		///<param name="target">The target to flee.</param>
 		protected virtual void CalculateFleeTarget(GameLiving target)
 		{
-			ushort TargetAngle = (ushort)((Body.GetHeading(target) + 2048) % 4096);
+			var targetAngle = Body.Coordinate.GetOrientationTo(target.Coordinate) + Angle.Degrees(180);
 
-            Point2D fleePoint = Body.GetPointFromHeading(TargetAngle, 300);
 			Body.StopFollowing();
 			Body.StopAttack();
-			Body.PathTo(new Point3D(fleePoint.X, fleePoint.Y, Body.Z), Body.MaxSpeed);
+            var destination = Body.Position + Vector.Create(targetAngle, length: 300);
+			Body.PathTo(destination.Coordinate, Body.MaxSpeed);
 		}
 	}
 } 

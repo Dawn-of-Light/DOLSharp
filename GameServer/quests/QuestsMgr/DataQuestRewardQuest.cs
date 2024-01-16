@@ -33,6 +33,7 @@ using log4net;
 using DOL.GS.Finance;
 using System.Collections.Specialized;
 using System.Text;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Quests
 {
@@ -1696,7 +1697,7 @@ namespace DOL.GS.Quests
                                 var npc = giver as GameNPC;
                                 player.Out.SendNPCsQuestEffect(npc, npc.GetQuestIndicator(player));
                             }
-                            player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
+                            player.Out.SendSoundEffect(7, Position.Zero, 0);
                             player.Out.SendMessage("You have acquired the quest: " + dq.Name, eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
                             if (!string.IsNullOrWhiteSpace(dq.AcceptText))
                             {
@@ -1844,7 +1845,7 @@ namespace DOL.GS.Quests
 
 
             // TODO swap sound depending on realm
-            m_questPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
+            m_questPlayer.Out.SendSoundEffect(11, Position.Zero, 0);
 
             if (obj is GameNPC)
             {

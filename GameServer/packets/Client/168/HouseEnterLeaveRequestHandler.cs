@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using DOL.GS.Geometry;
 using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -78,7 +79,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						break;
 
 					case 1:
-						if (!player.IsWithinRadius(_house, WorldMgr.VISIBILITY_DISTANCE) || (player.CurrentRegionID != _house.RegionID))
+						if (player.Coordinate.DistanceTo(_house.Position) > WorldMgr.VISIBILITY_DISTANCE
+                            || (player.CurrentRegionID != _house.RegionID))
 						{
 							ChatUtil.SendSystemMessage(player, string.Format("You are too far away to enter house {0}.", _house.HouseNumber));
 							return;

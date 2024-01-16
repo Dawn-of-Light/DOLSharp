@@ -36,8 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
-	namespace DOL.GS.Quests.Midgard {
+namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -124,15 +125,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + DwarvenGuardRinda.Name + ", creating ...");
 				DwarvenGuardRinda.GuildName = "Part of " + questTitle + " Quest";
 				DwarvenGuardRinda.Realm = eRealm.Midgard;
-				DwarvenGuardRinda.CurrentRegionID = 100;
 				DwarvenGuardRinda.Size = 53;
 				DwarvenGuardRinda.Level = 41;
 				DwarvenGuardRinda.MaxSpeedBase = 191;
 				DwarvenGuardRinda.Faction = FactionMgr.GetFactionByID(0);
-				DwarvenGuardRinda.X = 805496;
-				DwarvenGuardRinda.Y = 701215;
-				DwarvenGuardRinda.Z = 4960;
-				DwarvenGuardRinda.Heading = 1570;
+                DwarvenGuardRinda.Position = Position.Create(regionID: 100, x: 805496, y: 701215, z: 4960, heading: 1570);
 				DwarvenGuardRinda.RespawnInterval = -1;
 				DwarvenGuardRinda.BodyType = 0;
 				
@@ -169,15 +166,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + hobgoblinsnakefinder.Name + ", creating ...");
 				hobgoblinsnakefinder.GuildName = "Part of " + questTitle + " Quest";
 				hobgoblinsnakefinder.Realm = eRealm.None;
-				hobgoblinsnakefinder.CurrentRegionID = 100;
 				hobgoblinsnakefinder.Size = 37;
 				hobgoblinsnakefinder.Level = 1;
 				hobgoblinsnakefinder.MaxSpeedBase = 191;
 				hobgoblinsnakefinder.Faction = FactionMgr.GetFactionByID(0);
-				hobgoblinsnakefinder.X = 803189;
-				hobgoblinsnakefinder.Y = 695157;
-				hobgoblinsnakefinder.Z = 4926;
-				hobgoblinsnakefinder.Heading = 125;
+                hobgoblinsnakefinder.Position = Position.Create(regionID: 100, x: 803189, y: 695157, z: 4926, heading: 125);
 				hobgoblinsnakefinder.RespawnInterval = -1;
 				hobgoblinsnakefinder.BodyType = 0;
 				

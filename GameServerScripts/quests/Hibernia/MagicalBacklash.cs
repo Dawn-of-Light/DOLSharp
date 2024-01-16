@@ -27,6 +27,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Hibernia
@@ -309,7 +310,6 @@ namespace DOL.GS.Quests.Hibernia
 				//k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
 				//Josson.GuildName = "Part of " + questTitle + " Quest";
 				Josson.Realm = eRealm.Hibernia;
-				Josson.CurrentRegionID = 200;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 386);   //Slot 22
@@ -323,10 +323,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				Josson.Size = 48;
 				Josson.Level = 50;
-				Josson.X = 346627;
-				Josson.Y = 491453;
-				Josson.Z = 5247;
-				Josson.Heading = 2946;
+                Josson.Position = Position.Create(regionID: 200, x: 346627, y: 491453, z: 5247, heading: 2946);
 
 				if (SAVE_INTO_DATABASE)
 					Josson.SaveIntoDatabase();

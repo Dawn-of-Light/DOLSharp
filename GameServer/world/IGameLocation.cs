@@ -16,13 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using DOL.GS.Geometry;
+
 namespace DOL.GS
 {
-	/// <summary>
-	/// interface for classes that represent a point in 3d space
-	/// </summary>
-	public interface IGameLocation : IPoint3D
+	public interface IGameLocation
 	{
+        int X { get; }
+        int Y { get; }
+        int Z { get; }
+        Position Position { get; }
 		ushort RegionID { get; }
 		ushort Heading { get; }
 		string Name { get; }

@@ -26,6 +26,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Albion
@@ -156,7 +157,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + MasterClaistan.Name + ", creating him ...");
 				//MasterClaistan.GuildName = "Part of " + questTitle + " Quest";
 				MasterClaistan.Realm = eRealm.Albion;
-				MasterClaistan.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 39);
@@ -169,10 +169,7 @@ namespace DOL.GS.Quests.Albion
 
 				MasterClaistan.Size = 52;
 				MasterClaistan.Level = 51;
-				MasterClaistan.X = 562190;
-				MasterClaistan.Y = 512571;
-				MasterClaistan.Z = 2500;
-				MasterClaistan.Heading = 1592;
+                MasterClaistan.Position = Position.Create(regionID: 1, x: 562190, y: 512571, z: 2500, heading: 1592);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -197,7 +194,6 @@ namespace DOL.GS.Quests.Albion
 					log.Warn("Could not find " + PompinTheCrier.Name + ", creating him ...");
 				//MasterClaistan.GuildName = "Part of " + questTitle + " Quest";
 				PompinTheCrier.Realm = eRealm.Albion;
-				PompinTheCrier.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.HandsArmor, 39);
@@ -210,10 +206,7 @@ namespace DOL.GS.Quests.Albion
 
 				PompinTheCrier.Size = 50;
 				PompinTheCrier.Level = 5;
-				PompinTheCrier.X = 560484;
-				PompinTheCrier.Y = 511756;
-				PompinTheCrier.Z = 2344;
-				PompinTheCrier.Heading = 420;
+                PompinTheCrier.Position = Position.Create(regionID: 1, x: 560484, y: 511756, z: 2344, heading: 420);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

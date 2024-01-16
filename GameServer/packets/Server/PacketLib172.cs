@@ -69,12 +69,12 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort)playerToCreate.Client.SessionID);
 				pak.WriteShort((ushort)playerToCreate.ObjectID);
 				pak.WriteShort(playerToCreate.Model);
-				pak.WriteShort((ushort)playerToCreate.Z);
+				pak.WriteShort((ushort)playerToCreate.Position.Z);
 	            //Dinberg:Instances - Zoneskin ID for clientside positioning 'bluff'.
 				pak.WriteShort(playerZone.ZoneSkinID);
-				pak.WriteShort((ushort)playerRegion.GetXOffInZone(playerToCreate.X, playerToCreate.Y));
-				pak.WriteShort((ushort)playerRegion.GetYOffInZone(playerToCreate.X, playerToCreate.Y));
-				pak.WriteShort(playerToCreate.Heading);
+				pak.WriteShort(GetXOffsetInZone(playerToCreate));
+				pak.WriteShort(GetYOffsetInZone(playerToCreate));
+				pak.WriteShort(playerToCreate.Orientation.InHeading);
 	
 				pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.EyeSize)); //1-4 = Eye Size / 5-8 = Nose Size
 				pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.LipSize)); //1-4 = Ear size / 5-8 = Kin size
@@ -124,7 +124,7 @@ namespace DOL.GS.PacketHandler
 				// Write Speed
 				if (player.Steed != null && player.Steed.ObjectState == GameObject.eObjectState.Active)
 				{
-					player.Heading = player.Steed.Heading;
+					player.Orientation = player.Steed.Orientation;
 					pak.WriteShort(0x1800);
 				}
 				else
@@ -168,13 +168,10 @@ namespace DOL.GS.PacketHandler
 					pak.WriteShort(content);
 				}
 
-				// Get Off Corrd
-				int offX = player.X - player.CurrentZone.XOffset;
-				int offY = player.Y - player.CurrentZone.YOffset;
-
-				pak.WriteShort((ushort)player.Z);
-				pak.WriteShort((ushort)offX);
-				pak.WriteShort((ushort)offY);
+                var zoneCoord = player.Coordinate - player.CurrentZone.Offset;
+				pak.WriteShort((ushort)zoneCoord.Z);
+				pak.WriteShort((ushort)zoneCoord.X);
+				pak.WriteShort((ushort)zoneCoord.Y);
 				
 				// Write Zone
 				pak.WriteShort(player.CurrentZone.ZoneSkinID);
@@ -188,7 +185,7 @@ namespace DOL.GS.PacketHandler
 				else
 				{
 					// Set Player always on ground, this is an "anti lag" packet
-					ushort contenthead = (ushort)(player.Heading + (true ? 0x1000 : 0));
+					ushort contenthead = (ushort)(player.Orientation.InHeading + (true ? 0x1000 : 0));
 					pak.WriteShort(contenthead);
 					// No Fall Speed.
 					pak.WriteShort(0);

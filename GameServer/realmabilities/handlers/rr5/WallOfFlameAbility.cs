@@ -47,8 +47,7 @@ namespace DOL.GS.RealmAbilities
 			}
 
 			Statics.WallOfFlameBase wof = new Statics.WallOfFlameBase(dmgValue);
-			Point3D targetSpot = new Point3D(caster.X, caster.Y, caster.Z);
-			wof.CreateStatic(caster, targetSpot, duration, 3, 150);
+			wof.CreateStatic(caster, caster.Coordinate, duration, 3, 150);
 
 			DisableSkill(living);
 			caster.StopCurrentSpellcast();

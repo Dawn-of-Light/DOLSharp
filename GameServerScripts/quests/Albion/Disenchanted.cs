@@ -33,6 +33,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
@@ -161,13 +162,9 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + palune.Name + ", creating him ...");
                 palune.GuildName = "Enchanter";
                 palune.Realm = eRealm.Albion;
-                palune.CurrentRegionID = 1;
                 palune.Size = 52;
                 palune.Level = 27;
-                palune.X = 573735;
-                palune.Y = 530508;
-                palune.Z = 2957;
-                palune.Heading = 3083;
+                palune.Position = Position.Create(regionID: 1, x: 573735, y: 530508, z: 2957, heading: 3083);
 
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
@@ -191,13 +188,9 @@ namespace DOL.GS.Quests.Albion
                     log.Warn("Could not find " + guardCynon.Name + ", creating him ...");
                 guardCynon.GuildName = "Part of " + questTitle + " Quest";
                 guardCynon.Realm = eRealm.Albion;
-                guardCynon.CurrentRegionID = 1;
                 guardCynon.Size = 51;
                 guardCynon.Level = 25;
-                guardCynon.X = 577920;
-                guardCynon.Y = 557362;
-                guardCynon.Z = 2159;
-                guardCynon.Heading = 3982;
+                guardCynon.Position = Position.Create(regionID: 1, x: 577920, y: 557362, z: 2159, heading: 3982);
                 guardCynon.MaxSpeedBase = 200;
 
                 //You don't have to store the created mob in the db if you don't want,

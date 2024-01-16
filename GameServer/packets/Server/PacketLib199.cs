@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.Language;
 using log4net;
 
@@ -116,7 +117,8 @@ namespace DOL.GS.PacketHandler
 								Region reg = WorldMgr.GetRegion((ushort)characters[j].Region);
 								if (reg != null)
 								{
-									var description = m_gameClient.GetTranslatedSpotDescription(reg, characters[j].Xpos, characters[j].Ypos, characters[j].Zpos);									
+                                    var coordinate = characters[j].GetPosition().Coordinate;
+									var description = GamePlayerUtils.GetTranslatedSpotDescription(reg, m_gameClient, coordinate);
 									pak.FillString(description, 24);
 								}
 								else

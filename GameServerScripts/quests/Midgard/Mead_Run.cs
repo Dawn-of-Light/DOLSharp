@@ -36,8 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
-	namespace DOL.GS.Quests.Midgard {
+namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -122,15 +123,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + Audun.Name + ", creating ...");
 				Audun.GuildName = "Part of " + questTitle + " Quest";
 				Audun.Realm = eRealm.Midgard;
-				Audun.CurrentRegionID = 101;
 				Audun.Size = 48;
 				Audun.Level = 49;
 				Audun.MaxSpeedBase = 191;
 				Audun.Faction = FactionMgr.GetFactionByID(0);
-				Audun.X = 33283;
-				Audun.Y = 35305;
-				Audun.Z = 8027;
-				Audun.Heading = 1763;
+                Audun.Position = Position.Create(regionID: 101, x: 33283, y: 35305, z: 8027, heading: 1763);
 				Audun.RespawnInterval = -1;
 				Audun.BodyType = 0;
 				
@@ -167,15 +164,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + GuardOlja.Name + ", creating ...");
 				GuardOlja.GuildName = "Part of " + questTitle + " Quest";
 				GuardOlja.Realm = eRealm.Midgard;
-				GuardOlja.CurrentRegionID = 229;
 				GuardOlja.Size = 50;
 				GuardOlja.Level = 50;
 				GuardOlja.MaxSpeedBase = 191;
 				GuardOlja.Faction = FactionMgr.GetFactionByID(0);
-				GuardOlja.X = 47994;
-				GuardOlja.Y = 37341;
-				GuardOlja.Z = 21812;
-				GuardOlja.Heading = 204;
+                GuardOlja.Position = Position.Create(regionID: 229, x: 47994, y: 37341, z: 21812, heading: 204);
 				GuardOlja.RespawnInterval = -1;
 				GuardOlja.BodyType = 0;
 				

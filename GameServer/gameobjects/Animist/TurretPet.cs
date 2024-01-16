@@ -74,9 +74,9 @@ namespace DOL.GS
 
 			TargetObject = attackTarget;
 			if (TargetObject.Realm == 0 || Realm == 0)
-				m_lastAttackTickPvE = m_CurrentRegion.Time;
+				m_lastAttackTickPvE = CurrentRegion.Time;
 			else
-				m_lastAttackTickPvP = m_CurrentRegion.Time;
+				m_lastAttackTickPvP = CurrentRegion.Time;
 
 			if (m_attackers.Count == 0)
 			{

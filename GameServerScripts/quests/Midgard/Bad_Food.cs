@@ -36,8 +36,9 @@ using DOL.GS.Quests;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
+using DOL.GS.Geometry;
 
-	namespace DOL.GS.Quests.Midgard {
+namespace DOL.GS.Quests.Midgard {
 	
      /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
@@ -118,15 +119,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + Pedra.Name + ", creating ...");
 				Pedra.GuildName = "Part of " + questTitle + " Quest";
 				Pedra.Realm = eRealm.Midgard;
-				Pedra.CurrentRegionID = 151;
 				Pedra.Size = 51;
 				Pedra.Level = 50;
 				Pedra.MaxSpeedBase = 191;
 				Pedra.Faction = FactionMgr.GetFactionByID(0);
-				Pedra.X = 289895;
-				Pedra.Y = 356014;
-				Pedra.Z = 3866;
-				Pedra.Heading = 1661;
+                Pedra.Position = Position.Create(regionID: 151, x: 289895, y: 356014, z: 3866, heading: 1661);
 				Pedra.RespawnInterval = -1;
 				Pedra.BodyType = 0;
 				
@@ -160,15 +157,11 @@ using DOL.AI.Brain;
 					log.Warn("Could not find " + Kedra.Name + ", creating ...");
 				Kedra.GuildName = "Part of " + questTitle + " Quest";
 				Kedra.Realm = eRealm.Midgard;
-				Kedra.CurrentRegionID = 151;
 				Kedra.Size = 51;
 				Kedra.Level = 50;
 				Kedra.MaxSpeedBase = 191;
 				Kedra.Faction = FactionMgr.GetFactionByID(0);
-				Kedra.X = 289612;
-				Kedra.Y = 354560;
-				Kedra.Z = 3866;
-				Kedra.Heading = 3902;
+                Kedra.Position = Position.Create(regionID: 151, x: 289612, y: 354560, z: 3866, heading: 3902);
 				Kedra.RespawnInterval = -1;
 				Kedra.BodyType = 0;
 				

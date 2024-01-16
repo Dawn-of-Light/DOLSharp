@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using DOL.GS;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -56,8 +57,8 @@ namespace DOL.GS
             long time = NFTime;
             Fight fight = new Fight();
             fight.Zone = zoneid;
-            fight.X = (byte)((x - zone.XOffset) >> 14);
-            fight.Y = (byte)((y - zone.YOffset) >> 14);
+            fight.X = (byte)((x - zone.Offset.X) >> 14);
+            fight.Y = (byte)((y - zone.Offset.Y) >> 14);
             fight.Realm1 = realm1;
             fight.Realm2 = realm2;
             lock (m_fights)
@@ -68,7 +69,15 @@ namespace DOL.GS
             return true;
         }
 
+        [Obsolete("Use .AddGroup(Position,string,byte) instead!")]
         public static bool AddGroup(byte zoneid, int x, int y, string name, byte realm)
+        {
+            var zone = WorldMgr.GetZone(zoneid);
+            if (zone == null) return false;
+            return AddGroup(Position.Create(zone.ZoneRegion.ID, x, y), name, realm);
+        }
+
+        public static bool AddGroup(Position position, string name, byte realm)
         {
             if (!ServerProperties.Properties.ENABLE_WARMAPMGR)
                 return false;
@@ -76,18 +85,20 @@ namespace DOL.GS
             lock (m_groups)
             {
                 if (m_groups.ContainsKey(name)) return false;
-                m_groups.Add(name, new Dictionary<long,Group>());
-                Zone zone = WorldMgr.GetZone(zoneid);
+                m_groups.Add(name, new Dictionary<long, Group>());
+                var region = WorldMgr.GetRegion(position.RegionID);
+                var zone = region.GetZone(position.Coordinate);
                 if (zone == null) return false;
                 long time = NFTime;
                 Group group = new Group();
-                group.Zone = zoneid;
-                group.X = (byte)((x - zone.XOffset) >> 14);
-                group.Y = (byte)((y - zone.YOffset) >> 14);
+                group.Zone = (byte)zone.ID;
+                var groupPosition = position - zone.Offset;
+                group.X = (byte)(groupPosition.X >> 14);
+                group.Y = (byte)((groupPosition.Y) >> 14);
                 group.Realm = realm;
                 while (m_groups[name].ContainsKey(time)) time++;
                 m_groups[name].Add(time, group);
-             }
+            }
             return true;
         }
 

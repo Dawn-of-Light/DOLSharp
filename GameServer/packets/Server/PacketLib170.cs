@@ -53,11 +53,11 @@ namespace DOL.GS.PacketHandler
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepInfo)))
 			{
 
-				pak.WriteShort((ushort)keep.KeepID);
+				pak.WriteShort(keep.KeepID);
 				pak.WriteShort(0);//zone id not sure
 				pak.WriteInt((uint)keep.X);
 				pak.WriteInt((uint)keep.Y);
-				pak.WriteShort((ushort)keep.Heading);
+				pak.WriteShort((ushort)keep.Orientation.InDegrees);
 				pak.WriteByte((byte)keep.Realm);
 				pak.WriteByte((byte)keep.Level);//level(not sure)
 				pak.WriteShort(0);//unk

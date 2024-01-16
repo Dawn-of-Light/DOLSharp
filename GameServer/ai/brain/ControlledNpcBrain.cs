@@ -28,6 +28,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.GS.SkillHandler;
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.AI.Brain
 {
@@ -48,9 +49,7 @@ namespace DOL.AI.Brain
 		public static readonly short MIN_ENEMY_FOLLOW_DIST = 90;
 		public static readonly short MAX_ENEMY_FOLLOW_DIST = 512;
 
-		protected int m_tempX = 0;
-		protected int m_tempY = 0;
-		protected int m_tempZ = 0;
+        protected Coordinate tempPosition = Coordinate.Nowhere;
 
 		/// <summary>
 		/// Holds the controlling player of this brain
@@ -236,8 +235,8 @@ namespace DOL.AI.Brain
 					Body.TargetObject = null;
 					if (WalkState == eWalkState.Follow)
 						FollowOwner();
-					else if (m_tempX > 0 && m_tempY > 0 && m_tempZ > 0)
-						Body.PathTo(new Point3D(m_tempX, m_tempY, m_tempZ), Body.MaxSpeed);
+					else if (!tempPosition.Equals(Coordinate.Nowhere))
+						Body.PathTo(tempPosition, Body.MaxSpeed);
 				}
 				AttackMostWanted();
 			}
@@ -276,9 +275,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public virtual void Stay()
 		{
-			m_tempX = Body.X;
-			m_tempY = Body.Y;
-			m_tempZ = Body.Z;
+            tempPosition = Body.Coordinate;
 			WalkState = eWalkState.Stay;
 			Body.StopFollowing();
 		}
@@ -288,12 +285,10 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public virtual void ComeHere()
 		{
-			m_tempX = Body.X;
-			m_tempY = Body.Y;
-			m_tempZ = Body.Z;
+            tempPosition = Body.Coordinate;
 			WalkState = eWalkState.ComeHere;
 			Body.StopFollowing();
-			Body.PathTo(Owner, Body.MaxSpeed);
+			Body.PathTo(Owner.Coordinate, Body.MaxSpeed);
 		}
 
 		/// <summary>
@@ -302,12 +297,10 @@ namespace DOL.AI.Brain
 		/// <param name="target"></param>
 		public virtual void Goto(GameObject target)
 		{
-			m_tempX = Body.X;
-			m_tempY = Body.Y;
-			m_tempZ = Body.Z;
+			tempPosition = Body.Coordinate;
 			WalkState = eWalkState.GoTarget;
 			Body.StopFollowing();
-			Body.PathTo(target, Body.MaxSpeed);
+			Body.PathTo(target.Coordinate, Body.MaxSpeed);
 		}
 
 		public virtual void SetAggressionState(eAggressionState state)
@@ -994,7 +987,7 @@ namespace DOL.AI.Brain
 					if (living.IsMezzed ||
 					    living.IsAlive == false ||
 					    living.ObjectState != GameObject.eObjectState.Active ||
-					    Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE ||
+					    Body.GetDistanceTo(living.Position, 0) > MAX_AGGRO_LIST_DISTANCE ||
 					    GameServer.ServerRules.IsAllowedToAttack(this.Body, living, true) == false)
 					{
 						removable.Add(living);
@@ -1111,9 +1104,9 @@ namespace DOL.AI.Brain
 				{
 					FollowOwner();
 				}
-				else if (m_tempX > 0 && m_tempY > 0 && m_tempZ > 0)
+				else if (!tempPosition.Equals(Coordinate.Nowhere))
 				{
-					Body.PathTo(new Point3D(m_tempX, m_tempY, m_tempZ), Body.MaxSpeed);
+					Body.PathTo(tempPosition, Body.MaxSpeed);
 				}
 			}
 		}

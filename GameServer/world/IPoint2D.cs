@@ -16,26 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+
 namespace DOL.GS
 {
-	/// <summary>
-	/// interface for classes that represent a point in 2d space
-	/// </summary>
+    [Obsolete("Use Coordinate instead!")]
 	public interface IPoint2D
 	{
-		/// <summary>
-		/// X
-		/// </summary>
 		int X { get; set; }
-
-		/// <summary>
-		/// Y
-		/// </summary>
 		int Y { get; set; }
 
 		ushort GetHeading(IPoint2D point);
+
 		Point2D GetPointFromHeading(ushort heading, int distance);
+
 		int GetDistance(IPoint2D point);
+
 		void Clear();
 	}
 }

@@ -28,6 +28,7 @@ using log4net;
 using DOL.GS.Housing;
 using DOL.AI.Brain;
 using DOL.Events;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -422,7 +423,9 @@ namespace DOL.GS
 			// Get All House in Region
 			IDictionary<int, House> housesDict = HouseMgr.GetHouses(player.CurrentRegionID);
 			// Build Vincinity List
-			var houses = housesDict.Values.Where(h => h != null && player.IsWithinRadius(h, HousingConstants.HouseViewingDistance)).ToArray();
+			var houses = housesDict.Values
+                .Where(h => h != null && player.Coordinate.DistanceTo(h.Position) <= HousingConstants.HouseViewingDistance)
+                .ToArray();
 			
 			try
 			{

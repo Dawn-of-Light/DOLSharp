@@ -37,7 +37,6 @@ namespace DOL.GS.Scripts
                 player.Out.SendObjectUpdate(this);
                 player.Out.SendModelChange(this, GetClientVisualModel(player.Client));
             }
-            m_lastUpdateTickCount = (uint)Environment.TickCount;
         }
     }
 }

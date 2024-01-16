@@ -39,6 +39,7 @@ using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 /* I suggest you declare yourself some namespaces for your quests
 * Like: DOL.GS.Quests.Albion
 *       DOL.GS.Quests.Midgard
@@ -157,13 +158,10 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find" + aethic.Name + " , creating ...");
 				aethic.GuildName = "Part of " + questTitle + " Quest";
 				aethic.Realm = eRealm.Hibernia;
-				aethic.CurrentRegionID = 200;
 				aethic.Size = 49;
 				aethic.Level = 21;
-				aethic.X = GameLocation.ConvertLocalXToGlobalX(23761, 200);
-				aethic.Y = GameLocation.ConvertLocalYToGlobalY(45658, 200);
-				aethic.Z = 5448;
-				aethic.Heading = 320;
+                var loughDerg = WorldMgr.GetZone(200);
+                aethic.Position = Position.Create(regionID: 200, x: 23761, y: 45658, z: 5448, heading: 320) + loughDerg.Offset;
 				//aethic.EquipmentTemplateID = "1707754";
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -185,13 +183,9 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + freagus.Name + ", creating ...");
 				freagus.GuildName = "Stable Master";
 				freagus.Realm = eRealm.Hibernia;
-				freagus.CurrentRegionID = 200;
 				freagus.Size = 48;
 				freagus.Level = 30;
-				freagus.X = 341008;
-				freagus.Y = 469180;
-				freagus.Z = 5200;
-				freagus.Heading = 1934;
+                freagus.Position = Position.Create(regionID: 200, x: 341008, y: 469180, z: 5200, heading: 1934);
 				freagus.EquipmentTemplateID = "3800664";
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -214,13 +208,9 @@ namespace DOL.GS.Quests.Hibernia
 				rumdor.Name = "Rumdor";
 				rumdor.GuildName = "Stable Master";
 				rumdor.Realm = eRealm.Hibernia;
-				rumdor.CurrentRegionID = 200;
 				rumdor.Size = 53;
 				rumdor.Level = 33;
-				rumdor.X = 347175;
-				rumdor.Y = 491836;
-				rumdor.Z = 5226;
-				rumdor.Heading = 1262;
+                rumdor.Position = Position.Create(regionID: 200, x: 347175, y: 491836, z: 5226, heading: 1262);
 				rumdor.EquipmentTemplateID = "3800664";
 
 				//You don't have to store the created mob in the db if you don't want,
@@ -244,13 +234,9 @@ namespace DOL.GS.Quests.Hibernia
                     log.Warn("Could not find " + truichon.Name + ", creating ...");
                 truichon.GuildName = "Stable Master";
                 truichon.Realm = eRealm.Hibernia;
-                truichon.CurrentRegionID = 1;
                 truichon.Size = 50;
                 truichon.Level = 33;
-                truichon.X = 343464;
-                truichon.Y = 526708;
-                truichon.Z = 5448;
-                truichon.Heading = 68;
+                truichon.Position = Position.Create(regionID: 1, x: 343464, y: 526708, z: 5448, heading: 68);
                 //truichon.EquipmentTemplateID = "5448";
 
                 //You don't have to store the created mob in the db if you don't want,

@@ -37,14 +37,14 @@ namespace DOL.GS.Spells
 
 			Region rgn = WorldMgr.GetRegion(Caster.CurrentRegion.ID);
 
-			if (rgn == null || rgn.GetZone(Caster.GroundTarget.X, Caster.GroundTarget.Y) == null)
+			if (rgn == null || rgn.GetZone(Caster.GroundTargetPosition.Coordinate) == null)
 			{
                 if (Caster is GamePlayer)
                     MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistFnF.CheckBeginCast.NoGroundTarget"), eChatType.CT_SpellResisted);
                 return false;
 			}
 
-			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Properties.TURRET_AREA_CAP_RADIUS, false, true))
+			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.GroundTargetPosition.Coordinate, (ushort)Properties.TURRET_AREA_CAP_RADIUS, false, true))
 				if (npc.Brain is TurretFNFBrain)
 					nCount++;
 

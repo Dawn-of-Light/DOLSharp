@@ -9,6 +9,7 @@ using DOL.GS;
 using DOL.Events;
 using System.Collections.Specialized;
 using DOL.GS.Profession;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Spells
 {
@@ -100,11 +101,8 @@ namespace DOL.GS.Spells
                 GamePlayer casterPlayer = caster as GamePlayer;
                 merchant = new GameMerchant();
                 //Fill the object variables
-                merchant.X = casterPlayer.X + Util.Random(20, 40) - Util.Random(20, 40);
-                merchant.Y = casterPlayer.Y + Util.Random(20, 40) - Util.Random(20, 40);
-                merchant.Z = casterPlayer.Z;
-                merchant.CurrentRegion = casterPlayer.CurrentRegion;
-                merchant.Heading = (ushort)((casterPlayer.Heading + 2048) % 4096);
+                merchant.Position = casterPlayer.Position.TurnedAround() 
+                    + Vector.Create(Util.Random(-20, 20), Util.Random(-20, 20));
                 merchant.Level = 1;
                 merchant.Realm = casterPlayer.Realm;
                 merchant.Name = "Ancient Transmuter";
@@ -177,7 +175,7 @@ namespace DOL.GS.Spells
         protected RegionTimer m_expireTimer;
         protected GameNPC m_npc;
         protected GamePlayer m_target;
-		protected IPoint3D m_loc;
+		protected Coordinate m_loc;
 
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
@@ -214,15 +212,11 @@ namespace DOL.GS.Spells
             m_npc = npc;
 
             npc.Realm = Caster.Realm;
-            npc.Heading = Caster.Heading;
+            npc.Position = Caster.Position;
             npc.Model = 1269;
-            npc.Y = Caster.Y;
-            npc.X = Caster.X;
-            npc.Z = Caster.Z;
             npc.Name = "Forceful Zephyr";
             npc.MaxSpeedBase = 400;
             npc.Level = 55;
-            npc.CurrentRegion = Caster.CurrentRegion;
             npc.Flags |= GameNPC.eFlags.PEACE;
             npc.Flags |= GameNPC.eFlags.DONTSHOWNAME;
 			npc.Flags |= GameNPC.eFlags.CANTTARGET;
@@ -318,22 +312,13 @@ namespace DOL.GS.Spells
             if (Caster is GamePlayer)
             {
                 //Calculate random target
-                m_loc = GetTargetLoc();
+                m_loc = m_npc.Coordinate + Vector.Create(x: Util.Random(-1500, 1500), y: Util.Random(-1500, 1500));;
 				(Caster as GamePlayer).Out.SendCheckLOS((Caster as GamePlayer), m_npc, new CheckLOSResponse(ZephyrCheckLOS));
             }
         }
 		public void ZephyrCheckLOS(GamePlayer player, ushort response, ushort targetOID)
         {
-            if ((response & 0x100) == 0x100)
-				m_npc.WalkTo(m_loc, 100);
-        }
-
-        public virtual IPoint3D GetTargetLoc()
-        {
-            double targetX = m_npc.X + Util.Random(-1500, 1500);
-            double targetY = m_npc.Y + Util.Random(-1500, 1500);
-
-            return new Point3D((int)targetX, (int)targetY, m_npc.Z);
+            if ((response & 0x100) == 0x100) m_npc.WalkTo(m_loc, 100);
         }
 
         public override int CalculateSpellResistChance(GameLiving target)
@@ -430,7 +415,7 @@ namespace DOL.GS.Spells
 
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
-            if (Caster is GamePlayer && Caster.CurrentRegionID == 51 && ((GamePlayer)Caster).BindRegion == 51)
+            if (Caster is GamePlayer && Caster.CurrentRegionID == 51 && ((GamePlayer)Caster).BindPosition.RegionID == 51)
             {
                 if (Caster.CurrentRegionID == 51)
                 {
@@ -471,7 +456,7 @@ namespace DOL.GS.Spells
                         if (pl != null)
                         {
                             SendEffectAnimation(pl, 0, false, 1);
-                            pl.MoveTo((ushort)player.BindRegion, player.BindXpos, player.BindYpos, player.BindZpos, (ushort)player.BindHeading);
+                            pl.MoveTo(player.BindPosition);
                         }
                     }
                 }

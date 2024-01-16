@@ -26,6 +26,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Albion
@@ -41,7 +42,7 @@ namespace DOL.GS.Quests.Albion
 		private static GameNPC LadyGrynoch = null;
 		private QuestGoal FoundTomb;
 
-		private static GameLocation Burial_Tomb = new GameLocation("Burial Tomb", 1, 562679, 517225, 2935);
+		private static Position Burial_Tomb = Position.Create(regionID: 1, x: 562679, y: 517225, z: 2935);
 
 		private static IArea Burial_Tomb_Area = null;
 
@@ -256,7 +257,6 @@ namespace DOL.GS.Quests.Albion
 				//k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
 				//LadyGrynoch.GuildName = "Part of " + questTitle + " Quest";
 				LadyGrynoch.Realm = eRealm.Albion;
-				LadyGrynoch.CurrentRegionID = 1;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58);    //Slot 25
@@ -265,10 +265,7 @@ namespace DOL.GS.Quests.Albion
 
 				LadyGrynoch.Size = 51;
 				LadyGrynoch.Level = 38;
-				LadyGrynoch.X = 559698;
-				LadyGrynoch.Y = 513578;
-				LadyGrynoch.Z = 2428;
-				LadyGrynoch.Heading = 2742;
+                LadyGrynoch.Position = Position.Create(regionID: 1, x: 559698, y: 513578, z: 2428, heading: 2742);
 
 				if (SAVE_INTO_DATABASE)
 					LadyGrynoch.SaveIntoDatabase();
@@ -280,7 +277,7 @@ namespace DOL.GS.Quests.Albion
 
 			#endregion
 			#region defineAreas
-			Burial_Tomb_Area = WorldMgr.GetRegion(Burial_Tomb.RegionID).AddArea(new Area.Circle("", Burial_Tomb.X, Burial_Tomb.Y, Burial_Tomb.Z, 200));
+			Burial_Tomb_Area = WorldMgr.GetRegion(Burial_Tomb.RegionID).AddArea(new Area.Circle("", Burial_Tomb.Coordinate, 200));
 			Burial_Tomb_Area.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterBurialTombArea));
 			#endregion
 

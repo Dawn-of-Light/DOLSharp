@@ -106,7 +106,7 @@ namespace DOL.GS.Spells
 			UniPortalEffect effect = new UniPortalEffect(this, 1000);
 			effect.Start(player);
 
-			player.MoveTo((ushort)player.BindRegion,	player.BindXpos, player.BindYpos, player.BindZpos, (ushort)player.BindHeading);
+			player.MoveTo(player.BindPosition);
 		}
 
 

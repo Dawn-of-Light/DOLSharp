@@ -18,6 +18,7 @@
  */
 
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 
@@ -39,7 +40,7 @@ namespace DOL.GS.ServerRules
         public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
         {
             //Handles zoning INTO an instance.
-            GameLocation loc = null;
+            var loc = Position.Nowhere;
 
             //First, we try the groups mission.
             if (player.Group != null)
@@ -49,23 +50,23 @@ namespace DOL.GS.ServerRules
                 {
                     //Attempt to get the instance entrance location...
                     TaskDungeonMission task = (TaskDungeonMission)grp.Mission;
-                    loc = task.TaskRegion.InstanceEntranceLocation;
+                    loc = task.TaskRegion.EntrancePosition;
                 }
             }
             else if (player.Mission != null && player.Mission is TaskDungeonMission)
             {
                 //Then, try personal missions...
                 TaskDungeonMission task = (TaskDungeonMission)player.Mission;
-                loc = task.TaskRegion.InstanceEntranceLocation;
+                loc = task.TaskRegion.EntrancePosition;
             }
 
-            if (loc != null)
+            if (loc != Position.Nowhere)
             {
                 targetPoint.TargetX = loc.X;
                 targetPoint.TargetY = loc.Y;
                 targetPoint.TargetZ = loc.Z;
                 targetPoint.TargetRegion = loc.RegionID;
-                targetPoint.TargetHeading = loc.Heading;
+                targetPoint.TargetHeading = loc.Orientation.InHeading;
                 return true;
             }
 

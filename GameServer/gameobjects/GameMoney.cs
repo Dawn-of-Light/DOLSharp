@@ -23,9 +23,6 @@ using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Zusammenfassung für GameLoot.
-	/// </summary>
 	public class GameMoney: GameStaticItemTimed
 	{
 		/// <summary>
@@ -71,11 +68,7 @@ namespace DOL.GS
 		/// <param name="dropper">the gameobject that dropped this bag</param>
 		public GameMoney(long copperValue, GameObject dropper):this(copperValue)
 		{
-			X=dropper.X;
-			Y=dropper.Y;
-			Z=dropper.Z;
-			Heading = dropper.Heading;
-			CurrentRegion = dropper.CurrentRegion;
+            Position = dropper.Position;
 		}
 		/// <summary>
 		/// Returns the number of mithril pieces in this bag

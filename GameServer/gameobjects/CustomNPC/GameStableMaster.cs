@@ -27,6 +27,7 @@ using System.Collections;
 using log4net;
 using System.Linq;
 using DOL.GS.Finance;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -129,7 +130,7 @@ namespace DOL.GS
 				{
 					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
 
-					if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
+					if ((path != null) && ((Math.Abs(path.Coordinate.X - Coordinate.X)) < 500) && ((Math.Abs(path.Coordinate.Y - Coordinate.Y)) < 500))
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);
                         InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);
@@ -207,11 +208,7 @@ namespace DOL.GS
 						}
 
 						mount.Realm = source.Realm;
-						mount.X = path.X;
-						mount.Y = path.Y;
-						mount.Z = path.Z;
-						mount.CurrentRegion = CurrentRegion;
-						mount.Heading = path.GetHeading( path.Next );
+						mount.Position = Position.Create(CurrentRegion.ID, path.Coordinate, path.AngleToNextPathPoint);
 						mount.AddToWorld();
 						mount.CurrentWayPoint = path;
 						GameEventMgr.AddHandler(mount, GameNPCEvent.PathMoveEnds, new DOLEventHandler(OnHorseAtPathEnd));

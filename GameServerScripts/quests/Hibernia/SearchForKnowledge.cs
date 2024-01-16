@@ -26,6 +26,7 @@
 using System;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS.Geometry;
 using DOL.Language;
 
 namespace DOL.GS.Quests.Hibernia
@@ -169,7 +170,6 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + Blercyn.Name + ", creating him ...");
 				//Blercyn.GuildName = "Part of " + questTitle + " Quest";
 				Blercyn.Realm = eRealm.Hibernia;
-				Blercyn.CurrentRegionID = 200;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58);
@@ -178,10 +178,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				Blercyn.Size = 50;
 				Blercyn.Level = 50;
-				Blercyn.X = 348614;
-				Blercyn.Y = 492141;
-				Blercyn.Z = 5199;
-				Blercyn.Heading = 1539;
+                Blercyn.Position = Position.Create(regionID: 200, x: 348614, y: 492141, z: 5199, heading: 1539);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
@@ -206,7 +203,6 @@ namespace DOL.GS.Quests.Hibernia
 					log.Warn("Could not find " + Epona.Name + ", creating him ...");
 				//Blercyn.GuildName = "Part of " + questTitle + " Quest";
 				Epona.Realm = eRealm.Hibernia;
-				Epona.CurrentRegionID = 200;
 
 				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
 				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 58);
@@ -215,10 +211,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				Epona.Size = 50;
 				Epona.Level = 50;
-				Epona.X = 347606;
-				Epona.Y = 490658;
-				Epona.Z = 5227;
-				Epona.Heading = 1342;
+                Epona.Position = Position.Create(regionID: 200, x: 347606, y: 490658, z: 5227, heading: 1342);
 
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following

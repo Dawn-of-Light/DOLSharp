@@ -150,7 +150,7 @@ namespace DOL.GS.Commands
 				}
 			}
 
-			ArrayList houses = (ArrayList)HouseMgr.GetHousesCloseToSpot(player.CurrentRegionID, player.X, player.Y, 700);
+			ArrayList houses = (ArrayList)HouseMgr.GetHousesCloseToSpot(player.Position, 700);
 			if (houses.Count != 1)
 			{
 				DisplayMessage(player.Client, LanguageMgr.GetTranslation(player.Client, "Scripts.Players.House.FarAway"));

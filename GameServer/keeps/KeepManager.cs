@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DOL.Database;
+using DOL.GS.Geometry;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -289,29 +290,13 @@ namespace DOL.GS.Keeps
 			return m_keepList[id] as AbstractGameKeep;
 		}
 
-		/// <summary>
-		/// get list of keep close to spot
-		/// </summary>
-		/// <param name="regionid"></param>
-		/// <param name="point3d"></param>
-		/// <param name="radius"></param>
-		/// <returns></returns>
+        [Obsolete("Use .GetKeepCloseToSpot(Position, int) instead!")]
 		public virtual IEnumerable GetKeepsCloseToSpot(ushort regionid, IPoint3D point3d, int radius)
-		{
-			return GetKeepsCloseToSpot(regionid, point3d.X, point3d.Y, point3d.Z, radius);
-		}
+            => GetKeepsCloseToSpot(regionid, point3d.X, point3d.Y, point3d.Z, radius);
 
-		/// <summary>
-		/// get the keep with minimum distance close to spot
-		/// </summary>
-		/// <param name="regionid"></param>
-		/// <param name="point3d"></param>
-		/// <param name="radius"></param>
-		/// <returns></returns>
-		public virtual AbstractGameKeep GetKeepCloseToSpot(ushort regionid, IPoint3D point3d, int radius)
-		{
-			return GetKeepCloseToSpot(regionid, point3d.X, point3d.Y, point3d.Z, radius);
-		}
+        [Obsolete("Use .GetKeepCloseToSpot(Position, int) instead!")]
+		public virtual AbstractGameKeep GetKeepCloseToSpot(ushort regionid, IPoint3D point3d, int radius) 
+            => GetKeepCloseToSpot(Position.Create(regionid, point3d.ToCoordinate()), radius);
 
 		/// <summary>
 		/// Gets all keeps by a realm map /rw
@@ -441,16 +426,10 @@ namespace DOL.GS.Keeps
 			return closeKeeps;
 		}
 
-		/// <summary>
-		/// get the keep with minimum distance close to spot
-		/// </summary>
-		/// <param name="regionid"></param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="z"></param>
-		/// <param name="radius"></param>
-		/// <returns></returns>
 		public virtual AbstractGameKeep GetKeepCloseToSpot(ushort regionid, int x, int y, int z, int radius)
+            => GetKeepCloseToSpot(Position.Create(regionid,x,y), radius);
+
+        public virtual AbstractGameKeep GetKeepCloseToSpot(Position position, int radius)
 		{
 			AbstractGameKeep closestKeep = null;
 
@@ -461,11 +440,11 @@ namespace DOL.GS.Keeps
 
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
-					if (keep == null || keep.DBKeep == null || keep.DBKeep.Region != regionid)
+					if (keep == null || keep.DBKeep == null || keep.DBKeep.Region != position.RegionID)
 						continue;
 
-					long xdiff = keep.DBKeep.X - x;
-					long ydiff = keep.DBKeep.Y - y;
+					long xdiff = keep.DBKeep.X - position.X;
+					long ydiff = keep.DBKeep.Y - position.Y;
 					long range = xdiff * xdiff + ydiff * ydiff;
 
 					if (range > radiussqrt)
@@ -698,68 +677,33 @@ namespace DOL.GS.Keeps
 			return 0;
 		}
 
-		public virtual void GetBorderKeepLocation(int keepid, out int x, out int y, out int z, out ushort heading)
+        public virtual void GetBorderKeepLocation(int keepid, out int x, out int y, out int z, out ushort heading)
+        {
+            var result = GetBorderKeepPosition(keepid);
+            x = result.X;
+            y = result.Y;
+            z = result.Z;
+            heading = result.Orientation.InHeading;
+        }
+
+		public virtual Position GetBorderKeepPosition(int keepid)
 		{
-			x = 0;
-			y = 0;
-			z = 0;
-			heading = 0;
+            var newFrontierRegionID = (ushort)163;
 			switch (keepid)
 			{
 				//sauvage
-				case 1:
-					{
-						x = 653811;
-						y = 616998;
-						z = 9560;
-						heading = 2040;
-						break;
-					}
+				case 1: return Position.Create(newFrontierRegionID, x: 653811, y: 616998, z: 9560, heading: 2040);
 				//snowdonia
-				case 2:
-					{
-						x = 616149;
-						y = 679042;
-						z = 9560;
-						heading = 1611;
-						break;
-					}
+				case 2: return Position.Create(newFrontierRegionID, x: 616149, y: 679042, z: 9560, heading: 1611);
 				//svas
-				case 3:
-					{
-						x = 651460;
-						y = 313758;
-						z = 9432;
-						heading = 1004;
-						break;
-					}
+				case 3: return Position.Create(newFrontierRegionID, x: 651460, y: 313758, z: 9432, heading: 1004);
 				//vind
-				case 4:
-					{
-						x = 715179;
-						y = 365101;
-						z = 9432;
-						heading = 314;
-						break;
-					}
+				case 4: return Position.Create(newFrontierRegionID, x: 715179, y: 365101, z: 9432, heading: 314);
 				//ligen
-				case 5:
-					{
-						x = 396519;
-						y = 618017;
-						z = 9838;
-						heading = 2159;
-						break;
-					}
+				case 5: return Position.Create(newFrontierRegionID, x: 396519, y: 618017, z: 9838, heading: 2159);
 				//cain
-				case 6:
-					{
-						x = 432841;
-						y = 680032;
-						z = 9747;
-						heading = 2585;
-						break;
-					}
+				case 6: return Position.Create(newFrontierRegionID, x: 432841, y: 680032, z: 9747, heading: 2585);
+                default: return Position.Zero;
 			}
 		}
 
@@ -838,9 +782,8 @@ namespace DOL.GS.Keeps
 
 			if (location != "")
 			{
-				Teleport t = DOLDB<Teleport>.SelectObject(DB.Column(nameof(Teleport.TeleportID)).IsEqualTo(location));
-				if (t != null)
-					player.MoveTo((ushort)t.RegionID, t.X, t.Y, t.Z, (ushort)t.Heading);
+				var t = DOLDB<Teleport>.SelectObject(DB.Column(nameof(Teleport.TeleportID)).IsEqualTo(location));
+				if (t != null) player.MoveTo(t.GetPosition());
 			}
 		}
 	}

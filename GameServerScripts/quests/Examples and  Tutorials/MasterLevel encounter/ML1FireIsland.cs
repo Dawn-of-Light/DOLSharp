@@ -10,6 +10,7 @@ using DOL.Events;
 using log4net;
 using System.Reflection;
 using DOL.GS.Atlantis;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -122,16 +123,15 @@ namespace DOL.GS
 			//First we spawn the 30 Wall of Fire mobs around the perimeter of the island.
 			for (int i = 0; i < 30; i++)
 			{
-				SpawnAfire(FirePosition[i, 0], FirePosition[i, 1], FirePosition[i, 2]);
+                var fireLocation = Coordinate.Create(x: FirePosition[i, 0], y: FirePosition[i, 1], z:FirePosition[i, 2]);
+				SpawnAfire(Position.Create((ushort)Ianetor.playerregion, fireLocation, heading: 1690));
 			}
 			//Next we spawn the two sets of stair guards
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 8; i++)
 			{
-				SpawnAGuard(GuardPosition[i, 0], GuardPosition[i, 1], GuardPosition[i, 2], 3720);
-			}
-			for (int i = 4; i < 8; i++)
-			{
-				SpawnAGuard(GuardPosition[i, 0], GuardPosition[i, 1], GuardPosition[i, 2], 1735);
+                var guardPosition = Position.Create((ushort)Ianetor.playerregion, x: GuardPosition[i, 0], y: GuardPosition[i, 1], z: GuardPosition[i, 2]);
+                if (i < 4) SpawnAGuard(guardPosition.With(heading: 3720));
+                else SpawnAGuard(guardPosition.With(heading: 1735));
 			}
 			//Next we spawn Sunkaio
 
@@ -140,15 +140,11 @@ namespace DOL.GS
 			sunkaio.Size = 100;
 			sunkaio.Level = 68; //level 65 on live
 			sunkaio.Name = "Sunkaio";
-			sunkaio.CurrentRegionID = (ushort)Ianetor.playerregion;
-			sunkaio.Heading = 1690;
 			sunkaio.Realm = 0;
 			sunkaio.CurrentSpeed = 0;
 			sunkaio.MaxSpeedBase = 191;
 			sunkaio.GuildName = "";
-			sunkaio.X = 431865;
-			sunkaio.Y = 544121;
-			sunkaio.Z = 8311;
+            sunkaio.Position = Position.Create(regionID: (ushort)Ianetor.playerregion, x: 431865, y: 544121, z: 8311, heading: 1690);
 			sunkaio.RoamingRange = 0;
 			sunkaio.RespawnInterval = 0;
 			sunkaio.BodyType = 0;
@@ -170,15 +166,11 @@ namespace DOL.GS
 			zopureo.Size = 100;
 			zopureo.Level = 70;
 			zopureo.Name = "Zopureo";
-			zopureo.CurrentRegionID = (ushort)Ianetor.playerregion;
-			zopureo.Heading = 1690;
 			zopureo.Realm = 0;
 			zopureo.CurrentSpeed = 0;
 			zopureo.MaxSpeedBase = 0;
 			zopureo.GuildName = "";
-			zopureo.X = 432767;
-			zopureo.Y = 543483;
-			zopureo.Z = 8291;
+            zopureo.Position = Position.Create(regionID: (ushort)Ianetor.playerregion, x: 432767, y: 543483, z: 8291, heading: 1690);
 			zopureo.RoamingRange = 0;
 			zopureo.RespawnInterval = 0;
 			zopureo.BodyType = 0;
@@ -200,15 +192,11 @@ namespace DOL.GS
 			aithos.Size = 100;
 			aithos.Level = 68; //level 65 on live
 			aithos.Name = "Aithos";
-			aithos.CurrentRegionID = (ushort)Ianetor.playerregion;
-			aithos.Heading = 1690;
 			aithos.Realm = 0;
 			aithos.CurrentSpeed = 0;
 			aithos.MaxSpeedBase = 191;
 			aithos.GuildName = "";
-			aithos.X = 432377;
-			aithos.Y = 543728;
-			aithos.Z = 8334;
+            aithos.Position = Position.Create((ushort)Ianetor.playerregion, x: 432377, y: 543728, z: 8334, heading: 1690);
 			aithos.RoamingRange = 0;
 			aithos.RespawnInterval = 0;
 			aithos.BodyType = 0;
@@ -334,22 +322,18 @@ namespace DOL.GS
 			return 0;
 		}
 
-		public void SpawnAfire(int fireX, int fireY, int fireZ)
+		public void SpawnAfire(Position position)
 		{
 			GameWallofFire fire = new GameWallofFire();
 			fire.Model = 1;
 			fire.Size = 50;
 			fire.Level = 99;
 			fire.Name = "Wall of Fire";
-			fire.CurrentRegionID = (ushort)Ianetor.playerregion;
-			fire.Heading = 1690;
 			fire.Realm = 0;
 			fire.CurrentSpeed = 0;
 			fire.MaxSpeedBase = 0;
 			fire.GuildName = "";
-			fire.X = fireX;
-			fire.Y = fireY;
-			fire.Z = fireZ;
+            fire.Position = position;
 			fire.RoamingRange = 0;
 			fire.RespawnInterval = 0;
 			fire.BodyType = 0;
@@ -367,22 +351,18 @@ namespace DOL.GS
 			return;
 		}
 
-		public void SpawnAGuard(int guardX, int guardY, int guardZ, ushort heading)
+		public void SpawnAGuard(Position position)
 		{
 			GameStairGuard guard = new GameStairGuard();
 			guard.Model = 1349;
 			guard.Size = 37;
 			guard.Level = 80; //level 70 on live
 			guard.Name = "daleros ephoros";
-			guard.CurrentRegionID = (ushort)Ianetor.playerregion;
-			guard.Heading = heading;
+            guard.Position = position;
 			guard.Realm = 0;
 			guard.CurrentSpeed = 0;
 			guard.MaxSpeedBase = 300;
 			guard.GuildName = "";
-			guard.X = guardX;
-			guard.Y = guardY;
-			guard.Z = guardZ;
 			guard.RoamingRange = 0;
 			guard.RespawnInterval = 0;
 			guard.BodyType = 0;
@@ -507,40 +487,32 @@ namespace DOL.GS
 			log.Warn("Loading Master Level 1: Fire Island.  Spawned Ianetor's.");
 		}
 
-		public static void SpawnIanetor1(int region)
+		public static void SpawnIanetor1(int regionID)
 		{
 			Ianetor ianetor1 = new Ianetor();
 			ianetor1.Name = "Ianetor";
 			ianetor1.GuildName = "";
 			ianetor1.Model = 1194;
 			ianetor1.Realm = 0;
-			ianetor1.CurrentRegionID = (ushort)region;
 			ianetor1.Size = 35;
 			ianetor1.Level = 0;
-			ianetor1.X = 433401;
-			ianetor1.Y = 546420;
-			ianetor1.Z = 8481;
-			ianetor1.Heading = 3720;
+            ianetor1.Position = Position.Create((ushort)regionID, x: 433401, y: 546420, z: 8481, heading: 3720);
 			ianetor1.RoamingRange = 0;
 			ianetor1.Flags ^= GameNPC.eFlags.PEACE;
 			ianetor1.CurrentSpeed = 0;
 			ianetor1.MaxSpeedBase = 0;
 			ianetor1.AddToWorld();
 		}
-		public static void SpawnIanetor2(int region)
+		public static void SpawnIanetor2(int regionID)
 		{
 			Ianetor ianetor2 = new Ianetor();
 			ianetor2.Name = "Ianetor";
 			ianetor2.GuildName = "";
 			ianetor2.Model = 1194;
 			ianetor2.Realm = 0;
-			ianetor2.CurrentRegionID = (ushort)region;
 			ianetor2.Size = 35;
 			ianetor2.Level = 0;
-			ianetor2.X = 431100;
-			ianetor2.Y = 541433;
-			ianetor2.Z = 8481;
-			ianetor2.Heading = 1735;
+            ianetor2.Position = Position.Create((ushort)regionID, x: 431100, y: 541433, z: 8481, heading: 1735);
 			ianetor2.RoamingRange = 0;
 			ianetor2.Flags ^= GameNPC.eFlags.PEACE;
 			ianetor2.CurrentSpeed = 0;
@@ -661,45 +633,40 @@ namespace DOL.GS
 			}
 		}
 
-		public void SpawnPurros()
-		{
-			SpawnAPurro(432802, 543389, 8291);
-			SpawnAPurro(432709, 543571, 8302);
-			SpawnAPurro(432664, 543446, 8298);
-			SpawnAPurro(432867, 543538, 8285);
-		}
+        public void SpawnPurros()
+        {
+            var purroLocations = new[]{
+                Coordinate.Create(432802, 543389, 8291),
+                Coordinate.Create(432709, 543571, 8302),
+                Coordinate.Create(432664, 543446, 8298),
+                Coordinate.Create(432867, 543538, 8285)
+            };
+            foreach(var purroLoc in purroLocations)
+            {
+                GamePurros purro = new GamePurros();
+                purro.Model = 911;
+                purro.Size = 50;
+                purro.Level = 60;
+                purro.Name = "purros";
+                purro.Realm = 0;
+                purro.CurrentSpeed = 0;
+                purro.MaxSpeedBase = 350;
+                purro.GuildName = "";
+                purro.Position = Position.Create((ushort)Ianetor.playerregion,purroLoc,heading: 1690);
+                purro.RoamingRange = 0;
+                purro.RespawnInterval = 0;
+                purro.BodyType = 0;
 
-		public void SpawnAPurro(int purroX, int purroY, int purroZ)
-		{
-			GamePurros purro = new GamePurros();
-			purro.Model = 911;
-			purro.Size = 50;
-			purro.Level = 60;
-			purro.Name = "purros";
-			purro.CurrentRegionID = (ushort)Ianetor.playerregion;
-			purro.Heading = 1690;
-			purro.Realm = 0;
-			purro.CurrentSpeed = 0;
-			purro.MaxSpeedBase = 350;
-			purro.GuildName = "";
-			purro.X = purroX;
-			purro.Y = purroY;
-			purro.Z = purroZ;
-			purro.RoamingRange = 0;
-			purro.RespawnInterval = 0;
-			purro.BodyType = 0;
+                PurroBrain pbrain = new PurroBrain();
+                pbrain.AggroLevel = 100;
+                pbrain.AggroRange = 200;
+                purro.SetOwnBrain(pbrain);
 
-			PurroBrain pbrain = new PurroBrain();
-			pbrain.AggroLevel = 100;
-			pbrain.AggroRange = 200;
-			purro.SetOwnBrain(pbrain);
-
-			purro.AddToWorld();
-			Ianetor.PurrosList.Add(purro);
-			GameEventMgr.AddHandler(purro, GameNPCEvent.Dying, new DOLEventHandler(Ianetor.PurroHasDied));
-			return;
-			
-		}
+                purro.AddToWorld();
+                Ianetor.PurrosList.Add(purro);
+                GameEventMgr.AddHandler(purro, GameNPCEvent.Dying, new DOLEventHandler(Ianetor.PurroHasDied));
+            }
+        }
 
 		public static void ZopureoChangeHealth(int damage)
 		{

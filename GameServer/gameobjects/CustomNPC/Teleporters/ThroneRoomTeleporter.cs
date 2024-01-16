@@ -20,6 +20,7 @@ using System;
 using System.Linq;
 
 using DOL.Database;
+using DOL.GS.Geometry;
 
 namespace DOL.GS
 {
@@ -135,7 +136,7 @@ namespace DOL.GS
 				if (teleport != null)
 				{
 					SayTo(player, "Very well ...");
-					player.MoveTo((ushort)teleport.RegionID, teleport.X, teleport.Y, teleport.Z, (ushort)teleport.Heading);
+					player.MoveTo(teleport.GetPosition());
 				}
 
 				return true;

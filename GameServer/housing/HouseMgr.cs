@@ -30,6 +30,7 @@ using DOL.GS.ServerProperties;
 using DOL.Language;
 
 using log4net;
+using DOL.GS.Geometry;
 
 namespace DOL.GS.Housing
 {
@@ -447,7 +448,7 @@ namespace DOL.GS.Housing
 			}
 
 			// remove the house for all nearby players
-			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(house, WorldMgr.OBJ_UPDATE_DISTANCE))
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(house.Position, WorldMgr.OBJ_UPDATE_DISTANCE))
 			{
 				player.Out.SendRemoveHouse(house);
 				player.Out.SendGarden(house);
@@ -835,27 +836,26 @@ namespace DOL.GS.Housing
 			GameServer.ServerRules.BuyHousingItem(player, slot, count, merchantType);
 		}
 
+        [Obsolete("Use .GetHousesCloseToSpot(Position) instead!")]
+        public static IEnumerable GetHousesCloseToSpot(ushort regionid, int x, int y, int radius)
+            => GetHousesCloseToSpot(Position.Create(x: x, y: y, regionID: regionid), radius);
 
-		/// <summary>
-		/// This function gets the house close to spot
-		/// </summary>
-		/// <returns>array of house</returns>
-		public static IEnumerable GetHousesCloseToSpot(ushort regionid, int x, int y, int radius)
-		{
-			var myhouses = new ArrayList();
-			int radiussqrt = radius * radius;
-			foreach (House house in GetHouses(regionid).Values)
-			{
-				int xdiff = house.X - x;
-				int ydiff = house.Y - y;
-				int range = xdiff * xdiff + ydiff * ydiff;
-				if (range < 0)
-					range *= -1;
-				if (range > radiussqrt)
-					continue;
-				myhouses.Add(house);
-			}
-			return myhouses;
-		}
+        public static IEnumerable GetHousesCloseToSpot(Position position, int radius)
+        {
+            var myhouses = new ArrayList();
+            int radiussqrt = radius * radius;
+            foreach (House house in GetHouses(position.RegionID).Values)
+            {
+                int xdiff = house.Position.X - position.X;
+                int ydiff = house.Position.Y - position.Y;
+                int range = xdiff * xdiff + ydiff * ydiff;
+                if (range < 0)
+                    range *= -1;
+                if (range > radiussqrt)
+                    continue;
+                myhouses.Add(house);
+            }
+            return myhouses;
+        }
 	}
 }
