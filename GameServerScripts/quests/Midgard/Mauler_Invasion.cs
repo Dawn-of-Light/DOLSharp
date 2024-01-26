@@ -45,7 +45,7 @@ using log4net;
 	 * as Quest. To do this, we derive from the abstract class
 	 * BaseQuest	  	 
 	 */
-	public class maulerinvasion : BaseQuest
+	public class MaulerInvasion : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -81,19 +81,19 @@ using log4net;
 		/* 
 		* Constructor
 		*/
-		public maulerinvasion() : base()
+		public MaulerInvasion() : base()
 		{
 		}
 
-		public maulerinvasion(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		public MaulerInvasion(GamePlayer questingPlayer) : this(questingPlayer, 1)
 		{
 		}
 
-		public maulerinvasion(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		public MaulerInvasion(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
 		{
 		}
 
-		public maulerinvasion(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		public MaulerInvasion(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
 	{
 	}
 
@@ -228,110 +228,110 @@ using log4net;
 		
 		#region defineQuestParts
 
-		QuestBuilder builder = QuestMgr.getBuilder(typeof(maulerinvasion));
+		QuestBuilder builder = QuestMgr.getBuilder(typeof(MaulerInvasion));
 			QuestBehaviour a;
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.Interact,null,VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.maulerinvasion),VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null,(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),VikingKreimhilde);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null,(eComparator)5);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk1"), VikingKreimhilde);
         AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
             a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Whisper1"), VikingKreimhilde);
-        a.AddRequirement(eRequirementType.QuestGivable, typeof(DOL.GS.Quests.Midgard.maulerinvasion), VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null,(eComparator)5);
+        a.AddRequirement(eRequirementType.QuestGivable, typeof(DOL.GS.Quests.Midgard.MaulerInvasion), VikingKreimhilde);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null,(eComparator)5);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk2"), VikingKreimhilde);
         AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
             a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Whisper2"), VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.maulerinvasion),VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null,(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),VikingKreimhilde);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null,(eComparator)5);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk3"), VikingKreimhilde);
         AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
             a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Whisper3"), VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.maulerinvasion),VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null,(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),VikingKreimhilde);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null,(eComparator)5);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk4"), null);
         AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
             a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Whisper4"), VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.maulerinvasion),VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null,(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),VikingKreimhilde);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null,(eComparator)5);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk5"), VikingKreimhilde);
         AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
             a.AddTrigger(eTriggerType.Whisper, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Whisper5"), VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.maulerinvasion),VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null,(eComparator)5);
-            a.AddAction(eActionType.OfferQuest, typeof(DOL.GS.Quests.Midgard.maulerinvasion), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.OfferQuest"));
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),VikingKreimhilde);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null,(eComparator)5);
+            a.AddAction(eActionType.OfferQuest, typeof(DOL.GS.Quests.Midgard.MaulerInvasion), LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.OfferQuest"));
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
-				a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.maulerinvasion));
+				a.AddTrigger(eTriggerType.DeclineQuest,null,typeof(DOL.GS.Quests.Midgard.MaulerInvasion));
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk6"), VikingKreimhilde);
         AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
-				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.maulerinvasion));
-			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.maulerinvasion),VikingKreimhilde);
+				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.MaulerInvasion));
+			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),VikingKreimhilde);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk7"), VikingKreimhilde);
         AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
             a.AddTrigger(eTriggerType.EnemyKilled, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.EnemyKilled"), null);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.maulerinvasion),3,(eComparator)1);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),3,(eComparator)1);
 			a.AddAction(eActionType.GiveItem,blackmaulercubpelt,null);
-			a.AddAction(eActionType.IncQuestStep,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null);
+			a.AddAction(eActionType.IncQuestStep,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.Interact,null,VikingKreimhilde);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.maulerinvasion),3,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),3,(eComparator)3);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk8"), VikingKreimhilde);
-        a.AddAction(eActionType.SetQuestStep,typeof(maulerinvasion),4);
+        a.AddAction(eActionType.SetQuestStep,typeof(MaulerInvasion),4);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.GiveItem,VikingKreimhilde,blackmaulercubpelt);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.maulerinvasion),4,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),4,(eComparator)3);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk9"), VikingKreimhilde);
-        a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.maulerinvasion),5);
+        a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),5);
 			a.AddAction(eActionType.TakeItem,blackmaulercubpelt,null);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.GiveItem,VikingKreimhilde,blackmaulercubpelt);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.maulerinvasion),5,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),5,(eComparator)3);
 			a.AddRequirement(eRequirementType.Level,1,null,(eComparator)3);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk10"), VikingKreimhilde);
         a.AddAction(eActionType.GiveXP,5,null);
 			a.AddAction(eActionType.GiveGold,27,null);
-			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null);
 			a.AddAction(eActionType.TakeItem,blackmaulercubpelt,null);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.GiveItem,VikingKreimhilde,blackmaulercubpelt);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.maulerinvasion),5,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),5,(eComparator)3);
 			a.AddRequirement(eRequirementType.Level,2,null,(eComparator)3);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk10"), VikingKreimhilde);
         a.AddAction(eActionType.GiveXP,20,null);
 			a.AddAction(eActionType.GiveGold,27,null);
-			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null);
 			a.AddAction(eActionType.TakeItem,blackmaulercubpelt,null);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.GiveItem,VikingKreimhilde,blackmaulercubpelt);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.maulerinvasion),5,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),5,(eComparator)3);
 			a.AddRequirement(eRequirementType.Level,3,null,(eComparator)3);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk10"), VikingKreimhilde);
         a.AddAction(eActionType.GiveXP,40,null);
 			a.AddAction(eActionType.GiveGold,27,null);
-			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null);
 			a.AddAction(eActionType.TakeItem,blackmaulercubpelt,null);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(VikingKreimhilde,-1);
 				a.AddTrigger(eTriggerType.GiveItem,VikingKreimhilde,blackmaulercubpelt);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.maulerinvasion),5,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),5,(eComparator)3);
 			a.AddRequirement(eRequirementType.Level,4,null,(eComparator)3);
             a.AddAction(eActionType.Talk, LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.Talk10"), VikingKreimhilde);
         a.AddAction(eActionType.GiveXP,60,null);
 			a.AddAction(eActionType.GiveGold,27,null);
-			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.maulerinvasion),null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.MaulerInvasion),null);
 			a.AddAction(eActionType.TakeItem,blackmaulercubpelt,null);
 			AddBehaviour(a);
 			
@@ -341,7 +341,7 @@ using log4net;
 			
 			// Custom Scriptloaded Code End
 
-			VikingKreimhilde.AddQuestToGive(typeof (maulerinvasion));
+			VikingKreimhilde.AddQuestToGive(typeof (MaulerInvasion));
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
 		}
@@ -362,7 +362,7 @@ using log4net;
 			if (VikingKreimhilde == null)
 				return;
 			/* Now we remove the possibility to give this quest to players */			
-			VikingKreimhilde.RemoveQuestToGive(typeof (maulerinvasion));
+			VikingKreimhilde.RemoveQuestToGive(typeof (MaulerInvasion));
 		}
 
 		/* Now we set the quest name.
@@ -416,7 +416,7 @@ using log4net;
 		public override bool CheckQuestQualification(GamePlayer player)
 		{		
 			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof (maulerinvasion)) != null)
+			if (player.IsDoingQuest(typeof (MaulerInvasion)) != null)
 				return true;
 				
 			// Custom Code Begin
