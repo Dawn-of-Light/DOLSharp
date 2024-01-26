@@ -27,7 +27,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool isCastSpellSuccessful = spellHandler.CastSpell(target);
 
-            Assert.IsTrue(isCastSpellSuccessful);
+            Assert.That(isCastSpellSuccessful, Is.True);
         }
 
         [Test]
@@ -42,8 +42,8 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = caster.lastNotifiedEvent;
             var expected = GameLivingEvent.CastStarting;
-            Assert.AreEqual(expected, actual);
-            Assert.AreEqual((caster.lastNotifiedEventArgs as CastingEventArgs).SpellHandler, spellHandler);
+            Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(spellHandler, Is.EqualTo((caster.lastNotifiedEventArgs as CastingEventArgs).SpellHandler));
         }
 
         [Test]
@@ -63,8 +63,8 @@ namespace DOL.UnitTests.Gameserver
 
             var eventNumberOnCaster = gameEventMgrSpy.GameObjectEventCollection[caster].Count;
             var eventNumberOnTarget = gameEventMgrSpy.GameObjectEventCollection[target].Count;
-            Assert.AreEqual(5, eventNumberOnCaster, "Caster has not the right amount of event subscriptions");
-            Assert.AreEqual(1, eventNumberOnTarget, "Target has not the right amount of event subscriptions");
+            Assert.That(eventNumberOnCaster, Is.EqualTo(5), "Caster has not the right amount of event subscriptions");
+            Assert.That(eventNumberOnTarget, Is.EqualTo(1), "Target has not the right amount of event subscriptions");
         }
 
         [Test]
@@ -85,8 +85,8 @@ namespace DOL.UnitTests.Gameserver
 
             var eventNumberOnCaster = gameEventMgrSpy.GameObjectEventCollection[caster].Count;
             var eventNumberOnTarget = gameEventMgrSpy.GameObjectEventCollection[target].Count;
-            Assert.AreEqual(0, eventNumberOnCaster, "Caster has not the right amount of event subscriptions");
-            Assert.AreEqual(0, eventNumberOnTarget, "Target has not the right amount of event subscriptions");
+            Assert.That(eventNumberOnCaster, Is.EqualTo(0), "Caster has not the right amount of event subscriptions");
+            Assert.That(eventNumberOnTarget, Is.EqualTo(0), "Target has not the right amount of event subscriptions");
         }
 
         [Test]
@@ -104,15 +104,15 @@ namespace DOL.UnitTests.Gameserver
             var spellHandler = new SpellHandler(caster, spell, NewSpellLine());
             var gameEventMgrSpy = GameEventMgrSpy.LoadAndReturn();
 
-            Assert.IsTrue(spellHandler.CastSpell(target));
+            Assert.That(spellHandler.CastSpell(target), Is.True);
             target.fakeRegion.fakeElapsedTime = 2;
             spellHandler.StartSpell(target); //tick
             caster.OnPlayerMove();
 
             var eventNumberOnCaster = gameEventMgrSpy.GameObjectEventCollection[caster].Count;
             var eventNumberOnTarget = gameEventMgrSpy.GameObjectEventCollection[target].Count;
-            Assert.AreEqual(0, eventNumberOnCaster, "Caster has not the right amount of event subscriptions");
-            Assert.AreEqual(0, eventNumberOnTarget, "Target has not the right amount of event subscriptions");
+            Assert.That(eventNumberOnCaster, Is.EqualTo(0), "Caster has not the right amount of event subscriptions");
+            Assert.That(eventNumberOnTarget, Is.EqualTo(0), "Target has not the right amount of event subscriptions");
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace DOL.UnitTests.Gameserver
             var spellHandler = new SpellHandler(caster, spell, null);
 
             bool isBeginCastSuccessful = spellHandler.CheckBeginCast(NewFakeNPC());
-            Assert.IsTrue(isBeginCastSuccessful);
+            Assert.That(isBeginCastSuccessful, Is.True);
         }
         #endregion CastSpell
 
@@ -137,7 +137,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
 
-            Assert.AreEqual(1.25, actual);
+            Assert.That(actual, Is.EqualTo(1.25));
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(target, out double ignoredValue, out double actual);
 
-            Assert.AreEqual(1.25, actual);
+            Assert.That(actual, Is.EqualTo(1.25));
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(null, out double actual, out double ignoredValue);
 
-            Assert.AreEqual(1.00, actual);
+            Assert.That(actual, Is.EqualTo(1.00));
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(null, out double actual, out double ignoredValue);
 
-            Assert.AreEqual(1.00, actual);
+            Assert.That(actual, Is.EqualTo(1.00));
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(null, out double ignoredValue, out double actual);
 
-            Assert.AreEqual(1.5, actual);
+            Assert.That(actual, Is.EqualTo(1.5));
         }
 
         [Test]
@@ -193,8 +193,8 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(null, out double actualMin, out double actualMax);
 
-            Assert.AreEqual(1.0, actualMin);
-            Assert.AreEqual(1.0, actualMax);
+            Assert.That(actualMin, Is.EqualTo(1.0));
+            Assert.That(actualMax, Is.EqualTo(1.0));
         }
 
         [Test]
@@ -210,7 +210,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
 
-            Assert.AreEqual(0.75, actual);
+            Assert.That(actual, Is.EqualTo(0.75));
         }
 
         [Test]
@@ -226,7 +226,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
 
-            Assert.AreEqual(0.25, actual);
+            Assert.That(actual, Is.EqualTo(0.25));
         }
 
         [Test]
@@ -242,7 +242,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
 
-            Assert.AreEqual(1.27, actual);
+            Assert.That(actual, Is.EqualTo(1.27));
         }
 
         [Test]
@@ -258,7 +258,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
 
-            Assert.AreEqual(0.55, actual);
+            Assert.That(actual, Is.EqualTo(0.55));
         }
 
         [Test]
@@ -274,7 +274,7 @@ namespace DOL.UnitTests.Gameserver
 
             spellHandler.CalculateDamageVariance(target, out double ignoredValue, out double actual);
 
-            Assert.AreEqual(1.55, actual);
+            Assert.That(actual, Is.EqualTo(1.55));
         }
         #endregion CalculateDamageVariance
 
@@ -292,7 +292,7 @@ namespace DOL.UnitTests.Gameserver
             double actual = spellHandler.CalculateDamageBase(target);
 
             double expected = 100 * (0 + 200) / 275.0;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -310,7 +310,7 @@ namespace DOL.UnitTests.Gameserver
             double actual = spellHandler.CalculateDamageBase(target);
 
             double expected = 100 * (100 + 200) / 275.0;
-            Assert.AreEqual(expected, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(expected).Within(0.001));
         }
 
         [Test]
@@ -334,7 +334,7 @@ namespace DOL.UnitTests.Gameserver
             double actual = spellHandler.CalculateDamageBase(target);
 
             double expected = 100 * (100 + 200) / 275.0 * (100 + 200) / 275.0;
-            Assert.AreEqual(expected, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(expected).Within(0.001));
         }
 
         [Test]
@@ -353,7 +353,7 @@ namespace DOL.UnitTests.Gameserver
             double actual = spellHandler.CalculateDamageBase(target);
 
             double expected = 100 * (100 + 200) / 275.0;
-            Assert.AreEqual(expected, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(expected).Within(0.001));
         }
         #endregion CalculateDamageBase
 
@@ -369,7 +369,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = spellHandler.CalculateToHitChance(target);
 
-            Assert.AreEqual(85, actual);
+            Assert.That(actual, Is.EqualTo(85));
         }
 
         [Test]
@@ -385,7 +385,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = spellHandler.CalculateToHitChance(target);
 
-            Assert.AreEqual(110, actual);
+            Assert.That(actual, Is.EqualTo(110));
         }
 
         [Test]
@@ -400,7 +400,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = spellHandler.CalculateToHitChance(target);
 
-            Assert.AreEqual(90, actual);
+            Assert.That(actual, Is.EqualTo(90));
         }
 
         [Test]
@@ -415,7 +415,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = spellHandler.CalculateToHitChance(target);
 
-            Assert.AreEqual(88, actual);
+            Assert.That(actual, Is.EqualTo(88));
         }
 
         [Test]
@@ -433,7 +433,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = spellHandler.CalculateToHitChance(target);
 
-            Assert.AreEqual(85, actual);
+            Assert.That(actual, Is.EqualTo(85));
         }
 
         [Test]
@@ -451,7 +451,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = spellHandler.CalculateToHitChance(target);
 
-            Assert.AreEqual(90, actual);
+            Assert.That(actual, Is.EqualTo(90));
         }
 
         [Test]
@@ -470,7 +470,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = spellHandler.CalculateToHitChance(target);
 
-            Assert.AreEqual(80, actual);
+            Assert.That(actual, Is.EqualTo(80));
         }
 
         #endregion

@@ -15,7 +15,7 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
 
             int actual = MeleeDamageBonusCalculator.CalcValue(npc, MeleeDamageProperty);
 
-            Assert.AreEqual(6, actual);
+            Assert.That(actual, Is.EqualTo(6));
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
 
             int actual = MeleeDamageBonusCalculator.CalcValue(npc, MeleeDamageProperty);
 
-            Assert.AreEqual(-6, actual);
+            Assert.That(actual, Is.EqualTo(-6));
         }
 
         private MeleeDamagePercentCalculator MeleeDamageBonusCalculator => new MeleeDamagePercentCalculator();

@@ -36,7 +36,7 @@ namespace DOL.Integration.Net
 		[Test, Explicit]
 		public void Discover()
 		{
-			Assert.IsTrue(upnp.Discover());
+			Assert.That(upnp.Discover(), Is.True);
 		}
 	}
 }

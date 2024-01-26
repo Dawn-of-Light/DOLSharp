@@ -44,7 +44,7 @@ namespace DOL.UnitTests.Gameserver
             var actual = recipe.CostToCraft;
 
             var expected = 2;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace DOL.UnitTests.Gameserver
             var actual = recipe.CostToCraft;
 
             var expected = 6;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = product.Price;
             var expected = 2;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = product.Price;
             var expected = 95 * 2;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 
@@ -105,7 +105,7 @@ namespace DOL.UnitTests.Gameserver
             var actual = ingredient.Cost;
 
             var expected = 1;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace DOL.UnitTests.Gameserver
             var actual = ingredient.Cost;
 
             var expected = 2;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

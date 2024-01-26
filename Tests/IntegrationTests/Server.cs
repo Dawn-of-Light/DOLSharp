@@ -37,14 +37,14 @@ namespace DOL.Integration.Server
 		{
 			DOLCharacters character= null;
 			var account = GameServer.Database.SelectAllObjects<Account>().FirstOrDefault();
-			Assert.IsNotNull(account);
+			Assert.That(account, Is.Not.Null);
 
 			foreach (var charact in account.Characters)
 			{
 				if (charact!=null)
 					character = charact;
 			}
-			Assert.IsNotNull(character);
+			Assert.That(character, Is.Not.Null);
 			
 			var client = new GameClient(GameServer.Instance);
 			client.Version = GameClient.eClientVersion.Version1105;
@@ -53,7 +53,7 @@ namespace DOL.Integration.Server
 			client.PacketProcessor = new PacketProcessor(client);
 			client.Out = new PacketLib1105(client);
 			client.Player = new GamePlayer(client,character);
-			Assert.IsNotNull(client.Player,"GamePlayer instance created");
+			Assert.That(client.Player, Is.Not.Null,"GamePlayer instance created");
 			
 			return client.Player;
 		}

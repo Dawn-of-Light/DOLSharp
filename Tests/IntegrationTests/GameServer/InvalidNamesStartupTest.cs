@@ -35,25 +35,25 @@ namespace DOL.Integration.Server
 		[Test]
 		public void InvalidNamesStartup_CheckDefaultConstraintOneString_Match()
 		{
-			Assert.IsTrue(GameServer.Instance.PlayerManager.InvalidNames["fuck"]);
+			Assert.That(GameServer.Instance.PlayerManager.InvalidNames["fuck"], Is.True);
 		}
 		
 		[Test]
 		public void InvalidNamesStartup_CheckDefaultConstraintOneString_NoMatch()
 		{
-			Assert.IsFalse(GameServer.Instance.PlayerManager.InvalidNames["unicorn"]);
+			Assert.That(GameServer.Instance.PlayerManager.InvalidNames["unicorn"], Is.False);
 		}
 		
 		[Test]
 		public void InvalidNamesStartup_CheckDefaultConstraintTwoString_Match()
 		{
-			Assert.IsTrue(GameServer.Instance.PlayerManager.InvalidNames["fu", "ck"]);
+			Assert.That(GameServer.Instance.PlayerManager.InvalidNames["fu", "ck"], Is.True);
 		}
 		
 		[Test]
 		public void InvalidNamesStartup_CheckDefaultConstraintTwoString_NoMatch()
 		{
-			Assert.IsFalse(GameServer.Instance.PlayerManager.InvalidNames["uni", "corn"]);
+			Assert.That(GameServer.Instance.PlayerManager.InvalidNames["uni", "corn"], Is.False);
 		}
 	}
 }

@@ -35,10 +35,10 @@ namespace DOL.Integration.DOLBase
             newMPK[textFileLocation].Header.TimeStamp = 0; //Make MPK creation deterministic
 
             newMPK.Save();
-            Assert.AreEqual(1, newMPK.Count);
+            Assert.That(newMPK.Count, Is.EqualTo(1));
 
             var expectedCRCValue = 375344986;
-            Assert.AreEqual(expectedCRCValue, newMPK.CRCValue);
+            Assert.That(newMPK.CRCValue, Is.EqualTo(expectedCRCValue));
         }
 
         [Test, Order(2)]
@@ -55,7 +55,7 @@ namespace DOL.Integration.DOLBase
 
             var actualFileText = File.ReadAllText(Path.Combine(extractPath,  textFileLocation));
             var expectedFileText = textFileContent;
-            Assert.AreEqual(expectedFileText, actualFileText);
+            Assert.That(actualFileText, Is.EqualTo(expectedFileText));
         }
 
         [OneTimeTearDown]

@@ -55,7 +55,7 @@ namespace DOL.Integration.Database.MySQL
 			                                	new TestTableWithBrokenPrimaryV2 { PrimaryKey = 1 },
 			                                });
 			
-			Assert.IsFalse(adds, "Primary Key was not restored and duplicate key were inserted !");
+			Assert.That(adds, Is.False, "Primary Key was not restored and duplicate key were inserted !");
 		}
 	}
 }

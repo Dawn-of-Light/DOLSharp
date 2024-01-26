@@ -51,18 +51,18 @@ namespace DOL.Integration.Gameserver
         {
             var dataQuest = new DataQuestSpy(dbDataQuest);
 
-            Assert.AreEqual(23886, dataQuest.ID);
-            Assert.AreEqual("QuestName", dataQuest.Name);
-            Assert.AreEqual(DataQuest.eStartType.Standard, dataQuest.StartType);
-            Assert.AreEqual("description", dataQuest.Description);
-            Assert.AreEqual(null, dataQuest.SpySourceName);
-            Assert.AreEqual(1, dataQuest.MaxQuestCount);
-            Assert.AreEqual(1, dataQuest.Level);
-            Assert.AreEqual(11, dataQuest.MaxLevel);
-            Assert.AreEqual("", dataQuest.OptionalRewards);
-            Assert.AreEqual("", dataQuest.FinalRewards);
-            Assert.AreEqual(new List<string>() { "Basics of Combat (Hibernia)" }, dataQuest.SpyQuestDependency);
-            Assert.AreEqual(new List<byte> { 1, 2, 3 }, dataQuest.SpyAllowedClasses);
+            Assert.That(dataQuest.ID, Is.EqualTo(23886));
+            Assert.That(dataQuest.Name, Is.EqualTo("QuestName"));
+            Assert.That(dataQuest.StartType, Is.EqualTo(DataQuest.eStartType.Standard));
+            Assert.That(dataQuest.Description, Is.EqualTo("description"));
+            Assert.That(dataQuest.SpySourceName, Is.EqualTo(null));
+            Assert.That(dataQuest.MaxQuestCount, Is.EqualTo(1));
+            Assert.That(dataQuest.Level, Is.EqualTo(1));
+            Assert.That(dataQuest.MaxLevel, Is.EqualTo(11));
+            Assert.That(dataQuest.OptionalRewards, Is.EqualTo(""));
+            Assert.That(dataQuest.FinalRewards, Is.EqualTo(""));
+            Assert.That(dataQuest.SpyQuestDependency, Is.EqualTo(new List<string>() { "Basics of Combat (Hibernia)" }));
+            Assert.That(dataQuest.SpyAllowedClasses, Is.EqualTo(new List<byte> { 1, 2, 3 }));
         }
 
         [Test]
@@ -76,17 +76,17 @@ namespace DOL.Integration.Gameserver
             {
                 dataQuest.Step = i;
                 int index = i - 1;
-                Assert.AreEqual(new List<byte>() { 0, 4, 6, 6, 5 }[index], (byte)dataQuest.StepType, "Failed at Step " + dataQuest.Step);
-                Assert.AreEqual(new List<long>() { 1, 2, 3, 4, 5 }[index], dataQuest.SpyRewardMoney);
-                Assert.AreEqual(new long[] { 6, 7, 8, 9, 10 }[index], dataQuest.SpyRewardXP);
-                Assert.AreEqual(0, dataQuest.SpyRewardBP);
-                Assert.AreEqual(new string[] { "tic", "trick", "truck", "track", "trock" }[index], dataQuest.TargetName);
-                Assert.AreEqual(new long[] { 10, 9, 8, 7, 6 }[index], dataQuest.TargetRegion);
-                Assert.AreEqual(new string[] { "foo", "bar", "baz", "bork", "fuu" }[index], dataQuest.SpyTargetText);
-                Assert.AreEqual("storyA", dataQuest.Story);
-                Assert.AreEqual(new string[] { "storyA", "", "storyC", "storyD", "storyEnd" }[index], dataQuest.SpySourceText);
-                Assert.AreEqual(new string[] { "step1", "step2", "step3", "step4", "step5"}[index], dataQuest.StepTexts[index]);
-                Assert.AreEqual(new string[] { "item1", "item2", "item3", "item4", "item5" }[index], dataQuest.SpyStepItemTemplate);
+                Assert.That((byte)dataQuest.StepType, Is.EqualTo(new List<byte>() { 0, 4, 6, 6, 5 }[index]), "Failed at Step " + dataQuest.Step);
+                Assert.That(dataQuest.SpyRewardMoney, Is.EqualTo(new List<long>() { 1, 2, 3, 4, 5 }[index]));
+                Assert.That(dataQuest.SpyRewardXP, Is.EqualTo(new long[] { 6, 7, 8, 9, 10 }[index]));
+                Assert.That(dataQuest.SpyRewardBP, Is.EqualTo(0));
+                Assert.That(dataQuest.TargetName, Is.EqualTo(new string[] { "tic", "trick", "truck", "track", "trock" }[index]));
+                Assert.That(dataQuest.TargetRegion, Is.EqualTo(new long[] { 10, 9, 8, 7, 6 }[index]));
+                Assert.That(dataQuest.SpyTargetText, Is.EqualTo(new string[] { "foo", "bar", "baz", "bork", "fuu" }[index]));
+                Assert.That(dataQuest.Story, Is.EqualTo("storyA"));
+                Assert.That(dataQuest.SpySourceText, Is.EqualTo(new string[] { "storyA", "", "storyC", "storyD", "storyEnd" }[index]));
+                Assert.That(dataQuest.StepTexts[index], Is.EqualTo(new string[] { "step1", "step2", "step3", "step4", "step5"}[index]));
+                Assert.That(dataQuest.SpyStepItemTemplate, Is.EqualTo(new string[] { "item1", "item2", "item3", "item4", "item5" }[index]));
             }
         }
 

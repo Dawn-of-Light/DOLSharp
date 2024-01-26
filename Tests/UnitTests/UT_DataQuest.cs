@@ -25,7 +25,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.MoneyReward();
             var expected = 0;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.ExperiencePercent(player);
             var expected = 0;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.MoneyReward();
             var expected = 2;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.ExperiencePercent(player);
             var expected = 4;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.SpyRewardMoney;
             var expected = 3;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.SpyRewardXP;
             var expected = 3;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.SpyRewardCLXP;
             var expected = 4;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.SpyRewardRP;
             var expected = 5;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.SpyRewardBP;
             var expected = 6;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -145,7 +145,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.StepType;
             var expected = DataQuest.eStepType.Unknown;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.Step;
             var expected = 0;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
         #endregion Accessor
 
@@ -168,7 +168,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool isQualified = dataQuest.CheckQuestQualification(player);
 
-            Assert.IsTrue(isQualified);
+            Assert.That(isQualified, Is.True);
         }
 
         [Test]
@@ -181,7 +181,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool isQualified = dataQuest.CheckQuestQualification(player);
 
-            Assert.IsFalse(isQualified);
+            Assert.That(isQualified, Is.False);
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool isQualified = dataQuest.CheckQuestQualification(player);
 
-            Assert.IsFalse(isQualified);
+            Assert.That(isQualified, Is.False);
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool isQualified = dataQuest.CheckQuestQualification(player);
 
-            Assert.IsFalse(isQualified);
+            Assert.That(isQualified, Is.False);
         }
 
         [Test]
@@ -225,7 +225,7 @@ namespace DOL.UnitTests.Gameserver
             player.fakeQuestList.Add(dataQuest);
             bool isQualified = dataQuest.CheckQuestQualification(player);
 
-            Assert.IsFalse(isQualified);
+            Assert.That(isQualified, Is.False);
         }
 
         [Test]
@@ -239,7 +239,7 @@ namespace DOL.UnitTests.Gameserver
             player.fakeQuestListFinished.Add(dataQuest);
             bool isQualified = dataQuest.CheckQuestQualification(player);
 
-            Assert.IsFalse(isQualified);
+            Assert.That(isQualified, Is.False);
         }
 
         [Test]
@@ -252,7 +252,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool isQualified = dataQuest.CheckQuestQualification(player);
 
-            Assert.IsFalse(isQualified);
+            Assert.That(isQualified, Is.False);
         }
 #endregion CheckQuestQualification
 
@@ -264,7 +264,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.IsDoingQuest(dataQuest);
 
-            Assert.IsTrue(actual);
+            Assert.That(actual, Is.True);
         }
 
         [Test]
@@ -275,7 +275,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.IsDoingQuest(dataQuest);
 
-            Assert.IsFalse(actual);
+            Assert.That(actual, Is.False);
         }
 
         [Test]
@@ -289,7 +289,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.IsDoingQuest(otherDataQuest);
 
-            Assert.IsFalse(actual);
+            Assert.That(actual, Is.False);
         }
 
         [Test]
@@ -300,7 +300,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.TargetName;
             var expected = "";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -313,7 +313,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.TargetName;
             var expected = "SomeName";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -326,7 +326,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.TargetName;
             var expected = "Bar";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -340,7 +340,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = dataQuest.SpyTargetText;
             var expected = "Baz";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         private FakeQuestPlayer NewFakePlayer() => new FakeQuestPlayer();

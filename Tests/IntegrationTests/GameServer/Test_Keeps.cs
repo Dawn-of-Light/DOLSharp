@@ -60,7 +60,7 @@ namespace DOL.Integration.Keeps
             keepComponent2.Keep = keep;
             keepComponent2.LoadPositions();
             keepComponent2.FillPositions();
-            Assert.AreEqual(2, keepComponent.Keep.Guards.Count);
+            Assert.That(keepComponent.Keep.Guards.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace DOL.Integration.Keeps
             keepComponent2.Keep = keep;
             keepComponent2.LoadPositions();
             keepComponent2.FillPositions();
-            Assert.AreEqual(4, keepComponent.Keep.Guards.Count);
+            Assert.That(keepComponent.Keep.Guards.Count, Is.EqualTo(4));
         }
 
         private void AddKeepPositions()

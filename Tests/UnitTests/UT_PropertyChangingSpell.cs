@@ -26,7 +26,7 @@ namespace DOL.UnitTests.Gameserver
             resiPierceBuff.ApplyEffectOnTarget(target, 1);
 
             var actual = target.BaseBuffBonusCategory[eProperty.ResistPierce];
-            Assert.AreEqual(5, actual);
+            Assert.That(actual, Is.EqualTo(5));
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace DOL.UnitTests.Gameserver
             constitutionBuff.ApplyEffectOnTarget(target, 1);
 
             var actual = target.GetModified(eProperty.Constitution);
-            Assert.AreEqual(51, actual);
+            Assert.That(actual, Is.EqualTo(51));
         }
 
         private Spell NewSpellWithValue(int value)

@@ -23,5 +23,5 @@ jobs:
           dotnet build -c ${{ matrix.build_target }} "Tests\Tests.csproj" --verbosity normal
       - name: Test
         run: |
-          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests&TestCategory!=Explicit"
-          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration&TestCategory!=Explicit"
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.UnitTests"
+          dotnet test .\build\Tests\${{ matrix.build_target }}\lib\Tests.dll -v n --filter "DOL.Integration"

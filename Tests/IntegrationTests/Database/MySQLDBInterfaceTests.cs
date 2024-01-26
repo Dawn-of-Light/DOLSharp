@@ -33,7 +33,7 @@ namespace DOL.Integration.Database.MySQL
 		{
 			var test = "\\\"'’";
 			
-			Assert.AreEqual("\\\\\\\"\\'\\’", Database.Escape(test), "MySQL String Escape Test Failure...");
+			Assert.That(Database.Escape(test), Is.EqualTo("\\\\\\\"\\'\\’"), "MySQL String Escape Test Failure...");
 		}
 	}
 }

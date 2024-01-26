@@ -43,7 +43,7 @@ namespace DOL.Integration.Server
 		public void GetRandomNPCTest()
 		{
 			Zone zone = WorldMgr.GetZone(0);
-			Assert.IsNotNull(zone);
+			Assert.That(zone, Is.Not.Null);
 
 			StartWatch();
 			GameNPC npc = zone.GetRandomNPC(eRealm.None, 5, 7);

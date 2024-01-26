@@ -64,7 +64,7 @@ namespace DOL.Integration.Gameserver
 
             var actual = allItems.Count;
             var expected = 1;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace DOL.Integration.Gameserver
 
             var actual = allItems.Count;
             var expected = 0;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace DOL.Integration.Gameserver
 
             var actual = allItems.Count;
             var expected = 2;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace DOL.Integration.Gameserver
 
             var actual = allItems.Count;
             var expected = 1;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace DOL.Integration.Gameserver
 
             var actual = allItems.Count;
             var expected = 2;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]

@@ -13,7 +13,7 @@ public class UT_Vector
         var vectorA = Vector.Create();
         var vectorB = Vector.Create();
 
-        Assert.IsTrue(vectorA.Equals(vectorB));
+        Assert.That(vectorA.Equals(vectorB), Is.True);
     }
 
     [Test]
@@ -22,7 +22,7 @@ public class UT_Vector
         var vectorA = Vector.Create(x: 0);
         var vectorB = Vector.Create(x: 1);
 
-        Assert.IsFalse(vectorA.Equals(vectorB));
+        Assert.That(vectorA.Equals(vectorB), Is.False);
     }
 
     [Test]
@@ -33,7 +33,7 @@ public class UT_Vector
         var actual = (vector + vector).Length;
 
         var expectedLength = 2;
-        Assert.AreEqual(expectedLength, actual);
+        Assert.That(actual, Is.EqualTo(expectedLength));
     }
 
     [Test]
@@ -42,7 +42,7 @@ public class UT_Vector
         var actual = Vector.Create(orientation: Angle.Zero, length: 1);
 
         var expected = Vector.Create(y: 1);
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -51,7 +51,7 @@ public class UT_Vector
         var actual = Vector.Create(orientation: Angle.Degrees(45), length: 100);
 
         var expected = Vector.Create(x: -71, y: 71);
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -62,7 +62,7 @@ public class UT_Vector
         var actual = vector.RotatedClockwise(Angle.Degrees(90));
 
         var expected = Vector.Create(y: 100);
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -74,7 +74,7 @@ public class UT_Vector
 
         //rounded
         var expected = Vector.Create(x: 71, y: 71);
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -86,7 +86,7 @@ public class UT_Vector
 
         //rounded
         var expected = Vector.Create(x: 35, y: 35);
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
 
@@ -99,7 +99,7 @@ public class UT_Vector
         var actual = vector.Length;
 
         var expected = 3d;
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -110,6 +110,6 @@ public class UT_Vector
         var actual = vector.Length2D;
 
         var expected = 5d;
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 }

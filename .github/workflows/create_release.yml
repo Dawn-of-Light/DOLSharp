@@ -87,8 +87,8 @@ jobs:
           cp libdol_detour.dll ../../../${{ matrix.build_target }}/dol_detour.dll
       - name: Test Build
         run: |
-          dotnet test --verbosity normal --filter "DOL.UnitTests&TestCategory!=Explicit" ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll
-          dotnet test --verbosity normal --filter "DOL.Integration&TestCategory!=Explicit" ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll
+          dotnet test --verbosity normal --filter "DOL.UnitTests" ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll
+          dotnet test --verbosity normal --filter "DOL.Integration" ./build/Tests/${{ matrix.build_target }}/lib/Tests.dll
       - name: Add DOLConfig
         if: ${{ github.repository_owner == 'Dawn-of-Light' }}
         run: |

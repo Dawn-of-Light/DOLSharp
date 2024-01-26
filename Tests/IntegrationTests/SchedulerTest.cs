@@ -56,7 +56,7 @@ namespace DOL.Integration.Utils
 			
 			var task = scheduler.Start(() => 0, 10);
 			
-			Assert.IsTrue(task.Active, "Task should be active after Scheduler Insertion...");
+			Assert.That(task.Active, Is.True, "Task should be active after Scheduler Insertion...");
 		}
 		
 		[Test]
@@ -68,7 +68,7 @@ namespace DOL.Integration.Utils
 			
 			task.Stop();
 			
-			Assert.IsFalse(task.Active, "Task should be inactive after Scheduler Stop...");
+			Assert.That(task.Active, Is.False, "Task should be inactive after Scheduler Stop...");
 		}
 		
 		[Test]
@@ -85,7 +85,7 @@ namespace DOL.Integration.Utils
 			
 			System.Threading.Thread.Sleep(100);
 			
-			Assert.IsFalse(run, "Task should not have run when Stopping before delay...");
+			Assert.That(run, Is.False, "Task should not have run when Stopping before delay...");
 		}
 		
 		[Test]
@@ -100,7 +100,7 @@ namespace DOL.Integration.Utils
 			
 			task.Stop();
 			
-			Assert.IsTrue(run, "Task should have run when Stopping after delay...");
+			Assert.That(run, Is.True, "Task should have run when Stopping after delay...");
 		}
 		
 		[Test]
@@ -114,12 +114,12 @@ namespace DOL.Integration.Utils
 			System.Threading.Thread.Sleep(100);
 			
 			var intermediate = count;
-			Assert.Greater(intermediate, 0, "Task Should have been Scheduled multiple time with an Interval of 1ms...");
+			Assert.That(intermediate, Is.GreaterThan(0), "Task Should have been Scheduled multiple time with an Interval of 1ms...");
 			
 			System.Threading.Thread.Sleep(100);
 			task.Stop();
 
-			Assert.Greater(count, intermediate, "Task should have been scheduled again before stopping...");
+			Assert.That(count, Is.GreaterThan(intermediate), "Task should have been scheduled again before stopping...");
 		}
 		
 		[Test]
@@ -132,9 +132,9 @@ namespace DOL.Integration.Utils
 			
 			System.Threading.Thread.Sleep(100);
 			
-			Assert.AreEqual(count, 1, "Task Should have been Scheduled once with no Interval...");
+			Assert.That(1, Is.EqualTo(count), "Task Should have been Scheduled once with no Interval...");
 			
-			Assert.IsFalse(task.Active, "Task Should be inactive after one Scheduling...");
+			Assert.That(task.Active, Is.False, "Task Should be inactive after one Scheduling...");
 		}
 		
 		[Test]
@@ -147,8 +147,8 @@ namespace DOL.Integration.Utils
 			
 			System.Threading.Thread.Sleep(200);
 			
-			Assert.AreEqual(10, count, "Task Should have been Scheduled 10 times...");
-			Assert.IsFalse(task.Active, "Task should be Inactive after Fixed Schedule count...");
+			Assert.That(count, Is.EqualTo(10), "Task Should have been Scheduled 10 times...");
+			Assert.That(task.Active, Is.False, "Task should be Inactive after Fixed Schedule count...");
 		}
 		
 		[Test]
@@ -162,8 +162,8 @@ namespace DOL.Integration.Utils
 			
 			System.Threading.Thread.Sleep(100);
 			
-			Assert.Less(finished - start, 100, "Scheduler Task Latency is higher than 100ms!");
-			Assert.IsFalse(task.Active, "Task Should be inactive after Scheduling...");
+			Assert.That(finished - start, Is.LessThan(100), "Scheduler Task Latency is higher than 100ms!");
+			Assert.That(task.Active, Is.False, "Task Should be inactive after Scheduling...");
 		}
 		
 		[Test, Explicit]
@@ -181,11 +181,11 @@ namespace DOL.Integration.Utils
 			
 			System.Threading.Thread.Sleep(100);
 			
-			CollectionAssert.AreEqual(Enumerable.Range(0, 10).Select(i => false), shortTasks.Select(t => t.Active));
+			Assert.That(shortTasks.Select(t => t.Active), Is.EqualTo(Enumerable.Range(0, 10).Select(i => false)));
 			
 			System.Threading.Thread.Sleep(900);
 			
-			CollectionAssert.AreEqual(Enumerable.Range(0, 10).Select(i => false), longTasks.Select(t => t.Active));
+			Assert.That(longTasks.Select(t => t.Active), Is.EqualTo(Enumerable.Range(0, 10).Select(i => false)));
 		}
 		
 		[Test, Explicit]
@@ -205,13 +205,13 @@ namespace DOL.Integration.Utils
 			
 			System.Threading.Thread.Sleep(1100);
 			
-			CollectionAssert.AreEqual(Enumerable.Range(0, 10).Select(i => 10), shortCount);
-			CollectionAssert.AreEqual(Enumerable.Range(0, 10).Select(i => false), shortTasks.Select(t => t.Active));
+			Assert.That(shortCount, Is.EqualTo(Enumerable.Range(0, 10).Select(i => 10)));
+			Assert.That(shortTasks.Select(t => t.Active), Is.EqualTo(Enumerable.Range(0, 10).Select(i => false)));
 			
 			System.Threading.Thread.Sleep(1900);
 			
-			CollectionAssert.AreEqual(Enumerable.Range(0, 10).Select(i => 5), longCount);
-			CollectionAssert.AreEqual(Enumerable.Range(0, 10).Select(i => false), longTasks.Select(t => t.Active));
+			Assert.That(longCount, Is.EqualTo(Enumerable.Range(0, 10).Select(i => 5)));
+			Assert.That(longTasks.Select(t => t.Active), Is.EqualTo(Enumerable.Range(0, 10).Select(i => false)));
 		}
 
 		[Test, Explicit]
@@ -223,7 +223,7 @@ namespace DOL.Integration.Utils
 			
 			System.Threading.Thread.Sleep(1000);
 			
-			Assert.IsFalse(task.Active, "Task should have been scheduled to Test Exception...");
+			Assert.That(task.Active, Is.False, "Task should have been scheduled to Test Exception...");
 		}
 		
 		[Test]
@@ -235,7 +235,7 @@ namespace DOL.Integration.Utils
 			
 			System.Threading.Thread.Sleep(100);
 			
-			Assert.IsFalse(task.Active, "Task should have been scheduled to Test Exception...");
+			Assert.That(task.Active, Is.False, "Task should have been scheduled to Test Exception...");
 		}
 	}
 }

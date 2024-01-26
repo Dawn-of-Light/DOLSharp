@@ -52,7 +52,7 @@ namespace DOL.Integration.Server
 					MoneyTask task = (MoneyTask)player.Task;
 
 
-					Assert.IsNotNull(task);
+					Assert.That(task, Is.Not.Null);
 					Console.WriteLine("XP" + task.RewardXP);
 					Console.WriteLine("Item:" + task.ItemName);
 					Console.WriteLine("Item:" + task.Name);

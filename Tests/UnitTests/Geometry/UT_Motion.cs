@@ -14,7 +14,7 @@ public class UT_Motion
         var actual = Motion.Create(start, destination: Coordinate.Nowhere, withSpeed: 0)
             .GetPositonAfter(0);
 
-        Assert.AreEqual(start, actual);
+        Assert.That(actual, Is.EqualTo(start));
     }
 
     [Test]
@@ -26,7 +26,7 @@ public class UT_Motion
         var actual = motion.GetPositonAfter(1000);
 
         var expected = start + Vector.Create(y: 100);
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -39,6 +39,6 @@ public class UT_Motion
         var actual = motion.GetPositonAfter(1000);
 
         var expected = destination;
-        Assert.AreEqual(destination, actual);
+        Assert.That(actual, Is.EqualTo(destination));
     }
 }

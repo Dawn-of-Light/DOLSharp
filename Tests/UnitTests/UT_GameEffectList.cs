@@ -19,7 +19,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool actual = effectList.Add(effect);
 
-            Assert.AreEqual(false, actual);
+            Assert.That(actual, Is.EqualTo(false));
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool actual = effectList.Add(effect);
 
-            Assert.AreEqual(false, actual);
+            Assert.That(actual, Is.EqualTo(false));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool actual = effectList.Add(effect);
 
-            Assert.AreEqual(true, actual);
+            Assert.That(actual, Is.EqualTo(true));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace DOL.UnitTests.Gameserver
             effectList.Add(effect);
 
             int actual = effectList.Count;
-            Assert.AreEqual(1, actual);
+            Assert.That(actual, Is.EqualTo(1));
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace DOL.UnitTests.Gameserver
             effectList.Add(effect);
 
             int actual = effectList.Count;
-            Assert.AreEqual(0, actual);
+            Assert.That(actual, Is.EqualTo(0));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool actual = effectList.Remove(effect);
             
-            Assert.AreEqual(false, actual);
+            Assert.That(actual, Is.EqualTo(false));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool actual = effectList.Remove(effect);
 
-            Assert.AreEqual(true, actual);
+            Assert.That(actual, Is.EqualTo(true));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace DOL.UnitTests.Gameserver
 
             bool actual = effectList.Remove(effect);
             
-            Assert.AreEqual(false, actual);
+            Assert.That(actual, Is.EqualTo(false));
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace DOL.UnitTests.Gameserver
             effectList.Remove(effect);
 
             int actual = effectList.Count;
-            Assert.AreEqual(0, actual);
+            Assert.That(actual, Is.EqualTo(0));
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace DOL.UnitTests.Gameserver
 
             effectList.CancelAll();
 
-            Assert.IsTrue(effect.receivedCancel);
+            Assert.That(effect.receivedCancel, Is.True);
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace DOL.UnitTests.Gameserver
             
             effectList.OnEffectsChanged(null);
 
-            Assert.IsTrue(brain.receivedUpdatePetWindow);
+            Assert.That(brain.receivedUpdatePetWindow, Is.True);
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace DOL.UnitTests.Gameserver
             effectList.BeginChanges();
             effectList.OnEffectsChanged(null);
 
-            Assert.IsFalse(brain.receivedUpdatePetWindow);
+            Assert.That(brain.receivedUpdatePetWindow, Is.False);
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace DOL.UnitTests.Gameserver
             
             effectList.OnEffectsChanged(null);
 
-            Assert.IsTrue(brain.receivedUpdatePetWindow);
+            Assert.That(brain.receivedUpdatePetWindow, Is.True);
         }
 
         [Test]
@@ -189,7 +189,7 @@ namespace DOL.UnitTests.Gameserver
             effectList.BeginChanges();
             effectList.OnEffectsChanged(null);
 
-            Assert.IsFalse(brain.receivedUpdatePetWindow);
+            Assert.That(brain.receivedUpdatePetWindow, Is.False);
         }
 
         [Test]
@@ -200,7 +200,7 @@ namespace DOL.UnitTests.Gameserver
 
             IGameEffect actual = effectList.GetOfType<GameSpellEffect>();
 
-            Assert.AreEqual(null, actual);
+            Assert.That(actual, Is.EqualTo(null));
         }
 
         [Test]
@@ -212,7 +212,7 @@ namespace DOL.UnitTests.Gameserver
 
             IGameEffect actual = effectList.GetOfType<GameSpellEffect>();
             
-            Assert.IsNotNull(actual);
+            Assert.That(actual, Is.Not.Null);
         }
 
         //RestoreAllEffects calls Database
