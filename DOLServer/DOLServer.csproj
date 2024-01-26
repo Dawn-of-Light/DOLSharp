@@ -45,7 +45,7 @@
     <RegisterForComInterop>False</RegisterForComInterop>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.1" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="8.0.0" />
     <PackageReference Include="log4net" Version="2.0.15" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" />
   </ItemGroup>
