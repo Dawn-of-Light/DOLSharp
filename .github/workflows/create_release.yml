@@ -14,7 +14,7 @@ jobs:
       version: ${{ steps.release_info.outputs.version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Generate Release Info
@@ -39,7 +39,7 @@ jobs:
           #Prepend patch notes with backticks
           sed -i '1s/^/```\n/' patch_notes.txt
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release_info
           path: |
@@ -56,9 +56,9 @@ jobs:
       OUTPUT_FILE_NAME: DOLServer_${{ matrix.build_target }}.zip
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Dotnet
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '6.0.x'
       - name: Setup MinGW-w64
@@ -112,7 +112,7 @@ jobs:
         run: |
           (cd ${{ matrix.build_target }}/ && zip -r ../${{ env.OUTPUT_FILE_NAME }} * )
       - name: Upload Build Output
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build_artifacts
           path: ${{ env.OUTPUT_FILE_NAME }}
@@ -123,9 +123,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
       - name: Create Release
         run: |
           set -x
