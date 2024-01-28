@@ -135,8 +135,7 @@ namespace DOL.GS
                                 .Where(s => !string.IsNullOrEmpty(s))
                                 .Select(s => MetadataReference.CreateFromFile(s));
             var additionalReferences = new string[] { 
-                "System.Security.Cryptography.Algorithms", //for SHA256 in AutoXMLDatabaseUpdate
-                "System.Security.Cryptography.Primitives", //for SHA256 in AutoXMLDatabaseUpdate
+                "System.Security.Cryptography", //for SHA256 in AutoXMLDatabaseUpdate
                 "System.Net.Http"
             }.Union(GameServer.Instance.Configuration.AdditionalScriptAssemblies)
                 .Select(r => GetPortableExecutableReference(r));
