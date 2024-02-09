@@ -50,36 +50,36 @@ namespace DOL.Integration.Database
 				Database.DeleteObject(obj);
 			
 			// Check Dynamic object is not Persisted
-			Assert.IsFalse(TestData.IsPersisted, "Newly Created Data Object should not be persisted...");
-			Assert.IsFalse(TestData.CustomParams.First().IsPersisted, "Newly Created Param Object should not be persisted...");
+			Assert.That(TestData.IsPersisted, Is.False, "Newly Created Data Object should not be persisted...");
+			Assert.That(TestData.CustomParams.First().IsPersisted, Is.False, "Newly Created Param Object should not be persisted...");
 			
 			// Insert Object
 			var paramsInserted = TestData.CustomParams.Select(o => Database.AddObject(o)).ToArray();
 			var inserted = Database.AddObject(TestData);
 			
-			Assert.IsTrue(inserted, "Test Object not inserted properly in Database !");
-			Assert.IsTrue(paramsInserted.All(result => result), "Params Objects not inserted properly in Database !");
+			Assert.That(inserted, Is.True, "Test Object not inserted properly in Database !");
+			Assert.That(paramsInserted.All(result => result), Is.True, "Params Objects not inserted properly in Database !");
 			
 			// Check Saved Object is Persisted
-			Assert.IsTrue(TestData.IsPersisted, "Newly Created Data Object should be persisted...");
-			Assert.IsTrue(TestData.CustomParams.First().IsPersisted, "Newly Created Param Object should be persisted...");
+			Assert.That(TestData.IsPersisted, Is.True, "Newly Created Data Object should be persisted...");
+			Assert.That(TestData.CustomParams.First().IsPersisted, Is.True, "Newly Created Param Object should be persisted...");
 
 			// Retrieve Object From Database
 			var RetrieveData = Database.FindObjectByKey<TableWithCustomParams>(TestData.ObjectId);
 			
 			// Check Retrieved object is Persisted
-			Assert.IsTrue(RetrieveData.IsPersisted, "Retrieved Data Object should be persisted...");
-			Assert.IsTrue(RetrieveData.CustomParams.First().IsPersisted, "Retrieved Param Object should be persisted...");
+			Assert.That(RetrieveData.IsPersisted, Is.True, "Retrieved Data Object should be persisted...");
+			Assert.That(RetrieveData.CustomParams.First().IsPersisted, Is.True, "Retrieved Param Object should be persisted...");
 			
 			// Compare both Objects
-			Assert.AreEqual(TestData.ObjectId, RetrieveData.ObjectId, "Newly Created and Inserted Data Object should have the same ID than Retrieved Object.");
+			Assert.That(RetrieveData.ObjectId, Is.EqualTo(TestData.ObjectId), "Newly Created and Inserted Data Object should have the same ID than Retrieved Object.");
 			
-			Assert.AreEqual(TestData.CustomParams.Length,
-			                RetrieveData.CustomParams.Length,
+			Assert.That(RetrieveData.CustomParams.Length,
+			                Is.EqualTo(TestData.CustomParams.Length),
 			                "Saved Object and Retrieved Object doesn't have the same amount of Custom Params");
 			
-			Assert.AreEqual(TestData.CustomParams.First(param => param.KeyName == "TestParam").Value,
-			                RetrieveData.CustomParams.First(param => param.KeyName == "TestParam").Value,
+			Assert.That(RetrieveData.CustomParams.First(param => param.KeyName == "TestParam").Value,
+                            Is.EqualTo(TestData.CustomParams.First(param => param.KeyName == "TestParam").Value),
 			               "Both Saved Object and Retrieved Object should have similar Custom Params...");
 		}
 	}

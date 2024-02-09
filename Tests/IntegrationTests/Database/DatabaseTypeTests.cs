@@ -59,24 +59,24 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Boolean (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Boolean (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Boolean (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Boolean (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Boolean (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Bool, objRetrieved.Bool, "DatabaseTypeTests: in Boolean (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Boolean (NonNull) Test.");
+			Assert.That(objRetrieved.Bool, Is.EqualTo(obj.Bool), "DatabaseTypeTests: in Boolean (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Bool = true;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Boolean (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Boolean (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Boolean (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Boolean (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Boolean (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Bool, objReRetrieved.Bool, "DatabaseTypeTests: in Boolean (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Boolean (NonNull) Test.");
+			Assert.That(objReRetrieved.Bool, Is.EqualTo(obj.Bool), "DatabaseTypeTests: in Boolean (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -89,24 +89,24 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Boolean (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Boolean (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Boolean (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Boolean (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Boolean (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Bool, objRetrieved.Bool, "DatabaseTypeTests: in Boolean (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Boolean (Null) Test.");
+			Assert.That(objRetrieved.Bool, Is.EqualTo(obj.Bool), "DatabaseTypeTests: in Boolean (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Bool = true;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Boolean (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Boolean (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Boolean (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Boolean (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Boolean (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Bool, objReRetrieved.Bool, "DatabaseTypeTests: in Boolean (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Boolean (Null) Test.");
+			Assert.That(objReRetrieved.Bool, Is.EqualTo(obj.Bool), "DatabaseTypeTests: in Boolean (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -123,35 +123,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Char (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Char (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Char (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Char (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Char (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Char, objRetrieved.Char, "DatabaseTypeTests: in Char (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Char (NonNull) Test.");
+			Assert.That(objRetrieved.Char, Is.EqualTo(obj.Char), "DatabaseTypeTests: in Char (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Char = char.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Char (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Char (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Char (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Char (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Char (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Char, objReRetrieved.Char, "DatabaseTypeTests: in Char (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Char (NonNull) Test.");
+			Assert.That(objReRetrieved.Char, Is.EqualTo(obj.Char), "DatabaseTypeTests: in Char (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Char = default(char);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Char (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Char (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Char (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Char (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Char (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Char, objReReRetrieved.Char, "DatabaseTypeTests: in Char (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Char (NonNull) Test.");
+			Assert.That(objReReRetrieved.Char, Is.EqualTo(obj.Char), "DatabaseTypeTests: in Char (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -164,35 +164,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Char (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Char (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Char (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Char (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Char (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Char, objRetrieved.Char, "DatabaseTypeTests: in Char (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Char (Null) Test.");
+			Assert.That(objRetrieved.Char, Is.EqualTo(obj.Char), "DatabaseTypeTests: in Char (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Char = char.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Char (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Char (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Char (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Char (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Char (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Char, objReRetrieved.Char, "DatabaseTypeTests: in Char (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Char (Null) Test.");
+			Assert.That(objReRetrieved.Char, Is.EqualTo(obj.Char), "DatabaseTypeTests: in Char (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Char = default(char);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Char (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Char (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Char (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Char (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Char (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Char, objReReRetrieved.Char, "DatabaseTypeTests: in Char (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Char (Null) Test.");
+			Assert.That(objReReRetrieved.Char, Is.EqualTo(obj.Char), "DatabaseTypeTests: in Char (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -209,35 +209,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Byte (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Byte (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Byte (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Byte (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Byte (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Byte, objRetrieved.Byte, "DatabaseTypeTests: in Byte (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Byte (NonNull) Test.");
+			Assert.That(objRetrieved.Byte, Is.EqualTo(obj.Byte), "DatabaseTypeTests: in Byte (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Byte = byte.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Byte (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Byte (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Byte (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Byte (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Byte (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Byte, objReRetrieved.Byte, "DatabaseTypeTests: in Byte (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Byte (NonNull) Test.");
+			Assert.That(objReRetrieved.Byte, Is.EqualTo(obj.Byte), "DatabaseTypeTests: in Byte (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Byte = default(byte);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Byte (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Byte (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Byte (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Byte (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Byte (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Byte, objReReRetrieved.Byte, "DatabaseTypeTests: in Byte (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Byte (NonNull) Test.");
+			Assert.That(objReReRetrieved.Byte, Is.EqualTo(obj.Byte), "DatabaseTypeTests: in Byte (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -250,35 +250,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Byte (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Byte (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Byte (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Byte (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Byte (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Byte, objRetrieved.Byte, "DatabaseTypeTests: in Byte (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Byte (Null) Test.");
+			Assert.That(objRetrieved.Byte, Is.EqualTo(obj.Byte), "DatabaseTypeTests: in Byte (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Byte = byte.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Byte (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Byte (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Byte (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Byte (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Byte (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Byte, objReRetrieved.Byte, "DatabaseTypeTests: in Byte (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Byte (Null) Test.");
+			Assert.That(objReRetrieved.Byte, Is.EqualTo(obj.Byte), "DatabaseTypeTests: in Byte (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Byte = default(byte);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Byte (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Byte (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Byte (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Byte (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Byte (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Byte, objReReRetrieved.Byte, "DatabaseTypeTests: in Byte (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Byte (Null) Test.");
+			Assert.That(objReReRetrieved.Byte, Is.EqualTo(obj.Byte), "DatabaseTypeTests: in Byte (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -295,35 +295,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Sbyte (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Sbyte (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Sbyte (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Sbyte (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Sbyte (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Sbyte, objRetrieved.Sbyte, "DatabaseTypeTests: in Sbyte (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Sbyte (NonNull) Test.");
+			Assert.That(objRetrieved.Sbyte, Is.EqualTo(obj.Sbyte), "DatabaseTypeTests: in Sbyte (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Sbyte = sbyte.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Sbyte (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Sbyte (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Sbyte (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Sbyte (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Sbyte (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Sbyte, objReRetrieved.Sbyte, "DatabaseTypeTests: in Sbyte (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Sbyte (NonNull) Test.");
+			Assert.That(objReRetrieved.Sbyte, Is.EqualTo(obj.Sbyte), "DatabaseTypeTests: in Sbyte (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Sbyte = default(sbyte);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Sbyte (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Sbyte (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Sbyte (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Sbyte (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Sbyte (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Sbyte, objReReRetrieved.Sbyte, "DatabaseTypeTests: in Sbyte (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Sbyte (NonNull) Test.");
+			Assert.That(objReReRetrieved.Sbyte, Is.EqualTo(obj.Sbyte), "DatabaseTypeTests: in Sbyte (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -336,35 +336,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Sbyte (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Sbyte (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Sbyte (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Sbyte (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Sbyte (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Sbyte, objRetrieved.Sbyte, "DatabaseTypeTests: in Sbyte (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Sbyte (Null) Test.");
+			Assert.That(objRetrieved.Sbyte, Is.EqualTo(obj.Sbyte), "DatabaseTypeTests: in Sbyte (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Sbyte = sbyte.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Sbyte (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Sbyte (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Sbyte (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Sbyte (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Sbyte (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Sbyte, objReRetrieved.Sbyte, "DatabaseTypeTests: in Sbyte (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Sbyte (Null) Test.");
+			Assert.That(objReRetrieved.Sbyte, Is.EqualTo(obj.Sbyte), "DatabaseTypeTests: in Sbyte (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Sbyte = default(sbyte);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Sbyte (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Sbyte (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Sbyte (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Sbyte (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Sbyte (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Byte, objReReRetrieved.Byte, "DatabaseTypeTests: in Sbyte (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Sbyte (Null) Test.");
+			Assert.That(objReReRetrieved.Byte, Is.EqualTo(obj.Byte), "DatabaseTypeTests: in Sbyte (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -381,35 +381,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in UShort (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in UShort (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in UShort (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in UShort (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UShort (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UShort, objRetrieved.UShort, "DatabaseTypeTests: in UShort (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UShort (NonNull) Test.");
+			Assert.That(objRetrieved.UShort, Is.EqualTo(obj.UShort), "DatabaseTypeTests: in UShort (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.UShort = ushort.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in UShort (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in UShort (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in UShort (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in UShort (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UShort (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UShort, objReRetrieved.UShort, "DatabaseTypeTests: in UShort (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UShort (NonNull) Test.");
+			Assert.That(objReRetrieved.UShort, Is.EqualTo(obj.UShort), "DatabaseTypeTests: in UShort (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.UShort = default(ushort);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in UShort (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in UShort (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in UShort (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in UShort (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UShort (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UShort, objReReRetrieved.UShort, "DatabaseTypeTests: in UShort (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UShort (NonNull) Test.");
+			Assert.That(objReReRetrieved.UShort, Is.EqualTo(obj.UShort), "DatabaseTypeTests: in UShort (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -422,35 +422,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in UShort (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in UShort (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in UShort (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in UShort (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UShort (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UShort, objRetrieved.UShort, "DatabaseTypeTests: in UShort (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UShort (Null) Test.");
+			Assert.That(objRetrieved.UShort, Is.EqualTo(obj.UShort), "DatabaseTypeTests: in UShort (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.UShort = ushort.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in UShort (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in UShort (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in UShort (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in UShort (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UShort (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UShort, objReRetrieved.UShort, "DatabaseTypeTests: in UShort (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UShort (Null) Test.");
+			Assert.That(objReRetrieved.UShort, Is.EqualTo(obj.UShort), "DatabaseTypeTests: in UShort (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.UShort = default(ushort);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in UShort (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in UShort (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in UShort (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in UShort (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UShort (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UShort, objReReRetrieved.UShort, "DatabaseTypeTests: in UShort (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UShort (Null) Test.");
+			Assert.That(objReReRetrieved.UShort, Is.EqualTo(obj.UShort), "DatabaseTypeTests: in UShort (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -467,35 +467,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Short (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Short (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Short (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Short (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Short (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Short, objRetrieved.Short, "DatabaseTypeTests: in Short (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Short (NonNull) Test.");
+			Assert.That(objRetrieved.Short, Is.EqualTo(obj.Short), "DatabaseTypeTests: in Short (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Short = short.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Short (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Short (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Short (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Short (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Short (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Short, objReRetrieved.Short, "DatabaseTypeTests: in Short (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Short (NonNull) Test.");
+			Assert.That(objReRetrieved.Short, Is.EqualTo(obj.Short), "DatabaseTypeTests: in Short (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Short = default(short);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Short (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Short (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Short (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Short (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Short (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Short, objReReRetrieved.Short, "DatabaseTypeTests: in Short (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Short (NonNull) Test.");
+			Assert.That(objReReRetrieved.Short, Is.EqualTo(obj.Short), "DatabaseTypeTests: in Short (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -508,35 +508,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Short (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Short (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Short (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Short (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Short (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Short, objRetrieved.Short, "DatabaseTypeTests: in Short (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Short (Null) Test.");
+			Assert.That(objRetrieved.Short, Is.EqualTo(obj.Short), "DatabaseTypeTests: in Short (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Short = short.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Short (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Short (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Short (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Short (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Short (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Short, objReRetrieved.Short, "DatabaseTypeTests: in Short (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Short (Null) Test.");
+			Assert.That(objReRetrieved.Short, Is.EqualTo(obj.Short), "DatabaseTypeTests: in Short (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Short = default(short);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Short (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Short (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Short (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Short (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Short (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Short, objReReRetrieved.Short, "DatabaseTypeTests: in Short (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Short (Null) Test.");
+			Assert.That(objReReRetrieved.Short, Is.EqualTo(obj.Short), "DatabaseTypeTests: in Short (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -553,35 +553,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in UInt (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in UInt (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in UInt (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in UInt (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UInt (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UInt, objRetrieved.UInt, "DatabaseTypeTests: in UInt (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UInt (NonNull) Test.");
+			Assert.That(objRetrieved.UInt, Is.EqualTo(obj.UInt), "DatabaseTypeTests: in UInt (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.UInt = uint.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in UInt (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in UInt (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in UInt (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in UInt (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UInt (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UInt, objReRetrieved.UInt, "DatabaseTypeTests: in UInt (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UInt (NonNull) Test.");
+			Assert.That(objReRetrieved.UInt, Is.EqualTo(obj.UInt), "DatabaseTypeTests: in UInt (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.UInt = default(uint);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in UInt (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in UInt (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in UInt (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in UInt (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UInt (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UInt, objReReRetrieved.UInt, "DatabaseTypeTests: in UInt (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UInt (NonNull) Test.");
+			Assert.That(objReReRetrieved.UInt, Is.EqualTo(obj.UInt), "DatabaseTypeTests: in UInt (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -594,35 +594,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in UInt (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in UInt (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in UInt (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in UInt (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UInt (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UInt, objRetrieved.UInt, "DatabaseTypeTests: in UInt (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UInt (Null) Test.");
+			Assert.That(objRetrieved.UInt, Is.EqualTo(obj.UInt), "DatabaseTypeTests: in UInt (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.UInt = uint.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in UInt (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in UInt (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in UInt (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in UInt (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UInt (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UInt, objReRetrieved.UInt, "DatabaseTypeTests: in UInt (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UInt (Null) Test.");
+			Assert.That(objReRetrieved.UInt, Is.EqualTo(obj.UInt), "DatabaseTypeTests: in UInt (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.UInt = default(uint);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in UInt (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in UInt (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in UInt (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in UInt (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in UInt (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.UInt, objReReRetrieved.UInt, "DatabaseTypeTests: in UInt (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in UInt (Null) Test.");
+			Assert.That(objReReRetrieved.UInt, Is.EqualTo(obj.UInt), "DatabaseTypeTests: in UInt (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -639,35 +639,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Int (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Int (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Int (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Int (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Int (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Int, objRetrieved.Int, "DatabaseTypeTests: in Int (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Int (NonNull) Test.");
+			Assert.That(objRetrieved.Int, Is.EqualTo(obj.Int), "DatabaseTypeTests: in Int (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Int = int.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Int (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Int (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Int (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Int (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Int (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Int, objReRetrieved.Int, "DatabaseTypeTests: in Int (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Int (NonNull) Test.");
+			Assert.That(objReRetrieved.Int, Is.EqualTo(obj.Int), "DatabaseTypeTests: in Int (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Int = default(int);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Int (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Int (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Int (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Int (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Int (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Int, objReReRetrieved.Int, "DatabaseTypeTests: in Int (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Int (NonNull) Test.");
+			Assert.That(objReReRetrieved.Int, Is.EqualTo(obj.Int), "DatabaseTypeTests: in Int (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -680,35 +680,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Int (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Int (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Int (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Int (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Int (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Int, objRetrieved.Int, "DatabaseTypeTests: in Int (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Int (Null) Test.");
+			Assert.That(objRetrieved.Int, Is.EqualTo(obj.Int), "DatabaseTypeTests: in Int (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Int = int.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Int (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Int (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Int (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Int (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Int (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Int, objReRetrieved.Int, "DatabaseTypeTests: in Int (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Int (Null) Test.");
+			Assert.That(objReRetrieved.Int, Is.EqualTo(obj.Int), "DatabaseTypeTests: in Int (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Int = default(int);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Int (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Int (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Int (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Int (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Int (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Int, objReReRetrieved.Int, "DatabaseTypeTests: in Int (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Int (Null) Test.");
+			Assert.That(objReReRetrieved.Int, Is.EqualTo(obj.Int), "DatabaseTypeTests: in Int (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -725,35 +725,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in ULong (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in ULong (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in ULong (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in ULong (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in ULong (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.ULong, objRetrieved.ULong, "DatabaseTypeTests: in ULong (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in ULong (NonNull) Test.");
+			Assert.That(objRetrieved.ULong, Is.EqualTo(obj.ULong), "DatabaseTypeTests: in ULong (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.ULong = ulong.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in ULong (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in ULong (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in ULong (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in ULong (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in ULong (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.ULong, objReRetrieved.ULong, "DatabaseTypeTests: in ULong (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in ULong (NonNull) Test.");
+			Assert.That(objReRetrieved.ULong, Is.EqualTo(obj.ULong), "DatabaseTypeTests: in ULong (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.ULong = default(ulong);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in ULong (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in ULong (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in ULong (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in ULong (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in ULong (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.ULong, objReReRetrieved.ULong, "DatabaseTypeTests: in ULong (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in ULong (NonNull) Test.");
+			Assert.That(objReReRetrieved.ULong, Is.EqualTo(obj.ULong), "DatabaseTypeTests: in ULong (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -766,35 +766,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in ULong (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in ULong (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in ULong (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in ULong (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in ULong (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.ULong, objRetrieved.ULong, "DatabaseTypeTests: in ULong (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in ULong (Null) Test.");
+			Assert.That(objRetrieved.ULong, Is.EqualTo(obj.ULong), "DatabaseTypeTests: in ULong (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.ULong = ulong.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in ULong (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in ULong (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in ULong (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in ULong (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in ULong (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.ULong, objReRetrieved.ULong, "DatabaseTypeTests: in ULong (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in ULong (Null) Test.");
+			Assert.That(objReRetrieved.ULong, Is.EqualTo(obj.ULong), "DatabaseTypeTests: in ULong (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.ULong = default(ulong);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in ULong (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in ULong (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in ULong (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in ULong (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in ULong (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.ULong, objReReRetrieved.ULong, "DatabaseTypeTests: in ULong (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in ULong (Null) Test.");
+			Assert.That(objReReRetrieved.ULong, Is.EqualTo(obj.ULong), "DatabaseTypeTests: in ULong (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -811,35 +811,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Long (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Long (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Long (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Long (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Long (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Long, objRetrieved.Long, "DatabaseTypeTests: in Long (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Long (NonNull) Test.");
+			Assert.That(objRetrieved.Long, Is.EqualTo(obj.Long), "DatabaseTypeTests: in Long (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Long = long.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Long (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Long (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Long (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Long (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Long (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Long, objReRetrieved.Long, "DatabaseTypeTests: in Long (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Long (NonNull) Test.");
+			Assert.That(objReRetrieved.Long, Is.EqualTo(obj.Long), "DatabaseTypeTests: in Long (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Long = default(long);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Long (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Long (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Long (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Long (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Long (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Long, objReReRetrieved.Long, "DatabaseTypeTests: in Long (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Long (NonNull) Test.");
+			Assert.That(objReReRetrieved.Long, Is.EqualTo(obj.Long), "DatabaseTypeTests: in Long (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -852,35 +852,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Long (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Long (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Long (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Long (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Long (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Long, objRetrieved.Long, "DatabaseTypeTests: in Long (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Long (Null) Test.");
+			Assert.That(objRetrieved.Long, Is.EqualTo(obj.Long), "DatabaseTypeTests: in Long (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Long = long.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Long (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Long (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Long (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Long (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Long (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Long, objReRetrieved.Long, "DatabaseTypeTests: in Long (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Long (Null) Test.");
+			Assert.That(objReRetrieved.Long, Is.EqualTo(obj.Long), "DatabaseTypeTests: in Long (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Long = default(long);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Long (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Long (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Long (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Long (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Long (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Long, objReReRetrieved.Long, "DatabaseTypeTests: in Long (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Long (Null) Test.");
+			Assert.That(objReReRetrieved.Long, Is.EqualTo(obj.Long), "DatabaseTypeTests: in Long (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -897,35 +897,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Float (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Float (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Float (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Float (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Float (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Float, objRetrieved.Float, "DatabaseTypeTests: in Float (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Float (NonNull) Test.");
+			Assert.That(objRetrieved.Float, Is.EqualTo(obj.Float), "DatabaseTypeTests: in Float (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Float = float.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Float (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Float (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Float (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Float (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Float (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Float, objReRetrieved.Float, "DatabaseTypeTests: in Float (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Float (NonNull) Test.");
+			Assert.That(objReRetrieved.Float, Is.EqualTo(obj.Float), "DatabaseTypeTests: in Float (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Float = (float)0.1;
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Float (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Float (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Float (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Float (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Float (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Float, objReReRetrieved.Float, "DatabaseTypeTests: in Float (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Float (NonNull) Test.");
+			Assert.That(objReReRetrieved.Float, Is.EqualTo(obj.Float), "DatabaseTypeTests: in Float (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -938,35 +938,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Float (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Float (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Float (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Float (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Float (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Float, objRetrieved.Float, "DatabaseTypeTests: in Float (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Float (Null) Test.");
+			Assert.That(objRetrieved.Float, Is.EqualTo(obj.Float), "DatabaseTypeTests: in Float (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Float = float.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Float (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Float (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Float (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Float (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Float (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Float, objReRetrieved.Float, "DatabaseTypeTests: in Float (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Float (Null) Test.");
+			Assert.That(objReRetrieved.Float, Is.EqualTo(obj.Float), "DatabaseTypeTests: in Float (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Float = (float)0.1;
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Float (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Float (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Float (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Float (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Float (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Float, objReReRetrieved.Float, "DatabaseTypeTests: in Float (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Float (Null) Test.");
+			Assert.That(objReReRetrieved.Float, Is.EqualTo(obj.Float), "DatabaseTypeTests: in Float (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -983,35 +983,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Double (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Double (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Double (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Double (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Double (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Double, objRetrieved.Double, "DatabaseTypeTests: in Double (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Double (NonNull) Test.");
+			Assert.That(objRetrieved.Double, Is.EqualTo(obj.Double), "DatabaseTypeTests: in Double (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Double = double.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Double (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Double (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Double (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Double (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Double (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Double, objReRetrieved.Double, "DatabaseTypeTests: in Double (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Double (NonNull) Test.");
+			Assert.That(objReRetrieved.Double, Is.EqualTo(obj.Double), "DatabaseTypeTests: in Double (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Double = (double)0.1;
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Double (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Double (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Double (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Double (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Double (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Double, objReReRetrieved.Double, "DatabaseTypeTests: in Double (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Double (NonNull) Test.");
+			Assert.That(objReReRetrieved.Double, Is.EqualTo(obj.Double), "DatabaseTypeTests: in Double (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -1024,35 +1024,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Double (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Double (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Double (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Double (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Double (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Double, objRetrieved.Double, "DatabaseTypeTests: in Double (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Double (Null) Test.");
+			Assert.That(objRetrieved.Double, Is.EqualTo(obj.Double), "DatabaseTypeTests: in Double (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Double = double.MaxValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Double (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Double (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Double (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Double (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Double (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Double, objReRetrieved.Double, "DatabaseTypeTests: in Double (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Double (Null) Test.");
+			Assert.That(objReRetrieved.Double, Is.EqualTo(obj.Double), "DatabaseTypeTests: in Double (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Double = (double)0.1;
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Double (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Double (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Double (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Double (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Double (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Double, objReReRetrieved.Double, "DatabaseTypeTests: in Double (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Double (Null) Test.");
+			Assert.That(objReReRetrieved.Double, Is.EqualTo(obj.Double), "DatabaseTypeTests: in Double (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -1069,35 +1069,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in DateTime (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in DateTime (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in DateTime (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in DateTime (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in DateTime (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.DateTime, objRetrieved.DateTime, "DatabaseTypeTests: in DateTime (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in DateTime (NonNull) Test.");
+			Assert.That(objRetrieved.DateTime, Is.EqualTo(obj.DateTime), "DatabaseTypeTests: in DateTime (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.DateTime = DateTime.MinValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in DateTime (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in DateTime (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in DateTime (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in DateTime (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in DateTime (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.DateTime, objReRetrieved.DateTime, "DatabaseTypeTests: in DateTime (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in DateTime (NonNull) Test.");
+			Assert.That(objReRetrieved.DateTime, Is.EqualTo(obj.DateTime), "DatabaseTypeTests: in DateTime (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.DateTime = default(DateTime);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in DateTime (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in DateTime (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in DateTime (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in DateTime (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in DateTime (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.DateTime, objReReRetrieved.DateTime, "DatabaseTypeTests: in DateTime (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in DateTime (NonNull) Test.");
+			Assert.That(objReReRetrieved.DateTime, Is.EqualTo(obj.DateTime), "DatabaseTypeTests: in DateTime (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -1110,35 +1110,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in DateTime (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in DateTime (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in DateTime (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in DateTime (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in DateTime (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.DateTime, objRetrieved.DateTime, "DatabaseTypeTests: in DateTime (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in DateTime (Null) Test.");
+			Assert.That(objRetrieved.DateTime, Is.EqualTo(obj.DateTime), "DatabaseTypeTests: in DateTime (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.DateTime = DateTime.MinValue;
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in DateTime (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in DateTime (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in DateTime (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in DateTime (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in DateTime (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.DateTime, objReRetrieved.DateTime, "DatabaseTypeTests: in DateTime (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in DateTime (Null) Test.");
+			Assert.That(objReRetrieved.DateTime, Is.EqualTo(obj.DateTime), "DatabaseTypeTests: in DateTime (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.DateTime = default(DateTime);
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in DateTime (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in DateTime (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in DateTime (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in DateTime (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in DateTime (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.DateTime, objReReRetrieved.DateTime, "DatabaseTypeTests: in DateTime (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in DateTime (Null) Test.");
+			Assert.That(objReReRetrieved.DateTime, Is.EqualTo(obj.DateTime), "DatabaseTypeTests: in DateTime (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -1155,35 +1155,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in String (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in String (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in String (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in String (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in String (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.String, objRetrieved.String, "DatabaseTypeTests: in String (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in String (NonNull) Test.");
+			Assert.That(objRetrieved.String, Is.EqualTo(obj.String), "DatabaseTypeTests: in String (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.String = new string(Enumerable.Range(0, 199).Select(i => 'z').Concat(new [] { '@' }).ToArray());
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in String (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in String (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in String (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in String (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in String (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.String, objReRetrieved.String, "DatabaseTypeTests: in String (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in String (NonNull) Test.");
+			Assert.That(objReRetrieved.String, Is.EqualTo(obj.String), "DatabaseTypeTests: in String (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.String = string.Empty;
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in String (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in String (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in String (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in String (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in String (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.String, objReReRetrieved.String, "DatabaseTypeTests: in String (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in String (NonNull) Test.");
+			Assert.That(objReReRetrieved.String, Is.EqualTo(obj.String), "DatabaseTypeTests: in String (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -1196,35 +1196,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in String (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in String (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in String (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in String (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in String (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.String, objRetrieved.String, "DatabaseTypeTests: in String (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in String (Null) Test.");
+			Assert.That(objRetrieved.String, Is.EqualTo(obj.String), "DatabaseTypeTests: in String (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.String = new string(Enumerable.Range(0, 199).Select(i => 'z').Concat(new [] { '@' }).ToArray());
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in String (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in String (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in String (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in String (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in String (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.String, objReRetrieved.String, "DatabaseTypeTests: in String (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in String (Null) Test.");
+			Assert.That(objReRetrieved.String, Is.EqualTo(obj.String), "DatabaseTypeTests: in String (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.String = "a";
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in String (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in String (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in String (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in String (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in String (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.String, objReReRetrieved.String, "DatabaseTypeTests: in String (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in String (Null) Test.");
+			Assert.That(objReReRetrieved.String, Is.EqualTo(obj.String), "DatabaseTypeTests: in String (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -1241,35 +1241,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Text (NonNull) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Text (NonNull) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Text (NonNull) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Text (NonNull) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Text (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Text, objRetrieved.Text, "DatabaseTypeTests: in Text (NonNull) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Text (NonNull) Test.");
+			Assert.That(objRetrieved.Text, Is.EqualTo(obj.Text), "DatabaseTypeTests: in Text (NonNull) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Text = new string(Enumerable.Range(0, 65534).Select(i => 'z').Concat(new [] { '@' }).ToArray());
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Text (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Text (NonNull) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Text (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Text (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Text (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Text, objReRetrieved.Text, "DatabaseTypeTests: in Text (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Text (NonNull) Test.");
+			Assert.That(objReRetrieved.Text, Is.EqualTo(obj.Text), "DatabaseTypeTests: in Text (NonNull) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Text = string.Empty;
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Text (NonNull) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Text (NonNull) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Text (NonNull) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Text (NonNull) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTable>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Text (NonNull) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Text, objReReRetrieved.Text, "DatabaseTypeTests: in Text (NonNull) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Text (NonNull) Test.");
+			Assert.That(objReReRetrieved.Text, Is.EqualTo(obj.Text), "DatabaseTypeTests: in Text (NonNull) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 		[Test]
@@ -1282,35 +1282,35 @@ namespace DOL.Integration.Database
 			
 			// Test Add
 			var inserted = Database.AddObject(obj);
-			Assert.IsTrue(inserted, "DatabaseTypeTests: Could not insert object in Text (Null) Test.");
-			Assert.IsTrue(obj.IsPersisted, "DatabaseTypeTests: Inserted Object in Text (Null) Test doesn't have Persisted Flag set.");
+			Assert.That(inserted, Is.True, "DatabaseTypeTests: Could not insert object in Text (Null) Test.");
+			Assert.That(obj.IsPersisted, Is.True, "DatabaseTypeTests: Inserted Object in Text (Null) Test doesn't have Persisted Flag set.");
 			
 			// Test Read
 			var objRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Text (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Text, objRetrieved.Text, "DatabaseTypeTests: in Text (Null) Insterted Value and Retrieved Value should be Equal.");
+			Assert.That(objRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Text (Null) Test.");
+			Assert.That(objRetrieved.Text, Is.EqualTo(obj.Text), "DatabaseTypeTests: in Text (Null) Insterted Value and Retrieved Value should be Equal.");
 			
 			// Test Save
 			obj.Text = new string(Enumerable.Range(0, 65534).Select(i => 'z').Concat(new [] { '@' }).ToArray());
 			var saved = Database.SaveObject(obj);
-			Assert.IsTrue(saved, "DatabaseTypeTests: Could not save objet in Text (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Saved Object in Text (Null) Test still have Dirty Flag set.");
+			Assert.That(saved, Is.True, "DatabaseTypeTests: Could not save objet in Text (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Saved Object in Text (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Read
 			var objReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Text (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Text, objReRetrieved.Text, "DatabaseTypeTests: in Text (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Text (Null) Test.");
+			Assert.That(objReRetrieved.Text, Is.EqualTo(obj.Text), "DatabaseTypeTests: in Text (Null) Saved Value and Retrieved Value should be Equal.");
 			
 			// Test Re-Save
 			obj.Text = "a";
 			var reSaved = Database.SaveObject(obj);
-			Assert.IsTrue(reSaved, "DatabaseTypeTests: Could not Re-Save objet in Text (Null) Test.");
-			Assert.IsFalse(obj.Dirty, "DatabaseTypeTests: Re-Saved Object in Text (Null) Test still have Dirty Flag set.");
+			Assert.That(reSaved, Is.True, "DatabaseTypeTests: Could not Re-Save objet in Text (Null) Test.");
+			Assert.That(obj.Dirty, Is.False, "DatabaseTypeTests: Re-Saved Object in Text (Null) Test still have Dirty Flag set.");
 			
 			// Test Re-Re-Read
 			var objReReRetrieved = Database.FindObjectByKey<ComplexTypeTestTableWithNull>(obj.PrimaryKey);
-			Assert.IsNotNull(objReReRetrieved, "DatabaseTypeTests: Could not retrieve object (ID {0}) in Text (Null) Test.", obj.PrimaryKey);
-			Assert.AreEqual(obj.Text, objReReRetrieved.Text, "DatabaseTypeTests: in Text (Null) Saved Value and Retrieved Value should be Equal.");
+			Assert.That(objReReRetrieved, Is.Not.Null, $"DatabaseTypeTests: Could not retrieve object (ID {obj.PrimaryKey}) in Text (Null) Test.");
+			Assert.That(objReReRetrieved.Text, Is.EqualTo(obj.Text), "DatabaseTypeTests: in Text (Null) Saved Value and Retrieved Value should be Equal.");
 		}
 		
 	}

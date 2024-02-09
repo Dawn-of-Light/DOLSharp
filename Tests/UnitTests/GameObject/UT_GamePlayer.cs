@@ -23,7 +23,7 @@ namespace DOL.UnitTests.Gameserver
             int actual = player.Constitution;
 
             int expected = (int)(50 * 1.25);
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace DOL.UnitTests.Gameserver
             int actual = player.Constitution;
 
             int expected = (int)(50 * 1.875);
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace DOL.UnitTests.Gameserver
             int actual = player.Constitution;
 
             int expected = (int)(1.5 * 50);
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = player.Intelligence;
 
-            Assert.AreEqual(50, actual);
+            Assert.That(actual, Is.EqualTo(50));
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = player.Constitution;
 
-            Assert.AreEqual(127, actual);
+            Assert.That(actual, Is.EqualTo(127));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = player.Constitution;
 
-            Assert.AreEqual(106, actual);
+            Assert.That(actual, Is.EqualTo(106));
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = player.Intelligence;
 
-            Assert.AreEqual(50, actual);
+            Assert.That(actual, Is.EqualTo(50));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = player.Intelligence;
 
-            Assert.AreEqual(127, actual);
+            Assert.That(actual, Is.EqualTo(127));
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = player.Intelligence;
 
-            Assert.AreEqual(60, actual);
+            Assert.That(actual, Is.EqualTo(60));
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = player.Constitution;
 
-            Assert.AreEqual(81, actual);
+            Assert.That(actual, Is.EqualTo(81));
         }
 
         private static GamePlayer CreatePlayer()

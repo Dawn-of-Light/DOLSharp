@@ -31,7 +31,7 @@ namespace DOL.Integration.Server
 		public void TrainNow()
 		{
 			GamePlayer player = CreateMockGamePlayer();
-			Assert.IsNotNull(player);
+			Assert.That(player, Is.Not.Null);
 			player.Out.SendTrainerWindow();
 			return;
 		}

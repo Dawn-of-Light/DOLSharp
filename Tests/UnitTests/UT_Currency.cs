@@ -15,7 +15,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = money1.Equals(money2);
 
-            Assert.IsTrue(actual);
+            Assert.That(actual, Is.True);
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = money1.Equals(money2);
 
-            Assert.IsFalse(actual);
+            Assert.That(actual, Is.False);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = money1.Equals(money2);
 
-            Assert.IsFalse(actual);
+            Assert.That(actual, Is.False);
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = money1.Equals(money2);
 
-            Assert.IsFalse(actual);
+            Assert.That(actual, Is.False);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = money1.Equals(money2);
 
-            Assert.IsTrue(actual);
+            Assert.That(actual, Is.True);
         }
     }
 }

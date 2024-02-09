@@ -34,7 +34,7 @@ namespace DOL.Integration.Server
 		{
 			Console.WriteLine("TestGetString();");
 			Console.WriteLine(LanguageMgr.GetTranslation ("test","fail default string"));
-			Assert.IsTrue(true, "ok");
+			Assert.That(true, Is.True, "ok");
 		}
 	}
 }

@@ -33,7 +33,7 @@ namespace DOL.UnitTests.Gameserver
             var actual = brain.GetPlayerOwner();
 
             var expected = player;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

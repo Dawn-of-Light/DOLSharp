@@ -44,7 +44,7 @@ namespace DOL.GS.Quests.Midgard {
 	 * as Quest. To do this, we derive from the abstract class
 	 * BaseQuest	  	 
 	 */
-	public class badfood : BaseQuest
+	public class BadFood : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -82,19 +82,19 @@ namespace DOL.GS.Quests.Midgard {
 		/* 
 		* Constructor
 		*/
-		public badfood() : base()
+		public BadFood() : base()
 		{
 		}
 
-		public badfood(GamePlayer questingPlayer) : this(questingPlayer, 1)
+		public BadFood(GamePlayer questingPlayer) : this(questingPlayer, 1)
 		{
 		}
 
-		public badfood(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+		public BadFood(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
 		{
 		}
 
-		public badfood(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+		public BadFood(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
 	{
 	}
 
@@ -273,56 +273,56 @@ namespace DOL.GS.Quests.Midgard {
 		
 		#region defineQuestParts
 
-		QuestBuilder builder = QuestMgr.getBuilder(typeof(badfood));
+		QuestBuilder builder = QuestMgr.getBuilder(typeof(BadFood));
 			QuestBehaviour a;
 			a = builder.CreateBehaviour(Pedra,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Pedra);
-			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.badfood),Pedra);
-			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.badfood),null,(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.BadFood),Pedra);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.BadFood),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"Oh, I am not feeling very well at all. I don't think there's one member of this town that hasn't felt a little queasy at least (once?) from all the bad fish we've [eaten].",Pedra);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(Pedra,-1);
 				a.AddTrigger(eTriggerType.Whisper,"eaten",Pedra);
-			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.badfood),Pedra);
-			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.badfood),null,(eComparator)5);
+			a.AddRequirement(eRequirementType.QuestGivable,typeof(DOL.GS.Quests.Midgard.BadFood),Pedra);
+			a.AddRequirement(eRequirementType.QuestPending,typeof(DOL.GS.Quests.Midgard.BadFood),null,(eComparator)5);
 			a.AddAction(eActionType.Talk,"Aye, and now Kedra, the healer, is busy sorting out the worst! It turns out we are ate some bad fish. Now, Kedra says she is running our of her cure, and doesn't have time to get any more of the ingredients! Do you think you could help?",Pedra);
-			a.AddAction(eActionType.OfferQuest,typeof(DOL.GS.Quests.Midgard.badfood),"Will you help the healer out?");
+			a.AddAction(eActionType.OfferQuest,typeof(DOL.GS.Quests.Midgard.BadFood),"Will you help the healer out?");
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(Pedra,-1);
-				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.badfood));
-			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.badfood),Pedra);
+				a.AddTrigger(eTriggerType.AcceptQuest,null,typeof(DOL.GS.Quests.Midgard.BadFood));
+			a.AddAction(eActionType.GiveQuest,typeof(DOL.GS.Quests.Midgard.BadFood),Pedra);
 			a.AddAction(eActionType.Talk,"Oh good! Talk to Kedra about bad fish. She'll tell you what needs to be done.",Pedra);
-			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.badfood),2);
+			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.BadFood),2);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(Kedra,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Kedra);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.badfood),2,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.BadFood),2,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Fish! The entire town has eaten bad fish! It is crazy! I told them not to! I told them the moon's position in the sky indicated a bad harvest of fish, but did anyone listen? And now, everyone is [sick].",Kedra);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(Kedra,-1);
 				a.AddTrigger(eTriggerType.Whisper,"sick",Kedra);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.badfood),2,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.BadFood),2,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Yes. Sick. Why are you here? Are you sick? You don't look sick to me. You can help me. I am running out of my cure! I don't have time to go get the [marine fungus] I need!",Kedra);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(Kedra,-1);
 				a.AddTrigger(eTriggerType.Whisper,"marine fungus",Kedra);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.badfood),2,(eComparator)3);
-			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.badfood),3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.BadFood),2,(eComparator)3);
+			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.BadFood),3);
 			a.AddAction(eActionType.Talk,"Aye. I mash it up and add herbs to it. It's a great cure! I need more though! Go get me a marine fungus. I will pay you for it! And the whole town will thank you, when they are through wretching up the illness, that is.",Kedra);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(Pedra,-1);
 				a.AddTrigger(eTriggerType.EnemyKilled,"marine fungus",null);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.badfood),3,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.BadFood),3,(eComparator)3);
 			a.AddAction(eActionType.GiveItem,marinefungus,null);
-			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.badfood),4);
+			a.AddAction(eActionType.SetQuestStep,typeof(DOL.GS.Quests.Midgard.BadFood),4);
 			AddBehaviour(a);
 			a = builder.CreateBehaviour(Kedra,-1);
 				a.AddTrigger(eTriggerType.Interact,null,Kedra);
-			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.badfood),4,(eComparator)3);
+			a.AddRequirement(eRequirementType.QuestStep,typeof(DOL.GS.Quests.Midgard.BadFood),4,(eComparator)3);
 			a.AddAction(eActionType.Talk,"Oh thank you! The stench of the ill is getting to me! I can make a few more batches of my cure after this, and then be done with it all! This will teach everyone to ignore me! Let's see if they eat the fish the next time I say the moon isn't right! Here, I hope this is enough. Thank you for your aid!",Kedra);
 			a.AddAction(eActionType.GiveGold,305,null);
 			a.AddAction(eActionType.GiveXP,20,null);
-			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.badfood),null);
+			a.AddAction(eActionType.FinishQuest,typeof(DOL.GS.Quests.Midgard.BadFood),null);
 			a.AddAction(eActionType.TakeItem,marinefungus,null);
 			AddBehaviour(a);
 			
@@ -332,7 +332,7 @@ namespace DOL.GS.Quests.Midgard {
 			
 			// Custom Scriptloaded Code End
 
-			Pedra.AddQuestToGive(typeof (badfood));
+			Pedra.AddQuestToGive(typeof (BadFood));
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
 		}
@@ -353,7 +353,7 @@ namespace DOL.GS.Quests.Midgard {
 			if (Pedra == null)
 				return;
 			/* Now we remove the possibility to give this quest to players */			
-			Pedra.RemoveQuestToGive(typeof (badfood));
+			Pedra.RemoveQuestToGive(typeof (BadFood));
 		}
 
 		/* Now we set the quest name.
@@ -404,7 +404,7 @@ namespace DOL.GS.Quests.Midgard {
 		public override bool CheckQuestQualification(GamePlayer player)
 		{		
 			// if the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof (badfood)) != null)
+			if (player.IsDoingQuest(typeof (BadFood)) != null)
 				return true;
 				
 			// Custom Code Begin

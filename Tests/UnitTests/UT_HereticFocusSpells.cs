@@ -31,7 +31,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = source.LastDamageDealt;
             var expected = 100;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = source.LastDamageDealt;
             var expected = 150;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = source.LastDamageDealt;
             var expected = 150;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = source.LastDamageDealt;
             var expected = 170;
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         private Spell NewHereticFocusDamageSpell(double initialDamage, int growthPercent)

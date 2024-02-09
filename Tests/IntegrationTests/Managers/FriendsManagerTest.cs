@@ -41,13 +41,13 @@ namespace DOL.Integration.Server
 		[Test]
 		public void FriendsManager_StartUp_NotNull()
 		{
-			Assert.IsNotNull(GameServer.Instance.PlayerManager.Friends);
+			Assert.That(GameServer.Instance.PlayerManager.Friends, Is.Not.Null);
 		}
 		
 		[Test]
 		public void FriendsManager_NoAdd_RetrieveEmptyGamePlayerList()
 		{
-			CollectionAssert.IsEmpty(GameServer.Instance.PlayerManager.Friends[null]);
+			Assert.That(GameServer.Instance.PlayerManager.Friends[null], Is.Empty);
 		}
 		
 		[Test]
@@ -61,7 +61,7 @@ namespace DOL.Integration.Server
 
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			
-			CollectionAssert.IsEmpty(gameplayer.GetFriends());
+			Assert.That(gameplayer.GetFriends(), Is.Empty);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -77,7 +77,7 @@ namespace DOL.Integration.Server
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			
-			CollectionAssert.IsEmpty(gameplayer.GetFriends());
+			Assert.That(gameplayer.GetFriends(), Is.Empty);
 		}
 		
 		[Test]
@@ -91,8 +91,8 @@ namespace DOL.Integration.Server
 
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { client.Account.Characters[0].SerializedFriendsList });
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy" });
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(new [] { client.Account.Characters[0].SerializedFriendsList }));
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(new [] { "buddy" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -107,8 +107,8 @@ namespace DOL.Integration.Server
 
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), gameplayer.SerializedFriendsList);
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy", "mate", "someone" });
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(gameplayer.SerializedFriendsList));
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(new [] { "buddy", "mate", "someone" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -124,8 +124,8 @@ namespace DOL.Integration.Server
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
 
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { client.Account.Characters[0].SerializedFriendsList });
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy" });
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(new [] { client.Account.Characters[0].SerializedFriendsList }));
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(new [] { "buddy" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -143,8 +143,8 @@ namespace DOL.Integration.Server
 			gameplayer.AddFriend("mate");
 			gameplayer.AddFriend("someone");
 
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), gameplayer.SerializedFriendsList);
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy", "mate", "someone" });
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(gameplayer.SerializedFriendsList));
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(new [] { "buddy", "mate", "someone" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -159,11 +159,11 @@ namespace DOL.Integration.Server
 
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
-			Assert.IsFalse(gameplayer.AddFriend("buddy"));
+			Assert.That(gameplayer.AddFriend("buddy"), Is.False);
 			gameplayer.AddFriend("someone");
 
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), gameplayer.SerializedFriendsList);
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy", "someone" });
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(gameplayer.SerializedFriendsList));
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(new [] { "buddy", "someone" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -178,9 +178,9 @@ namespace DOL.Integration.Server
 
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
-			CollectionAssert.IsNotEmpty(gameplayer.GetFriends());
+			Assert.That(gameplayer.GetFriends(), Is.Not.Empty);
 			gameplayer.RemoveFriend("buddy");
-			CollectionAssert.IsEmpty(gameplayer.GetFriends());
+			Assert.That(gameplayer.GetFriends(), Is.Empty);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -197,11 +197,11 @@ namespace DOL.Integration.Server
 			gameplayer.AddFriend("buddy");
 			gameplayer.AddFriend("mate");
 			gameplayer.AddFriend("someone");
-			CollectionAssert.IsNotEmpty(gameplayer.GetFriends());
+			Assert.That(gameplayer.GetFriends(), Is.Not.Empty);
 			gameplayer.RemoveFriend("buddy");
 			gameplayer.RemoveFriend("mate");
 			gameplayer.RemoveFriend("someone");
-			CollectionAssert.IsEmpty(gameplayer.GetFriends());
+			Assert.That(gameplayer.GetFriends(), Is.Empty);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -216,9 +216,9 @@ namespace DOL.Integration.Server
 
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
-			CollectionAssert.IsNotEmpty(gameplayer.GetFriends());
-			Assert.IsFalse(gameplayer.RemoveFriend("mate"));
-			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy" });
+			Assert.That(gameplayer.GetFriends(), Is.Not.Empty);
+			Assert.That(gameplayer.RemoveFriend("mate"), Is.False);
+			Assert.That(gameplayer.GetFriends(), Is.EquivalentTo(new [] { "buddy" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -235,7 +235,7 @@ namespace DOL.Integration.Server
 			
 			client.ClientState = GameClient.eClientState.WorldEnter;
 					
-			CollectionAssert.IsEmpty(received);
+			Assert.That(received, Is.Empty);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
@@ -260,7 +260,7 @@ namespace DOL.Integration.Server
 			
 			client.ClientState = GameClient.eClientState.WorldEnter;
 					
-			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			Assert.That(received, Is.EquivalentTo(new[] { "mate" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
 		}
@@ -294,7 +294,7 @@ namespace DOL.Integration.Server
 			
 			client.ClientState = GameClient.eClientState.WorldEnter;
 					
-			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			Assert.That(received, Is.EquivalentTo(new[] { "mate" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerBuddy);
@@ -322,7 +322,7 @@ namespace DOL.Integration.Server
 			
 			gameplayerMate.IsAnonymous = true;
 			
-			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			Assert.That(received, Is.EquivalentTo(new[] { "mate" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
 		}
@@ -349,7 +349,7 @@ namespace DOL.Integration.Server
 			
 			gameplayerMate.IsAnonymous = false;
 			
-			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			Assert.That(received, Is.EquivalentTo(new[] { "mate" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
 		}
@@ -375,7 +375,7 @@ namespace DOL.Integration.Server
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
 			
 			GameEventMgr.Notify(GamePlayerEvent.GameEntered, gameplayerMate);
-			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			Assert.That(received, Is.EquivalentTo(new[] { "mate" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
 		}
@@ -401,7 +401,7 @@ namespace DOL.Integration.Server
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
 			
 			GameEventMgr.Notify(GamePlayerEvent.GameEntered, gameplayerMate);
-			Assert.IsNull(received);
+			Assert.That(received, Is.Null);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
 		}
@@ -427,7 +427,7 @@ namespace DOL.Integration.Server
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
 			
 			GameEventMgr.Notify(GamePlayerEvent.Quit, gameplayerMate);
-			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			Assert.That(received, Is.EquivalentTo(new[] { "mate" }));
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
 		}
@@ -453,7 +453,7 @@ namespace DOL.Integration.Server
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
 			
 			GameEventMgr.Notify(GamePlayerEvent.Quit, gameplayerMate);
-			Assert.IsNull(received);
+			Assert.That(received, Is.Null);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
 		}

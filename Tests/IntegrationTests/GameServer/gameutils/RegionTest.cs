@@ -45,7 +45,7 @@ namespace DOL.Integration.Server
 			if (obj.ObjectID<0)
 				Assert.Fail("Failed to add object to Region. ObjectId < 0");
 
-			Assert.AreEqual(obj.CurrentRegion.GetObject((ushort)obj.ObjectID),obj);
+			Assert.That(obj, Is.EqualTo(obj.CurrentRegion.GetObject((ushort)obj.ObjectID)));
 		}
 
 
@@ -56,10 +56,10 @@ namespace DOL.Integration.Server
             var circleLocation = Coordinate.Create(1000,1000,0);
 			IArea insertArea = region.AddArea(new Area.Circle(null,circleLocation,500));
 
-			Assert.IsNotNull(insertArea);
+			Assert.That(insertArea, Is.Not.Null);
 
 			var areas = region.GetAreasOfSpot(Coordinate.Create(501,1000,0));
-			Assert.IsTrue(areas.Count>0);
+			Assert.That(areas.Count>0, Is.True);
 
 			bool found = false;
 			foreach( IArea ar in areas)
@@ -70,11 +70,11 @@ namespace DOL.Integration.Server
 					break;
 				}
 			}
-			Assert.IsTrue(found);
+			Assert.That(found, Is.True);
 
 			//
 			areas = region.GetAreasOfSpot(Coordinate.Create(1499,1000,2000));
-			Assert.IsTrue(areas.Count>0);
+			Assert.That(areas.Count>0, Is.True);
 
 			found = false;
 			foreach( IArea ar in areas)
@@ -85,7 +85,7 @@ namespace DOL.Integration.Server
 					break;
 				}
 			}
-			Assert.IsTrue(found);
+			Assert.That(found, Is.True);
 
 
 			//Notify test
@@ -96,12 +96,12 @@ namespace DOL.Integration.Server
 			insertArea.RegisterPlayerEnter(new DOLEventHandler(NotifyTest));
 			insertArea.OnPlayerEnter(player);
 
-			Assert.IsTrue(notified);
+			Assert.That(notified, Is.True);
 
 			region.RemoveArea(insertArea);
 
 			areas = region.GetAreasOfSpot(Coordinate.Create(1499,1000,2000));
-			Assert.IsTrue(areas.Count==0);
+			Assert.That(areas.Count==0, Is.True);
 
 		}
 

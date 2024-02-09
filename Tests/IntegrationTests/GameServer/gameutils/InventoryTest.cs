@@ -37,13 +37,13 @@ namespace DOL.Integration.Server
 		public void InventoryTestCreation()
 		{
 			player = CreateMockGamePlayer();
-			Assert.IsNotNull(player, "Player is null !");
+			Assert.That(player, Is.Not.Null, "Player is null !");
 			itemt = DOLDB<ItemTemplate>.SelectObject(DB.Column(nameof(ItemTemplate.Id_nb)).IsEqualTo("championDocharWardenBlade"));
-			Assert.IsNotNull(itemt, "ItemTemplate is null !");
+			Assert.That(itemt, Is.Not.Null, "ItemTemplate is null !");
 			itemu = new ItemUnique();
 			itemu.Id_nb = "tunik"+DateTime.Now.Ticks;
 			GameServer.Database.AddObject(itemu);
-			Assert.IsNotNull(itemu, "ItemUnique is created !");
+			Assert.That(itemu, Is.Not.Null, "ItemUnique is created !");
 			_ = DOLDB<ItemTemplate>.SelectObject(DB.Column(nameof(ItemTemplate.Id_nb)).IsEqualTo("traitors_dagger_hib"));
 		}
 
@@ -64,14 +64,14 @@ namespace DOL.Integration.Server
 
 			InventoryItem ii = GameInventoryItem.Create(itemt);
 			player.Inventory.AddItem(eInventorySlot.FirstBackpack, ii);
-			Assert.IsNotNull(ii, "ii-t #1 : " + ii.Template.Id_nb + " created & added to " + ii.OwnerID);
+			Assert.That(ii, Is.Not.Null, "ii-t #1 : " + ii.Template.Id_nb + " created & added to " + ii.OwnerID);
 			var iicheck = GameServer.Database.FindObjectByKey<InventoryItem>(ii.ObjectId);
-			Assert.IsNotNull(iicheck, "ii-t #2 : saved in db " + ii.Template.Id_nb + " to " + ii.OwnerID);
+			Assert.That(iicheck, Is.Not.Null, "ii-t #2 : saved in db " + ii.Template.Id_nb + " to " + ii.OwnerID);
 			GameServer.Database.DeleteObject(ii);
 			iicheck = GameServer.Database.FindObjectByKey<InventoryItem>(ii.ObjectId);
-			Assert.IsNull(iicheck, "ii-t #3 : deleted from db " + ii.Template.Id_nb + " to " + ii.OwnerID);
+			Assert.That(iicheck, Is.Null, "ii-t #3 : deleted from db " + ii.Template.Id_nb + " to " + ii.OwnerID);
 			var itcheck = GameServer.Database.FindObjectByKey<ItemTemplate>(itemt.Id_nb);
-			Assert.IsNotNull(itcheck, "ii-t #4 : not deleted from db " + itemt.Id_nb);
+			Assert.That(itcheck, Is.Not.Null, "ii-t #4 : not deleted from db " + itemt.Id_nb);
 		}
 		
 		[Test, Explicit]
@@ -82,16 +82,16 @@ namespace DOL.Integration.Server
 
 			InventoryItem ii = GameInventoryItem.Create(itemu);
 			player.Inventory.AddItem(eInventorySlot.FirstBackpack, ii);
-			Assert.IsNotNull(ii, "ii-u #1 : " + ii.Template.Id_nb + " created & added to " + ii.OwnerID);
+			Assert.That(ii, Is.Not.Null, "ii-u #1 : " + ii.Template.Id_nb + " created & added to " + ii.OwnerID);
 			var iicheck = GameServer.Database.FindObjectByKey<InventoryItem>(ii.ObjectId);
-			Assert.IsNotNull(iicheck, "ii-u #2 : saved in db " + ii.Template.Id_nb + " to " + ii.OwnerID);
+			Assert.That(iicheck, Is.Not.Null, "ii-u #2 : saved in db " + ii.Template.Id_nb + " to " + ii.OwnerID);
 			var iucheck = GameServer.Database.FindObjectByKey<ItemUnique>(itemu.Id_nb);
-			Assert.IsNotNull(iicheck, "ii-u #3 : saved to db " + itemu.Id_nb);
+			Assert.That(iicheck, Is.Not.Null, "ii-u #3 : saved to db " + itemu.Id_nb);
 			GameServer.Database.DeleteObject(ii);
 			iicheck = GameServer.Database.FindObjectByKey<InventoryItem>(ii.ObjectId);
-			Assert.IsNull(iicheck, "ii-u #4 : deleted from db " + ii.Template.Id_nb + " to " + ii.OwnerID);
+			Assert.That(iicheck, Is.Null, "ii-u #4 : deleted from db " + ii.Template.Id_nb + " to " + ii.OwnerID);
 			iucheck = GameServer.Database.FindObjectByKey<ItemUnique>(itemu.Id_nb);
-			Assert.IsNull(iucheck, "ii-t #5 : deleted from db " + itemu.Id_nb);
+			Assert.That(iucheck, Is.Null, "ii-t #5 : deleted from db " + itemu.Id_nb);
 			
 		}
 		
@@ -103,9 +103,9 @@ namespace DOL.Integration.Server
 
 			InventoryItem ii = new InventoryItem();
 			player.Inventory.AddItem(eInventorySlot.FirstBackpack, ii);
-			Assert.IsNotNull(ii, "ii-g #1 : " + ii.Template.Id_nb + " created & added to " + ii.OwnerID);
+			Assert.That(ii, Is.Not.Null, "ii-g #1 : " + ii.Template.Id_nb + " created & added to " + ii.OwnerID);
 			var iicheck = GameServer.Database.FindObjectByKey<InventoryItem>(ii.ObjectId);
-			Assert.IsNull(iicheck, "ii-g #2 : not saved in db " + ii.Template.Id_nb + " to " + ii.OwnerID);
+			Assert.That(iicheck, Is.Null, "ii-g #2 : not saved in db " + ii.Template.Id_nb + " to " + ii.OwnerID);
 		}
 	}
 }

@@ -12,6 +12,6 @@ public class UT_Util
     {
         var actual = Util.SplitCSV("");
         var expected = new List<string>();
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 }

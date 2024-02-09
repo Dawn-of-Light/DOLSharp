@@ -34,7 +34,7 @@ namespace DOL.Integration.Server
 		public void TestGameServerStartup()
 		{
 			Console.WriteLine("Test GameServer Startup...");
-			Assert.IsTrue(GameServer.Instance.IsRunning && GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Open, "GameServer is not running correctly  : " + GameServer.Instance.ServerStatus);
+			Assert.That(GameServer.Instance.IsRunning && GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Open, Is.True, "GameServer is not running correctly  : " + GameServer.Instance.ServerStatus);
 		}
 	}
 }

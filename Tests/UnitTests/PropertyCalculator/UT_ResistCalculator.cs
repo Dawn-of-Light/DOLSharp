@@ -15,7 +15,7 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
 
             int actual = ResistCalculator.CalcValue(npc, SomeResistProperty);
 
-            Assert.AreEqual(6, actual);
+            Assert.That(actual, Is.EqualTo(6));
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
 
             int actual = ResistCalculator.CalcValue(npc, SomeResistProperty);
 
-            Assert.AreEqual(-6, actual);
+            Assert.That(actual, Is.EqualTo(-6));
         }
 
         private ResistCalculator ResistCalculator => new ResistCalculator();

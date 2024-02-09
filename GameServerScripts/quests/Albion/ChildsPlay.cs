@@ -46,7 +46,7 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	public class childsplay : BaseQuest
+	public class ChildsPlay : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -82,22 +82,22 @@ namespace DOL.GS.Quests.Albion
 
 		private static IArea Albion_Statue_Area = null;
 
-		public childsplay()
+		public ChildsPlay()
 			: base()
 		{
 		}
 
-		public childsplay(GamePlayer questingPlayer)
+		public ChildsPlay(GamePlayer questingPlayer)
 			: this(questingPlayer, 1)
 		{
 		}
 
-		public childsplay(GamePlayer questingPlayer, int step)
+		public ChildsPlay(GamePlayer questingPlayer, int step)
 			: base(questingPlayer, step)
 		{
 		}
 
-		public childsplay(GamePlayer questingPlayer, DBQuest dbQuest)
+		public ChildsPlay(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest)
 		{
 		}
@@ -1482,7 +1482,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.AddHandler(Charles, GameLivingEvent.Interact, new DOLEventHandler(TalkToCharles));
 			GameEventMgr.AddHandler(Charles, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToCharles));
 
-			Charles.AddQuestToGive(typeof(childsplay));
+			Charles.AddQuestToGive(typeof(ChildsPlay));
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initialized");
 		}
@@ -1502,7 +1502,7 @@ namespace DOL.GS.Quests.Albion
 			GameEventMgr.RemoveHandler(Charles, GameLivingEvent.Interact, new DOLEventHandler(TalkToCharles));
 			GameEventMgr.RemoveHandler(Charles, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToCharles));
 
-			Charles.RemoveQuestToGive(typeof(childsplay));
+			Charles.RemoveQuestToGive(typeof(ChildsPlay));
 		}
 
 		protected static void TalkToCharles(DOLEvent e, object sender, EventArgs args)
@@ -1511,10 +1511,10 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if (Charles.CanGiveQuest(typeof(childsplay), player) <= 0)
+			if (Charles.CanGiveQuest(typeof(ChildsPlay), player) <= 0)
 				return;
 
-			childsplay quest = player.IsDoingQuest(typeof(childsplay)) as childsplay;
+			ChildsPlay quest = player.IsDoingQuest(typeof(ChildsPlay)) as ChildsPlay;
 
 			Charles.TurnTo(player);
 
@@ -1581,7 +1581,7 @@ namespace DOL.GS.Quests.Albion
 					else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.CaseText2"))
 					{
 						Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text5"));
-						player.Out.SendQuestSubscribeCommand(Charles, QuestMgr.GetIDForQuestType(typeof(childsplay)), LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text6"));
+						player.Out.SendQuestSubscribeCommand(Charles, QuestMgr.GetIDForQuestType(typeof(ChildsPlay)), LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text6"));
 					}
 					else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.CaseText3"))
 					{
@@ -1596,7 +1596,7 @@ namespace DOL.GS.Quests.Albion
 		/// <returns>true if qualified, false if not</returns>
 		public override bool CheckQuestQualification(GamePlayer player)
 		{
-			if (player.IsDoingQuest(typeof(childsplay)) != null)
+			if (player.IsDoingQuest(typeof(ChildsPlay)) != null)
 				return true;
 
 			if (player.Level < minimumLevel || player.Level > maximumLevel)
@@ -1607,7 +1607,7 @@ namespace DOL.GS.Quests.Albion
 
 		private static void CheckPlayerAbortQuest(GamePlayer player, byte response)
 		{
-			childsplay quest = player.IsDoingQuest(typeof(childsplay)) as childsplay;
+			ChildsPlay quest = player.IsDoingQuest(typeof(ChildsPlay)) as ChildsPlay;
 
 			if (quest == null)
 				return;
@@ -1629,7 +1629,7 @@ namespace DOL.GS.Quests.Albion
 			if (qargs == null)
 				return;
 
-			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(childsplay)))
+			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ChildsPlay)))
 				return;
 
 			if (e == GamePlayerEvent.AcceptQuest)
@@ -1642,7 +1642,7 @@ namespace DOL.GS.Quests.Albion
 		{
 			AreaEventArgs aargs = args as AreaEventArgs;
 			GamePlayer player = aargs.GameObject as GamePlayer;
-			childsplay quest = player.IsDoingQuest(typeof(childsplay)) as childsplay;
+			ChildsPlay quest = player.IsDoingQuest(typeof(ChildsPlay)) as ChildsPlay;
 
 			if (quest != null && quest.Step == 1)
 			{
@@ -1653,10 +1653,10 @@ namespace DOL.GS.Quests.Albion
 
 		private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
 		{
-			if (Charles.CanGiveQuest(typeof(childsplay), player) <= 0)
+			if (Charles.CanGiveQuest(typeof(ChildsPlay), player) <= 0)
 				return;
 
-			if (player.IsDoingQuest(typeof(childsplay)) != null)
+			if (player.IsDoingQuest(typeof(ChildsPlay)) != null)
 				return;
 
 			if (response == 0x00)
@@ -1665,7 +1665,7 @@ namespace DOL.GS.Quests.Albion
 			}
 			else
 			{
-				if (!Charles.GiveQuest(typeof(childsplay), player, 1))
+				if (!Charles.GiveQuest(typeof(ChildsPlay), player, 1))
 					return;
 				SendReply(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAcceptQuest.Text2"));
 			}

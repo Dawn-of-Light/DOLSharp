@@ -31,7 +31,7 @@ namespace DOL.UnitTests.Database
 
             var actual = dbConfig.ConnectionString;
             var expected = "NonDefaultOption=Value";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace DOL.UnitTests.Database
 
             var actual = dbConfig.ConnectionString;
             var expected = "Default Option=Value";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace DOL.UnitTests.Database
 
             var actual = dbConfig.ConnectionString;
             var expected = "Default Option=Another Value";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace DOL.UnitTests.Database
 
             var actual = dbConfig.ConnectionString;
             var expected = "Default Option=";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace DOL.UnitTests.Database
             var actual = dbConfig.ConnectionString;
 
             var expected = "NonDefaultOption=;Default Option=";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace DOL.UnitTests.Database
             var actual = dbConfig.ConnectionString;
 
             var expected = "";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace DOL.UnitTests.Database
 
             var actual = dbConfig.GetValueOf("DEFAULTOPTION");
             var expected = "Value";
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

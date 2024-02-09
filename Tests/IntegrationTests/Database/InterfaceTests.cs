@@ -49,21 +49,21 @@ namespace DOL.Integration.Database
 			
 			var objId = obj.ObjectId;
 			
-			Assert.IsFalse(obj.IsPersisted, "Test Object should not have Persisted Flag before adding...");
-			Assert.IsTrue(obj.Dirty, "Test Object should be Dirty before adding...");
+			Assert.That(obj.IsPersisted, Is.False, "Test Object should not have Persisted Flag before adding...");
+			Assert.That(obj.Dirty, Is.True, "Test Object should be Dirty before adding...");
 			
 			var inserted = Database.AddObject(obj);
 			
-			Assert.IsTrue(inserted, "Test Object should be inserted successfully, something went wrong...");
-			Assert.IsTrue(obj.IsPersisted, "Test Object should have Persisted Flag after adding to database...");
-			Assert.IsFalse(obj.Dirty, "Test Object should not be Dirty after adding to database...");
-			Assert.AreEqual(objId, obj.ObjectId, "Test Object should have kept its ObjectId from Creation...");
+			Assert.That(inserted, Is.True, "Test Object should be inserted successfully, something went wrong...");
+			Assert.That(obj.IsPersisted, Is.True, "Test Object should have Persisted Flag after adding to database...");
+			Assert.That(obj.Dirty, Is.False, "Test Object should not be Dirty after adding to database...");
+			Assert.That(obj.ObjectId, Is.EqualTo(objId), "Test Object should have kept its ObjectId from Creation...");
 			
 			var retrieved = Database.FindObjectByKey<TestTable>(obj.ObjectId);
 			
-			Assert.IsNotNull(retrieved, "Test Object previously added should be retrieved from database...");
-			Assert.AreEqual(objId, retrieved.ObjectId, "Test Object previously added and retrieved object should have same ObjectId...");
-			Assert.AreEqual(obj.TestField, retrieved.TestField, "Test Object previously added and retrieved object should have equals fields...");
+			Assert.That(retrieved, Is.Not.Null, "Test Object previously added should be retrieved from database...");
+			Assert.That(retrieved.ObjectId, Is.EqualTo(objId), "Test Object previously added and retrieved object should have same ObjectId...");
+			Assert.That(retrieved.TestField, Is.EqualTo(obj.TestField), "Test Object previously added and retrieved object should have equals fields...");
 		}
 		
 		/// <summary>
@@ -79,24 +79,24 @@ namespace DOL.Integration.Database
 			
 			foreach (var obj in objs)
 			{
-				Assert.IsFalse(obj.IsPersisted, "Test Objects should not have Persisted Flag before adding...");
-				Assert.IsTrue(obj.Dirty, "Test Objects should be Dirty before adding...");
+				Assert.That(obj.IsPersisted, Is.False, "Test Objects should not have Persisted Flag before adding...");
+				Assert.That(obj.Dirty, Is.True, "Test Objects should be Dirty before adding...");
 			}
 			
 			var inserted = Database.AddObject(objs);
-			Assert.IsTrue(inserted, "Test Objects should be inserted successfully, something went wrong...");
+			Assert.That(inserted, Is.True, "Test Objects should be inserted successfully, something went wrong...");
 			foreach (var obj in objs)
 			{
-				Assert.IsTrue(obj.IsPersisted, "Test Objects should have Persisted Flag after adding to database...");
-				Assert.IsFalse(obj.Dirty, "Test Objects should not be Dirty after adding to database...");
+				Assert.That(obj.IsPersisted, Is.True, "Test Objects should have Persisted Flag after adding to database...");
+				Assert.That(obj.Dirty, Is.False, "Test Objects should not be Dirty after adding to database...");
 			}
-			CollectionAssert.AreEqual(objsId, objs.Select(obj => obj.ObjectId), "Test Objects should have kept their ObjectId from Creation...");
+			Assert.That(objs.Select(obj => obj.ObjectId), Is.EqualTo(objsId), "Test Objects should have kept their ObjectId from Creation...");
 			
 			var retrieved = Database.FindObjectsByKey<TestTable>(objsId);
 			
-			Assert.IsNotNull(retrieved, "Test Objects retrieved Collection should not be null...");
-			CollectionAssert.AreEqual(objsId, retrieved.Select(obj => obj.ObjectId), "Test Objects previously added and retrieved objects should have same ObjectId...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.TestField), retrieved.Select(obj => obj.TestField), "Test Objects previously added and retrieved objects should have equals fields...");
+			Assert.That(retrieved, Is.Not.Null, "Test Objects retrieved Collection should not be null...");
+			Assert.That(retrieved.Select(obj => obj.ObjectId), Is.EqualTo(objsId), "Test Objects previously added and retrieved objects should have same ObjectId...");
+			Assert.That(retrieved.Select(obj => obj.TestField), Is.EqualTo(objs.Select(obj => obj.TestField)), "Test Objects previously added and retrieved objects should have equals fields...");
 		}
 		
 		/// <summary>
@@ -129,53 +129,53 @@ namespace DOL.Integration.Database
 			
 			foreach (var obj in objs)
 			{
-				Assert.IsFalse(obj.IsPersisted, "Different Test Objects should not have Persisted Flag before adding...");
-				Assert.IsTrue(obj.Dirty, "Different Test Objects should be Dirty before adding...");
+				Assert.That(obj.IsPersisted, Is.False, "Different Test Objects should not have Persisted Flag before adding...");
+				Assert.That(obj.Dirty, Is.True, "Different Test Objects should be Dirty before adding...");
 			}
 			
 			var inserted = Database.AddObject(objs);
 			
-			Assert.IsTrue(inserted, "Different Test Objects should be inserted successfully, something went wrong...");
+			Assert.That(inserted, Is.True, "Different Test Objects should be inserted successfully, something went wrong...");
 			foreach (var obj in objs)
 			{
-				Assert.IsTrue(obj.IsPersisted, "Test Objects should have Persisted Flag after adding to database...");
-				Assert.IsFalse(obj.Dirty, "Test Objects should not be Dirty after adding to database...");
+				Assert.That(obj.IsPersisted, Is.True, "Test Objects should have Persisted Flag after adding to database...");
+				Assert.That(obj.Dirty, Is.False, "Test Objects should not be Dirty after adding to database...");
 			}
 			
 			foreach (var obj in objsTestTableRelations)
 			{
 				foreach (var ent in obj.Entries)
 				{
-					Assert.IsTrue(ent.IsPersisted, "TestTableRelationEntries Objects should have Persisted Flag after adding to database...");
-					Assert.IsFalse(ent.Dirty, "TestTableRelationEntries Objects should not be Dirty after adding to database...");
+					Assert.That(ent.IsPersisted, Is.True, "TestTableRelationEntries Objects should have Persisted Flag after adding to database...");
+					Assert.That(ent.Dirty, Is.False, "TestTableRelationEntries Objects should not be Dirty after adding to database...");
 				}
 			}
 			
-			CollectionAssert.AreEquivalent(objsTestTableId, objs.Where(obj => obj.GetType() == typeof(TestTable)).Select(obj => obj.ObjectId), "TestTable Objects should have kept their ObjectId from Creation...");
-			CollectionAssert.AreEquivalent(objsTestTableRelationsId, objs.Where(obj => obj.GetType() == typeof(TestTableRelations)).Select(obj => obj.ObjectId), "TestTableRelations Objects should have kept their ObjectId from Creation...");
-			CollectionAssert.AreNotEquivalent(objsTestTableAutoIncId, objs.Where(obj => obj.GetType() == typeof(TestTableAutoInc)).Select(obj => obj.ObjectId), "TestTableAutoInc Objects should NOT have kept their ObjectId from Creation...");
+			Assert.That(objs.Where(obj => obj.GetType() == typeof(TestTable)).Select(obj => obj.ObjectId), Is.EquivalentTo(objsTestTableId), "TestTable Objects should have kept their ObjectId from Creation...");
+			Assert.That(objs.Where(obj => obj.GetType() == typeof(TestTableRelations)).Select(obj => obj.ObjectId), Is.EquivalentTo(objsTestTableRelationsId), "TestTableRelations Objects should have kept their ObjectId from Creation...");
+			Assert.That(objs.Where(obj => obj.GetType() == typeof(TestTableAutoInc)).Select(obj => obj.ObjectId), Is.Not.EquivalentTo(objsTestTableAutoIncId), "TestTableAutoInc Objects should NOT have kept their ObjectId from Creation...");
 			
 			foreach (var obj in objs.Where(obj => obj.GetType() == typeof(TestTableRelations)).Cast<TestTableRelations>())
-				CollectionAssert.AreEquivalent(objsTestTableRelationsEntriesId[obj.ObjectId], obj.Entries.Select(ent => ent.ObjectId),
+				Assert.That(obj.Entries.Select(ent => ent.ObjectId), Is.EquivalentTo(objsTestTableRelationsEntriesId[obj.ObjectId]),
 				                               "TestTableRelationsEntries Objects should have kept their ObjectId from Creation...");
 			
 			var retrievedTestTable = Database.FindObjectsByKey<TestTable>(objsTestTableId);
-			Assert.IsNotNull(retrievedTestTable, "TestTable Objects retrieved Collection should not be null...");
-			CollectionAssert.AreEqual(objsTestTableId, retrievedTestTable.Select(obj => obj.ObjectId), "TestTable Objects previously added and retrieved objects should have same ObjectId...");
-			CollectionAssert.AreEqual(objsTestTable.Select(obj => obj.TestField), retrievedTestTable.Select(obj => obj.TestField), "TestTable Objects previously added and retrieved objects should have equals fields...");
+			Assert.That(retrievedTestTable, Is.Not.Null, "TestTable Objects retrieved Collection should not be null...");
+			Assert.That(retrievedTestTable.Select(obj => obj.ObjectId), Is.EqualTo(objsTestTableId), "TestTable Objects previously added and retrieved objects should have same ObjectId...");
+			Assert.That(retrievedTestTable.Select(obj => obj.TestField), Is.EqualTo(objsTestTable.Select(obj => obj.TestField)), "TestTable Objects previously added and retrieved objects should have equals fields...");
 			
 			var retrievedTestTableAutoInc = Database.FindObjectsByKey<TestTableAutoInc>(objsTestTableAutoInc.Select(key => (object)key.PrimaryKey));
-			Assert.IsNotNull(retrievedTestTableAutoInc, "TestTableAutoInc Objects retrieved Collection should not be null...");
-			CollectionAssert.AreEqual(objsTestTableAutoInc.Select(key => key.PrimaryKey.ToString()), retrievedTestTableAutoInc.Select(obj => obj.ObjectId), "TestTableAutoInc Objects previously added and retrieved objects should have same ObjectId...");
-			CollectionAssert.AreEqual(objsTestTableAutoInc.Select(obj => obj.TestField), retrievedTestTableAutoInc.Select(obj => obj.TestField), "TestTableAutoInc Objects previously added and retrieved objects should have equals fields...");
+			Assert.That(retrievedTestTableAutoInc, Is.Not.Null, "TestTableAutoInc Objects retrieved Collection should not be null...");
+			Assert.That(retrievedTestTableAutoInc.Select(obj => obj.ObjectId), Is.EqualTo(objsTestTableAutoInc.Select(key => key.PrimaryKey.ToString())), "TestTableAutoInc Objects previously added and retrieved objects should have same ObjectId...");
+			Assert.That(retrievedTestTableAutoInc.Select(obj => obj.TestField), Is.EqualTo(objsTestTableAutoInc.Select(obj => obj.TestField)), "TestTableAutoInc Objects previously added and retrieved objects should have equals fields...");
 			
 			var retrievedTestTableRelations = Database.FindObjectsByKey<TestTableRelations>(objsTestTableRelationsId);
-			Assert.IsNotNull(retrievedTestTableRelations, "TestTableRelations Objects retrieved Collection should not be null...");
-			CollectionAssert.AreEqual(objsTestTableRelationsId, retrievedTestTableRelations.Select(obj => obj.ObjectId), "TestTableRelations Objects previously added and retrieved objects should have same ObjectId...");
-			CollectionAssert.AreEqual(objsTestTableRelations.Select(obj => obj.TestField), retrievedTestTableRelations.Select(obj => obj.TestField), "TestTableRelations Objects previously added and retrieved objects should have equals fields...");
+			Assert.That(retrievedTestTableRelations, Is.Not.Null, "TestTableRelations Objects retrieved Collection should not be null...");
+			Assert.That(retrievedTestTableRelations.Select(obj => obj.ObjectId), Is.EqualTo(objsTestTableRelationsId), "TestTableRelations Objects previously added and retrieved objects should have same ObjectId...");
+			Assert.That(retrievedTestTableRelations.Select(obj => obj.TestField), Is.EqualTo(objsTestTableRelations.Select(obj => obj.TestField)), "TestTableRelations Objects previously added and retrieved objects should have equals fields...");
 			
 			foreach (var obj in retrievedTestTableRelations)
-				CollectionAssert.AreEquivalent(objsTestTableRelationsEntriesId[obj.ObjectId], obj.Entries.Select(ent => ent.ObjectId),
+				Assert.That(obj.Entries.Select(ent => ent.ObjectId), Is.EquivalentTo(objsTestTableRelationsEntriesId[obj.ObjectId]),
 				                               "TestTableRelationsEntries Objects previously added and retrieved objects should have same ObjectId...");
 		}
 
@@ -197,8 +197,8 @@ namespace DOL.Integration.Database
 		{
 			var dbo = new TableNotRegistered();
 			var added = Database.AddObject(dbo);
-			Assert.IsFalse(added, "Adding a Single non registered Object should not return success...");
-			Assert.IsFalse(dbo.IsPersisted, "Adding a Single non registered Object should not have Persisted Flag...");
+			Assert.That(added, Is.False, "Adding a Single non registered Object should not return success...");
+			Assert.That(dbo.IsPersisted, Is.False, "Adding a Single non registered Object should not have Persisted Flag...");
 		}
 		
 		/// <summary>
@@ -221,9 +221,9 @@ namespace DOL.Integration.Database
 			Database.RegisterDataObject(typeof(TestTable));
 			var dbo = new DataObject[] { new TestTable { TestField = "Test Multiple Add with some non registered Values" }, new TableNotRegistered() };
 			var added = Database.AddObject(dbo);
-			Assert.IsFalse(added, "Adding Multiple non registered Object should not return success...");
-			Assert.IsFalse(dbo[1].IsPersisted, "Adding a Multiple non registered Object should not have Persisted Flag on unregistered Object...");
-			Assert.IsTrue(dbo[0].IsPersisted, "Adding a Multiple non registered Object should have Persisted Flag on registered Object...");
+			Assert.That(added, Is.False, "Adding Multiple non registered Object should not return success...");
+			Assert.That(dbo[1].IsPersisted, Is.False, "Adding a Multiple non registered Object should not have Persisted Flag on unregistered Object...");
+			Assert.That(dbo[0].IsPersisted, Is.True, "Adding a Multiple non registered Object should have Persisted Flag on registered Object...");
 		}
 		
 		[Test, Explicit]
@@ -237,9 +237,9 @@ namespace DOL.Integration.Database
 			Database.DeleteObject(Database.SelectAllObjects<TestTableRelations>());
 			Database.DeleteObject(Database.SelectAllObjects<TestTableRelationsEntries>());
 			
-			Assert.IsEmpty(Database.SelectAllObjects<TestTable>(), "Database shouldn't have any record For TestTable.");
-			Assert.IsEmpty(Database.SelectAllObjects<TestTableRelations>(), "Database shouldn't have any record For TestTable.");
-			Assert.IsEmpty(Database.SelectAllObjects<TestTableRelationsEntries>(), "Database shouldn't have any record For TestTable.");
+			Assert.That(Database.SelectAllObjects<TestTable>(), Is.Empty, "Database shouldn't have any record For TestTable.");
+			Assert.That(Database.SelectAllObjects<TestTableRelations>(), Is.Empty, "Database shouldn't have any record For TestTable.");
+			Assert.That(Database.SelectAllObjects<TestTableRelationsEntries>(), Is.Empty, "Database shouldn't have any record For TestTable.");
 			
 			var objs = Enumerable.Range(0, 100).Select(i => new TestTable { TestField = string.Format("Bench Single Add '{0}'", i) }).ToArray();
 
@@ -280,9 +280,9 @@ namespace DOL.Integration.Database
 			Database.DeleteObject(Database.SelectAllObjects<TestTableRelations>());
 			Database.DeleteObject(Database.SelectAllObjects<TestTableRelationsEntries>());
 			
-			Assert.IsEmpty(Database.SelectAllObjects<TestTable>(), "Database shouldn't have any record For TestTable.");
-			Assert.IsEmpty(Database.SelectAllObjects<TestTableRelations>(), "Database shouldn't have any record For TestTable.");
-			Assert.IsEmpty(Database.SelectAllObjects<TestTableRelationsEntries>(), "Database shouldn't have any record For TestTable.");
+			Assert.That(Database.SelectAllObjects<TestTable>(), Is.Empty, "Database shouldn't have any record For TestTable.");
+			Assert.That(Database.SelectAllObjects<TestTableRelations>(), Is.Empty, "Database shouldn't have any record For TestTable.");
+			Assert.That(Database.SelectAllObjects<TestTableRelationsEntries>(), Is.Empty, "Database shouldn't have any record For TestTable.");
 			
 			var objs = Enumerable.Range(0, 100).Select(i => new TestTable { TestField = string.Format("Bench Multiple Add '{0}'", i) }).ToArray();
 
@@ -317,17 +317,17 @@ namespace DOL.Integration.Database
 			var inserted = Database.AddObject(obj);
 			
 			obj.TestField = "Test Single Save New Value";
-			Assert.IsTrue(obj.Dirty, "Changing TestTable Object should set Dirty Flag...");
+			Assert.That(obj.Dirty, Is.True, "Changing TestTable Object should set Dirty Flag...");
 			
 			var saved = Database.SaveObject(obj);
 			
-			Assert.IsTrue(saved, "Changed Object Should be Saved Successfully in database...");
-			Assert.IsFalse(obj.Dirty, "Changed Object should not have Dirty flag after Saving...");
+			Assert.That(saved, Is.True, "Changed Object Should be Saved Successfully in database...");
+			Assert.That(obj.Dirty, Is.False, "Changed Object should not have Dirty flag after Saving...");
 			
 			var retrieve = Database.FindObjectByKey<TestTable>(obj.ObjectId);
 			
-			Assert.IsNotNull(retrieve, "Changed Object Should be retrieved from database...");
-			Assert.AreEqual(obj.TestField, retrieve.TestField, "Previously Changed Object and newly retrieved Object should have the same field value...");
+			Assert.That(retrieve, Is.Not.Null, "Changed Object Should be retrieved from database...");
+			Assert.That(retrieve.TestField, Is.EqualTo(obj.TestField), "Previously Changed Object and newly retrieved Object should have the same field value...");
 		}
 		
 		/// <summary>
@@ -345,19 +345,19 @@ namespace DOL.Integration.Database
 			{
 				obj.TestField = string.Format("Test Multi Save Same Table Changed #{0}", current);
 				current++;
-				Assert.IsTrue(obj.Dirty, "Changing TestTable Objects should set Dirty Flag...");
+				Assert.That(obj.Dirty, Is.True, "Changing TestTable Objects should set Dirty Flag...");
 			}
 			
 			var saved = Database.SaveObject(objs);
 			
-			Assert.IsTrue(saved, "Changed Objects Should be Saved Successfully in database...");
+			Assert.That(saved, Is.True, "Changed Objects Should be Saved Successfully in database...");
 			foreach (var obj in objs)
-				Assert.IsFalse(obj.Dirty, "Changed Objects should not have Dirty flag after Saving...");
+				Assert.That(obj.Dirty, Is.False, "Changed Objects should not have Dirty flag after Saving...");
 			
 			var retrieved = Database.FindObjectsByKey<TestTable>(objs.Select(obj => obj.ObjectId));
 			
-			Assert.IsNotNull(retrieved, "Changed Objects Collection Should be retrieved from database...");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.TestField), retrieved.Select(obj => obj.TestField), "Previously Changed Objects and newly retrieved Objects should have the same field value...");
+			Assert.That(retrieved, Is.Not.Null, "Changed Objects Collection Should be retrieved from database...");
+			Assert.That(retrieved.Select(obj => obj.TestField), Is.EquivalentTo(objs.Select(obj => obj.TestField)), "Previously Changed Objects and newly retrieved Objects should have the same field value...");
 		}
 		
 		/// <summary>
@@ -389,7 +389,7 @@ namespace DOL.Integration.Database
 			{
 				obj.TestField = string.Format("Test Multi Save Same Table Changed #{0}", current);
 				current++;
-				Assert.IsTrue(obj.Dirty, "Changing TestTable Objects should set Dirty Flag...");
+				Assert.That(obj.Dirty, Is.True, "Changing TestTable Objects should set Dirty Flag...");
 			}
 			
 			foreach (var obj in objsTestTableRelations)
@@ -400,27 +400,27 @@ namespace DOL.Integration.Database
 			
 			var saved = Database.SaveObject(objs);
 			
-			Assert.IsTrue(saved, "Changed Objects Should be Saved Successfully in database...");
+			Assert.That(saved, Is.True, "Changed Objects Should be Saved Successfully in database...");
 			foreach (var obj in objs)
-				Assert.IsFalse(obj.Dirty, "Changed Objects should not have Dirty flag after Saving...");
+				Assert.That(obj.Dirty, Is.False, "Changed Objects should not have Dirty flag after Saving...");
 			
 			foreach (var obj in objsTestTableRelations)
 			{
 				foreach (var ent in obj.Entries)
-					Assert.IsFalse(ent.Dirty, "Changed Objects Relations should not have Dirty flag after Saving...");
+					Assert.That(ent.Dirty, Is.False, "Changed Objects Relations should not have Dirty flag after Saving...");
 			}
 			
 			var retrieved = Database.FindObjectsByKey<TestTable>(objsTestTable.Select(obj => obj.ObjectId))
 				.Concat(Database.FindObjectsByKey<TestTableAutoInc>(objsTestTableAutoInc.Select(obj => obj.ObjectId)))
 				.Concat(Database.FindObjectsByKey<TestTableRelations>(objsTestTableRelations.Select(obj => obj.ObjectId)));
 			
-			Assert.IsNotNull(retrieved, "Changed Objects Collection Should be retrieved from database...");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.TestField), retrieved.Select(obj => obj.TestField), "Previously Changed Objects and newly retrieved Objects should have the same field value...");
+			Assert.That(retrieved, Is.Not.Null, "Changed Objects Collection Should be retrieved from database...");
+			Assert.That(retrieved.Select(obj => obj.TestField), Is.EquivalentTo(objs.Select(obj => obj.TestField)), "Previously Changed Objects and newly retrieved Objects should have the same field value...");
 			
 			foreach (var obj in retrieved.Where(o => o.GetType() == typeof(TestTableRelations)).OfType<TestTableRelations>())
 			{
-				CollectionAssert.AreEquivalent(objsTestTableRelations.First(o => o.ObjectId == obj.ObjectId).Entries.Select(o => o.ObjectId),
-				                               obj.Entries.Select(o => o.ObjectId), "Previously Changed Objects and newly retrieved Objects should have the same Relations Collections...");
+				Assert.That(objsTestTableRelations.First(o => o.ObjectId == obj.ObjectId).Entries.Select(o => o.ObjectId),
+				                               Is.EquivalentTo(obj.Entries.Select(o => o.ObjectId)), "Previously Changed Objects and newly retrieved Objects should have the same Relations Collections...");
 			}
 		}
 		
@@ -445,8 +445,8 @@ namespace DOL.Integration.Database
 			DataObject obj = new TableNotRegistered();
 			obj.Dirty = true;
 			var saved = Database.SaveObject(obj);
-			Assert.IsFalse(saved, "Trying to save a non registered object should not return success...");
-			Assert.IsTrue(obj.Dirty, "Failing to save a non registered object should not remove Dirty Flag...");
+			Assert.That(saved, Is.False, "Trying to save a non registered object should not return success...");
+			Assert.That(obj.Dirty, Is.True, "Failing to save a non registered object should not remove Dirty Flag...");
 		}
 		
 		/// <summary>
@@ -477,9 +477,9 @@ namespace DOL.Integration.Database
 			
 			var saved = Database.SaveObject(dbo);
 			
-			Assert.IsFalse(saved, "Saving Multiple non registered Object should not return success...");
-			Assert.IsFalse(dbo[0].Dirty, "Saving a Collection with non registered Object should not have Dirty Flag on registered Object...");
-			Assert.IsTrue(dbo[1].Dirty, "Saving a Collection with non registered Object should have Dirty Flag on non-registered Object...");
+			Assert.That(saved, Is.False, "Saving Multiple non registered Object should not return success...");
+			Assert.That(dbo[0].Dirty, Is.False, "Saving a Collection with non registered Object should not have Dirty Flag on registered Object...");
+			Assert.That(dbo[1].Dirty, Is.True, "Saving a Collection with non registered Object should have Dirty Flag on non-registered Object...");
 		}
 		#endregion
 		
@@ -494,16 +494,16 @@ namespace DOL.Integration.Database
 			var obj = new TestTable { TestField = "Test Single Delete" };
 			var inserted = Database.AddObject(obj);
 			
-			Assert.IsTrue(obj.IsPersisted, "Added Object should have Persisted Flag...");
+			Assert.That(obj.IsPersisted, Is.True, "Added Object should have Persisted Flag...");
 			
 			var deleted = Database.DeleteObject(obj);
 			
-			Assert.IsTrue(deleted, "Added Object should be Successfully Deleted from database...");
-			Assert.IsFalse(obj.IsPersisted, "Deleted Object should not have Persisted Flag");
-			Assert.IsTrue(obj.IsDeleted, "Deleted Object should have Deleted Flag");
+			Assert.That(deleted, Is.True, "Added Object should be Successfully Deleted from database...");
+			Assert.That(obj.IsPersisted, Is.False, "Deleted Object should not have Persisted Flag");
+			Assert.That(obj.IsDeleted, Is.True, "Deleted Object should have Deleted Flag");
 			
 			var retrieve = Database.FindObjectByKey<TestTable>(obj.ObjectId);
-			Assert.IsNull(retrieve, "Retrieving Deleted Object should return null...");
+			Assert.That(retrieve, Is.Null, "Retrieving Deleted Object should return null...");
 		}
 		
 		/// <summary>
@@ -517,20 +517,20 @@ namespace DOL.Integration.Database
 			var inserted = Database.AddObject(objs);
 			
 			foreach (var obj in objs)
-				Assert.IsTrue(obj.IsPersisted, "Added Objects should have Persisted Flag...");
+				Assert.That(obj.IsPersisted, Is.True, "Added Objects should have Persisted Flag...");
 			
 			var deleted = Database.DeleteObject(objs);
 			
-			Assert.IsTrue(deleted, "Added Objects should be Successfully Deleted from database...");
+			Assert.That(deleted, Is.True, "Added Objects should be Successfully Deleted from database...");
 			foreach (var obj in objs)
 			{
-				Assert.IsFalse(obj.IsPersisted, "Deleted Objects should not have Persisted Flag");
-				Assert.IsTrue(obj.IsDeleted, "Deleted Objects should have Deleted Flag");
+				Assert.That(obj.IsPersisted, Is.False, "Deleted Objects should not have Persisted Flag");
+				Assert.That(obj.IsDeleted, Is.True, "Deleted Objects should have Deleted Flag");
 			}
 			
 			var retrieve = Database.FindObjectsByKey<TestTable>(objs.Select(obj => obj.ObjectId));
-			Assert.IsNotNull(retrieve, "Retrieving Deleted Objects Collection should not return null...");
-			Assert.IsEmpty(retrieve.Where(obj => obj != null), "Retrieved Deleted Objects Collection should be empty...");
+			Assert.That(retrieve, Is.Not.Null, "Retrieving Deleted Objects Collection should not return null...");
+			Assert.That(retrieve.Where(obj => obj != null), Is.Empty, "Retrieved Deleted Objects Collection should be empty...");
 		}
 		
 		/// <summary>
@@ -557,25 +557,25 @@ namespace DOL.Integration.Database
 			
 			var inserted = Database.AddObject(objs);
 			
-			Assert.IsTrue(inserted, "Object Should be inserted to test Delete Cases...");
+			Assert.That(inserted, Is.True, "Object Should be inserted to test Delete Cases...");
 			
 			// Delete Objects
 			var deleted = Database.DeleteObject(objs);
 			
-			Assert.IsTrue(deleted, "Object should be deleted successfully...");
+			Assert.That(deleted, Is.True, "Object should be deleted successfully...");
 			
 			foreach (var obj in objs)
 			{
-					Assert.IsTrue(obj.IsDeleted, "Deleted Objects should have Deleted Flag...");
-					Assert.IsFalse(obj.IsPersisted, "Deleted Objects should not have Persisted Flag...");
+					Assert.That(obj.IsDeleted, Is.True, "Deleted Objects should have Deleted Flag...");
+					Assert.That(obj.IsPersisted, Is.False, "Deleted Objects should not have Persisted Flag...");
 			}
 			
 			foreach (var obj in objsTestTableRelations)
 			{
 				foreach (var ent in obj.Entries)
 				{
-					Assert.IsTrue(ent.IsDeleted, "Deleted Objects should have Deleted Flag...");
-					Assert.IsFalse(ent.IsPersisted, "Deleted Objects should not have Persisted Flag...");
+					Assert.That(ent.IsDeleted, Is.True, "Deleted Objects should have Deleted Flag...");
+					Assert.That(ent.IsPersisted, Is.False, "Deleted Objects should not have Persisted Flag...");
 				}
 			}
 
@@ -583,13 +583,13 @@ namespace DOL.Integration.Database
 				.Concat(Database.FindObjectsByKey<TestTableAutoInc>(objsTestTableAutoInc.Select(obj => obj.ObjectId)))
 				.Concat(Database.FindObjectsByKey<TestTableRelations>(objsTestTableRelations.Select(obj => obj.ObjectId)));
 			
-			Assert.IsNotNull(retrieved, "Deleted Objects Collection Should be retrieved Empty not null from database...");
-			Assert.IsEmpty(retrieved.Where(obj => obj != null), "Deleted Objects Collection Should be retrieved Empty from database...");
+			Assert.That(retrieved, Is.Not.Null, "Deleted Objects Collection Should be retrieved Empty not null from database...");
+			Assert.That(retrieved.Where(obj => obj != null), Is.Empty, "Deleted Objects Collection Should be retrieved Empty from database...");
 			
 			var relRetrieved = Database.FindObjectsByKey<TestTableRelationsEntries>(objsTestTableRelations.SelectMany(obj => obj.Entries).Select(ent => ent.ObjectId));
 
-			Assert.IsNotNull(relRetrieved, "Deleted Objects Collection Should be retrieved Empty not null from database...");
-			Assert.IsEmpty(relRetrieved.Where(obj => obj != null), "Deleted Objects Collection Should be retrieved Empty from database...");
+			Assert.That(relRetrieved, Is.Not.Null, "Deleted Objects Collection Should be retrieved Empty not null from database...");
+			Assert.That(relRetrieved.Where(obj => obj != null), Is.Empty, "Deleted Objects Collection Should be retrieved Empty from database...");
 		}
 		
 		/// <summary>
@@ -612,8 +612,8 @@ namespace DOL.Integration.Database
 		{
 			DataObject obj = new TableNotRegistered();
 			var deleted = Database.DeleteObject(obj);
-			Assert.IsFalse(deleted, "Trying to Delete a non registered object should not return success...");
-			Assert.IsFalse(obj.IsDeleted, "Failing to Delete a non registered object should not set Deleted Flag...");
+			Assert.That(deleted, Is.False, "Trying to Delete a non registered object should not return success...");
+			Assert.That(obj.IsDeleted, Is.False, "Failing to Delete a non registered object should not set Deleted Flag...");
 		}
 		
 		/// <summary>
@@ -641,9 +641,9 @@ namespace DOL.Integration.Database
 	
 			var deleted = Database.DeleteObject(dbo);
 			
-			Assert.IsFalse(deleted, "Deleting Multiple non registered Object should not return success...");
-			Assert.IsTrue(dbo[0].IsDeleted, "Deleting a Collection with non registered Object should set Deleted Flag on registered Object...");
-			Assert.IsFalse(dbo[1].IsDeleted, "Deleting a Collection with non registered Object should not set Deleted Flag non-registered Object...");
+			Assert.That(deleted, Is.False, "Deleting Multiple non registered Object should not return success...");
+			Assert.That(dbo[0].IsDeleted, Is.True, "Deleting a Collection with non registered Object should set Deleted Flag on registered Object...");
+			Assert.That(dbo[1].IsDeleted, Is.False, "Deleting a Collection with non registered Object should not set Deleted Flag non-registered Object...");
 		}
 		
 		#endregion
@@ -661,19 +661,19 @@ namespace DOL.Integration.Database
 			
 			var inserted = Database.AddObject(obj);
 			
-			Assert.IsTrue(inserted, "Find Object By Key Test Could not add object in database...");
+			Assert.That(inserted, Is.True, "Find Object By Key Test Could not add object in database...");
 			
 			var retrieve = Database.FindObjectByKey<TestTable>(obj.ObjectId);
 			
-			Assert.IsNotNull(retrieve, "Find Object By Key Could not retrieve previously added Object...");
-			Assert.AreEqual(obj.ObjectId, retrieve.ObjectId, "Find Object By Key Should return similar Object to created one...");
-			Assert.AreEqual(obj.TestField, retrieve.TestField, "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieve, Is.Not.Null, "Find Object By Key Could not retrieve previously added Object...");
+			Assert.That(retrieve.ObjectId, Is.EqualTo(obj.ObjectId), "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieve.TestField, Is.EqualTo(obj.TestField), "Find Object By Key Should return similar Object to created one...");
 			
 			var retrieveCase = Database.FindObjectByKey<TestTable>(obj.ObjectId.ToUpper());
 			
-			Assert.IsNotNull(retrieveCase, "Find Object By Key Could not retrieve previously added Object using Case Mismatch...");
-			Assert.AreEqual(obj.ObjectId, retrieveCase.ObjectId, "Find Object By Key Should return similar Object to created one...");
-			Assert.AreEqual(obj.TestField, retrieveCase.TestField, "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieveCase, Is.Not.Null, "Find Object By Key Could not retrieve previously added Object using Case Mismatch...");
+			Assert.That(retrieveCase.ObjectId, Is.EqualTo(obj.ObjectId), "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieveCase.TestField, Is.EqualTo(obj.TestField), "Find Object By Key Should return similar Object to created one...");
 		}
 		
 		/// <summary>
@@ -688,21 +688,21 @@ namespace DOL.Integration.Database
 			
 			var inserted = Database.AddObject(objs);
 			
-			Assert.IsTrue(inserted, "Find Object By Key Test Could not add objects in database...");
+			Assert.That(inserted, Is.True, "Find Object By Key Test Could not add objects in database...");
 			
 			var retrieve = Database.FindObjectsByKey<TestTable>(objs.Select(obj => obj.ObjectId));
 			
-			Assert.IsNotNull(retrieve, "Find Object By Key Could should not return a null collection...");
-			Assert.IsNotEmpty(retrieve.Where(obj => obj != null), "Find Object By Key Could not retrieve previously added Objects...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.ObjectId), retrieve.Select(obj => obj.ObjectId), "Find Object By Key Should return similar Objects to created ones...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.TestField), retrieve.Select(obj => obj.TestField), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieve, Is.Not.Null, "Find Object By Key Could should not return a null collection...");
+			Assert.That(retrieve.Where(obj => obj != null), Is.Not.Empty, "Find Object By Key Could not retrieve previously added Objects...");
+			Assert.That(retrieve.Select(obj => obj.ObjectId), Is.EqualTo(objs.Select(obj => obj.ObjectId)), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieve.Select(obj => obj.TestField), Is.EqualTo(objs.Select(obj => obj.TestField)), "Find Object By Key Should return similar Objects to created ones...");
 			
 			var retrieveCase = Database.FindObjectsByKey<TestTable>(objs.Select(obj => obj.ObjectId.ToUpper()));
 			
-			Assert.IsNotNull(retrieveCase, "Find Object By Key Could should not return a null collection...");
-			Assert.IsNotEmpty(retrieveCase.Where(obj => obj != null), "Find Object By Key Could not retrieve previously added Objects using Case Mismatch...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.ObjectId), retrieveCase.Select(obj => obj.ObjectId), "Find Object By Key Should return similar Objects to created ones...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.TestField), retrieveCase.Select(obj => obj.TestField), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieveCase, Is.Not.Null, "Find Object By Key Could should not return a null collection...");
+			Assert.That(retrieveCase.Where(obj => obj != null), Is.Not.Empty, "Find Object By Key Could not retrieve previously added Objects using Case Mismatch...");
+			Assert.That(retrieveCase.Select(obj => obj.ObjectId), Is.EqualTo(objs.Select(obj => obj.ObjectId)), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieveCase.Select(obj => obj.TestField), Is.EqualTo(objs.Select(obj => obj.TestField)), "Find Object By Key Should return similar Objects to created ones...");
 		}
 		
 		/// <summary>
@@ -717,19 +717,19 @@ namespace DOL.Integration.Database
 			
 			var inserted = Database.AddObject(obj);
 			
-			Assert.IsTrue(inserted, "Find Object By Key Test Could not add object in database...");
+			Assert.That(inserted, Is.True, "Find Object By Key Test Could not add object in database...");
 			
 			var retrieve = Database.FindObjectByKey<TestTablePrimaryKey>(obj.PrimaryKey);
 			
-			Assert.IsNotNull(retrieve, "Find Object By Key Could not retrieve previously added Object...");
-			Assert.AreEqual(obj.PrimaryKey, retrieve.PrimaryKey, "Find Object By Key Should return similar Object to created one...");
-			Assert.AreEqual(obj.TestField, retrieve.TestField, "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieve, Is.Not.Null, "Find Object By Key Could not retrieve previously added Object...");
+			Assert.That(retrieve.PrimaryKey, Is.EqualTo(obj.PrimaryKey), "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieve.TestField, Is.EqualTo(obj.TestField), "Find Object By Key Should return similar Object to created one...");
 			
 			var retrieveCase = Database.FindObjectByKey<TestTablePrimaryKey>(obj.PrimaryKey.ToUpper());
 			
-			Assert.IsNotNull(retrieveCase, "Find Object By Key Could not retrieve previously added Object using Case Mismatch...");
-			Assert.AreEqual(obj.PrimaryKey, retrieveCase.PrimaryKey, "Find Object By Key Should return similar Object to created one...");
-			Assert.AreEqual(obj.TestField, retrieveCase.TestField, "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieveCase, Is.Not.Null, "Find Object By Key Could not retrieve previously added Object using Case Mismatch...");
+			Assert.That(retrieveCase.PrimaryKey, Is.EqualTo(obj.PrimaryKey), "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieveCase.TestField, Is.EqualTo(obj.TestField), "Find Object By Key Should return similar Object to created one...");
 		}
 		
 		/// <summary>
@@ -745,21 +745,21 @@ namespace DOL.Integration.Database
 			
 			var inserted = Database.AddObject(objs);
 			
-			Assert.IsTrue(inserted, "Find Object By Key Test Could not add objects in database...");
+			Assert.That(inserted, Is.True, "Find Object By Key Test Could not add objects in database...");
 			
 			var retrieve = Database.FindObjectsByKey<TestTablePrimaryKey>(objs.Select(obj => obj.PrimaryKey));
 			
-			Assert.IsNotNull(retrieve, "Find Object By Key Could should not return a null collection...");
-			Assert.IsNotEmpty(retrieve.Where(obj => obj != null), "Find Object By Key Could not retrieve previously added Objects...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.PrimaryKey), retrieve.Select(obj => obj.PrimaryKey), "Find Object By Key Should return similar Objects to created ones...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.TestField), retrieve.Select(obj => obj.TestField), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieve, Is.Not.Null, "Find Object By Key Could should not return a null collection...");
+			Assert.That(retrieve.Where(obj => obj != null), Is.Not.Empty, "Find Object By Key Could not retrieve previously added Objects...");
+			Assert.That(retrieve.Select(obj => obj.PrimaryKey), Is.EqualTo(objs.Select(obj => obj.PrimaryKey)), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieve.Select(obj => obj.TestField), Is.EqualTo(objs.Select(obj => obj.TestField)), "Find Object By Key Should return similar Objects to created ones...");
 			
 			var retrieveCase = Database.FindObjectsByKey<TestTablePrimaryKey>(objs.Select(obj => obj.PrimaryKey.ToUpper()));
 			
-			Assert.IsNotNull(retrieveCase, "Find Object By Key Could should not return a null collection...");
-			Assert.IsNotEmpty(retrieveCase.Where(obj => obj != null), "Find Object By Key Could not retrieve previously added Objects using Case Mismatch...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.PrimaryKey), retrieveCase.Select(obj => obj.PrimaryKey), "Find Object By Key Should return similar Object to created ones...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.TestField), retrieveCase.Select(obj => obj.TestField), "Find Object By Key Should return similar Object to created ones...");
+			Assert.That(retrieveCase, Is.Not.Null, "Find Object By Key Could should not return a null collection...");
+			Assert.That(retrieveCase.Where(obj => obj != null), Is.Not.Empty, "Find Object By Key Could not retrieve previously added Objects using Case Mismatch...");
+			Assert.That(retrieveCase.Select(obj => obj.PrimaryKey), Is.EqualTo(objs.Select(obj => obj.PrimaryKey)), "Find Object By Key Should return similar Object to created ones...");
+			Assert.That(retrieveCase.Select(obj => obj.TestField), Is.EqualTo(objs.Select(obj => obj.TestField)), "Find Object By Key Should return similar Object to created ones...");
 		}
 		
 		/// <summary>
@@ -774,25 +774,25 @@ namespace DOL.Integration.Database
 			
 			var inserted = Database.AddObject(obj);
 			
-			Assert.IsTrue(inserted, "Find Object By Key Test Could not add object in database...");
+			Assert.That(inserted, Is.True, "Find Object By Key Test Could not add object in database...");
 			
 			var retrieve = Database.FindObjectByKey<TestTableAutoInc>(obj.PrimaryKey);
 			
-			Assert.IsNotNull(retrieve, "Find Object By Key Could not retrieve previously added Object...");
-			Assert.AreEqual(obj.PrimaryKey, retrieve.PrimaryKey, "Find Object By Key Should return similar Object to created one...");
-			Assert.AreEqual(obj.TestField, retrieve.TestField, "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieve, Is.Not.Null, "Find Object By Key Could not retrieve previously added Object...");
+			Assert.That(retrieve.PrimaryKey, Is.EqualTo(obj.PrimaryKey), "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieve.TestField, Is.EqualTo(obj.TestField), "Find Object By Key Should return similar Object to created one...");
 			
 			var retrieveCast = Database.FindObjectByKey<TestTableAutoInc>((long)obj.PrimaryKey);
 			
-			Assert.IsNotNull(retrieveCast, "Find Object By Key Could not retrieve previously added Object using Numeric Cast...");
-			Assert.AreEqual(obj.PrimaryKey, retrieveCast.PrimaryKey, "Find Object By Key Should return similar Object to created one...");
-			Assert.AreEqual(obj.TestField, retrieveCast.TestField, "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieveCast, Is.Not.Null, "Find Object By Key Could not retrieve previously added Object using Numeric Cast...");
+			Assert.That(retrieveCast.PrimaryKey, Is.EqualTo(obj.PrimaryKey), "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieveCast.TestField, Is.EqualTo(obj.TestField), "Find Object By Key Should return similar Object to created one...");
 			
 			var retrieveString = Database.FindObjectByKey<TestTableAutoInc>(obj.PrimaryKey.ToString());
 			
-			Assert.IsNotNull(retrieveString, "Find Object By Key Could not retrieve previously added Object using String Cast...");
-			Assert.AreEqual(obj.PrimaryKey, retrieveString.PrimaryKey, "Find Object By Key Should return similar Object to created one...");
-			Assert.AreEqual(obj.TestField, retrieveString.TestField, "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieveString, Is.Not.Null, "Find Object By Key Could not retrieve previously added Object using String Cast...");
+			Assert.That(retrieveString.PrimaryKey, Is.EqualTo(obj.PrimaryKey), "Find Object By Key Should return similar Object to created one...");
+			Assert.That(retrieveString.TestField, Is.EqualTo(obj.TestField), "Find Object By Key Should return similar Object to created one...");
 		}
 		
 		/// <summary>
@@ -807,28 +807,28 @@ namespace DOL.Integration.Database
 			
 			var inserted = Database.AddObject(objs);
 			
-			Assert.IsTrue(inserted, "Find Object By Key Test Could not add objects in database...");
+			Assert.That(inserted, Is.True, "Find Object By Key Test Could not add objects in database...");
 			
 			var retrieve = Database.FindObjectsByKey<TestTableAutoInc>(objs.Select(obj => obj.PrimaryKey).Cast<object>());
 			
-			Assert.IsNotNull(retrieve, "Find Object By Key Could should not return a null collection...");
-			Assert.IsNotEmpty(retrieve.Where(obj => obj != null), "Find Object By Key Could not retrieve previously added Objects...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.PrimaryKey), retrieve.Select(obj => obj.PrimaryKey), "Find Object By Key Should return similar Objects to created ones...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.TestField), retrieve.Select(obj => obj.TestField), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieve, Is.Not.Null, "Find Object By Key Could should not return a null collection...");
+			Assert.That(retrieve.Where(obj => obj != null), Is.Not.Empty, "Find Object By Key Could not retrieve previously added Objects...");
+			Assert.That(retrieve.Select(obj => obj.PrimaryKey), Is.EqualTo(objs.Select(obj => obj.PrimaryKey)), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieve.Select(obj => obj.TestField), Is.EqualTo(objs.Select(obj => obj.TestField)), "Find Object By Key Should return similar Objects to created ones...");
 			
 			var retrieveCast = Database.FindObjectsByKey<TestTableAutoInc>(objs.Select(obj => (long)obj.PrimaryKey).Cast<object>());
 			
-			Assert.IsNotNull(retrieveCast, "Find Object By Key Could should not return a null collection...");
-			Assert.IsNotEmpty(retrieveCast.Where(obj => obj != null), "Find Object By Key Could not retrieve previously added Objects using Numeric Cast...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.PrimaryKey), retrieveCast.Select(obj => obj.PrimaryKey), "Find Object By Key Should return similar Objects to created ones...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.TestField), retrieveCast.Select(obj => obj.TestField), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieveCast, Is.Not.Null, "Find Object By Key Could should not return a null collection...");
+			Assert.That(retrieveCast.Where(obj => obj != null), Is.Not.Empty, "Find Object By Key Could not retrieve previously added Objects using Numeric Cast...");
+			Assert.That(retrieveCast.Select(obj => obj.PrimaryKey), Is.EqualTo(objs.Select(obj => obj.PrimaryKey)), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieveCast.Select(obj => obj.TestField), Is.EqualTo(objs.Select(obj => obj.TestField)), "Find Object By Key Should return similar Objects to created ones...");
 			
 			var retrieveString = Database.FindObjectsByKey<TestTableAutoInc>(objs.Select(obj => obj.PrimaryKey.ToString()));
 			
-			Assert.IsNotNull(retrieveString, "Find Object By Key Could should not return a null collection...");
-			Assert.IsNotEmpty(retrieveString.Where(obj => obj != null), "Find Object By Key Could not retrieve previously added Objects using String Cast...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.PrimaryKey), retrieveString.Select(obj => obj.PrimaryKey), "Find Object By Key Should return similar Objects to created ones...");
-			CollectionAssert.AreEqual(objs.Select(obj => obj.TestField), retrieveString.Select(obj => obj.TestField), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieveString, Is.Not.Null, "Find Object By Key Could should not return a null collection...");
+			Assert.That(retrieveString.Where(obj => obj != null), Is.Not.Empty, "Find Object By Key Could not retrieve previously added Objects using String Cast...");
+			Assert.That(retrieveString.Select(obj => obj.PrimaryKey), Is.EqualTo(objs.Select(obj => obj.PrimaryKey)), "Find Object By Key Should return similar Objects to created ones...");
+			Assert.That(retrieveString.Select(obj => obj.TestField), Is.EqualTo(objs.Select(obj => obj.TestField)), "Find Object By Key Should return similar Objects to created ones...");
 		}
 		
 		/// <summary>
@@ -841,7 +841,7 @@ namespace DOL.Integration.Database
 			Database.RegisterDataObject(typeof(TestTable));
 			object key = null;
 			var dbo = Database.FindObjectByKey<TestTable>(key);
-			Assert.IsNull(dbo, "Searching an Object By Key with a Null Key should return a null object...");
+			Assert.That(dbo, Is.Null, "Searching an Object By Key with a Null Key should return a null object...");
 		}
 		
 		/// <summary>
@@ -856,9 +856,9 @@ namespace DOL.Integration.Database
 			var dbo = new TestTable { TestField = "Test Searching Object by Key with some Null" };
 			Database.AddObject(dbo);
 			var result = Database.FindObjectsByKey<TestTable>(new object[] { key, dbo.ObjectId }).ToArray();
-			Assert.IsNotEmpty(result, "Searching with multiple keys including null shoud not return an empty collection...");
-			Assert.IsNull(result[0], "Searching with multiple keys including null should return null data object for null key...");
-			Assert.IsNotNull(result[1], "Searching with multiple keys including null should return a valid data object for non null key...");
+			Assert.That(result, Is.Not.Empty, "Searching with multiple keys including null shoud not return an empty collection...");
+			Assert.That(result[0], Is.Null, "Searching with multiple keys including null should return null data object for null key...");
+			Assert.That(result[1], Is.Not.Null, "Searching with multiple keys including null should return a valid data object for non null key...");
 		}
 		
 		/// <summary>
@@ -896,30 +896,30 @@ namespace DOL.Integration.Database
 
 			var allobjects = Database.SelectAllObjects<TestTable>();
 			
-			Assert.IsNotEmpty(allobjects, "Select Objects Test Need some Data to be Accurate...");
+			Assert.That(allobjects, Is.Not.Empty, "Select Objects Test Need some Data to be Accurate...");
 			
 			var simpleWhere = Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsEqualTo(objInitial.TestField));
 			
-			CollectionAssert.Contains(simpleWhere.Select(obj => obj.ObjectId), objInitial.ObjectId, "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
+			Assert.That(simpleWhere.Select(obj => obj.ObjectId), Has.Member(objInitial.ObjectId), "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
 
 			var complexWhere = Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsEqualTo(objInitial.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(objInitial.ObjectId)));
 			
-			CollectionAssert.Contains(complexWhere.Select(obj => obj.ObjectId.ToLower()), objInitial.ObjectId.ToLower(), "Select Objects with Complex Where clause should retrieve Object similar to Created one...");
+			Assert.That(complexWhere.Select(obj => obj.ObjectId.ToLower()), Has.Member(objInitial.ObjectId.ToLower()), "Select Objects with Complex Where clause should retrieve Object similar to Created one...");
 
-			Assert.IsTrue(Database.DeleteObject(Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsNull())));
+			Assert.That(Database.DeleteObject(Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsNull())), Is.True);
 			var objNull = new TestTable { TestField = null };
 			var nullAdd = Database.AddObject(objNull);
 			
-			Assert.IsTrue(nullAdd, "Select Objects null parameter Test Need some null object to be Accurate...");
+			Assert.That(nullAdd, Is.True, "Select Objects null parameter Test Need some null object to be Accurate...");
 
 			var nullParam = Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsEqualTo(null));
 			
-			CollectionAssert.IsEmpty(nullParam, "Select Objects with Null Parameter Query should not return any record...");
+			Assert.That(nullParam, Is.Empty, "Select Objects with Null Parameter Query should not return any record...");
 
 			var resultsWithTestfieldNull = Database.SelectObjects<TestTable>(DB.Column(nameof(TestTable.TestField)).IsNull());
 			var allObjectsAfter = Database.SelectAllObjects<TestTable>();
 
-			Assert.AreEqual(1, resultsWithTestfieldNull.Count);
+			Assert.That(resultsWithTestfieldNull.Count, Is.EqualTo(1));
 		}
 
 		[Test]
@@ -931,7 +931,7 @@ namespace DOL.Integration.Database
 
 			var result = Database.SelectObjects<SqlKeywordTable>(DB.Column(nameof(SqlKeywordTable.Type)).IsEqualTo(firstEntry.Type));
 
-			CollectionAssert.Contains(result.Select(obj => obj.ObjectId), firstEntry.ObjectId, "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
+			Assert.That(result.Select(obj => obj.ObjectId), Has.Member(firstEntry.ObjectId), "Select Objects with Simple Where clause should retrieve Object similar to Created one...");
 		}
 
 		/// <summary>
@@ -943,15 +943,15 @@ namespace DOL.Integration.Database
 			Database.RegisterDataObject(typeof(TestTable));
 			
 			var delete = Database.DeleteObject(Database.SelectAllObjects<TestTable>());
-			Assert.IsTrue(delete, "TestTable Objects should be deleted successfully...");
-			Assert.IsEmpty(Database.SelectAllObjects<TestTable>(), "This test needs an Empty Table to Run Successfully...");
+			Assert.That(delete, Is.True, "TestTable Objects should be deleted successfully...");
+			Assert.That(Database.SelectAllObjects<TestTable>(), Is.Empty, "This test needs an Empty Table to Run Successfully...");
 
 			var objs = new []{ "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" }
 			.Select(grp => Enumerable.Range(0, 100).Select(i => new TestTable { TestField = grp } )).ToDictionary(kv => kv.First().TestField, kv => kv.ToArray());
 			
 			var added = Database.AddObject(objs.SelectMany(obj => obj.Value));
 			
-			Assert.IsTrue(added, "TestTable Objects should be added successfully...");
+			Assert.That(added, Is.True, "TestTable Objects should be added successfully...");
 
 			var parameters = new[] { "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" };
 			var retrieve = Database.MultipleSelectObjects<TestTable>(parameters.Select(parameter => DB.Column(nameof(TestTable.TestField)).IsEqualTo(parameter)));
@@ -959,15 +959,15 @@ namespace DOL.Integration.Database
 			var objectByGroup = new []{ "Test Select Group1", "Test Select Group2", "Test Select Group3", "Test Select Group4" }
 			.Select((grp, index) => new { Grp = grp, Objects = retrieve.ElementAt(index) });
 			
-			Assert.IsNotNull(retrieve, "Retrieve Sets from Select Objects should not return null value...");
-			Assert.IsNotEmpty(retrieve, "Retrieve Set from Select Objects should not be Empty...");
+			Assert.That(retrieve, Is.Not.Null, "Retrieve Sets from Select Objects should not return null value...");
+			Assert.That(retrieve, Is.Not.Empty, "Retrieve Set from Select Objects should not be Empty...");
 			
 			foreach (var sets in objectByGroup)
 			{
-				Assert.IsNotEmpty(sets.Objects, "Retrieve SubSets from Select Objects should not be Empty...");
-				Assert.IsTrue(sets.Objects.All(obj => obj.TestField.Equals(sets.Grp, StringComparison.OrdinalIgnoreCase)),
+				Assert.That(sets.Objects, Is.Not.Empty, "Retrieve SubSets from Select Objects should not be Empty...");
+				Assert.That(sets.Objects.All(obj => obj.TestField.Equals(sets.Grp, StringComparison.OrdinalIgnoreCase)), Is.True,
 				              "Retrieve SubSets from Select Objects should have the Where Clause Matching their Field Value...");
-				CollectionAssert.AreEquivalent(objs[sets.Grp].Select(obj => obj.ObjectId), sets.Objects.Select(obj => obj.ObjectId),
+				Assert.That(sets.Objects.Select(obj => obj.ObjectId), Is.EquivalentTo(objs[sets.Grp].Select(obj => obj.ObjectId)),
 				                              "Retrieve SubSets from Select Objects should return the same ObjectId Sets as Created...");
 				
 			}
@@ -975,13 +975,13 @@ namespace DOL.Integration.Database
 			var orderedObjs = objs.SelectMany(obj => obj.Value).ToArray();
 			var retrieveMany = Database.MultipleSelectObjects<TestTable>(orderedObjs.Select(obj => DB.Column(nameof(TestTable.TestField)).IsEqualTo(obj.TestField).And(DB.Column("Test_Table_ID").IsEqualTo(obj.ObjectId))));
 			
-			Assert.IsNotNull(retrieveMany, "Retrieve Sets from Select Objects should not return null value...");
-			Assert.IsNotEmpty(retrieveMany, "Retrieve Set from Select Objects should not be Empty...");
+			Assert.That(retrieveMany, Is.Not.Null, "Retrieve Sets from Select Objects should not return null value...");
+			Assert.That(retrieveMany, Is.Not.Empty, "Retrieve Set from Select Objects should not be Empty...");
 
 			var resultsMany = retrieveMany.Select(obj => obj.Single());
-			CollectionAssert.AreEqual(orderedObjs.Select(obj => obj.ObjectId.ToLower()), resultsMany.Select(obj => obj.ObjectId.ToLower()),
+			Assert.That(resultsMany.Select(obj => obj.ObjectId.ToLower()), Is.EqualTo(orderedObjs.Select(obj => obj.ObjectId.ToLower())),
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set ObjectId...");
-			CollectionAssert.AreEqual(orderedObjs.Select(obj => obj.TestField.ToLower()), resultsMany.Select(obj => obj.TestField.ToLower()),
+			Assert.That(resultsMany.Select(obj => obj.TestField.ToLower()), Is.EqualTo(orderedObjs.Select(obj => obj.TestField.ToLower())),
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set Field Value...");
 
 			var parameterManyWithMissing = new [] { ("No Known Value", "Probably Nothing"),("Absolutely None","Nothing for Sure")}
@@ -989,13 +989,13 @@ namespace DOL.Integration.Database
 			var manyQueriesWithMissing = parameterManyWithMissing.Select(tuple => DB.Column(nameof(TestTable.TestField)).IsEqualTo(tuple.Item1).And(DB.Column("Test_Table_ID").IsEqualTo(tuple.Item2)));
 			var retrieveManyWithMissing = Database.MultipleSelectObjects<TestTable>(manyQueriesWithMissing);
 			
-			Assert.IsNotNull(retrieveManyWithMissing, "Retrieve Sets from Select Objects should not return null value...");
-			Assert.IsNotEmpty(retrieveManyWithMissing, "Retrieve Set from Select Objects should not be Empty...");
+			Assert.That(retrieveManyWithMissing, Is.Not.Null, "Retrieve Sets from Select Objects should not return null value...");
+			Assert.That(retrieveManyWithMissing, Is.Not.Empty, "Retrieve Set from Select Objects should not be Empty...");
 
 			var resultsManyWithMissing = retrieveManyWithMissing.Select(obj => obj.SingleOrDefault());
-			CollectionAssert.AreEqual(new [] { "", "" }.Concat(orderedObjs.Select(obj => obj.ObjectId.ToLower())), resultsManyWithMissing.Select(obj => obj != null ? obj.ObjectId.ToLower() : string.Empty),
+			Assert.That(resultsManyWithMissing.Select(obj => obj != null ? obj.ObjectId.ToLower() : string.Empty), Is.EqualTo(new [] { "", "" }.Concat(orderedObjs.Select(obj => obj.ObjectId.ToLower()))),
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set ObjectId...");
-			CollectionAssert.AreEqual(new [] { "", "" }.Concat(orderedObjs.Select(obj => obj.TestField.ToLower())), resultsManyWithMissing.Select(obj => obj != null ? obj.TestField.ToLower() : string.Empty),
+			Assert.That(resultsManyWithMissing.Select(obj => obj != null ? obj.TestField.ToLower() : string.Empty), Is.EqualTo(new [] { "", "" }.Concat(orderedObjs.Select(obj => obj.TestField.ToLower()))),
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set Field Value...");
 			
 			
@@ -1025,15 +1025,15 @@ namespace DOL.Integration.Database
 			Database.RegisterDataObject(typeof(TestTable));
 			
 			var delete = Database.DeleteObject(Database.SelectAllObjects<TestTable>());
-			Assert.IsTrue(delete, "TestTable Objects should be deleted successfully...");
-			Assert.IsEmpty(Database.SelectAllObjects<TestTable>(), "This test needs an Empty Table to Run Successfully...");
+			Assert.That(delete, Is.True, "TestTable Objects should be deleted successfully...");
+			Assert.That(Database.SelectAllObjects<TestTable>(), Is.Empty, "This test needs an Empty Table to Run Successfully...");
 			
 			var objInitial = Enumerable.Range(0, 10).Select(i => new TestTable { TestField = string.Format("Select Objects Null Values Test #{0}", i) });
 			Database.AddObject(objInitial);
 			
 			var allobjects = Database.SelectAllObjects<TestTable>();
 			
-			Assert.IsNotEmpty(allobjects, "This Test Need some Data to be Accurate...");
+			Assert.That(allobjects, Is.Not.Empty, "This Test Need some Data to be Accurate...");
 
 			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObject<TestTable>((WhereClause)null), "");
 			Assert.Throws(typeof(NullReferenceException), () => Database.SelectObjects<TestTable>((WhereClause)null), "");
@@ -1053,26 +1053,26 @@ namespace DOL.Integration.Database
 			
 			var objs = Database.SelectAllObjects<TestTable>();
 			
-			Assert.IsNotNull(objs, "Retrieving from a Registered Table should not return null...");
+			Assert.That(objs, Is.Not.Null, "Retrieving from a Registered Table should not return null...");
 			
 			var delete = Database.DeleteObject(objs);
 			
-			Assert.IsTrue(delete, "TestTable Objects should be deleted successfully...");
+			Assert.That(delete, Is.True, "TestTable Objects should be deleted successfully...");
 			
 			objs = Database.SelectAllObjects<TestTable>();
-			Assert.IsNotNull(objs, "TestTable Select All from an Empty table should not return null...");
-			Assert.IsEmpty(objs, "TestTable Select All from an Empty table should return an Empty Collection...");
+			Assert.That(objs, Is.Not.Null, "TestTable Select All from an Empty table should not return null...");
+			Assert.That(objs, Is.Empty, "TestTable Select All from an Empty table should return an Empty Collection...");
 			
 			objs = Enumerable.Range(0, 10).Select(i => new TestTable { TestField = string.Format("Test Select All Object #{0}", i) }).ToList();
 			
 			var inserted = Database.AddObject(objs);
 			
-			Assert.IsTrue(inserted, "TestTable Objects should be inserted successfully...");
+			Assert.That(inserted, Is.True, "TestTable Objects should be inserted successfully...");
 			
 			var retrieve = Database.SelectAllObjects<TestTable>();
-			Assert.IsNotEmpty(retrieve, "TestTable Objects Select All should return previously inserted objects...");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.ObjectId), retrieve.Select(obj => obj.ObjectId), "TestTable Select All should return Objects with Same ID as Inserted...");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.TestField), retrieve.Select(obj => obj.TestField), "TestTable Select All shoud return Objects with same Value Field as Inserted...");			
+			Assert.That(retrieve, Is.Not.Empty, "TestTable Objects Select All should return previously inserted objects...");
+			Assert.That(retrieve.Select(obj => obj.ObjectId), Is.EquivalentTo(objs.Select(obj => obj.ObjectId)), "TestTable Select All should return Objects with Same ID as Inserted...");
+			Assert.That(retrieve.Select(obj => obj.TestField), Is.EquivalentTo(objs.Select(obj => obj.TestField)), "TestTable Select All shoud return Objects with same Value Field as Inserted...");			
 		}
 		
 		/// <summary>
@@ -1099,7 +1099,7 @@ namespace DOL.Integration.Database
 			
 			var count = Database.GetObjectCount<TestTable>();
 			
-			Assert.AreEqual(0, count, "Test Table shouldn't Have any Object after deleting all records...");
+			Assert.That(count, Is.EqualTo(0), "Test Table shouldn't Have any Object after deleting all records...");
 			
 			var objs = Enumerable.Range(0, 10).Select(i => new TestTable { TestField = string.Format("Count Object Test #{0}", i) });
 			
@@ -1107,15 +1107,15 @@ namespace DOL.Integration.Database
 			
 			var newCount = Database.GetObjectCount<TestTable>();
 			
-			Assert.AreEqual(10, newCount, "Test Table should return same object count as added collection...");
+			Assert.That(newCount, Is.EqualTo(10), "Test Table should return same object count as added collection...");
 			
 			var whereCount = Database.GetObjectCount<TestTable>("1");
 			
-			Assert.AreEqual(10, whereCount, "Test Table should return same object count as added collection...");
+			Assert.That(whereCount, Is.EqualTo(10), "Test Table should return same object count as added collection...");
 			
 			var filterCount = Database.GetObjectCount<TestTable>("`TestField` LIKE '%1'");
 			
-			Assert.AreEqual(1, filterCount, "Test Table should return same object count as filtered collection...");
+			Assert.That(filterCount, Is.EqualTo(1), "Test Table should return same object count as filtered collection...");
 		}
 
 		/// <summary>
@@ -1131,7 +1131,7 @@ namespace DOL.Integration.Database
 			
 			var count = Database.GetObjectCount<TestTable>(null);
 			
-			Assert.AreEqual(0, count, "Test Table shouldn't Have any Object after deleting all records...");
+			Assert.That(count, Is.EqualTo(0), "Test Table shouldn't Have any Object after deleting all records...");
 			
 			var objs = Enumerable.Range(0, 10).Select(i => new TestTable { TestField = string.Format("Count Object Test #{0}", i) });
 			
@@ -1139,7 +1139,7 @@ namespace DOL.Integration.Database
 			
 			var newCount = Database.GetObjectCount<TestTable>(null);
 			
-			Assert.AreEqual(10, newCount, "Test Table should return same object count as added collection...");
+			Assert.That(newCount, Is.EqualTo(10), "Test Table should return same object count as added collection...");
 		}
 		
 		/// <summary>
@@ -1163,7 +1163,7 @@ namespace DOL.Integration.Database
 		{
 			var test = "'";
 			
-			Assert.AreEqual("''", Database.Escape(test), "Sqlite String Escape Test Failure...");
+			Assert.That(Database.Escape(test), Is.EqualTo("''"), "Sqlite String Escape Test Failure...");
 		}
 		
 		/// <summary>

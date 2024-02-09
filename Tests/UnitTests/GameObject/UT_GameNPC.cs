@@ -21,7 +21,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = npc.GetModified(eProperty.Constitution);
             
-            Assert.AreEqual(75, actual);
+            Assert.That(actual, Is.EqualTo(75));
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = npc.GetArmorAbsorb(eArmorSlot.NOTSET);
 
-            Assert.AreEqual(-0.05, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(-0.05).Within(0.001));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = npc.GetArmorAbsorb(eArmorSlot.NOTSET);
 
-            Assert.AreEqual(0.30, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(0.30).Within(0.001));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = npc.GetArmorAbsorb(eArmorSlot.NOTSET);
 
-            Assert.AreEqual(0.27, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(0.27).Within(0.001));
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = npc.GetArmorAbsorb(eArmorSlot.NOTSET);
 
-            Assert.AreEqual(-0.25, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(-0.25).Within(0.001));
         }
 
         private static GameNPC NewNPC() => new GameNPC(new FakeControlledBrain());
@@ -91,7 +91,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = guard.GetArmorAbsorb(eArmorSlot.NOTSET);
 
-            Assert.AreEqual(0.27, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(0.27).Within(0.001));
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = guard.GetArmorAbsorb(eArmorSlot.NOTSET);
 
-            Assert.AreEqual(0.32, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(0.32).Within(0.001));
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace DOL.UnitTests.Gameserver
 
             var actual = guard.GetArmorAbsorb(eArmorSlot.NOTSET);
 
-            Assert.AreEqual(0.22, actual, 0.001);
+            Assert.That(actual, Is.EqualTo(0.22).Within(0.001));
         }
     }
 }

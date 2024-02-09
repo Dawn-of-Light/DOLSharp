@@ -65,7 +65,7 @@ namespace DOL.Integration.Database
 						var selectall = typeof(IObjectDatabase).GetMethod("SelectAllObjects", Array.Empty<Type>() ).MakeGenericMethod(type);
 						object objs = null;
 						Assert.DoesNotThrow( () => { objs = selectall.Invoke(Database, Array.Empty<object>() ); }, "Registered tables should not Throw Exception on Select All... (Failed on Type {0})", type);
-						Assert.IsNotNull(objs);
+						Assert.That(objs, Is.Not.Null);
 					}
 				}
 			}
@@ -109,22 +109,22 @@ namespace DOL.Integration.Database
 			
 			Database.DeleteObject(Database.SelectAllObjects<TestTableWithNoPrimaryV1>());
 			
-			Assert.IsEmpty(Database.SelectAllObjects<TestTableWithNoPrimaryV1>(), "Test Table TestTableWithNoPrimaryV1 should be empty to begin this tests.");
+			Assert.That(Database.SelectAllObjects<TestTableWithNoPrimaryV1>(), Is.Empty, "Test Table TestTableWithNoPrimaryV1 should be empty to begin this tests.");
 			
 			var objs = new [] { "TestObj1", "TestObj2", "TestObj3" }.Select(ent => new TestTableWithNoPrimaryV1 { Value = ent }).ToArray();
 			
 			Database.AddObject(objs);
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.Value), Database.SelectAllObjects<TestTableWithNoPrimaryV1>().Select(obj => obj.Value), "Test Table TestTableWithNoPrimaryV1 Entries should be available for this test to run.");
+			Assert.That(Database.SelectAllObjects<TestTableWithNoPrimaryV1>().Select(obj => obj.Value), Is.EquivalentTo(objs.Select(obj => obj.Value)), "Test Table TestTableWithNoPrimaryV1 Entries should be available for this test to run.");
 			
 			// Trigger False Migration
 			DatabaseV2.RegisterDataObject(typeof(TestTableWithNoPrimaryV2));
 			
 			var newObjs = DatabaseV2.SelectAllObjects<TestTableWithNoPrimaryV2>().ToArray();
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.Value), newObjs.Select(obj => obj.Value), "Test Table Migration to TestTableWithNoPrimaryV2 should retrieve similar values that created ones...");
+			Assert.That(newObjs.Select(obj => obj.Value), Is.EquivalentTo(objs.Select(obj => obj.Value)), "Test Table Migration to TestTableWithNoPrimaryV2 should retrieve similar values that created ones...");
 			
-			Assert.IsTrue(newObjs.All(obj => obj.PrimaryKey != 0), "Test Table Migration to TestTableWithNoPrimaryV2 should have created and populated Primary Key Auto Increment.");
+			Assert.That(newObjs.All(obj => obj.PrimaryKey != 0), Is.True, "Test Table Migration to TestTableWithNoPrimaryV2 should have created and populated Primary Key Auto Increment.");
 			
 			// Trigger Another Migration
 			DatabaseV2 = GetDatabaseV2;
@@ -132,9 +132,9 @@ namespace DOL.Integration.Database
 			
 			var newerObjs = DatabaseV2.SelectAllObjects<TestTableWithNoPrimaryV3>().ToArray();
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.Value), newerObjs.Select(obj => obj.Value), "Test Table Migration to TestTableWithNoPrimaryV3 should retrieve similar values that created ones...");
+			Assert.That(newerObjs.Select(obj => obj.Value), Is.EquivalentTo(objs.Select(obj => obj.Value)), "Test Table Migration to TestTableWithNoPrimaryV3 should retrieve similar values that created ones...");
 			
-			Assert.IsTrue(newerObjs.All(obj => obj.PrimaryKey2 != 0), "Test Table Migration to TestTableWithNoPrimaryV3 should have created and populated Primary Key Auto Increment.");
+			Assert.That(newerObjs.All(obj => obj.PrimaryKey2 != 0), Is.True, "Test Table Migration to TestTableWithNoPrimaryV3 should have created and populated Primary Key Auto Increment.");
 
 		}
 		
@@ -154,7 +154,7 @@ namespace DOL.Integration.Database
 			
 			Database.DeleteObject(Database.SelectAllObjects<TestTableDifferentTypesV1>());
 			
-			Assert.IsEmpty(Database.SelectAllObjects<TestTableDifferentTypesV1>(), "Test Table TestTableDifferentTypesV1 should be empty to begin this tests.");
+			Assert.That(Database.SelectAllObjects<TestTableDifferentTypesV1>(), Is.Empty, "Test Table TestTableDifferentTypesV1 should be empty to begin this tests.");
 			
 			var datenow = DateTime.UtcNow;
 			var now = new DateTime(datenow.Year, datenow.Month, datenow.Day, datenow.Hour, datenow.Minute, datenow.Second);
@@ -162,16 +162,16 @@ namespace DOL.Integration.Database
 			
 			Database.AddObject(objs);
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.StringValue), Database.SelectAllObjects<TestTableDifferentTypesV1>().Select(obj => obj.StringValue), "Test Table TestTableDifferentTypesV1 Entries should be available for this test to run.");
+			Assert.That(Database.SelectAllObjects<TestTableDifferentTypesV1>().Select(obj => obj.StringValue), Is.EquivalentTo(objs.Select(obj => obj.StringValue)), "Test Table TestTableDifferentTypesV1 Entries should be available for this test to run.");
 			
 			// Trigger False Migration
 			DatabaseV2.RegisterDataObject(typeof(TestTableDifferentTypesV2));
 			
 			var newObjs = DatabaseV2.SelectAllObjects<TestTableDifferentTypesV2>().ToArray();
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.StringValue), newObjs.Select(obj => obj.StringValue), "Test Table Migration to TestTableDifferentTypesV2 should retrieve similar values that created ones...");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.IntValue), newObjs.Select(obj => obj.IntValue), "Test Table Migration to TestTableDifferentTypesV2 should retrieve similar values that created ones...");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.DateValue), newObjs.Select(obj => Convert.ToDateTime(obj.DateValue)), "Test Table Migration to TestTableDifferentTypesV2 should retrieve similar values that created ones...");
+			Assert.That(newObjs.Select(obj => obj.StringValue), Is.EquivalentTo(objs.Select(obj => obj.StringValue)), "Test Table Migration to TestTableDifferentTypesV2 should retrieve similar values that created ones...");
+			Assert.That(newObjs.Select(obj => obj.IntValue), Is.EquivalentTo(objs.Select(obj => obj.IntValue)), "Test Table Migration to TestTableDifferentTypesV2 should retrieve similar values that created ones...");
+			Assert.That(newObjs.Select(obj => Convert.ToDateTime(obj.DateValue)), Is.EquivalentTo(objs.Select(obj => obj.DateValue)), "Test Table Migration to TestTableDifferentTypesV2 should retrieve similar values that created ones...");
 			
 			// Trigger another Migraiton
 			DatabaseV2 = GetDatabaseV2;
@@ -179,9 +179,9 @@ namespace DOL.Integration.Database
 			
 			var newerObjs = DatabaseV2.SelectAllObjects<TestTableDifferentTypesV1>().ToArray();
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.StringValue), newerObjs.Select(obj => obj.StringValue), "Test Table Migration to TestTableDifferentTypesV1 should retrieve similar values that created ones...");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.IntValue), newerObjs.Select(obj => obj.IntValue), "Test Table Migration to TestTableDifferentTypesV1 should retrieve similar values that created ones...");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.DateValue), newerObjs.Select(obj => obj.DateValue), "Test Table Migration to TestTableDifferentTypesV1 should retrieve similar values that created ones...");
+			Assert.That(newerObjs.Select(obj => obj.StringValue), Is.EquivalentTo(objs.Select(obj => obj.StringValue)), "Test Table Migration to TestTableDifferentTypesV1 should retrieve similar values that created ones...");
+			Assert.That(newerObjs.Select(obj => obj.IntValue), Is.EquivalentTo(objs.Select(obj => obj.IntValue)), "Test Table Migration to TestTableDifferentTypesV1 should retrieve similar values that created ones...");
+			Assert.That(newerObjs.Select(obj => obj.DateValue), Is.EquivalentTo(objs.Select(obj => obj.DateValue)), "Test Table Migration to TestTableDifferentTypesV1 should retrieve similar values that created ones...");
 		}
 		
 		/// <summary>
@@ -193,7 +193,7 @@ namespace DOL.Integration.Database
 			Database.RegisterDataObject(typeof(TestTablePrecachedPrimaryKey));
 			Database.DeleteObject(Database.SelectAllObjects<TestTablePrecachedPrimaryKey>());
 			
-			Assert.IsEmpty(Database.SelectAllObjects<TestTablePrecachedPrimaryKey>(), "Test Precached Table with Update Cache need Empty table to begin tests.");
+			Assert.That(Database.SelectAllObjects<TestTablePrecachedPrimaryKey>(), Is.Empty, "Test Precached Table with Update Cache need Empty table to begin tests.");
 			
 			// Get a new Database Object to Trigger Cache Invalidation
 			var DatabaseV2 = GetDatabaseV2;
@@ -205,17 +205,17 @@ namespace DOL.Integration.Database
 			
 			var inserted = Database.AddObject(objs);
 			
-			Assert.IsTrue(inserted, "Test Precached Table with Update Cache could not insert test objects.");
+			Assert.That(inserted, Is.True, "Test Precached Table with Update Cache could not insert test objects.");
 			
 			var update = DatabaseV2.UpdateObjsInCache<TestTablePrecachedPrimaryKey>(objs.Select(o => o.PrimaryKey));
 			
-			Assert.IsTrue(update, "Test Precached Table with Update Cache could not refresh newly inserted objects.");
+			Assert.That(update, Is.True, "Test Precached Table with Update Cache could not refresh newly inserted objects.");
 			
 			var retrieve = DatabaseV2.SelectAllObjects<TestTablePrecachedPrimaryKey>();
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrimaryKey), retrieve.Select(obj => obj.PrimaryKey), "Test Precached Table with Update Cache should return similar objets than created ones.");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.TestField), retrieve.Select(obj => obj.TestField), "Test Precached Table with Update Cache should return similar objets than created ones.");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrecachedValue), retrieve.Select(obj => obj.PrecachedValue), "Test Precached Table with Update Cache should return similar objets than created ones.");
+			Assert.That(retrieve.Select(obj => obj.PrimaryKey), Is.EquivalentTo(objs.Select(obj => obj.PrimaryKey)), "Test Precached Table with Update Cache should return similar objets than created ones.");
+			Assert.That(retrieve.Select(obj => obj.TestField), Is.EquivalentTo(objs.Select(obj => obj.TestField)), "Test Precached Table with Update Cache should return similar objets than created ones.");
+			Assert.That(retrieve.Select(obj => obj.PrecachedValue), Is.EquivalentTo(objs.Select(obj => obj.PrecachedValue)), "Test Precached Table with Update Cache should return similar objets than created ones.");
 			
 			// Modify
 			foreach (var obj in retrieve)
@@ -226,24 +226,24 @@ namespace DOL.Integration.Database
 			
 			var saved = DatabaseV2.SaveObject(retrieve);
 			
-			Assert.IsTrue(saved, "Test Precached Table with Update Cache could not modify objects in database.");
+			Assert.That(saved, Is.True, "Test Precached Table with Update Cache could not modify objects in database.");
 			
 			var retrievecached = Database.FindObjectsByKey<TestTablePrecachedPrimaryKey>(objs.Select(obj => obj.PrimaryKey));
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrimaryKey), retrievecached.Select(obj => obj.PrimaryKey), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.TestField), retrievecached.Select(obj => obj.TestField), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrecachedValue), retrievecached.Select(obj => obj.PrecachedValue), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
+			Assert.That(retrievecached.Select(obj => obj.PrimaryKey), Is.EquivalentTo(objs.Select(obj => obj.PrimaryKey)), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
+			Assert.That(retrievecached.Select(obj => obj.TestField), Is.EquivalentTo(objs.Select(obj => obj.TestField)), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
+			Assert.That(retrievecached.Select(obj => obj.PrecachedValue), Is.EquivalentTo(objs.Select(obj => obj.PrecachedValue)), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
 			
 			// update
 			var updated = Database.UpdateObjsInCache<TestTablePrecachedPrimaryKey>(objs.Select(obj => obj.PrimaryKey));
 			
-			Assert.IsTrue(updated, "Test Precached Table with Update Cache could not update objects cache from database.");
+			Assert.That(updated, Is.True, "Test Precached Table with Update Cache could not update objects cache from database.");
 			
 			var retrieveupdated = Database.FindObjectsByKey<TestTablePrecachedPrimaryKey>(objs.Select(obj => obj.PrimaryKey));
 			
-			CollectionAssert.AreEquivalent(retrieve.Select(obj => obj.PrimaryKey), retrieveupdated.Select(obj => obj.PrimaryKey), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
-			CollectionAssert.AreEquivalent(retrieve.Select(obj => obj.TestField), retrieveupdated.Select(obj => obj.TestField), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
-			CollectionAssert.AreEquivalent(retrieve.Select(obj => obj.PrecachedValue), retrieveupdated.Select(obj => obj.PrecachedValue), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
+			Assert.That(retrieveupdated.Select(obj => obj.PrimaryKey), Is.EquivalentTo(retrieve.Select(obj => obj.PrimaryKey)), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
+			Assert.That(retrieveupdated.Select(obj => obj.TestField), Is.EquivalentTo(retrieve.Select(obj => obj.TestField)), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
+			Assert.That(retrieveupdated.Select(obj => obj.PrecachedValue), Is.EquivalentTo(retrieve.Select(obj => obj.PrecachedValue)), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
 		}
 
 		/// <summary>
@@ -262,21 +262,21 @@ namespace DOL.Integration.Database
 			
 			Database.DeleteObject(Database.SelectAllObjects<TestTableWithPrimaryChangingV1>());
 			
-			Assert.IsEmpty(Database.SelectAllObjects<TestTableWithPrimaryChangingV1>(), "Test Table TestTableWithPrimaryChangingV1 should be empty to begin this tests.");
+			Assert.That(Database.SelectAllObjects<TestTableWithPrimaryChangingV1>(), Is.Empty, "Test Table TestTableWithPrimaryChangingV1 should be empty to begin this tests.");
 			
 			var objs = new [] { "TestObj1", "TestObj2", "TestObj3" }.Select((ent, i) => new TestTableWithPrimaryChangingV1 { PrimaryKey = i, Value = ent }).ToArray();
 			
 			Database.AddObject(objs);
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.Value), Database.SelectAllObjects<TestTableWithPrimaryChangingV1>().Select(obj => obj.Value), "Test Table TestTableWithPrimaryChangingV1 Entries should be available for this test to run.");
+			Assert.That(Database.SelectAllObjects<TestTableWithPrimaryChangingV1>().Select(obj => obj.Value), Is.EquivalentTo(objs.Select(obj => obj.Value)), "Test Table TestTableWithPrimaryChangingV1 Entries should be available for this test to run.");
 			
 			// Trigger False Migration
 			DatabaseV2.RegisterDataObject(typeof(TestTableWithPrimaryChangingV2));
 			
 			var newObjs = DatabaseV2.SelectAllObjects<TestTableWithPrimaryChangingV2>().ToArray();
 			
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.Value), newObjs.Select(obj => obj.Value), "Test Table Migration to TestTableWithPrimaryChangingV2 should retrieve similar values that created ones...");
-			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrimaryKey), newObjs.Select(obj => obj.PrimaryKey), "Test Table Migration to TestTableWithPrimaryChangingV2 should retrieve similar values that created ones...");
+			Assert.That(newObjs.Select(obj => obj.Value), Is.EquivalentTo(objs.Select(obj => obj.Value)), "Test Table Migration to TestTableWithPrimaryChangingV2 should retrieve similar values that created ones...");
+			Assert.That(newObjs.Select(obj => obj.PrimaryKey), Is.EquivalentTo(objs.Select(obj => obj.PrimaryKey)), "Test Table Migration to TestTableWithPrimaryChangingV2 should retrieve similar values that created ones...");
 		}
 		
         [Test]
@@ -292,21 +292,21 @@ namespace DOL.Integration.Database
             
             Database.DeleteObject(Database.SelectAllObjects<TestTableMigrationNullToNonNull>());
             
-            Assert.IsEmpty(Database.SelectAllObjects<TestTableMigrationNullToNonNull>(), "Test Table TestTableMigrationNullToNonNull should be empty to begin this tests.");
+            Assert.That(Database.SelectAllObjects<TestTableMigrationNullToNonNull>(), Is.Empty, "Test Table TestTableMigrationNullToNonNull should be empty to begin this tests.");
             
             var objs = new [] { "TestObj1", null, "TestObj3" }.Select((ent, i) => new TestTableMigrationNullToNonNull { StringValue = ent }).ToArray();
             
             Database.AddObject(objs);
             
-            CollectionAssert.AreEquivalent(objs.Select(obj => obj.StringValue), Database.SelectAllObjects<TestTableMigrationNullToNonNull>().Select(obj => obj.StringValue), "Test Table TestTableMigrationNullToNonNull Entries should be available for this test to run.");
+            Assert.That(Database.SelectAllObjects<TestTableMigrationNullToNonNull>().Select(obj => obj.StringValue), Is.EquivalentTo(objs.Select(obj => obj.StringValue)), "Test Table TestTableMigrationNullToNonNull Entries should be available for this test to run.");
             
             // Trigger False Migration
             DatabaseV2.RegisterDataObject(typeof(TestTableMigrationNullFromNull));
             
             var newObjs = DatabaseV2.SelectAllObjects<TestTableMigrationNullFromNull>().ToArray();
             
-            CollectionAssert.AreEquivalent(objs.Select(obj => obj.StringValue ?? string.Empty), newObjs.Select(obj => obj.StringValue), "Test Table Migration to TestTableMigrationNullFromNull should retrieve similar values that created ones...");
-            CollectionAssert.AreEqual(Enumerable.Repeat(0, 3), newObjs.Select(obj => obj.IntValue), "Test Table Migration to TestTableMigrationNullFromNull should retrieve all default int value to 0...");
+            Assert.That(newObjs.Select(obj => obj.StringValue), Is.EquivalentTo(objs.Select(obj => obj.StringValue ?? string.Empty)), "Test Table Migration to TestTableMigrationNullFromNull should retrieve similar values that created ones...");
+            Assert.That(newObjs.Select(obj => obj.IntValue), Is.EqualTo(Enumerable.Repeat(0, 3)), "Test Table Migration to TestTableMigrationNullFromNull should retrieve all default int value to 0...");
         }
 	}
 }

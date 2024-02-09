@@ -56,8 +56,8 @@ namespace DOL.Integration.Server
 			{
 				KillTask task =(KillTask) player.Task;
 
-				Assert.IsNotNull(task);
-				Assert.IsTrue(task.TaskActive);
+				Assert.That(task, Is.Not.Null);
+				Assert.That(task.TaskActive, Is.True);
 
 				Console.WriteLine("Mob:"+ task.MobName);
 				Console.WriteLine("Item:"+ task.ItemName);

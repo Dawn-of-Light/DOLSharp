@@ -13,7 +13,7 @@ public class UT_Angle
         var angleA = Angle.Degrees(0);
         var angleB = Angle.Degrees(0);
 
-        Assert.IsTrue(angleA.Equals(angleB));
+        Assert.That(angleA.Equals(angleB), Is.True);
     }
 
     [Test]
@@ -22,7 +22,7 @@ public class UT_Angle
         var angleA = Angle.Degrees(0);
         var angleB = Angle.Degrees(1);
 
-        Assert.IsFalse(angleA.Equals(angleB));
+        Assert.That(angleA.Equals(angleB), Is.False);
     }
 
     [Test]
@@ -31,7 +31,7 @@ public class UT_Angle
         var angleA = Angle.Degrees(-1);
         var angleB = Angle.Degrees(359);
 
-        Assert.IsTrue(angleA.Equals(angleB));
+        Assert.That(angleA.Equals(angleB), Is.True);
     }
 
     [Test]
@@ -41,7 +41,7 @@ public class UT_Angle
 
         var expected = 1;
         var actual = angle.InHeading;
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -51,7 +51,7 @@ public class UT_Angle
 
         var expected = 1;
         var actual = angle.InHeading;
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -60,7 +60,7 @@ public class UT_Angle
         var actual = Angle.Heading(1) + Angle.Heading(1);
 
         var expected = Angle.Heading(2);
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -69,7 +69,7 @@ public class UT_Angle
         var actual = Angle.Heading(1) - Angle.Heading(1);
 
         var expected = Angle.Zero;
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -78,7 +78,7 @@ public class UT_Angle
         var actual = Angle.Radians(Math.PI/2048);
 
         var expected = Angle.Heading(1);
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 
     [Test]
@@ -87,6 +87,6 @@ public class UT_Angle
         var actual = Angle.Radians(Math.PI/180);
 
         var expected = Angle.Degrees(1);
-        Assert.AreEqual(expected, actual);
+        Assert.That(actual, Is.EqualTo(expected));
     }
 }
