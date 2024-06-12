@@ -243,13 +243,13 @@ namespace DOL.GS.ServerRules
 
         public virtual void OnPlayerTeleport(GamePlayer player, Teleport destination)
         {
-            OnPlayerTeleport(player, destination);
+            // override this in order to do something, like set immunity, when a player teleports
         }
 
         [Obsolete("Use .OnPlayerTeleport(GamePlayer,Teleport) instead!")]
 		public virtual void OnPlayerTeleport(GamePlayer player, GameLocation source, Teleport destination)
 		{
-			// override this in order to do something, like set immunity, when a player teleports
+            OnPlayerTeleport(player, destination);
 		}
 
 		/// <summary>
