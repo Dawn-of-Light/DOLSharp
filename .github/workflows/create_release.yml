@@ -39,7 +39,7 @@ jobs:
           #Prepend patch notes with backticks
           sed -i '1s/^/```\n/' patch_notes.txt
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: release_info
           path: |
@@ -112,7 +112,7 @@ jobs:
         run: |
           (cd ${{ matrix.build_target }}/ && zip -r ../${{ env.OUTPUT_FILE_NAME }} * )
       - name: Upload Build Output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: build_artifacts
           path: ${{ env.OUTPUT_FILE_NAME }}
