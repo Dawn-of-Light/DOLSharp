@@ -39,7 +39,7 @@ jobs:
           #Prepend patch notes with backticks
           sed -i '1s/^/```\n/' patch_notes.txt
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release_info
           path: |
@@ -112,9 +112,9 @@ jobs:
         run: |
           (cd ${{ matrix.build_target }}/ && zip -r ../${{ env.OUTPUT_FILE_NAME }} * )
       - name: Upload Build Output
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: build_artifacts
+          name: build_artifacts-${{ matrix.build_target }}
           path: ${{ env.OUTPUT_FILE_NAME }}
 
   create_release:
@@ -125,11 +125,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
       - name: Create Release
         run: |
           set -x
           new_version_tag="${{ needs.get_release_info.outputs.version }}"
-          gh release create "$new_version_tag" --title "$new_version_tag" --notes-file release_info/patch_notes.txt build_artifacts/*
+          gh release create "$new_version_tag" --title "$new_version_tag" --notes-file release_info/patch_notes.txt build_artifacts-*/*
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
