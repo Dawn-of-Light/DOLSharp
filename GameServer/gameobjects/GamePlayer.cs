@@ -9927,7 +9927,11 @@ namespace DOL.GS
 				if (!RemoveFromWorld())
 					return false;
 				//notify event
-				CurrentRegion.Notify(RegionEvent.PlayerLeave, CurrentRegion, new RegionPlayerEventArgs(this));
+
+                if(CurrentRegion != null)
+                {
+                    CurrentRegion.Notify(RegionEvent.PlayerLeave, CurrentRegion, new RegionPlayerEventArgs(this));
+                }
 
 				CancelAllConcentrationEffects(true);
 				if (ControlledBrain != null)
