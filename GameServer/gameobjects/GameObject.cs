@@ -115,7 +115,7 @@ namespace DOL.GS
 			set
             {
                 if(value == null) Position = Position.With(regionID: 0);
-                Position = Position.With(regionID: value.ID);
+                else Position = Position.With(regionID: value.ID);
             }
 		}
 
