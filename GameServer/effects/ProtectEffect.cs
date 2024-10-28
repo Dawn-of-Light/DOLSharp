@@ -32,34 +32,16 @@ namespace DOL.GS.Effects
 	public class ProtectEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
-		/// The player protecting the target
+		/// The individual protecting the target
 		/// </summary>
-		GamePlayer m_protectSource;
+		public GameLiving ProtectSource { get; private set; }
 
 		/// <summary>
-		/// Gets the player protecting the target
+		/// The individual being protected
 		/// </summary>
-		public GamePlayer ProtectSource
-		{
-			get { return m_protectSource; }
-			set { m_protectSource = value; }
-		}
+		public GameLiving ProtectTarget { get; private set; }
 
-		/// <summary>
-		/// Reference to gameplayer that is protecting this player
-		/// </summary>
-		GamePlayer m_protectTarget = null;
-
-		/// <summary>
-		/// Gets the protected player
-		/// </summary>
-		public GamePlayer ProtectTarget
-		{
-			get { return m_protectTarget; }
-			set { m_protectTarget = value; }
-		}
-
-		private Group m_playerGroup;
+		private Group m_playerGroup = null;
 
 		/// <summary>
 		/// Creates a new protect effect
@@ -71,34 +53,37 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Start the guarding on player
 		/// </summary>
-		public void Start(GamePlayer protectSource, GamePlayer protectTarget)
+		public void Start(GameLiving source, GameLiving target)
 		{
-			if (protectSource == null || protectTarget == null)
+			if (source == null || target == null)
 				return;
 
-			m_owner = protectSource;
-			m_playerGroup = protectSource.Group;
+			m_owner = source;
+			ProtectSource = source;
+			ProtectTarget = target;
 
-			if (m_playerGroup != protectTarget.Group)
-				return;
-
-			m_protectSource = protectSource;
-			m_protectTarget = protectTarget;
-
-			GameEventMgr.AddHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
-
-			m_protectSource.EffectList.Add(this);
-			m_protectTarget.EffectList.Add(this);
-
-			if (!protectSource.IsWithinRadius(protectTarget, ProtectAbilityHandler.PROTECT_DISTANCE))
+			if (target.Group != null && target.Group == source.Group)
 			{
-				protectSource.Out.SendMessage(LanguageMgr.GetTranslation(protectSource.Client, "Effects.ProtectEffect.YouProtectingYBut", protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				protectTarget.Out.SendMessage(LanguageMgr.GetTranslation(protectTarget.Client, "Effects.ProtectEffect.XProtectingYouBut", protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				m_playerGroup = source.Group;
+				GameEventMgr.AddHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
+			}
+
+			source.EffectList.Add(this);
+			target.EffectList.Add(this);
+
+			if (!source.IsWithinRadius(target, ProtectAbilityHandler.PROTECT_DISTANCE))
+			{
+				if (source is GamePlayer playerSource)
+					playerSource.Out.SendMessage(LanguageMgr.GetTranslation(playerSource.Client, "Effects.ProtectEffect.YouProtectingYBut", target.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (target is GamePlayer playerTarget)
+					playerTarget.Out.SendMessage(LanguageMgr.GetTranslation(playerTarget.Client, "Effects.ProtectEffect.XProtectingYouBut", source.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				protectSource.Out.SendMessage(LanguageMgr.GetTranslation(protectSource.Client, "Effects.ProtectEffect.YouProtectingY", protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				protectTarget.Out.SendMessage(LanguageMgr.GetTranslation(protectTarget.Client, "Effects.ProtectEffect.XProtectingYou", protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (source is GamePlayer playerSource)
+					playerSource.Out.SendMessage(LanguageMgr.GetTranslation(playerSource.Client, "Effects.ProtectEffect.YouProtectingY", target.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (target is GamePlayer playerTarget)
+					playerTarget.Out.SendMessage(LanguageMgr.GetTranslation(playerTarget.Client, "Effects.ProtectEffect.XProtectingYou", source.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -110,12 +95,8 @@ namespace DOL.GS.Effects
 		/// <param name="args"></param>
 		protected void GroupDisbandCallback(DOLEvent e, object sender, EventArgs args)
 		{
-			MemberDisbandedEventArgs eArgs = args as MemberDisbandedEventArgs;
-			if (eArgs == null) return;
-			if (eArgs.Member == ProtectTarget || eArgs.Member == ProtectSource)
-			{
+			if (args is MemberDisbandedEventArgs eArgs && (eArgs.Member == ProtectTarget || eArgs.Member == ProtectSource))
 				Cancel(false);
-			}
 		}
 
 		/// <summary>
@@ -123,15 +104,17 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public override void Cancel(bool playerCancel)
 		{
-			GameEventMgr.RemoveHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
+			if (m_playerGroup != null)
+				GameEventMgr.RemoveHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback));
+			
 			// intercept handling is done by the active part             
-			m_protectSource.EffectList.Remove(this);
-			m_protectTarget.EffectList.Remove(this);
+			ProtectSource.EffectList.Remove(this);
+			ProtectTarget.EffectList.Remove(this);
 
-			m_protectSource.Out.SendMessage(LanguageMgr.GetTranslation(m_protectSource.Client, "Effects.ProtectEffect.YouNoProtectY", m_protectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			m_protectTarget.Out.SendMessage(LanguageMgr.GetTranslation(m_protectTarget.Client, "Effects.ProtectEffect.XNoProtectYou", m_protectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-			m_playerGroup = null;
+			if (ProtectSource is GamePlayer playerSource)
+				playerSource.Out.SendMessage(LanguageMgr.GetTranslation(playerSource.Client, "Effects.ProtectEffect.YouNoProtectY", ProtectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if (ProtectTarget is GamePlayer playerTarget)
+				playerTarget.Out.SendMessage(LanguageMgr.GetTranslation(playerTarget.Client, "Effects.ProtectEffect.XNoProtectYou", ProtectSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
@@ -139,12 +122,16 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public override string Name
 		{
-
 			get
 			{
-				if (m_protectSource != null && m_protectTarget != null)
-					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.ProtectEffect.ProtectByName", m_protectTarget.GetName(0, false), m_protectSource.GetName(0, false));
-				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.ProtectEffect.Name");
+				string language;
+				if (ProtectTarget is GamePlayer playerTarget)
+					language = playerTarget.Client.Account.Language;
+				else if (ProtectSource is GamePlayer playerSource)
+					language = playerSource.Client.Account.Language;
+				else
+					language = LanguageMgr.DefaultLanguage;
+				return LanguageMgr.GetTranslation(language, "Effects.ProtectEffect.ProtectByName", ProtectTarget.GetName(0, false), ProtectSource.GetName(0, false));
 			}
 		}
 
@@ -171,12 +158,20 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				var delveInfoList = new List<string>(4);
-				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.ProtectEffect.InfoEffect"));
-				delveInfoList.Add(" ");
-				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.ProtectEffect.XProtectingY", ProtectSource.GetName(0, true), ProtectTarget.GetName(0, false)));
+				string language;
+				if (ProtectTarget is GamePlayer playerTarget)
+					language = playerTarget.Client.Account.Language;
+				else if (ProtectSource is GamePlayer playerSource)
+					language = playerSource.Client.Account.Language;
+				else
+					language = LanguageMgr.DefaultLanguage;
 
-				return delveInfoList;
+				return new List<string>(4)
+				{
+					LanguageMgr.GetTranslation(language, "Effects.ProtectEffect.InfoEffect"),
+					" ",
+					LanguageMgr.GetTranslation(language, "Effects.ProtectEffect.XProtectingY", ProtectSource.GetName(0, true), ProtectTarget.GetName(0, false))
+				};
 			}
 		}
 	}
