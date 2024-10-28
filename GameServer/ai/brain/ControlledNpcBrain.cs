@@ -464,7 +464,7 @@ namespace DOL.AI.Brain
 						case Abilities.Protect:
 							{
 								if (GetPlayerOwner() is GamePlayer player)
-									new ProtectEffect().Start(player);
+									new ProtectEffect().Start(Body, player);
 								break;
 							}
 						case Abilities.ChargeAbility:
