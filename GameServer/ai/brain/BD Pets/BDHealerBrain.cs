@@ -37,11 +37,6 @@ namespace DOL.AI.Brain
 	public class BDHealerBrain : BDPetBrain
 	{
 		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
 		/// Constructs new controlled npc brain
 		/// </summary>
 		/// <param name="owner"></param>
@@ -214,7 +209,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="living"></param>
 		/// <param name="aggroamount"></param>
-		public override void AddToAggroList(GameLiving living, int aggroamount) { }
+		public override void AddToAggroList(GameLiving living, int aggroamount, bool CheckLOS = false) { }
 
 		public override void  RemoveFromAggroList(GameLiving living) { }
 

@@ -21,7 +21,8 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="living"></param>
 		/// <param name="aggroamount"></param>
-		void AddToAggroList(GameLiving living, int aggroamount);
+		/// <param name="CheckLOS"></param>
+		void AddToAggroList(GameLiving living, int aggroamount, bool CheckLOS = false);
 
 		/// <summary>
 		/// Get current amount of aggro on aggrotable

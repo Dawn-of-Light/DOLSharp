@@ -935,7 +935,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="living"></param>
 		/// <param name="aggroamount"></param>
-		public override void AddToAggroList(GameLiving living, int aggroamount)
+		public override void AddToAggroList(GameLiving living, int aggroamount, bool CheckLOS = false)
 		{
             GameNPC npc_owner = GetNPCOwner();
             if (npc_owner == null || !(npc_owner.Brain is StandardMobBrain))
