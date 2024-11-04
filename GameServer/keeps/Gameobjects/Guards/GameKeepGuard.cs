@@ -147,6 +147,8 @@ namespace DOL.GS.Keeps
 		/// <returns>Whether or not we are responding</returns>
 		public virtual bool AssistLord(GuardLord lord)
 		{
+			if (!IsAlive || !IsAvailable || MaxSpeedBase <= 0)
+				return false;
 			Follow(lord, GameNPC.STICKMINIMUMRANGE, int.MaxValue);
 			return true;
 		}

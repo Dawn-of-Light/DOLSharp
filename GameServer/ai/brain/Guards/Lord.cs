@@ -9,9 +9,10 @@ namespace DOL.AI.Brain
 	/// </summary>
 	public class LordBrain : KeepGuardBrain
 	{
-		public LordBrain() : base()
+        public LordBrain() : base()
 		{
-		}
+			AggroRange = 750;
+        }
 
 		public override void Think()
 		{
@@ -55,20 +56,19 @@ namespace DOL.AI.Brain
 					int iGuardsResponding = 0;
 
 					foreach (GameKeepGuard guard in lord.Component.Keep.Guards.Values)
-						if (guard != null && guard.IsAlive && guard.IsAvailable)
+						if (guard != null)
 							if (guard.AssistLord(lord))
 								iGuardsResponding++;
 
-					string sMessage = $"{lord.Name} bellows for assistance ";
+					string sMessage = $"for assistance ";
 					if (iGuardsResponding == 0)
 						sMessage += "but no guards respond!";
 					else
 						sMessage += $"and {iGuardsResponding} guards respond!";
 
 					foreach (GamePlayer player in lord.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE, true))
-						if (player != null)
-							ChatUtil.SendErrorMessage(player, sMessage);
-				}
+                        player?.YellReceive(Body, sMessage);
+                }
 			}
 			else
 				base.BringFriends(trigger);
