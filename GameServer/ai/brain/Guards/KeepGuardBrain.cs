@@ -10,16 +10,12 @@ namespace DOL.AI.Brain
 	/// </summary>
 	public class KeepGuardBrain : StandardMobBrain
 	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		public GameKeepGuard guard;
-		/// <summary>
-		/// Constructor for the Brain setting default values
-		/// </summary>
-		public KeepGuardBrain()
+        public GameKeepGuard guard;
+        protected override bool IsKeepGuard => true;
+        /// <summary>
+        /// Constructor for the Brain setting default values
+        /// </summary>
+        public KeepGuardBrain()
 			: base()
 		{
 			AggroLevel = 90;
@@ -55,8 +51,8 @@ namespace DOL.AI.Brain
 
 			if ((guard is GuardArcher || guard is GuardStaticArcher || guard is GuardLord))
 			{
-				// Drop aggro and disengage if the target is out of range.
-				if (Body.IsAttacking && Body.TargetObject is GameLiving living && Body.IsWithinRadius(Body.TargetObject, AggroRange, false) == false)
+                // Drop aggro and disengage if the target is out of range.
+                if (Body.IsAttacking && Body.TargetObject is GameLiving living && Body.IsWithinRadius(Body.TargetObject, AggroRange, false) == false)
 				{
 					Body.StopAttack();
 					RemoveFromAggroList(living);
@@ -72,8 +68,8 @@ namespace DOL.AI.Brain
 			//if we are not doing an action, let us see if we should move somewhere
 			if (guard.CurrentSpellHandler == null && !guard.IsMoving && !guard.AttackState && !guard.InCombat)
 			{
-				// Tolakram - always clear the aggro list so if this is done by mistake the list will correctly re-fill on next think
-				ClearAggroList();
+                // Tolakram - always clear the aggro list so if this is done by mistake the list will correctly re-fill on next think
+                ClearAggroList();
 
 				if (guard.Coordinate.DistanceTo(guard.SpawnPosition, ignoreZ: true) > 50)
 				{
@@ -83,19 +79,18 @@ namespace DOL.AI.Brain
 			//Eden - Portal Keeps Guards max distance
             if (guard.Level > 200 && guard.Coordinate.DistanceTo(guard.SpawnPosition) > 2000)
 			{
-				ClearAggroList();
+                ClearAggroList();
 				guard.WalkToSpawn();
 			}
             else if (guard.InCombat == false && guard.Coordinate.DistanceTo(guard.SpawnPosition) > 6000)
 			{
-				ClearAggroList();
 				guard.WalkToSpawn();
 			}
 
 			// We want guards to check aggro even when they are returning home, which StandardMobBrain does not, so add checks here
 			if (guard.CurrentSpellHandler == null && !guard.AttackState && !guard.InCombat)
 			{
-				CheckPlayerAggro();
+                CheckPlayerAggro();
 				CheckNPCAggro();
 
 				if (HasAggro && Body.IsReturningHome)
@@ -134,7 +129,7 @@ namespace DOL.AI.Brain
 						Body.Say("Want to attack player " + player.Name);
 					}
 
-					AddToAggroList(player, 1);
+					AddToAggroList(player, 1, true);
 					return;
 				}
 			}
@@ -171,7 +166,7 @@ namespace DOL.AI.Brain
 						Body.Say("Want to attack player " + player.Name + " pet " + npc.Name);
 					}
 
-					AddToAggroList(npc, 1);
+					AddToAggroList(npc, 1, true);
 					return;
 				}
 			}
@@ -189,11 +184,6 @@ namespace DOL.AI.Brain
 			if (GameServer.KeepManager.IsEnemy(Body as GameKeepGuard, checkPlayer, true))
 				return AggroLevel;
 			return 0;
-		}
-		
-		public override bool AggroLOS
-		{
-			get { return true; }
 		}
 	}
 }

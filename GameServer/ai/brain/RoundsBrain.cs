@@ -48,7 +48,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="living"></param>
 		/// <param name="aggroamount"></param>
-		public override void AddToAggroList(GameLiving living, int aggroamount)
+		public override void AddToAggroList(GameLiving living, int aggroamount, bool CheckLOS = false)
 		{
 			//save current position in path go to here and reload path point
 			//insert path in pathpoint
@@ -57,7 +57,7 @@ namespace DOL.AI.Brain
 			temporaryPathPoint.Prev = Body.CurrentWayPoint.Prev;
 			Body.CurrentWayPoint = temporaryPathPoint;
 			//this path point will be not available after the following point because no link to itself
-			base.AddToAggroList(living, aggroamount);
+			base.AddToAggroList(living, aggroamount, CheckLOS);
 		}
 
 		/// <summary>

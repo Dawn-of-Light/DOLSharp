@@ -653,10 +653,16 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("world", "always_check_los", "Perform a LoS check before aggroing. This can involve a huge lag, handle with care!", false)]
 		public static bool ALWAYS_CHECK_LOS;
 
-		/// <summary>
-		/// Perform checklos on client with each mob
-		/// </summary>
-		[ServerProperty("world", "check_los_during_cast", "Perform a LOS check during a spell cast.", true)]
+        /// <summary>
+        /// Perform checklos on client with each mob
+        /// </summary>
+        [ServerProperty("world", "always_check_los_keep_guard", "Perform a LoS check before keep guards aggro. This can involve a huge lag, handle with care!", false)]
+        public static bool ALWAYS_CHECK_LOS_KEEP_GUARD;
+
+        /// <summary>
+        /// Perform checklos on client with each mob
+        /// </summary>
+        [ServerProperty("world", "check_los_during_cast", "Perform a LOS check during a spell cast.", true)]
 		public static bool CHECK_LOS_DURING_CAST;
 
 		/// <summary>
