@@ -2495,13 +2495,15 @@ namespace DOL.GS.Spells
 			return StartSpell(target);
 		}
 
+        protected const int minHitChance = 55;
+        protected const int maxResistChance = 100 - minHitChance;
 
-		/// <summary>
-		/// Called when spell effect has to be started and applied to targets
-		/// This is typically called after calling CheckBeginCast
-		/// </summary>
-		/// <param name="target">The current target object</param>
-		public virtual bool StartSpell(GameLiving target)
+        /// <summary>
+        /// Called when spell effect has to be started and applied to targets
+        /// This is typically called after calling CheckBeginCast
+        /// </summary>
+        /// <param name="target">The current target object</param>
+        public virtual bool StartSpell(GameLiving target)
 		{
 			// For PBAOE spells always set the target to the caster
 			if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() && (target == null || (Spell.Radius > 0 && Spell.Range == 0)))
@@ -2561,7 +2563,12 @@ namespace DOL.GS.Spells
 					&& Caster is GameNPC && (Caster as GameNPC).Brain is IOldAggressiveBrain)
 					((Caster as GameNPC).Brain as IOldAggressiveBrain).AddToAggroList(t, 1);
 
-				if (Util.Chance(CalculateSpellResistChance(t)))
+				int resistChance = CalculateSpellResistChance(t);
+
+				if (resistChance > maxResistChance)
+					resistChance = maxResistChance;
+
+				if (Util.Chance(resistChance))
 				{
 					OnSpellResisted(t);
 					continue;
@@ -3778,20 +3785,18 @@ namespace DOL.GS.Spells
 		}
 
 
-		/// <summary>
-		/// Adjust damage based on chance to hit.
-		/// </summary>
-		/// <param name="damage"></param>
-		/// <param name="hitChance"></param>
-		/// <returns></returns>
-		public virtual int AdjustDamageForHitChance(int damage, int hitChance)
+        /// <summary>
+        /// Adjust damage based on chance to hit.
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <param name="hitChance"></param>
+        /// <returns></returns>
+        public virtual int AdjustDamageForHitChance(int damage, int hitChance)
 		{
 			int adjustedDamage = damage;
 
-			if (hitChance < 55)
-			{
-				adjustedDamage += (int)(adjustedDamage * (hitChance - 55) * ServerProperties.Properties.SPELL_HITCHANCE_DAMAGE_REDUCTION_MULTIPLIER * 0.01);
-			}
+			if (hitChance < minHitChance)
+				adjustedDamage += (int)(adjustedDamage * (hitChance - minHitChance) * ServerProperties.Properties.SPELL_HITCHANCE_DAMAGE_REDUCTION_MULTIPLIER * 0.01);
 
 			return Math.Max(adjustedDamage, 1);
 		}
