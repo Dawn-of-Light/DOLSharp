@@ -2319,7 +2319,8 @@ namespace DOL.GS.PacketHandler
 		{
             foreach (var page in catalog.GetAllPages())
             {
-                windowType = ConvertCurrencyToMerchantWindowType(page.Currency);
+                if (page.Currency.Equals(Currency.Copper) == false) ConvertCurrencyToMerchantWindowType(page.Currency);
+
                 using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
                 {
                     pak.WriteByte((byte)page.EntryCount); //Item count on this page
