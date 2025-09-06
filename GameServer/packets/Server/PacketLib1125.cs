@@ -620,11 +620,13 @@ namespace DOL.GS.PacketHandler
         {
             foreach (var page in catalog.GetAllPages())
             {
-                if (page.Currency.Equals(Currency.Copper) == false) windowType = ConvertCurrencyToMerchantWindowType(page.Currency);
+                // Adjust Window Type depending on the currency; this makes multi-currency merchants possible, which don't exist on Live
+                var actualWindowType = windowType == eMerchantWindowType.Normal ? ConvertCurrencyToMerchantWindowType(page.Currency) : windowType;
+
                 using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
                 {
                     pak.WriteByte((byte)page.EntryCount); //Item count on this page
-                    pak.WriteByte((byte)windowType);
+                    pak.WriteByte((byte)actualWindowType);
                     pak.WriteByte((byte)page.Number); //Page number
                                                       //pak.WriteByte(0x00); //Unused // testing
 
