@@ -2497,14 +2497,14 @@ namespace DOL.GS.ServerProperties
 				{
 					foreach (Type type in asm.GetTypes())
 					{
-						foreach (FieldInfo field in type.GetFields())
+						foreach (FieldInfo @field in type.GetFields())
 						{
 							// Properties are Static
-							if (!field.IsStatic)
+							if (!@field.IsStatic)
 								continue;
 							
 							// Properties shoud contain a property attribute
-							object[] attribs = field.GetCustomAttributes(typeof(ServerPropertyAttribute), false);
+							object[] attribs = @field.GetCustomAttributes(typeof(ServerPropertyAttribute), false);
 							if (attribs.Length == 0)
 								continue;
 							
@@ -2532,7 +2532,7 @@ namespace DOL.GS.ServerProperties
 								serverProp.Value = serverProp.DefaultValue;
 							}
 							
-							result[att.Key] = new Tuple<ServerPropertyAttribute, FieldInfo, ServerProperty>(att, field, serverProp);
+							result[att.Key] = new Tuple<ServerPropertyAttribute, FieldInfo, ServerProperty>(att, @field, serverProp);
 						}
 					}
 				}

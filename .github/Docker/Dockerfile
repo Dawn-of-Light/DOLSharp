@@ -18,7 +18,7 @@ RUN set -ex; \
     unzip "/$DOL_DOTNET_ARCHIVE_NAME" -d /dawn-of-light-dotnet; 
 
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0 as release_dotnet
+FROM mcr.microsoft.com/dotnet/runtime:10.0 as release_dotnet
 
 ARG BUILD_DATE=now
 ARG VCS_REF=local
