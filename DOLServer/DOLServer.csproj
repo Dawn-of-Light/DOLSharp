@@ -46,7 +46,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="10.0.1" />
-    <PackageReference Include="log4net" Version="3.2.0" />
+    <PackageReference Include="log4net" Version="3.3.0" />
     <ProjectReference Include="..\GameServer\GameServer.csproj" Name="GameServer" />
   </ItemGroup>
   <ItemGroup>
