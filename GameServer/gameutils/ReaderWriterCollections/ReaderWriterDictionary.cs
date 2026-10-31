@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Buffers;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,11 +45,60 @@ namespace DOL.GS
 			m_dictionary = new Dictionary<TKey, TValue>(capacity);
 		}
 		
+        internal ReaderWriterDictionary(int capacity, IEqualityComparer<TKey> comparer)
+        {
+            m_dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
+        }
+
 		public ReaderWriterDictionary(IDictionary<TKey, TValue> collection)
 		{
 			m_dictionary = new Dictionary<TKey, TValue>(collection);
 		}
 		
+        // Keep each cleanup pass independent, but reuse its temporary array storage.
+        // The dictionary lock is released before callers resolve objects or send packets.
+        internal Snapshot RentSnapshot()
+        {
+            m_rwLock.EnterReadLock();
+            KeyValuePair<TKey, TValue>[] entries = null;
+            try
+            {
+                int count = m_dictionary.Count;
+                entries = count == 0 ? Array.Empty<KeyValuePair<TKey, TValue>>()
+                    : ArrayPool<KeyValuePair<TKey, TValue>>.Shared.Rent(count);
+                m_dictionary.CopyTo(entries, 0);
+                return new Snapshot(entries, count);
+            }
+            catch
+            {
+                if (entries != null && entries.Length != 0)
+                    ArrayPool<KeyValuePair<TKey, TValue>>.Shared.Return(entries, clearArray: true);
+                throw;
+            }
+            finally { m_rwLock.ExitReadLock(); }
+        }
+
+        internal sealed class Snapshot : IDisposable
+        {
+            private KeyValuePair<TKey, TValue>[] entries;
+            internal int Count { get; }
+            internal KeyValuePair<TKey, TValue> this[int index] =>
+                entries != null ? entries[index] : throw new ObjectDisposedException(nameof(Snapshot));
+
+            internal Snapshot(KeyValuePair<TKey, TValue>[] entries, int count)
+            {
+                this.entries = entries;
+                Count = count;
+            }
+
+            public void Dispose()
+            {
+                var completed = Interlocked.Exchange(ref entries, null);
+                if (completed != null && completed.Length != 0)
+                    ArrayPool<KeyValuePair<TKey, TValue>>.Shared.Return(completed, clearArray: true);
+            }
+        }
+
 		#region implementation of IEnumerator
 		/// <summary>
 		/// Get an enumerator over collection Snapshot.

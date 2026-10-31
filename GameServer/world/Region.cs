@@ -1462,7 +1462,8 @@ namespace DOL.GS
 
             if (startingZone != null)
             {
-                ArrayList res = startingZone.GetObjectsInRadius(type, center, radius, new ArrayList(), ignoreZ);
+                using var query = new RadiusQuerySet();
+                ArrayList res = startingZone.GetObjectsInRadius(type, center, radius, new ArrayList(), ignoreZ, query.Seen);
 
                 uint sqRadius = (uint)radius * radius;
 
@@ -1472,7 +1473,7 @@ namespace DOL.GS
                         && (currentZone.TotalNumberOfObjects > 0)
                         && CheckShortestDistance(currentZone, center, sqRadius))
                     {
-                        res = currentZone.GetObjectsInRadius(type, center, radius, res, ignoreZ);
+                        res = currentZone.GetObjectsInRadius(type, center, radius, res, ignoreZ, query.Seen);
                     }
                 }
 

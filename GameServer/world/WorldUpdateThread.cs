@@ -153,17 +153,24 @@ namespace DOL.GS
 		{
 			// Get All Player in Range
 			var players = player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE).Cast<GamePlayer>().Where(p => p != null && p.IsVisibleTo(player) && (!p.IsStealthed || player.CanDetect(p))).ToArray();
+			// Index the filtered snapshot once: cache cleanup must not scan it for every cached player.
+			var visiblePlayers = new HashSet<GamePlayer>(players);
 
 			try
 			{
 				// Clean Cache
-				foreach (var objEntry in player.Client.GameObjectUpdateArray)
+				using var cache = player.Client.GameObjectUpdateArray.RentSnapshot();
+				for (int i = 0; i < cache.Count; i++)
 				{
+					var objEntry = cache[i];
+					// Recent entries cannot need cleanup; avoid global region lookups for them.
+					if ((nowTicks - objEntry.Value) < GetPlayertoPlayerUpdateInterval)
+						continue;
 					var objKey = objEntry.Key;
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Player in cache that is not in vincinity
 					// For updating "out of view" we allow a halved refresh time. 
-					if (obj is GamePlayer && !players.Contains((GamePlayer)obj) && (nowTicks - objEntry.Value) >= GetPlayertoPlayerUpdateInterval)
+					if (obj is GamePlayer && !visiblePlayers.Contains((GamePlayer)obj))
 					{
 						long dummy;
 						
@@ -227,8 +234,13 @@ namespace DOL.GS
 			try
 			{
 				// Clean Cache
-				foreach (var objEntry in player.Client.GameObjectUpdateArray)
+				using var cache = player.Client.GameObjectUpdateArray.RentSnapshot();
+				for (int i = 0; i < cache.Count; i++)
 				{
+					var objEntry = cache[i];
+					// Recent entries cannot need cleanup; avoid global region lookups for them.
+					if ((nowTicks - objEntry.Value) < GetPlayerNPCUpdateInterval)
+						continue;
 					var objKey = objEntry.Key;
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					
@@ -237,7 +249,7 @@ namespace DOL.GS
 						continue;
 					
 					// We have a NPC in cache that is not in vincinity
-					if (obj is GameNPC && !npcs.Contains((GameNPC)obj) && (nowTicks - objEntry.Value) >= GetPlayerNPCUpdateInterval)
+					if (obj is GameNPC && !npcs.Contains((GameNPC)obj))
 					{
 						// Update him out of View
 						if (obj.IsVisibleTo(player))
@@ -299,12 +311,17 @@ namespace DOL.GS
 			try
 			{
 				// Clean Cache
-				foreach (var objEntry in player.Client.GameObjectUpdateArray)
+				using var cache = player.Client.GameObjectUpdateArray.RentSnapshot();
+				for (int i = 0; i < cache.Count; i++)
 				{
+					var objEntry = cache[i];
+					// Recent entries cannot need cleanup; avoid global region lookups for them.
+					if ((nowTicks - objEntry.Value) < GetPlayerItemUpdateInterval)
+						continue;
 					var objKey = objEntry.Key;
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Static Item in cache that is not in vincinity
-					if (obj is GameStaticItem && !objs.Contains((GameStaticItem)obj) && (nowTicks - objEntry.Value) >= GetPlayerItemUpdateInterval)
+					if (obj is GameStaticItem && !objs.Contains((GameStaticItem)obj))
 					{
 						long dummy;
 						player.Client.GameObjectUpdateArray.TryRemove(objKey, out dummy);
@@ -360,12 +377,17 @@ namespace DOL.GS
 			try
 			{
 				// Clean Cache
-				foreach (var objEntry in player.Client.GameObjectUpdateArray)
+				using var cache = player.Client.GameObjectUpdateArray.RentSnapshot();
+				for (int i = 0; i < cache.Count; i++)
 				{
+					var objEntry = cache[i];
+					// Recent entries cannot need cleanup; avoid global region lookups for them.
+					if ((nowTicks - objEntry.Value) < GetPlayerItemUpdateInterval)
+						continue;
 					var objKey = objEntry.Key;
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Door in cache that is not in vincinity
-					if (obj is IDoor && !doors.Contains(obj) && (nowTicks - objEntry.Value) >= GetPlayerItemUpdateInterval)
+					if (obj is IDoor && !doors.Contains(obj))
 					{
 						long dummy;
 						player.Client.GameObjectUpdateArray.TryRemove(objKey, out dummy);

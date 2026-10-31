@@ -305,8 +305,8 @@ namespace DOL.GS
 			m_clientVersion = eClientVersion.VersionNotChecked;
 			m_player = null;
 			m_activeCharIndex = -1; //No character loaded yet!
-			m_GameObjectUpdateArray = new ReaderWriterDictionary<Tuple<ushort, ushort>, long>();
-			m_HouseUpdateArray = new ReaderWriterDictionary<Tuple<ushort, ushort>, long>();
+			m_GameObjectUpdateArray = new ReaderWriterDictionary<Tuple<ushort, ushort>, long>(0, WorldObjectKeyComparer.Instance);
+			m_HouseUpdateArray = new ReaderWriterDictionary<Tuple<ushort, ushort>, long>(0, WorldObjectKeyComparer.Instance);
 		}
 
 		/// <summary>

@@ -540,6 +540,15 @@ namespace DOL.GS
         /// The found objects are appended to the given 'partialList'.
         /// </summary>
         internal ArrayList GetObjectsInRadius(eGameObjectType type, Coordinate coordinate, ushort radius, ArrayList partialList, bool ignoreZ)
+        {
+            using (var query = new RadiusQuerySet())
+            {
+                foreach (object existing in partialList) query.Seen.Add(existing);
+                return GetObjectsInRadius(type, coordinate, radius, partialList, ignoreZ, query.Seen);
+            }
+        }
+
+        internal ArrayList GetObjectsInRadius(eGameObjectType type, Coordinate coordinate, ushort radius, ArrayList partialList, bool ignoreZ, HashSet<object> seen)
 		{
 			if (!m_initialized) InitializeZone();
 			// initialise parameters
@@ -603,7 +612,7 @@ namespace DOL.GS
 							{
 								// we are in the subzone of the observation point
 								// => check all distances for all objects in the subzone
-								UnsafeAddToListWithDistanceCheck(startElement, coordinate, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, ignoreZ);
+								UnsafeAddToListWithDistanceCheck(startElement, coordinate, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, seen, ignoreZ);
 								UnsafeUpdateSubZoneTimestamp(currentSubZoneIndex, typeIndex);
 							}
 						}
@@ -625,7 +634,7 @@ namespace DOL.GS
 
 									lock (startElement)
 									{
-										UnsafeAddToListWithoutDistanceCheck(startElement, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements);
+										UnsafeAddToListWithoutDistanceCheck(startElement, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, seen);
 										UnsafeUpdateSubZoneTimestamp(currentSubZoneIndex, typeIndex);
 									}
 								}
@@ -636,7 +645,7 @@ namespace DOL.GS
 
 									lock (startElement)
 									{
-										UnsafeAddToListWithDistanceCheck(startElement, coordinate, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, ignoreZ);
+										UnsafeAddToListWithDistanceCheck(startElement, coordinate, sqRadius, typeIndex, currentSubZoneIndex, partialList, inZoneElements, outOfZoneElements, seen, ignoreZ);
 										UnsafeUpdateSubZoneTimestamp(currentSubZoneIndex, typeIndex);
 									}
 								}
@@ -675,7 +684,7 @@ namespace DOL.GS
 		}
 
 
-		private void UnsafeAddToListWithoutDistanceCheck(SubNodeElement startElement, int typeIndex, int subZoneIndex, ArrayList partialList, DOL.GS.Collections.Hashtable inZoneElements, DOL.GS.Collections.Hashtable outOfZoneElements)
+		private void UnsafeAddToListWithoutDistanceCheck(SubNodeElement startElement, int typeIndex, int subZoneIndex, ArrayList partialList, DOL.GS.Collections.Hashtable inZoneElements, DOL.GS.Collections.Hashtable outOfZoneElements, HashSet<object> seen)
 		{
 			SubNodeElement currentElement = startElement.next;
 			SubNodeElement elementToRemove = null;
@@ -700,7 +709,7 @@ namespace DOL.GS
 				{
 					// the current object exists, is Active and still in the current subzone
 					// => add it
-					if (!partialList.Contains(currentObject))
+					if (seen.Add(currentObject))
 					{
 						partialList.Add(currentObject);
 					}
@@ -720,6 +729,7 @@ namespace DOL.GS
 			ArrayList partialList,
 			DOL.GS.Collections.Hashtable inZoneElements,
 			DOL.GS.Collections.Hashtable outOfZoneElements,
+            HashSet<object> seen,
 			bool ignoreZ)
 		{
 
@@ -747,7 +757,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					if (CheckSquareDistance(coordinate, currentObject.Coordinate, sqRadius, ignoreZ) && !partialList.Contains(currentObject))
+					if (CheckSquareDistance(coordinate, currentObject.Coordinate, sqRadius, ignoreZ) && seen.Add(currentObject))
 					{
 						// the current object exists, is Active and still in the current subzone
 						// moreover it is in the right range and not yet in the result set
