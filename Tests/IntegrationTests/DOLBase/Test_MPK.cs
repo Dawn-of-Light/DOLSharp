@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System.Text;
 using System.IO;
+using System.Linq;
 
 namespace DOL.Integration.DOLBase
 {
@@ -26,7 +27,7 @@ namespace DOL.Integration.DOLBase
             testFile.Close();
         }
 
-        [Test, Order(1)]
+        [Test]
         public void Save_TestTxtToMPK_CorrectCRC()
         {
             var newMPK = new MPK.MPK(mpkFileLocation, true);
@@ -41,13 +42,13 @@ namespace DOL.Integration.DOLBase
             Assert.That(newMPK.CRCValue, Is.EqualTo(expectedCRCValue));
         }
 
-        [Test, Order(2)]
+        [Test, DependsOnTest(nameof(Save_TestTxtToMPK_CorrectCRC))]
         public void Open_TestMPK_NoExceptions()
         {
             _ = new MPK.MPK(mpkFileLocation, false);
         }
 
-        [Test, Order(3)]
+        [Test, DependsOnTest(nameof(Open_TestMPK_NoExceptions))]
         public void Extract_TestMPK_SameTxtContent()
         {
             var mpk = new MPK.MPK(mpkFileLocation, false);
